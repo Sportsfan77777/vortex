@@ -11,11 +11,13 @@ matplotlib.use('Agg')
 from matplotlib import rc
 from matplotlib import pyplot as plot
 
+from pylab import rcParams
 from pylab import fromfile
 
 import subprocess
 
 # Plot Parameters
+rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 cmap = "RdYlBu_r"
 clim = [10000000, -10000000] # Set later
