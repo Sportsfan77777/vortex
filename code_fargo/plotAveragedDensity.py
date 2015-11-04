@@ -98,7 +98,7 @@ path = "averagedDensity/avg_density_%03d.png"
 output = "averagedDensity/averagedDensity.mov"
 
 zoom_path = "averagedDensity/zoom_avg_density_%03d.png"
-zoom_output = "averagedDensity/averagedDensity.mov"
+zoom_output = "averagedDensity/averagedDensity_zoom.mov"
 
 # Movie Command
 command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
