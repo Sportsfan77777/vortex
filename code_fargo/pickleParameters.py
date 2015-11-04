@@ -1,5 +1,5 @@
 """
-save parameters from *.par file into a pickled dictionary
+save parameters from a single *.par file into a pickled dictionary
 """
 
 import pickle as p
@@ -31,3 +31,10 @@ def store(line):
 	par[name] = entry
 
 # Read file line by line
+with open(par_file, "r") as f:
+	for line in f:
+		store(line)
+
+dict_name = "params.p"
+p.dump(par, open(dict_name, "wb"))
+
