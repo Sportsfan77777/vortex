@@ -91,7 +91,14 @@ for i in range(num_frames):
     make_plot(i)
 
 #### Make Movies ####
-command = "avconv -framerate 40 -f image2 -vf scale=-2:720 -i averagedDensity/avg_density_%03d.png -b 65536k averagedDensity/averagedDensity.mov"
+# Movie Parameters
+fps = 40
+path = "averagedDensity/avg_density_%03d.png"
+output = "averagedDensity/averagedDensity.mov"
+
+# Movie Command
+#command = "avconv -framerate %d -f image2 -vf scale=-2:720 -i %s -b 65536k %s" % (fps, path, output)
+command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
 split_command = command.split()
 subprocess.Popen(split_command)
 
