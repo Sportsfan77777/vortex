@@ -97,7 +97,7 @@ fps = 40
 path = "averagedDensity/avg_density_%03d.png"
 output = "averagedDensity/averagedDensity.mov"
 
-path = "averagedDensity/zoom_avg_density_%03d.png"
+zoom_path = "averagedDensity/zoom_avg_density_%03d.png"
 zoom_output = "averagedDensity/averagedDensity.mov"
 
 # Movie Command
