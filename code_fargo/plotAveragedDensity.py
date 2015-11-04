@@ -93,12 +93,19 @@ for i in range(num_frames):
 #### Make Movies ####
 # Movie Parameters
 fps = 40
+
 path = "averagedDensity/avg_density_%03d.png"
 output = "averagedDensity/averagedDensity.mov"
 
+path = "averagedDensity/zoom_avg_density_%03d.png"
+zoom_output = "averagedDensity/averagedDensity.mov"
+
 # Movie Command
-#command = "avconv -framerate %d -f image2 -vf scale=-2:720 -i %s -b 65536k %s" % (fps, path, output)
 command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
+split_command = command.split()
+subprocess.Popen(split_command)
+
+command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
 split_command = command.split()
 subprocess.Popen(split_command)
 
