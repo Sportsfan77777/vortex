@@ -14,15 +14,15 @@ public class Mode {
 	 * @param m the mode number (must be positive integer)
 	 * @param angle initial angle (in degrees) of Blob 0
 	 */
-	public Mode(int centerX, int centerY, int m, double angle) {
+	public Mode(int m, double angle, Display d) {
 		this.mode_number = m;
 		
 		blobs = new Blob[m];
 		double theta = (Math.PI / 180.0) * angle;
 		for (int i = 0; i < m; i++) {
-			double x = Math.cos(theta);
-			double y = Math.sin(theta);
-			blobs[i] = new Blob(centerX + x, centerY + y);
+			double x = d.orbitalRadius * Math.cos(theta);
+			double y = d.orbitalRadius * Math.sin(theta);
+			blobs[i] = new Blob(x, y, d);
 			
 			theta += 2 * Math.PI / m;
 		}

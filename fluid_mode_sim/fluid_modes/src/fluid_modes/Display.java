@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +18,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Display extends JPanel implements ActionListener {
-		
+	
 	private int perturbationMode;
 	
 	// Elements
@@ -25,17 +26,20 @@ public class Display extends JPanel implements ActionListener {
 	private Mode mode;
 	
 	// Constants
-	private final int MIN_RATE = 10;
+	private final int MIN_RATE = 1;
 	private final int MAX_RATE = 100;
-	private final int INIT_RATE = 10;
+	private final int INIT_RATE = 50;
 	
 	private final int MIN_MODE = 1;
 	private final int MAX_MODE = 30;
 	private final int INIT_MODE = 4;
 	
 	// Display Properties
-	private final int WIDTH = 600;
-	private final int HEIGHT = 600;
+	public final int WIDTH = 600;
+	public final int HEIGHT = 600;
+	
+	private final int solarRadius = 40;
+	public final int orbitalRadius = 225;
 	
 	// Timer
 	private Timer timer;
@@ -49,18 +53,18 @@ public class Display extends JPanel implements ActionListener {
 	public Display() {
 		// Fluid Elements
 		initElement();
-		initMode();
+		initMode(INIT_MODE);
 		
 		this.initDisplay();
 	}
 	
 	private void initElement() {
-		this.element = new Element(WIDTH / 2, HEIGHT / 2);
+		this.element = new Element(orbitalRadius, 0, this);
 	}
 	
-	private void initMode() {
+	private void initMode(int mode_number) {
 		double angle = 0;
-		this.mode = new Mode(WIDTH / 2, HEIGHT / 2, INIT_MODE, angle);
+		this.mode = new Mode(mode_number, angle, this);
 	}
 	
 	private void initDisplay() {
@@ -120,26 +124,61 @@ public class Display extends JPanel implements ActionListener {
 		
 		// Timer
 		this.timer = new Timer(INIT_RATE, this); // 'this' is this class as an ActionListener
-        this.timer.start();
+        //this.timer.start();
 	}
 	
 	public void switchMode(int m) {
-		
+		initMode(m);
 	}
 	
 	public void rotateElements() {
+		double rotationAngle = rateChoice.getValue();
+		
 		// Element
-		element.rotate(timer.getDelay());
+		element.rotate(rotationAngle);
 		// Mode
 		Blob[] blobs = mode.getBlobs();
 		for (int i = 0; i < blobs.length; i++) {
 			Blob b = blobs[i];
-			b.rotate(timer.getDelay());
+			//b.rotate(rotationAngle);
 		}
+	}
+	
+	public void drawSun(Graphics2D g) {
+		int radius = this.solarRadius;
+		int diameter = 2 * radius;
+		g.setColor(Color.YELLOW);
+		g.fillOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
+	}
+	
+    public void drawOrbit(Graphics2D g) {
+    	int radius = this.orbitalRadius;
+    	int diameter = 2 * radius;
+    	g.setColor(Color.WHITE);
+		g.drawOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
+	}
+    
+    public void drawElement(Graphics2D g) {
+		int radius = this.element.getRadius();
+		int diameter = 2 * radius;
+		
+		int displayX = (int)this.element.currentX + (this.WIDTH / 2);
+		int displayY = (int)this.element.currentY + (this.HEIGHT / 2);
+		
+		g.setColor(Color.GRAY);
+		g.fillOval(displayX - radius, displayY - radius, diameter, diameter);
 	}
 	
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        Graphics2D g2d = (Graphics2D) g;
+        
+        this.drawSun(g2d);
+        this.drawOrbit(g2d);
+        
+        this.drawElement(g2d);
+        //this.drawMode(g2d);
         
         Toolkit.getDefaultToolkit().sync();
     }

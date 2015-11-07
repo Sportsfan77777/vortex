@@ -5,6 +5,12 @@ package fluid_modes;
  *
  */
 public class Element {
+	// Display
+	public Display display;
+	
+	// Size
+	private int radius = 20;
+	
 	// Start Position
 	private double startX;
 	private double startY;
@@ -14,16 +20,25 @@ public class Element {
 	double currentY;
 	
 	// Frequency
-	double freq;
+	double freq = 0.1;
 	
 	/**
 	 * initializes an element with a start position
 	 * @param x
 	 * @param y
 	 */
-	public Element(double x, double y) {
+	public Element(double x, double y, Display d) {
 		this.startX = x;
 		this.startY = y;
+		
+		this.currentX = this.startX;
+		this.currentY = this.startY;
+		
+		this.display = d;
+	}
+	
+	public int getRadius() {
+		return this.radius;
 	}
 	
 	/**
@@ -49,10 +64,12 @@ public class Element {
 	public void rotate(double time) {
 		double x = this.currentX;
 		double y = this.currentY;
-		double theta = this.freq * time;
+		
+		// rotate counter-clockwise with (-1)
+		double theta = this.freq * time * (Math.PI / 180) * (-1); 
 		
 		// Rotation Matrix
-		this.currentX += (x * Math.cos(theta) - y * Math.sin(theta));
-		this.currentY += (x * Math.sin(theta) + y * Math.cos(theta));
+		this.currentX = (x * Math.cos(theta) - y * Math.sin(theta));
+		this.currentY = (x * Math.sin(theta) + y * Math.cos(theta));
 	}
 }
