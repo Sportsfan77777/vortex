@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 
 public class Display extends JPanel implements ActionListener {
 	
+	private double dt = 0.01;
 	private int perturbationMode;
 	
 	// Elements
@@ -31,15 +32,21 @@ public class Display extends JPanel implements ActionListener {
 	private final int INIT_RATE = 50;
 	
 	private final int MIN_MODE = 1;
-	private final int MAX_MODE = 30;
-	private final int INIT_MODE = 4;
+	private final int MAX_MODE = 40;
+	private final int INIT_MODE = 5;
+	
+	private final int MIN_FREQ = 1;
+	private final int MAX_FREQ = 100;
+	private final int INIT_FREQ = 2;
+	
+	private final int KEPLER_FREQ = 16;
 	
 	// Display Properties
 	public final int WIDTH = 600;
 	public final int HEIGHT = 600;
 	
 	private final int solarRadius = 40;
-	public final int orbitalRadius = 225;
+	public final int orbitalRadius = 200;
 	
 	// Timer
 	private Timer timer;
@@ -49,6 +56,7 @@ public class Display extends JPanel implements ActionListener {
 	private JButton stop;
 	private JSlider rateChoice; // rate of updates
 	private JSlider modeChoice; // mode of fluid
+	private JSlider freqChoice; // frequency of perturbation
 	
 	public Display() {
 		// Fluid Elements
@@ -59,12 +67,12 @@ public class Display extends JPanel implements ActionListener {
 	}
 	
 	private void initElement() {
-		this.element = new Element(orbitalRadius, 0, this);
+		this.element = new Element(orbitalRadius, 0, KEPLER_FREQ, this);
 	}
 	
 	private void initMode(int mode_number) {
 		double angle = 0;
-		this.mode = new Mode(mode_number, angle, this);
+		this.mode = new Mode(mode_number, angle, INIT_FREQ, this);
 	}
 	
 	private void initDisplay() {
@@ -96,11 +104,11 @@ public class Display extends JPanel implements ActionListener {
 		rateChoice.addChangeListener( 
         		new ChangeListener() {
 					public void stateChanged(ChangeEvent e) {
-						if (!rateChoice.getValueIsAdjusting()) {
+						//if (!rateChoice.getValueIsAdjusting()) {
 							// only change rate if the slider is fixed
 							int new_rate = rateChoice.getValue();
 							timer.setDelay(new_rate);
-						}
+						//}
 					}
         		});
 		add(rateChoice);
@@ -109,7 +117,7 @@ public class Display extends JPanel implements ActionListener {
 		modeChoice.addChangeListener( 
         		new ChangeListener() {
 					public void stateChanged(ChangeEvent e) {
-						if (!modeChoice.getValueIsAdjusting()) {
+						//if (!modeChoice.getValueIsAdjusting()) {
 							// only change rate if the slider is fixed
 							int newMode = modeChoice.getValue();
 							if (newMode != perturbationMode) {
@@ -117,10 +125,23 @@ public class Display extends JPanel implements ActionListener {
 								perturbationMode = newMode;
 							}
 							
-						}
+						//}
 					}
         		});
 		add(modeChoice);
+		
+		this.freqChoice = new JSlider(JSlider.HORIZONTAL, MIN_FREQ, MAX_FREQ, INIT_FREQ);
+		freqChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+						    int newFreq = freqChoice.getValue();
+							mode.setFreq(newFreq);
+						//}
+					}
+        		});
+		add(freqChoice);
 		
 		// Timer
 		this.timer = new Timer(INIT_RATE, this); // 'this' is this class as an ActionListener
@@ -132,7 +153,7 @@ public class Display extends JPanel implements ActionListener {
 	}
 	
 	public void rotateElements() {
-		double rotationAngle = rateChoice.getValue();
+		double rotationAngle = rateChoice.getValue() * dt;
 		
 		// Element
 		element.rotate(rotationAngle);
@@ -140,7 +161,7 @@ public class Display extends JPanel implements ActionListener {
 		Blob[] blobs = mode.getBlobs();
 		for (int i = 0; i < blobs.length; i++) {
 			Blob b = blobs[i];
-			//b.rotate(rotationAngle);
+			b.rotate(rotationAngle);
 		}
 	}
 	
@@ -158,15 +179,22 @@ public class Display extends JPanel implements ActionListener {
 		g.drawOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
 	}
     
-    public void drawElement(Graphics2D g) {
-		int radius = this.element.getRadius();
+    public void drawElement(Graphics2D g, Element e, Color c) {
+    	int radius = e.getRadius();
 		int diameter = 2 * radius;
 		
-		int displayX = (int)this.element.currentX + (this.WIDTH / 2);
-		int displayY = (int)this.element.currentY + (this.HEIGHT / 2);
+		int displayX = (int)e.currentX + (this.WIDTH / 2);
+		int displayY = (int)e.currentY + (this.HEIGHT / 2);
 		
-		g.setColor(Color.GRAY);
+		g.setColor(c);
 		g.fillOval(displayX - radius, displayY - radius, diameter, diameter);
+	}
+    
+    public void drawMode(Graphics2D g) {
+    	Blob[] blobs = mode.getBlobs();
+    	for (int i = 0; i < blobs.length; i++) {
+    		this.drawElement(g, blobs[i], Color.BLUE);
+    	}
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -177,8 +205,8 @@ public class Display extends JPanel implements ActionListener {
         this.drawSun(g2d);
         this.drawOrbit(g2d);
         
-        this.drawElement(g2d);
-        //this.drawMode(g2d);
+        this.drawElement(g2d, this.element, Color.GRAY);
+        this.drawMode(g2d);
         
         Toolkit.getDefaultToolkit().sync();
     }

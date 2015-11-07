@@ -9,7 +9,7 @@ public class Element {
 	public Display display;
 	
 	// Size
-	private int radius = 20;
+	protected int radius;
 	
 	// Start Position
 	private double startX;
@@ -20,21 +20,24 @@ public class Element {
 	double currentY;
 	
 	// Frequency
-	double freq = 0.1;
+	double freq;
 	
 	/**
 	 * initializes an element with a start position
 	 * @param x
 	 * @param y
 	 */
-	public Element(double x, double y, Display d) {
+	public Element(double x, double y, double freq, Display d) {
 		this.startX = x;
 		this.startY = y;
 		
 		this.currentX = this.startX;
 		this.currentY = this.startY;
 		
+		this.freq = freq;
+		
 		this.display = d;
+		this.radius = 20;
 	}
 	
 	public int getRadius() {

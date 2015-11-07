@@ -1,0 +1,75 @@
+package fluid_modes;
+
+/**
+ * Generic Fluid Element
+ *
+ */
+public class Element {
+	// Display
+	public Display display;
+	
+	// Size
+	private int radius = 20;
+	
+	// Start Position
+	private double startX;
+	private double startY;
+	
+	// Current Position
+	double currentX;
+	double currentY;
+	
+	// Frequency
+	double freq = 10;
+	
+	/**
+	 * initializes an element with a start position
+	 * @param x
+	 * @param y
+	 */
+	public Element(double x, double y, Display d) {
+		this.startX = x;
+		this.startY = y;
+		
+		this.currentX = this.startX;
+		this.currentY = this.startY;
+		
+		this.display = d;
+	}
+	
+	public int getRadius() {
+		return this.radius;
+	}
+	
+	/**
+	 * set frequency at which element moves
+	 * @param freq
+	 */
+	public void setFrequency(double freq) {
+		this.freq = freq;
+	}
+	
+	/**
+	 * set to initial position
+	 */
+	public void resetPosition() {
+		this.currentX = this.startX;
+		this.currentY = this.startY;
+	}
+	
+	/**
+	 * rotate element by frequency * time
+	 * @param time
+	 */
+	public void rotate(double time) {
+		double x = this.currentX;
+		double y = this.currentY;
+		
+		// rotate counter-clockwise with (-1)
+		double theta = this.freq * time * (Math.PI / 180) * (-1); 
+		
+		// Rotation Matrix
+		this.currentX = (x * Math.cos(theta) - y * Math.sin(theta));
+		this.currentY = (x * Math.sin(theta) + y * Math.cos(theta));
+	}
+}

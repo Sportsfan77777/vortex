@@ -14,7 +14,7 @@ public class Mode {
 	 * @param m the mode number (must be positive integer)
 	 * @param angle initial angle (in degrees) of Blob 0
 	 */
-	public Mode(int m, double angle, Display d) {
+	public Mode(int m, double angle, double freq, Display d) {
 		this.mode_number = m;
 		
 		blobs = new Blob[m];
@@ -22,7 +22,7 @@ public class Mode {
 		for (int i = 0; i < m; i++) {
 			double x = d.orbitalRadius * Math.cos(theta);
 			double y = d.orbitalRadius * Math.sin(theta);
-			blobs[i] = new Blob(x, y, d);
+			blobs[i] = new Blob(x, y, freq, d);
 			
 			theta += 2 * Math.PI / m;
 		}
@@ -30,5 +30,11 @@ public class Mode {
 	
 	public Blob[] getBlobs() {
 		return blobs;
+	}
+	
+	public void setFreq(double freq) {
+		for (int i = 0; i < blobs.length; i++) {
+			blobs[i].setFrequency(freq);
+		}
 	}
 }
