@@ -1,0 +1,67 @@
+package fluid_modes;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.Timer;
+
+public class Display extends JPanel implements ActionListener {
+	
+	int dt; // change in time with each step	
+	private Blob[] allBlobs;
+	
+	// Constants
+	private final int INIT_DELAY = 10;
+	
+	// Display Properties
+	private final int WIDTH = 500;
+	private final int HEIGHT = 500;
+	
+	// Timer
+	private Timer timer;
+	
+	// Swing Components
+	private JButton start;
+	private JButton stop;
+	private JSlider rate; // rate of updates
+	private JSlider mode; // mode of fluid
+	
+	public Display() {
+		this.initDisplay();
+	}
+	
+	private void initDisplay() {
+		// Display Properties
+		setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setDoubleBuffered(true);
+        
+		// Swing Components
+		this.rate = new JSlider();
+		this.mode = new JSlider();
+		
+		// Timer
+		this.timer = new Timer(INIT_DELAY, this); // 'this' is this class as an ActionListener
+        this.timer.start();
+	}
+	
+	public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		
+		repaint();
+	}
+	
+	
+}

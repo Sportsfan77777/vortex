@@ -1,0 +1,37 @@
+package fluid_modes;
+
+/**
+ * Generic Fluid Element
+ *
+ */
+public class Element {
+	// Start Position
+	private double startX;
+	private double startY;
+	
+	// Current Position
+	double currentX;
+	double currentY;
+	
+	// Frequency
+	double freq;
+	
+	/**
+	 * initializes an element with a start position
+	 * @param x
+	 * @param y
+	 */
+	public Element(double x, double y) {
+		this.startX = x;
+		this.startY = y;
+	}
+	
+	public void setFrequency(double freq) {
+		this.freq = freq;
+	}
+	
+	public void resetPosition() {
+		this.currentX = this.startX;
+		this.currentY = this.startY;
+	}
+}

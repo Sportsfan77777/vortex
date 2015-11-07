@@ -1,0 +1,8 @@
+package fluid_modes;
+
+public class Display {
+	
+	public Display() {
+		
+	}
+}

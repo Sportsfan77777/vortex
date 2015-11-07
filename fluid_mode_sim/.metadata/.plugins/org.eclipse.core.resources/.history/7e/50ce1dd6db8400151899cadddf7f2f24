@@ -1,0 +1,9 @@
+package fluid_modes;
+
+/**
+ * Generic Fluid Element
+ *
+ */
+public class Element {
+	
+}

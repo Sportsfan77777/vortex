@@ -1,0 +1,14 @@
+package fluid_modes;
+
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+
+public class Display extends JPanel implements ActionListener {
+	
+	int time;
+	
+	public Display() {
+	}
+	
+	
+}

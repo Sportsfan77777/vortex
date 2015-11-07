@@ -1,0 +1,23 @@
+package fluid_modes;
+
+/**
+ * Generic Fluid Element
+ *
+ */
+public class Element {
+	private double startX;
+	private double startY;
+	
+	double currentX;
+	double currentY;
+	
+	public Element(double x, double y) {
+		this.startX = x;
+		this.startY = y;
+	}
+	
+	public void resetPosition() {
+		this.currentX = this.startX;
+		this.currentY = this.startY;
+	}
+}

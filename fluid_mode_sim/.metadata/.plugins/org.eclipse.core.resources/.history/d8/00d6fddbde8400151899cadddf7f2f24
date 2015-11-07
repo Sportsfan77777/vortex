@@ -1,0 +1,25 @@
+package fluid_modes;
+
+/**
+ * creates a perturbation mode with 'm' blobs
+ *
+ */
+public class Mode {
+	
+	private int mode_number;
+	private Blob[] blobs;
+	
+	public Mode(int m, int theta) {
+		this.mode_number = m;
+		
+		blobs = new Blob[m];
+		double theta = 0;
+		for (int i = 0; i < m; i++) {
+			double x = Math.cos(theta);
+			double y = Math.sin(theta);
+			blobs[i] = new Blob(x, y);
+			
+			theta += 2 * Math.PI / m;
+		}
+	}
+}

@@ -1,0 +1,14 @@
+package fluid_modes;
+
+/**
+ * creates a perturbation mode with 'm' blobs
+ *
+ */
+public class Mode {
+	
+	private int mode_number;
+	
+	public Mode(int m) {
+		this.mode_number = m;
+	}
+}

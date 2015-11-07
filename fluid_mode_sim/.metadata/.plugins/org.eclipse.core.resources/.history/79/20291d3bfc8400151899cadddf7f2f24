@@ -1,0 +1,25 @@
+package fluid_modes;
+
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+
+public class FluidSimulation extends JFrame {
+	
+	public FluidSimulation() {
+		this.initialize();
+	}
+	
+	private void initialize() {
+		add(null, new Display());
+	}
+	
+	public static void main(String[] args) {
+        
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {                
+                FluidSimulation sim = new FluidSimulation();
+                sim.setVisible(true);                
+            }
+        });
+    }
+}

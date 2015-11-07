@@ -1,0 +1,10 @@
+package fluid_modes;
+
+/**
+ * creates a perturbation mode with 'm' blobs
+ *
+ */
+public class Mode {
+	
+	public Mode()
+}

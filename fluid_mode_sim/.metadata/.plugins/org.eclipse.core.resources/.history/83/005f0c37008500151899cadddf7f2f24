@@ -1,0 +1,41 @@
+package fluid_modes;
+
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+public class Display extends JPanel implements ActionListener {
+	
+	int dt; // change in time with each step	
+	private Blob[] allBlobs;
+	
+	// Constants
+	private final int INIT_DELAY = 10;
+	
+	// GUI
+	private Timer timer;
+	
+	private JSlider rate;
+	
+	public Display() {
+		this.initDisplay();
+	}
+	
+	private void initDisplay() {
+		
+		
+		this.timer = new Timer(INIT_DELAY, this);
+        this.timer.start();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		
+	}
+	
+	
+}

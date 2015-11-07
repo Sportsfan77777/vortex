@@ -1,0 +1,27 @@
+package fluid_modes;
+
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+
+public class Display extends JPanel implements ActionListener {
+	
+	int time;
+	
+	public Display() {
+		this.initialize();
+	}
+	
+	private void initialize() {
+		
+	}
+	
+	public static void main(String[] args) {
+        
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {                
+                Display display = new Display();
+                display.setVisible(true);                
+            }
+        });
+    }
+}
