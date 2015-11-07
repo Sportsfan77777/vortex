@@ -16,7 +16,7 @@ from scipy.ndimage import filters as ff
 # Smoothing Function
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 ks = 50.0 # Kernel Size
-ks_small = ks / 5.0 # Smaller kernel to check the normal kernel
+ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 
 # Load Data (and choose subset) = x-axis
 rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
@@ -36,33 +36,37 @@ def make_plot(rla = True):
         y1_base = data[:,1]
         y2_base = data[:,2]
         title = "Torque! (with no roche lobe avoidance)"
-        save_fn = "TorqueEvolution_with_no_rla.png"
+        save_fn = "TorqueLogEvolution_with_no_rla.png"
     else:
         # Roche Lobe Tapering
         y1_base = data[:,3]
         y2_base = data[:,4]
         title = "Torque! (with roche lobe tapering)"
-        save_fn = "TorqueEvolution_with_rla.png"
+        save_fn = "TorqueLogEvolution_with_rla.png"
 
     # Data
 
-    y1 = smooth(y1_base, ks_small)[select] # Torque from Inner Disk 
-    y2 = smooth(y2_base, ks_small)[select] # Torque from Outer Disk
-    y3 = y1 + y2
+    y1 = np.abs(smooth(y1_base, ks_small)[select]) # Torque from Inner Disk 
+    y2 = np.abs(smooth(y2_base, ks_small)[select]) # Torque from Outer Disk
+    y3 = np.abs(y2 - y1)
+    y4 = (np.sign(y2 - y1) * 10**(-9)) + 3 * 10**(-9)
 
-    s1 = smooth(y1_base, ks)[select] # Torque from Inner Disk (smoothed)
-    s2 = smooth(y2_base, ks)[select] # Torque from Outer Disk (smoothed)
-    s3 = s1 + s2
+    s1 = np.abs(smooth(y1_base, ks)[select]) # Torque from Inner Disk (smoothed)
+    s2 = np.abs(smooth(y2_base, ks)[select]) # Torque from Outer Disk (smoothed)
+    s3 = np.abs(s2 - s1)
+    s4 = (np.sign(s2 - s1) * 10**(-9)) + 3 * 10**(-9)
 
     # Curves
 
     plot.plot(x, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
     plot.plot(x, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
     plot.plot(x, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
+    plot.plot(x, y4, c = "orange", alpha = alpha, linewidth = linewidth - 1)
 
     plot.plot(x, s1, c = "r", label = "Inner", linewidth = linewidth)
     plot.plot(x, s2, c = "g", label = "Outer", linewidth = linewidth)
     plot.plot(x, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
+    plot.plot(x, s4, c = "orange", linewidth = linewidth)
 
     plot.plot([x[0], x[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
 
@@ -73,6 +77,11 @@ def make_plot(rla = True):
     plot.title(title, fontsize = fontsize + 2)
     plot.xlabel("Timestep", fontsize = fontsize)
     plot.ylabel("Torque", fontsize = fontsize)
+
+    # Layout
+
+    plot.yscale('log')
+    plot.ylim(10**(-10), 10**(-4))
 
     # Save and Close
 
