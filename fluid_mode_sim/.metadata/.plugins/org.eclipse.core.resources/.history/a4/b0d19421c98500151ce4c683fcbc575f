@@ -29,18 +29,14 @@ public class Mode {
 	}
 	
 	/**
-	 * access the m blobs
+	 * array of m blobs
 	 * @return
 	 */
 	public Blob[] getBlobs() {
 		return blobs;
 	}
 	
-	/**
-	 * change frequency of the mode
-	 * @param freq
-	 */
-	public void setFrequency(double freq) {
+	public void setFreq(double freq) {
 		for (int i = 0; i < blobs.length; i++) {
 			blobs[i].setFrequency(freq);
 		}

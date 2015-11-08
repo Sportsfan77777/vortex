@@ -4,7 +4,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 /**
+ * 
  * run the simulation of the Fluid Modes here
+ *
  */
 public class FluidSimulation extends JFrame {
 	
@@ -12,9 +14,6 @@ public class FluidSimulation extends JFrame {
 		this.initialize();
 	}
 	
-	/**
-	 * set things up
-	 */
 	private void initialize() {
 		add(new Display());
 		

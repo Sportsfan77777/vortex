@@ -53,14 +53,6 @@ public class Element {
 	}
 	
 	/**
-	 * get color for drawing
-	 * @return
-	 */
-	public Color getColor() {
-		return this.color;
-	}
-	
-	/**
 	 * set frequency at which element moves
 	 * @param freq
 	 */

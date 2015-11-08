@@ -78,8 +78,8 @@ public class Display extends JPanel implements ActionListener {
 	
 	public Display() {
 		// Fluid Elements
-		this.initElement();
-		this.initMode(INIT_MODE);
+		initElement();
+		initMode(INIT_MODE);
 		
 		this.initDisplay();
 	}
@@ -100,10 +100,6 @@ public class Display extends JPanel implements ActionListener {
 		this.mode = new Mode(mode_number, angle, INIT_FREQ, this);
 	}
 	
-	/**
-	 * set GUI appearance
-	 * set up JComponents
-	 */
 	private void initDisplay() {
 		// Display Properties
 		setBackground(Color.BLACK);
@@ -235,17 +231,10 @@ public class Display extends JPanel implements ActionListener {
         //this.timer.start();
 	}
 	
-	/**
-	 * switch current mode (triggered by slider)
-	 * @param m
-	 */
 	public void switchMode(int m) {
 		initMode(m);
 	}
 	
-	/**
-	 * rotate the elements (triggered by timer)
-	 */
 	public void rotateElements() {
 		double rotationAngle = rateChoice.getValue() * dt;
 		

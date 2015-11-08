@@ -1,7 +1,5 @@
 package fluid_modes;
 
-import java.awt.Color;
-
 /**
  * Generic Fluid Element
  *
@@ -10,9 +8,8 @@ public class Element {
 	// Display
 	public Display display;
 	
-	// Size and Color
+	// Size
 	protected int radius;
-	protected Color color;
 	
 	// Start Position
 	private double startX;
@@ -41,23 +38,10 @@ public class Element {
 		
 		this.display = d;
 		this.radius = 20;
-		this.color = Color.GRAY;
 	}
 	
-	/**
-	 * get radius for drawing
-	 * @return
-	 */
 	public int getRadius() {
 		return this.radius;
-	}
-	
-	/**
-	 * get color for drawing
-	 * @return
-	 */
-	public Color getColor() {
-		return this.color;
 	}
 	
 	/**

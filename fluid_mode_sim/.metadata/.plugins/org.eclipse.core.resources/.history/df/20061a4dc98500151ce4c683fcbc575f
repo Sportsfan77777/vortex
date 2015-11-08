@@ -12,9 +12,6 @@ public class FluidSimulation extends JFrame {
 		this.initialize();
 	}
 	
-	/**
-	 * set things up
-	 */
 	private void initialize() {
 		add(new Display());
 		

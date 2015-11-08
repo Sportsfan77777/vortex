@@ -235,17 +235,10 @@ public class Display extends JPanel implements ActionListener {
         //this.timer.start();
 	}
 	
-	/**
-	 * switch current mode (triggered by slider)
-	 * @param m
-	 */
 	public void switchMode(int m) {
 		initMode(m);
 	}
 	
-	/**
-	 * rotate the elements (triggered by timer)
-	 */
 	public void rotateElements() {
 		double rotationAngle = rateChoice.getValue() * dt;
 		

@@ -243,9 +243,6 @@ public class Display extends JPanel implements ActionListener {
 		initMode(m);
 	}
 	
-	/**
-	 * rotate the elements (triggered by timer)
-	 */
 	public void rotateElements() {
 		double rotationAngle = rateChoice.getValue() * dt;
 		

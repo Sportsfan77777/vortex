@@ -44,20 +44,8 @@ public class Element {
 		this.color = Color.GRAY;
 	}
 	
-	/**
-	 * get radius for drawing
-	 * @return
-	 */
 	public int getRadius() {
 		return this.radius;
-	}
-	
-	/**
-	 * get color for drawing
-	 * @return
-	 */
-	public Color getColor() {
-		return this.color;
 	}
 	
 	/**

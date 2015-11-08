@@ -37,10 +37,10 @@ public class Mode {
 	}
 	
 	/**
-	 * change frequency of the mode
+	 * change frequency
 	 * @param freq
 	 */
-	public void setFrequency(double freq) {
+	public void setFreq(double freq) {
 		for (int i = 0; i < blobs.length; i++) {
 			blobs[i].setFrequency(freq);
 		}
