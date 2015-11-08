@@ -1,0 +1,233 @@
+package fluid_modes;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+public class Display extends JPanel implements ActionListener {
+	
+	private double dt = 0.01;
+	private int perturbationMode;
+	
+	// Elements
+	private Element element;
+	private Mode mode;
+	
+	// Constants
+	Font sliderFont = new Font("Serif", Font.ITALIC, 15);
+	
+	private final int MIN_RATE = 1;
+	private final int MAX_RATE = 100;
+	private final int INIT_RATE = 50;
+	
+	private final int MIN_MODE = 1;
+	private final int MAX_MODE = 40;
+	private final int INIT_MODE = 5;
+	
+	private final int MIN_FREQ = 1;
+	private final int MAX_FREQ = 100;
+	private final int INIT_FREQ = 2;
+	
+	private final int KEPLER_FREQ = 16;
+	
+	// Display Properties
+	public final int WIDTH = 600;
+	public final int HEIGHT = 600;
+	
+	private final int solarRadius = 40;
+	public final int orbitalRadius = 200;
+	
+	// Timer
+	private Timer timer;
+	
+	// Swing Components
+	private JButton start;
+	private JButton stop;
+	private JSlider rateChoice; // rate of updates
+	private JSlider modeChoice; // mode of fluid
+	private JSlider freqChoice; // frequency of perturbation
+	
+	public Display() {
+		// Fluid Elements
+		initElement();
+		initMode(INIT_MODE);
+		
+		this.initDisplay();
+	}
+	
+	private void initElement() {
+		this.element = new Element(orbitalRadius, 0, KEPLER_FREQ, this);
+	}
+	
+	private void initMode(int mode_number) {
+		double angle = 0;
+		this.mode = new Mode(mode_number, angle, INIT_FREQ, this);
+	}
+	
+	private void initDisplay() {
+		// Display Properties
+		setBackground(Color.BLACK);
+		//setForeground(Color.WHITE);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setDoubleBuffered(true);
+        
+		// Swing Components
+        this.start = new JButton("Start");
+        start.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						timer.start();
+					}
+        		});
+        add(start);
+        
+        this.stop = new JButton("Stop");
+        stop.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						timer.stop();
+					}
+        		});
+        add(stop);
+        
+		this.rateChoice = new JSlider(JSlider.HORIZONTAL, MIN_RATE, MAX_RATE, INIT_RATE);
+		rateChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!rateChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+							int new_rate = rateChoice.getValue();
+							timer.setDelay(new_rate);
+						//}
+					}
+        		});
+		rateChoice.setForeground(Color.WHITE);
+		rateChoice.setMajorTickSpacing((MAX_RATE - MIN_RATE) / 7);
+		rateChoice.setPaintLabels(true);
+		add(rateChoice);
+		
+		this.modeChoice = new JSlider(JSlider.HORIZONTAL, MIN_MODE, MAX_MODE, INIT_MODE);
+		modeChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+							int newMode = modeChoice.getValue();
+							if (newMode != perturbationMode) {
+								switchMode(newMode);
+								perturbationMode = newMode;
+							}
+							
+						//}
+					}
+        		});
+		modeChoice.setForeground(Color.WHITE);
+		modeChoice.setMajorTickSpacing((MAX_MODE - MIN_MODE) / 8);
+		modeChoice.setPaintLabels(true);
+		add(modeChoice);
+		
+		this.freqChoice = new JSlider(JSlider.HORIZONTAL, MIN_FREQ, MAX_FREQ, INIT_FREQ);
+		freqChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+						    int newFreq = freqChoice.getValue();
+							mode.setFreq(newFreq);
+						//}
+					}
+        		});
+		freqChoice.setPaintLabels(true);
+		add(freqChoice);
+		
+		// Timer
+		this.timer = new Timer(INIT_RATE, this); // 'this' is this class as an ActionListener
+        //this.timer.start();
+	}
+	
+	public void switchMode(int m) {
+		initMode(m);
+	}
+	
+	public void rotateElements() {
+		double rotationAngle = rateChoice.getValue() * dt;
+		
+		// Element
+		element.rotate(rotationAngle);
+		// Mode
+		Blob[] blobs = mode.getBlobs();
+		for (int i = 0; i < blobs.length; i++) {
+			Blob b = blobs[i];
+			b.rotate(rotationAngle);
+		}
+	}
+	
+	public void drawSun(Graphics2D g) {
+		int radius = this.solarRadius;
+		int diameter = 2 * radius;
+		g.setColor(Color.YELLOW);
+		g.fillOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
+	}
+	
+    public void drawOrbit(Graphics2D g) {
+    	int radius = this.orbitalRadius;
+    	int diameter = 2 * radius;
+    	g.setColor(Color.WHITE);
+		g.drawOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
+	}
+    
+    public void drawElement(Graphics2D g, Element e, Color c) {
+    	int radius = e.getRadius();
+		int diameter = 2 * radius;
+		
+		int displayX = (int)e.currentX + (this.WIDTH / 2);
+		int displayY = (int)e.currentY + (this.HEIGHT / 2);
+		
+		g.setColor(c);
+		g.fillOval(displayX - radius, displayY - radius, diameter, diameter);
+	}
+    
+    public void drawMode(Graphics2D g) {
+    	Blob[] blobs = mode.getBlobs();
+    	for (int i = 0; i < blobs.length; i++) {
+    		this.drawElement(g, blobs[i], Color.BLUE);
+    	}
+	}
+	
+	public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        Graphics2D g2d = (Graphics2D) g;
+        
+        this.drawSun(g2d);
+        this.drawOrbit(g2d);
+        
+        this.drawElement(g2d, this.element, Color.GRAY);
+        this.drawMode(g2d);
+        
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		this.rotateElements();
+		
+		repaint();
+	}
+	
+	
+}

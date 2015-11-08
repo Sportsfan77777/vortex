@@ -3,16 +3,21 @@ package fluid_modes;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SpringLayout;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -27,6 +32,8 @@ public class Display extends JPanel implements ActionListener {
 	private Mode mode;
 	
 	// Constants
+	private final int greekFontSize = 18;
+	
 	private final int MIN_RATE = 1;
 	private final int MAX_RATE = 100;
 	private final int INIT_RATE = 50;
@@ -36,17 +43,19 @@ public class Display extends JPanel implements ActionListener {
 	private final int INIT_MODE = 5;
 	
 	private final int MIN_FREQ = 1;
-	private final int MAX_FREQ = 100;
+	private final int MAX_FREQ = 50;
 	private final int INIT_FREQ = 2;
 	
-	private final int KEPLER_FREQ = 16;
+	private final int MIN_KEPLER = 1;
+	private final int MAX_KEPLER = 50;
+	private final int INIT_KEPLER = 16;
 	
 	// Display Properties
 	public final int WIDTH = 600;
 	public final int HEIGHT = 600;
 	
 	private final int solarRadius = 40;
-	public final int orbitalRadius = 200;
+	public final int orbitalRadius = 175;
 	
 	// Timer
 	private Timer timer;
@@ -54,9 +63,19 @@ public class Display extends JPanel implements ActionListener {
 	// Swing Components
 	private JButton start;
 	private JButton stop;
+	
+	private JLabel rateLabel;
 	private JSlider rateChoice; // rate of updates
+	
+	private JLabel modeLabel;
 	private JSlider modeChoice; // mode of fluid
+	
+	private JLabel freqLabel;
 	private JSlider freqChoice; // frequency of perturbation
+	
+	private JLabel keplerLabel;
+	private JSlider keplerChoice; // frequency of normal fluid
+	
 	
 	public Display() {
 		// Fluid Elements
@@ -67,7 +86,7 @@ public class Display extends JPanel implements ActionListener {
 	}
 	
 	private void initElement() {
-		this.element = new Element(orbitalRadius, 0, KEPLER_FREQ, this);
+		this.element = new Element(orbitalRadius, 0, INIT_KEPLER, this);
 	}
 	
 	private void initMode(int mode_number) {
@@ -81,7 +100,12 @@ public class Display extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
         
+        // Set Layout
+        // Do this in the future?
+        
 		// Swing Components
+        // ###### START BUTTON #####
+        
         this.start = new JButton("Start");
         start.addActionListener( 
         		new ActionListener() {
@@ -91,14 +115,11 @@ public class Display extends JPanel implements ActionListener {
         		});
         add(start);
         
-        this.stop = new JButton("Stop");
-        stop.addActionListener( 
-        		new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						timer.stop();
-					}
-        		});
-        add(stop);
+        // ###### TIMER #####
+        
+        this.rateLabel = new JLabel("  Speed");
+        rateLabel.setForeground(Color.WHITE);
+        add(rateLabel);
         
 		this.rateChoice = new JSlider(JSlider.HORIZONTAL, MIN_RATE, MAX_RATE, INIT_RATE);
 		rateChoice.addChangeListener( 
@@ -111,7 +132,16 @@ public class Display extends JPanel implements ActionListener {
 						//}
 					}
         		});
+		rateChoice.setForeground(Color.WHITE);
+		rateChoice.setMajorTickSpacing((MAX_RATE - MIN_RATE) / 7);
+		rateChoice.setPaintLabels(true);
 		add(rateChoice);
+		
+		// ###### MODE #####
+		
+		this.modeLabel = new JLabel("    Mode m");
+        modeLabel.setForeground(Color.WHITE);
+        add(modeLabel);
 		
 		this.modeChoice = new JSlider(JSlider.HORIZONTAL, MIN_MODE, MAX_MODE, INIT_MODE);
 		modeChoice.addChangeListener( 
@@ -128,7 +158,28 @@ public class Display extends JPanel implements ActionListener {
 						//}
 					}
         		});
+		modeChoice.setForeground(Color.WHITE);
+		modeChoice.setMajorTickSpacing((MAX_MODE - MIN_MODE) / 6);
+		modeChoice.setPaintLabels(true);
 		add(modeChoice);
+		
+		// ###### STOP BUTTON #####
+		
+		this.stop = new JButton("Stop");
+        stop.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						timer.stop();
+					}
+        		});
+        add(stop);
+        
+        // ###### Frequency of Pertubation #####
+        
+        this.freqLabel = new JLabel("    \u03C9   ");
+        freqLabel.setFont(new Font(freqLabel.getFont().getName(), Font.PLAIN, greekFontSize));
+        freqLabel.setForeground(Color.WHITE);
+        add(freqLabel);
 		
 		this.freqChoice = new JSlider(JSlider.HORIZONTAL, MIN_FREQ, MAX_FREQ, INIT_FREQ);
 		freqChoice.addChangeListener( 
@@ -141,7 +192,33 @@ public class Display extends JPanel implements ActionListener {
 						//}
 					}
         		});
+		freqChoice.setForeground(Color.WHITE);
+		freqChoice.setMajorTickSpacing((MAX_FREQ - MIN_FREQ) / 7);
+		freqChoice.setPaintLabels(true);
 		add(freqChoice);
+		
+		// ###### Kepler Frequency #####
+		
+		this.keplerLabel = new JLabel("    \u03A9  ");
+		keplerLabel.setFont(new Font(keplerLabel.getFont().getName(), Font.PLAIN, greekFontSize));
+        keplerLabel.setForeground(Color.WHITE);
+        add(keplerLabel);
+		
+		this.keplerChoice = new JSlider(JSlider.HORIZONTAL, MIN_KEPLER, MAX_KEPLER, INIT_KEPLER);
+		keplerChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+						    int newFreq = keplerChoice.getValue();
+							element.setFrequency(newFreq);
+						//}
+					}
+        		});
+		keplerChoice.setForeground(Color.WHITE);
+		keplerChoice.setMajorTickSpacing((MAX_KEPLER - MIN_KEPLER) / 7);
+		keplerChoice.setPaintLabels(true);
+		add(keplerChoice);
 		
 		// Timer
 		this.timer = new Timer(INIT_RATE, this); // 'this' is this class as an ActionListener
@@ -196,6 +273,20 @@ public class Display extends JPanel implements ActionListener {
     		this.drawElement(g, blobs[i], Color.BLUE);
     	}
 	}
+    
+    public void drawText(Graphics2D g) {
+    	int leftMargin = 40;
+    	g.setColor(Color.ORANGE);
+    	
+    	int w = freqChoice.getValue();
+    	int m = modeChoice.getValue();
+    	int K = keplerChoice.getValue();
+    	
+    	g.drawString(String.format("\u03C9 = %d", w) , leftMargin, HEIGHT - 100);
+    	g.drawString(String.format("m = %d", m), leftMargin, HEIGHT - 80);
+    	g.drawString(String.format("\u03A9 = %d", K), leftMargin, HEIGHT - 60);
+    	g.drawString(String.format("\u03C9 - m\u03A9 = %d", w - m*K), leftMargin, HEIGHT - 30);
+    }
 	
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -208,10 +299,17 @@ public class Display extends JPanel implements ActionListener {
         this.drawElement(g2d, this.element, Color.GRAY);
         this.drawMode(g2d);
         
+        this.drawText(g2d);
+        
         Toolkit.getDefaultToolkit().sync();
     }
 
 	@Override
+	/**
+	 * Action Listener for Timer
+	 * Rotates each element at each timestep
+	 * @param ae
+	 */
 	public void actionPerformed(ActionEvent ae) {
 		this.rotateElements();
 		
