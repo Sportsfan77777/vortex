@@ -13,27 +13,27 @@ files = glob.glob("*.par")
 par_file = files[0]
 
 def store(line):
-	""" For a line 'a b', stores 'b' under 'a' in the dictionary """
-	line_sp = line.split()
+    """ For a line 'a b', stores 'b' under 'a' in the dictionary """
+    line_sp = line.split()
 
-	if len(line_sp) < 2:
-		# Empty
-		pass
-	if line_sp[0][0] == "#":
-		# Comment
-		pass
+    if len(line_sp) < 2:
+        # Empty
+        pass
+    elif line_sp[0][0] == "#":
+        # Comment
+        pass
+    else:
+        # Parse
+        name = line_sp[0]
+        entry = line_sp[1]
 
-	# Parse
-	name = line_sp[0]
-	entry = line_sp[1]
-
-	# Store
-	par[name] = entry
+        # Store
+        par[name] = entry
 
 # Read file line by line
 with open(par_file, "r") as f:
-	for line in f:
-		store(line)
+    for line in f:
+        store(line)
 
 dict_name = "params.p"
 p.dump(par, open(dict_name, "wb"))
