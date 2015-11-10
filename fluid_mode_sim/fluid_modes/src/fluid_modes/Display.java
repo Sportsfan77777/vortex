@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,6 +30,7 @@ public class Display extends JPanel implements ActionListener {
 	// Elements
 	private Element element;
 	private Mode mode;
+	private ArrayList<Element> collisions;
 	
 	// Constants (mostly for sliders)
 	private final int greekFontSize = 18;
@@ -62,6 +64,8 @@ public class Display extends JPanel implements ActionListener {
 	// Swing Components
 	private JButton start;
 	private JButton stop;
+	private JButton clear;
+	private JLabel clearLabel;
 	
 	private JLabel rateLabel;
 	private JSlider rateChoice; // rate of updates
@@ -80,6 +84,7 @@ public class Display extends JPanel implements ActionListener {
 		// Fluid Elements
 		this.initElement();
 		this.initMode(INIT_MODE);
+		this.initCollisions();
 		
 		this.initDisplay();
 	}
@@ -98,6 +103,13 @@ public class Display extends JPanel implements ActionListener {
 	private void initMode(int mode_number) {
 		double angle = 0;
 		this.mode = new Mode(mode_number, angle, INIT_FREQ, this);
+	}
+	
+	/**
+	 * initialize collisions to be empty
+	 */
+	private void initCollisions() {
+		this.collisions = new ArrayList<Element>();
 	}
 	
 	/**
@@ -163,6 +175,7 @@ public class Display extends JPanel implements ActionListener {
 							if (newMode != perturbationMode) {
 								switchMode(newMode);
 								perturbationMode = newMode;
+								repaint();
 							}
 							
 						//}
@@ -199,6 +212,7 @@ public class Display extends JPanel implements ActionListener {
 							// only change rate if the slider is fixed
 						    int newFreq = freqChoice.getValue();
 							mode.setFrequency(newFreq);
+							repaint();
 						//}
 					}
         		});
@@ -222,6 +236,7 @@ public class Display extends JPanel implements ActionListener {
 							// only change rate if the slider is fixed
 						    int newFreq = keplerChoice.getValue();
 							element.setFrequency(newFreq);
+							repaint();
 						//}
 					}
         		});
@@ -229,6 +244,23 @@ public class Display extends JPanel implements ActionListener {
 		keplerChoice.setMajorTickSpacing((MAX_KEPLER - MIN_KEPLER) / 7);
 		keplerChoice.setPaintLabels(true);
 		add(keplerChoice);
+		
+		// Remove Collisions
+		
+		this.clear = new JButton("Clear");
+        clear.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						collisions.clear();
+						repaint();
+					}
+        		});
+        String empty = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+        this.clearLabel = new JLabel(empty + empty + empty + empty + empty);
+		clearLabel.setFont(new Font(clearLabel.getFont().getName(), Font.PLAIN, greekFontSize));
+        clearLabel.setForeground(Color.WHITE);
+        add(clearLabel);
+        add(clear);
 		
 		// Timer
 		this.timer = new Timer(INIT_RATE, this); // 'this' is this class as an ActionListener
@@ -241,6 +273,24 @@ public class Display extends JPanel implements ActionListener {
 	 */
 	public void switchMode(int m) {
 		initMode(m);
+	}
+	
+	/**
+	 * checks for encounters between perturbation and fluid element
+	 */
+	public void checkCollisions() {
+		Blob[] blobs = mode.getBlobs();
+		for (int i = 0; i < blobs.length; i++) {
+			Blob b = blobs[i];
+			int collide = element.checkCollision(b);
+			if (collide != -1) {
+				double x = element.averageX(b);
+				double y = element.averageY(b);
+				int freq = 0; // does not rotate
+				int radius = collide; 
+				collisions.add(new Collision(x, y, freq, this, radius));
+			}
+		}
 	}
 	
 	/**
@@ -293,6 +343,12 @@ public class Display extends JPanel implements ActionListener {
     	}
 	}
     
+    public void drawCollisions(Graphics2D g) {
+    	for (int i = 0; i < collisions.size(); i++) {
+    		this.drawElement(g, collisions.get(i));
+    	}
+	}
+    
     public void drawText(Graphics2D g) {
     	int leftMargin = 40;
     	g.setColor(Color.ORANGE);
@@ -321,6 +377,8 @@ public class Display extends JPanel implements ActionListener {
         this.drawSun(g2d);
         this.drawOrbit(g2d);
         
+        this.drawCollisions(g2d);
+        
         this.drawElement(g2d, this.element);
         this.drawMode(g2d);
         
@@ -337,6 +395,7 @@ public class Display extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent ae) {
 		this.rotateElements();
+		this.checkCollisions();
 		
 		repaint();
 	}
