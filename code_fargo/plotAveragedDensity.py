@@ -71,17 +71,6 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
-# Search for maximum frame
-density_files = glob.glob("gasdens*.dat")
-max_frame = 0
-for d_f in density_files:
-    name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
-    frame_number = int(name[7:]) # just 999
-    if frame_number > max_frame:
-        max_frame = frame_number
-
-num_frames = max_frame # Calculate this instead using glob search?
-
 ##### PLOTTING #####
 
 # Make Directory
@@ -145,9 +134,19 @@ def make_plot(frame):
 ##### Plot One File or All Files #####
 
 if len(sys.argv) > 2:
-    frame_number = sys.argv[2]
+    frame_number = int(sys.argv[2])
     make_plot(frame_number)
 else:
+    # Search for maximum frame
+    density_files = glob.glob("gasdens*.dat")
+    max_frame = 0
+    for d_f in density_files:
+        name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
+        frame_number = int(name[7:]) # just 999
+        if frame_number > max_frame:
+            max_frame = frame_number
+    num_frames = max_frame # Calculate this instead using glob search?
+
     for i in range(num_frames):
         make_plot(i)
 
