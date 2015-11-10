@@ -101,7 +101,8 @@ def make_plot(frame):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     def choose_axis(i, axis):
         # Orbit Number
-        orbit = int(round(fargo_par["Ninterm"] * fargo_par["DT"] / (2 * np.pi), 0))
+        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+        orbit = int(round(time / (2 * np.pi), 0))
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
