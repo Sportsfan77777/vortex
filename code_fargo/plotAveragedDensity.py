@@ -14,6 +14,7 @@ import os
 import subprocess
 import glob
 import pickle
+from multiprocessing import Pool
 
 import math
 import numpy as np
@@ -29,7 +30,7 @@ from pylab import fromfile
 ### Movie Commands ###
 def make_movies():
     # Movie Parameters
-    fps = 40
+    fps = 5
 
     path = "averagedDensity/avg_density_%03d.png"
     output = "averagedDensity/averagedDensity.mov"
@@ -92,7 +93,7 @@ def make_plot(frame):
     def choose_axis(i, axis):
         # Orbit Number
         time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0))
+        orbit = int(round(time / (2 * np.pi), 0)) * i
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
@@ -145,10 +146,14 @@ else:
         frame_number = int(name[7:]) # just 999
         if frame_number > max_frame:
             max_frame = frame_number
-    num_frames = max_frame # Calculate this instead using glob search?
+    num_frames = max_frame + 1
 
-    for i in range(num_frames):
-        make_plot(i)
+    #for i in range(num_frames):
+    #    make_plot(i)
+
+    p = Pool(8)
+    p.map(make_plot, range(num_frames))
+    p.terminate()
 
     #### Make Movies ####
     make_movies()
