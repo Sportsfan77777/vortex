@@ -1,8 +1,14 @@
 """
 plot azimuthally averaged density
 then, makes movies
+
+Usage:
+python plotAveragedDensity.py frame_number <== plot one frame
+python plotAveragedDensity.py <== plot all frames and make a movie
+
 """
 
+import sys
 import os
 import subprocess
 
@@ -17,14 +23,15 @@ from matplotlib import pyplot as plot
 from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
-# Plot Parameters
-rcParams['figure.figsize'] = 5, 10
-my_dpi = 100
+### Get FARGO Parameters ###
+# Create param file if it doesn't already exist
+param_fn = "params.p"
+if not os.path.exists(param_fn):
+    command = "python pickleParameters.py"
+    split_command = command.split()
+    subprocess.Popen(split_command)
+fargo_par = pickle.load(open(params_fn, "rb"))
 
-fontsize = 14
-linewidth = 4
-
-# Get FARGO Parameters
 num_frames = 390 # Calculate this instead using glob search?
 
 num_rad = np.loadtxt("dims.dat")[-2]
@@ -33,8 +40,10 @@ num_theta = np.loadtxt("dims.dat")[-1]
 rad = np.loadtxt("used_rad.dat")[:-1]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density = 6.366 * 10**(-4)
-scale_height = 0.06 # Find this in .par file?
+surface_density = float(fargo_par["Sigma0"])
+scale_height = float(fargo_par["AspectRatio"])
+
+##### PLOTTING #####
 
 # Make Directory
 directory = "averagedDensity"
@@ -43,11 +52,18 @@ try:
 except:
     print "Directory Already Exists"
 
+# Plot Parameters
+rcParams['figure.figsize'] = 5, 10
+my_dpi = 100
+
+fontsize = 14
+linewidth = 4
+
 def make_plot(frame):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     def choose_axis(i, axis):
         # Orbit Number
-        orbit = 2 * i # This could be different for different parameters!!!!!!!
+        orbit = int(round(fargo_par["Ninterm"] * fargo_par["DT"] / (2 * np.pi), 0))
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
@@ -86,26 +102,31 @@ def make_plot(frame):
     choose_axis(i, "normal")
     choose_axis(i, "zoom")
 
-# Plot Each File
-for i in range(num_frames):
-    make_plot(i)
+##### Plot One File or All Files #####
 
-#### Make Movies ####
-# Movie Parameters
-fps = 40
+if len(sys.argv) > 2:
+    frame_number = sys.argv[2]
+    make_plot(frame_number)
+else:
+    for i in range(num_frames):
+        make_plot(i)
 
-path = "averagedDensity/avg_density_%03d.png"
-output = "averagedDensity/averagedDensity.mov"
+    #### Make Movies ####
+    # Movie Parameters
+    fps = 40
 
-zoom_path = "averagedDensity/zoom_avg_density_%03d.png"
-zoom_output = "averagedDensity/averagedDensity_zoom.mov"
+    path = "averagedDensity/avg_density_%03d.png"
+    output = "averagedDensity/averagedDensity.mov"
 
-# Movie Command
-command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-split_command = command.split()
-subprocess.Popen(split_command)
+    zoom_path = "averagedDensity/zoom_avg_density_%03d.png"
+    zoom_output = "averagedDensity/averagedDensity_zoom.mov"
 
-command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-split_command = command.split()
-subprocess.Popen(split_command)
+    # Movie Command
+    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
+    split_command = command.split()
+    subprocess.Popen(split_command)
+
+    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
+    split_command = command.split()
+    subprocess.Popen(split_command)
 
