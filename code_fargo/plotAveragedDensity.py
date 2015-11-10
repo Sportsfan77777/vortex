@@ -133,8 +133,8 @@ def make_plot(frame):
 
 ##### Plot One File or All Files #####
 
-if len(sys.argv) > 2:
-    frame_number = int(sys.argv[2])
+if len(sys.argv) > 1:
+    frame_number = int(sys.argv[1])
     make_plot(frame_number)
 else:
     # Search for maximum frame
