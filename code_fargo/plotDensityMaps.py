@@ -1,14 +1,21 @@
 """
 plot 2-D density maps
+
+python plotDensityMaps.py
+python plotDensityMaps.py frame_number
+python plotDensityMaps.py -m
 """
 
 import sys
 import os
 import subprocess
 import pickle
+import glob
+from multiprocessing import Pool
 
 import math
 import numpy as np
+
 
 import matplotlib
 matplotlib.use('Agg')
@@ -25,7 +32,7 @@ save_directory = "gasDensityMaps"
 ### Movie Commands ###
 def make_movies():
     # Movie Parameters
-    fps = 40
+    fps = 5
 
     path = save_directory + "/densityMap_%03d.png"
     output = save_directory + "/densityMap.mov"
@@ -42,6 +49,11 @@ def make_movies():
     split_command = command.split()
     subprocess.Popen(split_command)
 
+# Make only movies and then return
+if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
+    make_movies()
+    # Terminate
+    quit()
 
 
 ### Get FARGO Parameters ###
@@ -75,6 +87,7 @@ cmap = "RdYlBu_r"
 clim = [0, 2]
 
 fontsize = 14
+my_dpi = 100
 
 
 def make_plot(frame):
@@ -82,7 +95,7 @@ def make_plot(frame):
     def choose_axis(i, axis):
         # Orbit Number
         time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0))
+        orbit = int(round(time / (2 * np.pi), 0)) * i
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
@@ -93,11 +106,13 @@ def make_plot(frame):
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(-np.pi, np.pi)
+            plot.ylim(0, 2 * np.pi)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
+            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
+            plot.ylim(0, 2 * np.pi)
             xlabel = "Radius"
 
         # Data
@@ -105,7 +120,7 @@ def make_plot(frame):
         normalized_density = density / surface_density_zero
 
         ### Plot ###
-        result = ax.pcolormesh(rad, theta, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
@@ -138,10 +153,14 @@ else:
         frame_number = int(name[7:]) # just 999
         if frame_number > max_frame:
             max_frame = frame_number
-    num_frames = max_frame # Calculate this instead using glob search?
+    num_frames = max_frame + 1
 
-    for i in range(num_frames):
-        make_plot(i)
+    #for i in range(num_frames):
+    #    make_plot(i)
+
+    p = Pool(8)
+    p.map(make_plot, range(num_frames))
+    p.terminate()
 
     #### Make Movies ####
     make_movies()
