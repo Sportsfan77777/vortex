@@ -77,6 +77,50 @@ public class Element {
 	}
 	
 	/**
+	 * return average x-cor between this element and another
+	 * @param e
+	 * @return
+	 */
+	public double averageX(Element e) {
+		return (this.currentX + e.currentX) / 2;
+	}
+	
+	/**
+	 * return average x-cor between this element and another
+	 * @param e
+	 * @return
+	 */
+	public double averageY(Element e) {
+		return (this.currentY + e.currentY) / 2;
+	}
+	
+	/**
+	 * check for collisions with another element
+	 * returns a score for the collision (the radius of the collsion marker)
+	 * if there is no collision, return -1
+	 * @param e another element
+	 */
+	public int checkCollision(Element e) {
+		int score = -1;
+		
+		double dx = this.currentX - e.currentX;
+		double dy = this.currentY - e.currentY;
+		
+		double dist_sq = Math.pow(dx, 2) + Math.pow(dy, 2);
+		double dist = Math.pow(dist_sq, 0.5);
+		
+		if (dist < this.radius + e.getRadius()) {
+			// There is a collision
+			int max_drawing_radius = Math.min(this.radius, e.getRadius()) ;
+			double scale_factor = Math.pow(dist + 1, -0.3);
+			
+			score = (int)(scale_factor * max_drawing_radius);
+		}
+		
+		return score;
+	}
+	
+	/**
 	 * rotate element by frequency * time
 	 * @param time
 	 */
