@@ -60,7 +60,7 @@ if not os.path.exists(param_fn):
     command = "python pickleParameters.py"
     split_command = command.split()
     subprocess.Popen(split_command)
-fargo_par = pickle.load(open(params_fn, "rb"))
+fargo_par = pickle.load(open(param_fn, "rb"))
 
 num_rad = np.loadtxt("dims.dat")[-2]
 num_theta = np.loadtxt("dims.dat")[-1]
