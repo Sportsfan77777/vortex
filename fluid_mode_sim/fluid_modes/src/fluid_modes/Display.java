@@ -8,6 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -26,6 +29,7 @@ public class Display extends JPanel implements ActionListener {
 	
 	private double dt = 0.01;
 	private int perturbationMode;
+	private double freqOffset = 0;
 	
 	// Elements
 	private Element element;
@@ -36,7 +40,7 @@ public class Display extends JPanel implements ActionListener {
 	private final int greekFontSize = 18;
 	
 	private final int MIN_RATE = 1;
-	private final int MAX_RATE = 100;
+	private final int MAX_RATE = 300;
 	private final int INIT_RATE = 50;
 	
 	private final int MIN_MODE = 1;
@@ -64,8 +68,11 @@ public class Display extends JPanel implements ActionListener {
 	// Swing Components
 	private JButton start;
 	private JButton stop;
-	private JButton clear;
+	private JButton joltFreqUP;
+	private JButton joltFreqDOWN;
 	private JLabel clearLabel;
+	private JButton clear;
+	
 	
 	private JLabel rateLabel;
 	private JSlider rateChoice; // rate of updates
@@ -211,6 +218,7 @@ public class Display extends JPanel implements ActionListener {
 						//if (!modeChoice.getValueIsAdjusting()) {
 							// only change rate if the slider is fixed
 						    int newFreq = freqChoice.getValue();
+						    freqOffset = 0; // re-set offset to zero
 							mode.setFrequency(newFreq);
 							repaint();
 						//}
@@ -245,6 +253,30 @@ public class Display extends JPanel implements ActionListener {
 		keplerChoice.setPaintLabels(true);
 		add(keplerChoice);
 		
+		// BUTTONS to Make Small Jolts to Freq
+		
+		this.joltFreqUP = new JButton("\u03C9 += 0.05");
+        joltFreqUP.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						freqOffset += 0.05;
+						element.setFrequency(keplerChoice.getValue() + freqOffset);
+						repaint();
+					}
+        		});
+        add(joltFreqUP);
+        
+        this.joltFreqDOWN = new JButton("\u03C9 -= 0.05");
+        joltFreqDOWN.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						freqOffset -= 0.05;
+						element.setFrequency(keplerChoice.getValue() + freqOffset);
+						repaint();
+					}
+        		});
+        add(joltFreqDOWN);
+		
 		// Remove Collisions
 		
 		this.clear = new JButton("Clear");
@@ -255,7 +287,7 @@ public class Display extends JPanel implements ActionListener {
 						repaint();
 					}
         		});
-        String empty = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+        String empty = "\t\t\t\t\t\t\t\t\t";
         this.clearLabel = new JLabel(empty + empty + empty + empty + empty);
 		clearLabel.setFont(new Font(clearLabel.getFont().getName(), Font.PLAIN, greekFontSize));
         clearLabel.setForeground(Color.WHITE);
@@ -353,14 +385,14 @@ public class Display extends JPanel implements ActionListener {
     	int leftMargin = 40;
     	g.setColor(Color.ORANGE);
     	
-    	int w = freqChoice.getValue();
+    	double w = freqChoice.getValue() + this.freqOffset;
     	int m = modeChoice.getValue();
     	int K = keplerChoice.getValue();
     	
-    	g.drawString(String.format("\u03C9 = %d", w) , leftMargin, HEIGHT - 100);
+    	g.drawString(String.format("\u03C9 = %.2f", w) , leftMargin, HEIGHT - 100);
     	g.drawString(String.format("m = %d", m), leftMargin, HEIGHT - 80);
     	g.drawString(String.format("\u03A9 = %d", K), leftMargin, HEIGHT - 60);
-    	g.drawString(String.format("\u0394 \u03C9 = \u03C9 - m\u03A9 = %d", w - m*K), leftMargin, HEIGHT - 30);
+    	g.drawString(String.format("\u0394 \u03C9 = \u03C9 - m\u03A9 = %.2f", w - m*K), leftMargin, HEIGHT - 30);
     }
 	
     /**
@@ -386,8 +418,7 @@ public class Display extends JPanel implements ActionListener {
         
         Toolkit.getDefaultToolkit().sync();
     }
-
-	@Override
+	
 	/**
 	 * Action Listener for Timer
 	 * Rotates each element at each timestep

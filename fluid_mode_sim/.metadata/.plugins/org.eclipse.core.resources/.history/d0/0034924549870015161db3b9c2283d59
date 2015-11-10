@@ -1,0 +1,400 @@
+package fluid_modes;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+/**
+ * GUI for fluid modes
+ *
+ */
+public class Display extends JPanel implements ActionListener {
+	
+	private double dt = 0.01;
+	private int perturbationMode;
+	
+	// Elements
+	private Element element;
+	private Mode mode;
+	private ArrayList<Element> collisions;
+	
+	// Constants (mostly for sliders)
+	private final int greekFontSize = 18;
+	
+	private final int MIN_RATE = 1;
+	private final int MAX_RATE = 100;
+	private final int INIT_RATE = 50;
+	
+	private final int MIN_MODE = 1;
+	private final int MAX_MODE = 40;
+	private final int INIT_MODE = 5;
+	
+	private final int MIN_FREQ = 1;
+	private final int MAX_FREQ = 50;
+	private final int INIT_FREQ = 2;
+	
+	private final int MIN_KEPLER = 1;
+	private final int MAX_KEPLER = 50;
+	private final int INIT_KEPLER = 16;
+	
+	// Display Properties
+	public final int WIDTH = 600;
+	public final int HEIGHT = 600;
+	
+	private final int solarRadius = 40;
+	public final int orbitalRadius = 175;
+	
+	// Timer
+	private Timer timer;
+	
+	// Swing Components
+	private JButton start;
+	private JButton stop;
+	private JButton clear;
+	private JLabel clearLabel;
+	
+	private JLabel rateLabel;
+	private JSlider rateChoice; // rate of updates
+	
+	private JLabel modeLabel;
+	private JSlider modeChoice; // mode of fluid
+	
+	private JLabel freqLabel;
+	private JSlider freqChoice; // frequency of perturbation
+	
+	private JLabel keplerLabel;
+	private JSlider keplerChoice; // frequency of normal fluid
+	
+	
+	public Display() {
+		// Fluid Elements
+		this.initElement();
+		this.initMode(INIT_MODE);
+		this.initCollisions();
+		
+		this.initDisplay();
+	}
+	
+	/**
+	 * initialize a fluid element
+	 */
+	private void initElement() {
+		this.element = new Element(orbitalRadius, 0, INIT_KEPLER, this);
+	}
+	
+	/**
+	 * initialize a pertubation mode
+	 * @param mode_number the mode to be initialized
+	 */
+	private void initMode(int mode_number) {
+		double angle = 0;
+		this.mode = new Mode(mode_number, angle, INIT_FREQ, this);
+	}
+	
+	/**
+	 * initialize collisions to be empty
+	 */
+	private void initCollisions() {
+		this.collisions = new ArrayList<Element>();
+	}
+	
+	/**
+	 * set GUI appearance
+	 * set up JComponents
+	 */
+	private void initDisplay() {
+		// Display Properties
+		setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setDoubleBuffered(true);
+        
+        // Set Layout
+        // Do this in the future?
+        
+		// Swing Components
+        // ###### START BUTTON #####
+        
+        this.start = new JButton("Start");
+        start.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						timer.start();
+					}
+        		});
+        add(start);
+        
+        // ###### TIMER #####
+        
+        this.rateLabel = new JLabel("  Speed");
+        rateLabel.setForeground(Color.WHITE);
+        add(rateLabel);
+        
+		this.rateChoice = new JSlider(JSlider.HORIZONTAL, MIN_RATE, MAX_RATE, INIT_RATE);
+		rateChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!rateChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+							int new_rate = rateChoice.getValue();
+							timer.setDelay(new_rate);
+						//}
+					}
+        		});
+		rateChoice.setForeground(Color.WHITE);
+		rateChoice.setMajorTickSpacing((MAX_RATE - MIN_RATE) / 7);
+		rateChoice.setPaintLabels(true);
+		add(rateChoice);
+		
+		// ###### MODE #####
+		
+		this.modeLabel = new JLabel("    Mode m");
+        modeLabel.setForeground(Color.WHITE);
+        add(modeLabel);
+		
+		this.modeChoice = new JSlider(JSlider.HORIZONTAL, MIN_MODE, MAX_MODE, INIT_MODE);
+		modeChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+							int newMode = modeChoice.getValue();
+							if (newMode != perturbationMode) {
+								switchMode(newMode);
+								perturbationMode = newMode;
+							}
+							
+						//}
+					}
+        		});
+		modeChoice.setForeground(Color.WHITE);
+		modeChoice.setMajorTickSpacing((MAX_MODE - MIN_MODE) / 6);
+		modeChoice.setPaintLabels(true);
+		add(modeChoice);
+		
+		// ###### STOP BUTTON #####
+		
+		this.stop = new JButton("Stop");
+        stop.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						timer.stop();
+					}
+        		});
+        add(stop);
+        
+        // ###### Frequency of Pertubation #####
+        
+        this.freqLabel = new JLabel("    \u03C9   ");
+        freqLabel.setFont(new Font(freqLabel.getFont().getName(), Font.PLAIN, greekFontSize));
+        freqLabel.setForeground(Color.WHITE);
+        add(freqLabel);
+		
+		this.freqChoice = new JSlider(JSlider.HORIZONTAL, MIN_FREQ, MAX_FREQ, INIT_FREQ);
+		freqChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+						    int newFreq = freqChoice.getValue();
+							mode.setFrequency(newFreq);
+						//}
+					}
+        		});
+		freqChoice.setForeground(Color.WHITE);
+		freqChoice.setMajorTickSpacing((MAX_FREQ - MIN_FREQ) / 7);
+		freqChoice.setPaintLabels(true);
+		add(freqChoice);
+		
+		// ###### Kepler Frequency #####
+		
+		this.keplerLabel = new JLabel("    \u03A9  ");
+		keplerLabel.setFont(new Font(keplerLabel.getFont().getName(), Font.PLAIN, greekFontSize));
+        keplerLabel.setForeground(Color.WHITE);
+        add(keplerLabel);
+		
+		this.keplerChoice = new JSlider(JSlider.HORIZONTAL, MIN_KEPLER, MAX_KEPLER, INIT_KEPLER);
+		keplerChoice.addChangeListener( 
+        		new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						//if (!modeChoice.getValueIsAdjusting()) {
+							// only change rate if the slider is fixed
+						    int newFreq = keplerChoice.getValue();
+							element.setFrequency(newFreq);
+						//}
+					}
+        		});
+		keplerChoice.setForeground(Color.WHITE);
+		keplerChoice.setMajorTickSpacing((MAX_KEPLER - MIN_KEPLER) / 7);
+		keplerChoice.setPaintLabels(true);
+		add(keplerChoice);
+		
+		// Remove Collisions
+		
+		this.clear = new JButton("Clear");
+        start.addActionListener( 
+        		new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						collisions.clear();
+					}
+        		});
+        String empty = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+        this.clearLabel = new JLabel(empty + empty + empty + empty + empty);
+		clearLabel.setFont(new Font(clearLabel.getFont().getName(), Font.PLAIN, greekFontSize));
+        clearLabel.setForeground(Color.WHITE);
+        add(clearLabel);
+        add(clear);
+		
+		// Timer
+		this.timer = new Timer(INIT_RATE, this); // 'this' is this class as an ActionListener
+        //this.timer.start();
+	}
+	
+	/**
+	 * switch current mode (triggered by slider)
+	 * @param m
+	 */
+	public void switchMode(int m) {
+		initMode(m);
+	}
+	
+	/**
+	 * checks for encounters between perturbation and fluid element
+	 */
+	public void checkCollisions() {
+		Blob[] blobs = mode.getBlobs();
+		for (int i = 0; i < blobs.length; i++) {
+			Blob b = blobs[i];
+			int collide = element.checkCollision(b);
+			if (collide != -1) {
+				double x = element.averageX(b);
+				double y = element.averageY(b);
+				int freq = 0; // does not rotate
+				int radius = collide; 
+				collisions.add(new Collision(x, y, freq, this, radius));
+			}
+		}
+	}
+	
+	/**
+	 * rotate the elements (triggered by timer)
+	 */
+	public void rotateElements() {
+		double rotationAngle = rateChoice.getValue() * dt;
+		
+		// Element
+		element.rotate(rotationAngle);
+		// Mode
+		Blob[] blobs = mode.getBlobs();
+		for (int i = 0; i < blobs.length; i++) {
+			Blob b = blobs[i];
+			b.rotate(rotationAngle);
+		}
+	}
+	
+	// #### DRAW WITH GRAPHICS OBJECT ####
+	
+	public void drawSun(Graphics2D g) {
+		int radius = this.solarRadius;
+		int diameter = 2 * radius;
+		g.setColor(Color.YELLOW);
+		g.fillOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
+	}
+	
+    public void drawOrbit(Graphics2D g) {
+    	int radius = this.orbitalRadius;
+    	int diameter = 2 * radius;
+    	g.setColor(Color.WHITE);
+		g.drawOval(WIDTH / 2 - radius, HEIGHT / 2 - radius, diameter, diameter);
+	}
+    
+    public void drawElement(Graphics2D g, Element e) {
+    	int radius = e.getRadius();
+		int diameter = 2 * radius;
+		
+		int displayX = (int)e.currentX + (this.WIDTH / 2);
+		int displayY = (int)e.currentY + (this.HEIGHT / 2);
+		
+		g.setColor(e.getColor());
+		g.fillOval(displayX - radius, displayY - radius, diameter, diameter);
+	}
+    
+    public void drawMode(Graphics2D g) {
+    	Blob[] blobs = mode.getBlobs();
+    	for (int i = 0; i < blobs.length; i++) {
+    		this.drawElement(g, blobs[i]);
+    	}
+	}
+    
+    public void drawCollisions(Graphics2D g) {
+    	for (int i = 0; i < collisions.size(); i++) {
+    		this.drawElement(g, collisions.get(i));
+    	}
+	}
+    
+    public void drawText(Graphics2D g) {
+    	int leftMargin = 40;
+    	g.setColor(Color.ORANGE);
+    	
+    	int w = freqChoice.getValue();
+    	int m = modeChoice.getValue();
+    	int K = keplerChoice.getValue();
+    	
+    	g.drawString(String.format("\u03C9 = %d", w) , leftMargin, HEIGHT - 100);
+    	g.drawString(String.format("m = %d", m), leftMargin, HEIGHT - 80);
+    	g.drawString(String.format("\u03A9 = %d", K), leftMargin, HEIGHT - 60);
+    	g.drawString(String.format("\u0394 \u03C9 = \u03C9 - m\u03A9 = %d", w - m*K), leftMargin, HEIGHT - 30);
+    }
+	
+    /**
+     * Draws things (called each timestep)
+     * includes Sun, Orbit, Fluid Element, Fluid Mode,
+     * and Text showing values of parameters
+     * @param g
+     */
+	public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        Graphics2D g2d = (Graphics2D) g;
+        
+        this.drawSun(g2d);
+        this.drawOrbit(g2d);
+        
+        this.drawCollisions(g2d);
+        
+        this.drawElement(g2d, this.element);
+        this.drawMode(g2d);
+        
+        this.drawText(g2d);
+        
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+	@Override
+	/**
+	 * Action Listener for Timer
+	 * Rotates each element at each timestep
+	 * @param ae
+	 */
+	public void actionPerformed(ActionEvent ae) {
+		this.rotateElements();
+		this.checkCollisions();
+		
+		repaint();
+	}
+	
+	
+}

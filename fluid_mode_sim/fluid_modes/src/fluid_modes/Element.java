@@ -109,7 +109,9 @@ public class Element {
 		double dist_sq = Math.pow(dx, 2) + Math.pow(dy, 2);
 		double dist = Math.pow(dist_sq, 0.5);
 		
-		if (dist < this.radius + e.getRadius()) {
+		double max_dist = (this.radius + e.getRadius()) / 3;
+		
+		if (dist < max_dist) {
 			// There is a collision
 			int max_drawing_radius = Math.min(this.radius, e.getRadius()) ;
 			double scale_factor = Math.pow(dist + 1, -0.3);
