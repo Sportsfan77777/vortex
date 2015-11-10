@@ -4,6 +4,7 @@ then, makes movies
 
 Usage:
 python plotAveragedDensity.py frame_number <== plot one frame
+python plotAveragedDensity.py -m <== make a movie instead of plots (plots already exist)
 python plotAveragedDensity.py <== plot all frames and make a movie
 
 """
@@ -11,6 +12,7 @@ python plotAveragedDensity.py <== plot all frames and make a movie
 import sys
 import os
 import subprocess
+import glob
 
 import math
 import numpy as np
@@ -23,6 +25,33 @@ from matplotlib import pyplot as plot
 from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
+### Movie Commands ###
+def make_movies():
+    # Movie Parameters
+    fps = 40
+
+    path = "averagedDensity/avg_density_%03d.png"
+    output = "averagedDensity/averagedDensity.mov"
+
+    zoom_path = "averagedDensity/zoom_avg_density_%03d.png"
+    zoom_output = "averagedDensity/averagedDensity_zoom.mov"
+
+    # Movie Command
+    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
+    split_command = command.split()
+    subprocess.Popen(split_command)
+
+    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
+    split_command = command.split()
+    subprocess.Popen(split_command)
+
+# Make only movies and then return
+if (len(sys.argv) > 2) and (sys.argv[2] == "-m"):
+    make_movies()
+    # Terminate
+    quit()
+
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -32,8 +61,6 @@ if not os.path.exists(param_fn):
     subprocess.Popen(split_command)
 fargo_par = pickle.load(open(params_fn, "rb"))
 
-num_frames = 390 # Calculate this instead using glob search?
-
 num_rad = np.loadtxt("dims.dat")[-2]
 num_theta = np.loadtxt("dims.dat")[-1]
 
@@ -42,6 +69,17 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
+
+# Search for maximum frame
+density_files = glob.glob("gasdens*.dat")
+max_frame = 0
+for d_f in density_files:
+    name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
+    frame_number = int(d_f[7:]) # just 999
+    if frame_number > max_frame:
+        max_frame = frame_number
+
+num_frames = max_frame # Calculate this instead using glob search?
 
 ##### PLOTTING #####
 
@@ -112,21 +150,5 @@ else:
         make_plot(i)
 
     #### Make Movies ####
-    # Movie Parameters
-    fps = 40
-
-    path = "averagedDensity/avg_density_%03d.png"
-    output = "averagedDensity/averagedDensity.mov"
-
-    zoom_path = "averagedDensity/zoom_avg_density_%03d.png"
-    zoom_output = "averagedDensity/averagedDensity_zoom.mov"
-
-    # Movie Command
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
+    make_movies()
 
