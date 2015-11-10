@@ -47,7 +47,7 @@ def make_movies():
     subprocess.Popen(split_command)
 
 # Make only movies and then return
-if (len(sys.argv) > 2) and (sys.argv[2] == "-m"):
+if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
     make_movies()
     # Terminate
     quit()
