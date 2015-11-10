@@ -1,0 +1,150 @@
+"""
+plot 2-D density maps
+"""
+
+import sys
+import os
+import subprocess
+import pickle
+
+import math
+import numpy as np
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import rcParams as rc
+from matplotlib import pyplot as plot
+
+from pylab import rcParams
+from pylab import fromfile
+
+
+save_directory = "gasDensityMaps"
+
+
+### Movie Commands ###
+def make_movies():
+    # Movie Parameters
+    fps = 40
+
+    path = save_directory + "/densityMap_%03d.png"
+    output = save_directory + "/densityMap.mov"
+
+    zoom_path = save_directory + "/zoom_densityMap_%03d.png"
+    zoom_output = save_directory + "/densityMap_zoom.mov"
+
+    # Movie Command
+    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
+    split_command = command.split()
+    subprocess.Popen(split_command)
+
+    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
+    split_command = command.split()
+    subprocess.Popen(split_command)
+
+
+
+### Get FARGO Parameters ###
+# Create param file if it doesn't already exist
+param_fn = "params.p"
+if not os.path.exists(param_fn):
+    command = "python pickleParameters.py"
+    split_command = command.split()
+    subprocess.Popen(split_command)
+fargo_par = pickle.load(open(param_fn, "rb"))
+
+num_rad = np.loadtxt("dims.dat")[-2]
+num_theta = np.loadtxt("dims.dat")[-1]
+
+rad = np.loadtxt("used_rad.dat")[:-1]
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+surface_density_zero = float(fargo_par["Sigma0"])
+scale_height = float(fargo_par["AspectRatio"])
+
+##### PLOTTING #####
+
+# Make Directory
+try:
+    os.mkdir(save_directory)
+except:
+    print "Directory Already Exists"
+
+# Plot Parameters
+cmap = "RdYlBu_r"
+clim = [0, 2]
+
+fontsize = 14
+
+
+def make_plot(frame):
+    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
+    def choose_axis(i, axis):
+        # Orbit Number
+        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+        orbit = int(round(time / (2 * np.pi), 0))
+
+        # Set up figure
+        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+        ax = fig.add_subplot(111)
+
+        # Axis
+        if axis == "zoom":
+            x = (rad - 1) / scale_height
+            prefix = "zoom_"
+            plot.xlim(0, 40) # to match the ApJL paper
+            plot.ylim(-np.pi, np.pi)
+            xlabel = r"($r - r_p$) $/$ $h$"
+        else:
+            x = rad
+            prefix = ""
+            xlabel = "Radius"
+
+        # Data
+        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+        normalized_density = density / surface_density_zero
+
+        ### Plot ###
+        result = ax.pcolormesh(rad, theta, np.transpose(normalized_density), cmap = cmap)
+        fig.colorbar(result)
+        result.set_clim(clim[0], clim[1])
+
+        # Annotate
+        plot.xlabel(xlabel, fontsize = fontsize)
+        plot.ylabel(r"$\phi$", fontsize = fontsize)
+        plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+
+        # Save and Close
+        plot.savefig("%s/%sdensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
+        plot.close(fig) # Close Figure (to avoid too many figures)
+
+    i = frame
+    choose_axis(i, "normal")
+    choose_axis(i, "zoom")
+
+
+##### Plot One File or All Files #####
+
+if len(sys.argv) > 1:
+    frame_number = int(sys.argv[1])
+    make_plot(frame_number)
+else:
+    # Search for maximum frame
+    density_files = glob.glob("gasdens*.dat")
+    max_frame = 0
+    for d_f in density_files:
+        name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
+        frame_number = int(name[7:]) # just 999
+        if frame_number > max_frame:
+            max_frame = frame_number
+    num_frames = max_frame # Calculate this instead using glob search?
+
+    for i in range(num_frames):
+        make_plot(i)
+
+    #### Make Movies ####
+    make_movies()
+
+
+
