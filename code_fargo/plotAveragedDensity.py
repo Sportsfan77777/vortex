@@ -76,7 +76,7 @@ density_files = glob.glob("gasdens*.dat")
 max_frame = 0
 for d_f in density_files:
     name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
-    frame_number = int(d_f[7:]) # just 999
+    frame_number = int(name[7:]) # just 999
     if frame_number > max_frame:
         max_frame = frame_number
 
