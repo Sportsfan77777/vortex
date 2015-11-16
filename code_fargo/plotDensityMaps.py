@@ -158,7 +158,7 @@ else:
     #for i in range(num_frames):
     #    make_plot(i)
 
-    p = Pool(8)
+    p = Pool() # default number of processes is multiprocessing.cpu_count()
     p.map(make_plot, range(num_frames))
     p.terminate()
 
