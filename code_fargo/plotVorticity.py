@@ -1,5 +1,5 @@
 """
-plot 2-D density maps
+plot 2-D vorticity maps (really vortensity = vorticity / density)
 
 python plotVorticity.py
 python plotVorticity.py frame_number
@@ -54,6 +54,36 @@ surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
 
+# Curl function
+def curl(v_rad, v_theta, rad, theta):
+    """ z-component of the curl (because this is a 2-D simulation)"""
+    ### Start Differentials ###
+    # d_r
+    rad_shift = np.roll(rad, 1)
+    dr = (rad - rad_shift)[1:]
+
+    # d_t
+    theta_shift = np.roll(theta, 1)
+    dt = (theta - theta_shift)[1:]
+
+    # dv_rad
+    v_rad_shift = np.roll(v_rad, 1, axis = 1) # something is wrong here
+    dv_rad = (v_rad - v_rad_shift)[:, 1:]
+
+    # dv_theta
+    v_theta_shift = np.roll(v_theta, 1, axis = 1) # something is wrong here
+    dv_theta = (v_theta - v_theta_shift)[:, 1:]
+
+    ### End Differentials ###
+
+    # z-Determinant
+    partial_one = rad[:-1, None] * dv_theta[:-1] / dr[:, None] # Note: dr is one shorter than rad
+    partial_two = dv_rad[:-1, :] / dt[None, :] # Note: dt is d_theta, not d_time!!!!!!!!!
+
+    # Source: https://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates
+    z_curl = (partial_one - partial_two) / rad[:-1, None]
+    return z_curl
+
 
 ##### PLOTTING #####
 
@@ -69,6 +99,57 @@ clim = [0, 2]
 
 fontsize = 14
 my_dpi = 100
+
+def make_plot(frame):
+    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
+    def choose_axis(i, axis):
+        # Orbit Number
+        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+        orbit = int(round(time / (2 * np.pi), 0)) * i
+
+        # Set up figure
+        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+        ax = fig.add_subplot(111)
+
+        # Axis
+        if axis == "zoom":
+            x = (rad - 1) / scale_height
+            prefix = "zoom_"
+            plot.xlim(0, 40) # to match the ApJL paper
+            plot.ylim(0, 2 * np.pi)
+            xlabel = r"($r - r_p$) $/$ $h$"
+        else:
+            x = rad
+            prefix = ""
+            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
+            plot.ylim(0, 2 * np.pi)
+            xlabel = "Radius"
+
+        # Data
+        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+        normalized_density = density / surface_density_zero
+
+        vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
+        vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+
+        ### Plot ###
+        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        fig.colorbar(result)
+        result.set_clim(clim[0], clim[1])
+
+        # Annotate
+        plot.xlabel(xlabel, fontsize = fontsize)
+        plot.ylabel(r"$\phi$", fontsize = fontsize)
+        plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+
+        # Save and Close
+        plot.savefig("%s/%sdensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
+        plot.close(fig) # Close Figure (to avoid too many figures)
+
+    i = frame
+    choose_axis(i, "normal")
+    choose_axis(i, "zoom")
 
 
 
