@@ -135,7 +135,7 @@ def make_plot(frame):
         w = curl(vrad, vtheta, rad, theta)
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])], cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])]), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
