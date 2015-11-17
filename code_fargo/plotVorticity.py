@@ -6,6 +6,26 @@ python plotVorticity.py frame_number
 python plotVorticity.py -m
 """
 
+import sys
+import os
+import subprocess
+import pickle
+import glob
+from multiprocessing import Pool
+
+import math
+import numpy as np
+
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import rcParams as rc
+from matplotlib import pyplot as plot
+
+from pylab import rcParams
+from pylab import fromfile
+
+
 save_directory = "vorticityMaps"
 
 ### Movie Commands ###
