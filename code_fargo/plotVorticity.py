@@ -132,8 +132,10 @@ def make_plot(frame):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
+        w = curl(vrad, vtheta, rad, theta)
+
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
@@ -143,7 +145,7 @@ def make_plot(frame):
         plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sdensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         #plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
