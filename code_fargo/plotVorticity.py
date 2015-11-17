@@ -135,7 +135,7 @@ def make_plot(frame):
         w = curl(vrad, vtheta, rad, theta)
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])], cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
@@ -174,7 +174,7 @@ else:
     #for i in range(num_frames):
     #    make_plot(i)
 
-    p = Pool(8)
+    p = Pool() # default number of processes is multiprocessing.cpu_count()
     p.map(make_plot, range(num_frames))
     p.terminate()
 
