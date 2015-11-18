@@ -32,10 +32,10 @@ fontsize = 20
 linewidth = 3
 
 def make_plot(mode, t_max = 0):
-    ts = times(t_max + 1)
+    ts = times(t_max)
     for time in ts:
         """ sin wave with frequency 'mode' """
-        ys = [np.sin(mode * x) * np.cos(np.pi * time / 10) for x in xs]
+        ys = [np.sin(mode * x - np.pi * time / 10) for x in xs]
 
         figure = plot.figure(figsize = (10, 3))
 

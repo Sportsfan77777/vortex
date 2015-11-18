@@ -31,7 +31,7 @@ times = lambda max_t : np.linspace(0, max_t, 10 * max_t)
 def exp(r, x):
     return np.exp(r * x)
 
-rate = 0.06
+rate = 0.05
 grow = lambda x : exp(rate, x)
 
 # Plotting
@@ -42,7 +42,7 @@ def make_plot(mode, t_max = 0):
     ts = times(t_max + 1)
     for time in ts:
         """ sin wave with frequency 'mode' """
-        ys = [np.sin(mode * x) * np.cos(np.pi * time / 10) * grow(time) for x in xs]
+        ys = [np.sin(mode * x - np.pi * time / 10) * grow(time) for x in xs]
 
         figure = plot.figure(figsize = (10, 3))
 
@@ -63,7 +63,7 @@ def make_plot(mode, t_max = 0):
 
 mode_num = int(sys.argv[1])
 
-make_plot(mode_num, t_max = 48)
+make_plot(mode_num, t_max = 40)
 
 make_movie(mode_num)
 
