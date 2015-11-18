@@ -13,7 +13,7 @@ def make_movie(mode):
     # Movie Parameters
     fps = 5
 
-    directory = "mode%d" % mode
+    directory = "growing_mode%d" % mode
 
     path = directory + "/" + directory + "_%03d.png"
     output = directory + "/" + directory + ".mov" 
@@ -27,6 +27,13 @@ def make_movie(mode):
 xs = np.linspace(0, 10, 100)
 times = lambda max_t : np.linspace(0, max_t, 10 * max_t)
 
+
+def exp(r, x):
+    return np.exp(r * x)
+
+rate = 0.06
+grow = lambda x : exp(rate, x)
+
 # Plotting
 fontsize = 20
 linewidth = 3
@@ -35,7 +42,7 @@ def make_plot(mode, t_max = 0):
     ts = times(t_max + 1)
     for time in ts:
         """ sin wave with frequency 'mode' """
-        ys = [np.sin(mode * x) * np.cos(np.pi * time / 10) for x in xs]
+        ys = [np.sin(mode * x) * np.cos(np.pi * time / 10) * grow(time) for x in xs]
 
         figure = plot.figure(figsize = (10, 3))
 
@@ -43,20 +50,20 @@ def make_plot(mode, t_max = 0):
 
         # Limit
         plot.xlim(0, 2 * np.pi)
-        plot.ylim(-1, 1)
+        plot.ylim(-8, 8)
 
         # Annotate
         plot.xlabel(r"$\phi$", fontsize = fontsize)
         plot.title("Mode $m = %d$" % mode, fontsize = fontsize + 2)
 
         # Save and Close
-        plot.savefig("mode%d/mode%d_%03d.png" % (mode, mode, time), bbox_inches = 'tight')
+        plot.savefig("growing_mode%d/growing_mode%d_%03d.png" % (mode, mode, time), bbox_inches = 'tight')
         #plot.show()
         plot.close(figure)
 
 mode_num = int(sys.argv[1])
 
-make_plot(mode_num, t_max = 40)
+make_plot(mode_num, t_max = 48)
 
 make_movie(mode_num)
 
