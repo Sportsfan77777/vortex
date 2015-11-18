@@ -5,6 +5,7 @@ plots single mode
 import sys
 import numpy as np 
 from matplotlib import pyplot as plot
+from matplotlib import ticker
 
 import subprocess
 
@@ -24,12 +25,15 @@ def make_movie(mode):
     subprocess.Popen(split_command)
 
 
-xs = np.linspace(0, 10, 100)
+xs = np.linspace(0, 2 * np.pi, 100)
+xs_deg = np.linspace(0, 360, 100)
 times = lambda max_t : np.linspace(0, max_t, 10 * max_t)
 
 # Plotting
 fontsize = 20
 linewidth = 3
+
+ticks = ticker.MultipleLocator(base = 60)
 
 def make_plot(mode, t_max = 0):
     ts = times(t_max)
@@ -37,16 +41,17 @@ def make_plot(mode, t_max = 0):
         """ sin wave with frequency 'mode' """
         ys = [np.sin(mode * x - np.pi * time / 10) for x in xs]
 
-        figure = plot.figure(figsize = (10, 3))
+        figure, ax = plot.subplots(figsize = (10, 3))
 
-        plot.plot(xs, ys, 'b', linewidth = linewidth + 1)
+        plot.plot(xs_deg, ys, 'b', linewidth = linewidth + 1)
 
         # Limit
-        plot.xlim(0, 2 * np.pi)
+        plot.xlim(0, 360)
         plot.ylim(-1, 1)
 
         # Annotate
-        plot.xlabel(r"$\phi$", fontsize = fontsize)
+        plot.xlabel(r"$\phi$ (degrees)", fontsize = fontsize)
+        ax.xaxis.set_major_locator(ticks)
         plot.title("Mode $m = %d$" % mode, fontsize = fontsize + 2)
 
         # Save and Close
