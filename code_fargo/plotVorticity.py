@@ -73,9 +73,18 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
-
 # Curl function
 def curl(v_rad, v_theta, rad, theta):
+    """ z-component of the curl (because this is a 2-D simulation)"""
+
+    # Determinant
+    z_curl = (partial_one - partial_two) / rad
+
+    return z_curl
+
+
+# Curl function
+def old_curl(v_rad, v_theta, rad, theta):
     """ z-component of the curl (because this is a 2-D simulation)"""
     ### Start Differentials ###
     # d_r
@@ -115,7 +124,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+clim = [0, 0.2]
 
 fontsize = 14
 my_dpi = 100
@@ -152,10 +161,11 @@ def make_plot(frame):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        w = curl(vrad, vtheta, rad, theta)
+        w = old_curl(vrad, vtheta, rad, theta)
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])]), cmap = cmap)
+        #result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
@@ -165,8 +175,8 @@ def make_plot(frame):
         plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        #plot.show()
+        #plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
@@ -182,7 +192,7 @@ if len(sys.argv) > 1:
     make_plot(frame_number)
 else:
     # Search for maximum frame
-    density_files = glob.glob("gasvrad*.dat")
+    density_files = glob.glob("gasdens*.dat")
     max_frame = 0
     for d_f in density_files:
         name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
