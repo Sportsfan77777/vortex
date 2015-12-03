@@ -29,34 +29,20 @@ def curl(v_rad, v_theta, rad, theta):
     d_rad = np.diff(rad)
     d_theta = np.diff(theta)
 
-    order = 1
-    dv_rad = np.diff(v_rad, axis = 1, n = order)
-    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0, n = order)
-
+    dv_rad = np.diff(v_rad, axis = 1)
+    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
     ### End Differentials ###
 
     # z-Determinant
-    partial_one = dv_theta / d_rad[:, None] # Note: dr is one shorter than rad
-    partial_two = dv_rad / d_theta # Note: dt is d_theta, not d_time!!!!!!!!!
-    #partial_one = rad[:-1, None] * dv_theta[:-1] / dr # Note: dr is one shorter than rad
-    #partial_two = dv_rad[:-1, :] / dt # Note: dt is d_theta, not d_time!!!!!!!!!
+    partial_one = dv_theta / d_rad[:, None]
+    partial_two = dv_rad / d_theta
 
-    #print "One"
-    #print np.median(partial_one), partial_one
-    #print "Two"
-    #print np.median(partial_two), partial_two
-
-    # Source: https://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates
     z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
-
-    #print "Curl"
-    #print np.median(z_curl), z_curl
-
     return z_curl
 
 #### DATA ####
-num_rad = 100
-num_theta = 200
+num_rad = 3000
+num_theta = 3000
 rs = np.linspace(0.2, 4, num_rad)
 thetas = np.linspace(0, 2 * np.pi, num_theta)
 
@@ -91,9 +77,9 @@ fig = plot.figure()
 ax = fig.add_subplot(111, polar = True)
 
 
-result = ax.pcolormesh(thetas, rs, diff)
+result = ax.pcolormesh(thetas[1:], rs[1:], diff)
 fig.colorbar(result)
-result.set_clim(-0.1, 0.25)
+result.set_clim(-0.01, 0.01)
 #plot.savefig("notsaving.png")
 plot.show()
 
