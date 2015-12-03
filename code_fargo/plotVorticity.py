@@ -18,7 +18,7 @@ import numpy as np
 
 
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -76,10 +76,19 @@ scale_height = float(fargo_par["AspectRatio"])
 # Curl function
 def curl(v_rad, v_theta, rad, theta):
     """ z-component of the curl (because this is a 2-D simulation)"""
+    ### Start Differentials ###
+    d_rad = np.diff(rad)
+    d_theta = np.diff(theta)
 
-    # Determinant
-    z_curl = (partial_one - partial_two) / rad
+    dv_rad = np.diff(v_rad, axis = 1)
+    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
+    ### End Differentials ###
 
+    # z-Determinant
+    partial_one = dv_theta / d_rad[:, None]
+    partial_two = dv_rad / d_theta
+
+    z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
     return z_curl
 
 
@@ -88,29 +97,38 @@ def old_curl(v_rad, v_theta, rad, theta):
     """ z-component of the curl (because this is a 2-D simulation)"""
     ### Start Differentials ###
     # d_r
-    rad_shift = np.roll(rad, 1)
-    dr = (rad - rad_shift)[1:]
+    d_rad = np.diff(rad)
 
     # d_t
-    theta_shift = np.roll(theta, 1)
-    dt = (theta - theta_shift)[1:]
+    d_theta = np.diff(theta)
+
+    order = 1
 
     # dv_rad
-    v_rad_shift = np.roll(v_rad, 1, axis = 1) # something is wrong here
-    dv_rad = (v_rad - v_rad_shift)[:, 1:]
+    dv_rad = np.diff(v_rad, axis = 1, n = order)
 
     # dv_theta
-    v_theta_shift = np.roll(v_theta, 1, axis = 1) # something is wrong here
-    dv_theta = (v_theta - v_theta_shift)[:, 1:]
+    dv_theta = np.diff(rad * v_theta, axis = 0, n = order)
 
     ### End Differentials ###
 
     # z-Determinant
-    partial_one = rad[:-1, None] * dv_theta[:-1] / dr[:, None] # Note: dr is one shorter than rad
-    partial_two = dv_rad[:-1, :] / dt[None, :] # Note: dt is d_theta, not d_time!!!!!!!!!
+    partial_one = dv_theta / d_rad[:, None] # Note: dr is one shorter than rad
+    partial_two = dv_rad / d_theta # Note: dt is d_theta, not d_time!!!!!!!!!
+    #partial_one = rad[:-1, None] * dv_theta[:-1] / dr # Note: dr is one shorter than rad
+    #partial_two = dv_rad[:-1, :] / dt # Note: dt is d_theta, not d_time!!!!!!!!!
+
+    print "One"
+    print np.median(partial_one), partial_one
+    print "Two"
+    print np.median(partial_two), partial_two
 
     # Source: https://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates
-    z_curl = (partial_one - partial_two) / rad[:-1, None]
+    z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:]
+
+    print "Curl"
+    print np.median(z_curl), z_curl
+
     return z_curl
 
 
@@ -124,7 +142,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 0.2]
+clim = [-2, 2]
 
 fontsize = 14
 my_dpi = 100
@@ -161,9 +179,15 @@ def make_plot(frame):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        w = old_curl(vrad, vtheta, rad, theta)
+        w = curl(vrad, vtheta, rad, theta)
+
+        print len(w[0,:]), len(w[:,0])
+        print len(normalized_density[0,:]), len(normalized_density[:,0])
+
+        print normalized_density[:,0]
 
         ### Plot ###
+        #result = ax.pcolormesh(x, theta, np.transpose(w), cmap = cmap)
         result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])]), cmap = cmap)
         #result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density), cmap = cmap)
         fig.colorbar(result)
@@ -180,7 +204,7 @@ def make_plot(frame):
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
-    choose_axis(i, "normal")
+    #choose_axis(i, "normal")
     choose_axis(i, "zoom")
 
 
