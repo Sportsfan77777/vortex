@@ -91,47 +91,6 @@ def curl(v_rad, v_theta, rad, theta):
     z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
     return z_curl
 
-
-# Curl function
-def old_curl(v_rad, v_theta, rad, theta):
-    """ z-component of the curl (because this is a 2-D simulation)"""
-    ### Start Differentials ###
-    # d_r
-    d_rad = np.diff(rad)
-
-    # d_t
-    d_theta = np.diff(theta)
-
-    order = 1
-
-    # dv_rad
-    dv_rad = np.diff(v_rad, axis = 1, n = order)
-
-    # dv_theta
-    dv_theta = np.diff(rad * v_theta, axis = 0, n = order)
-
-    ### End Differentials ###
-
-    # z-Determinant
-    partial_one = dv_theta / d_rad[:, None] # Note: dr is one shorter than rad
-    partial_two = dv_rad / d_theta # Note: dt is d_theta, not d_time!!!!!!!!!
-    #partial_one = rad[:-1, None] * dv_theta[:-1] / dr # Note: dr is one shorter than rad
-    #partial_two = dv_rad[:-1, :] / dt # Note: dt is d_theta, not d_time!!!!!!!!!
-
-    print "One"
-    print np.median(partial_one), partial_one
-    print "Two"
-    print np.median(partial_two), partial_two
-
-    # Source: https://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates
-    z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:]
-
-    print "Curl"
-    print np.median(z_curl), z_curl
-
-    return z_curl
-
-
 ##### PLOTTING #####
 
 # Make Directory
