@@ -118,17 +118,21 @@ def make_plot(frame):
         ax = fig.add_subplot(111)
 
         # Axis
+        angles = np.linspace(0, 2 * np.pi, 7)
+        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+
+        plot.ylim(0, 2 * np.pi)
+        plot.yticks(angles, degree_angles)
+
         if axis == "zoom":
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(0, 2 * np.pi)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
             plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-            plot.ylim(0, 2 * np.pi)
             xlabel = "Radius"
 
         # Data
@@ -138,24 +142,18 @@ def make_plot(frame):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        w = curl(vrad, vtheta, rad, theta)
-
-        print len(w[0,:]), len(w[:,0])
-        print len(normalized_density[0,:]), len(normalized_density[:,0])
-
-        print normalized_density[:,0]
+        vorticity = curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
 
         ### Plot ###
-        #result = ax.pcolormesh(x, theta, np.transpose(w), cmap = cmap)
-        result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density[:len(w[0,:]), :len(w[:,0])]), cmap = cmap)
-        #result = ax.pcolormesh(x, theta, np.transpose(w / normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
+    
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+        plot.title("Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
         #plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)

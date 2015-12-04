@@ -102,17 +102,20 @@ def make_plot(frame):
         ax = fig.add_subplot(111)
 
         # Axis
+        angles = np.linspace(0, 2 * np.pi, 7)
+        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+
+        plot.ylim(0, 2 * np.pi)
+        plot.yticks(angles, degree_angles)
         if axis == "zoom":
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(0, 2 * np.pi)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
             plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-            plot.ylim(0, 2 * np.pi)
             xlabel = "Radius"
 
         # Data
