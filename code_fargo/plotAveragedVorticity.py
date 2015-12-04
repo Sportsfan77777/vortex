@@ -117,6 +117,7 @@ def make_plot(frame):
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
         # Axis
+        plot.ylim(-10, 2)
         if axis == "zoom":
             x = (rad - 1) / scale_height
             prefix = "zoom_"

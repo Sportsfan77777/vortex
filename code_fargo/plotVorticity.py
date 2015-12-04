@@ -101,7 +101,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [-2, 2]
+clim = [-2, 0]
 
 fontsize = 14
 my_dpi = 100
@@ -156,12 +156,12 @@ def make_plot(frame):
         plot.title("Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        #plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        plot.show()
+        plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
-    #choose_axis(i, "normal")
+    choose_axis(i, "normal")
     choose_axis(i, "zoom")
 
 
