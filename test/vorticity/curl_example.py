@@ -76,7 +76,6 @@ diff = curl_solution[1:, 1:] - curl_calculation
 fig = plot.figure()
 ax = fig.add_subplot(111, polar = True)
 
-
 result = ax.pcolormesh(thetas[1:], rs[1:], diff)
 fig.colorbar(result)
 result.set_clim(-0.01, 0.01)
