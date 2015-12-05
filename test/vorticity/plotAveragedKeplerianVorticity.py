@@ -1,9 +1,7 @@
 """
-plot 2-D vorticity maps (really vortensity = vorticity / density)
+plot 2-D vorticity map for Keplerian profile (really vortensity = vorticity / density)
 
-python plotVorticity.py
-python plotVorticity.py frame_number
-python plotVorticity.py -m
+python plotAveragedKeplerianVorticity.py
 """
 
 import sys
@@ -27,33 +25,6 @@ from pylab import fromfile
 
 
 save_directory = "averagedVorticityMaps"
-
-### Movie Commands ###
-def make_movies():
-    # Movie Parameters
-    fps = 5
-
-    path = save_directory + "/vorticityMap_%03d.png"
-    output = save_directory + "/vorticityMap.mov"
-
-    zoom_path = save_directory + "/zoom_vorticityMap_%03d.png"
-    zoom_output = save_directory + "/vorticityMap_zoom.mov"
-
-    # Movie Command
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-# Make only movies and then return
-if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
-    make_movies()
-    # Terminate
-    quit()
-
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -89,7 +60,7 @@ def curl(v_rad, v_theta, rad, theta):
     partial_two = dv_rad / d_theta
 
     z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
-    return z_curl
+    return z_curl + 2
 
 ##### PLOTTING #####
 
@@ -117,7 +88,7 @@ def make_plot(frame):
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
         # Axis
-        plot.ylim(-10, 2)
+        plot.ylim(0, 2)
         if axis == "zoom":
             x = (rad - 1) / scale_height
             prefix = "zoom_"
@@ -155,12 +126,13 @@ def make_plot(frame):
 
     i = frame
     choose_axis(i, "normal")
-    choose_axis(i, "zoom")
+    #choose_axis(i, "zoom")
 
 
 
-##### Plot #####
+##### Plot One File or All Files #####
 
+frame_number = 0
 make_plot(frame_number)
 
 

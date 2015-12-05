@@ -89,6 +89,10 @@ def curl(v_rad, v_theta, rad, theta):
     partial_two = dv_rad / d_theta
 
     z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
+
+    # Shift out of rotating frame (http://arxiv.org/pdf/astro-ph/0605237v2.pdf)
+    z_curl += 2
+
     return z_curl
 
 ##### PLOTTING #####
@@ -117,7 +121,7 @@ def make_plot(frame):
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
         # Axis
-        plot.ylim(-10, 2)
+        plot.ylim(0, 1.3)
         if axis == "zoom":
             x = (rad - 1) / scale_height
             prefix = "zoom_"
@@ -137,8 +141,9 @@ def make_plot(frame):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        vorticity = curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
-        averaged_w = np.average(vorticity, axis = 1)
+        vorticity = curl(vrad, vtheta, rad, theta)
+        vortensity = vorticity / normalized_density[1:, 1:]
+        averaged_w = np.average(vortensity, axis = 1)
 
         ### Plot ###
         plot.plot(x[1:], averaged_w, linewidth = linewidth)
@@ -149,8 +154,8 @@ def make_plot(frame):
         plot.title("Averaged Vortensity at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        #plot.savefig("%s/%saveragedVorticity_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        plot.show()
+        plot.savefig("%s/%saveragedVorticity_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
