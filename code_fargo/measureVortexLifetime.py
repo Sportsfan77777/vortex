@@ -139,6 +139,48 @@ def find_vortensity_min(frame):
     return radius_min
 
 
+def get_density_variation(frame, vortex_location):
+    """
+    return variation in density (defined to be max / avg at a particular radius)
+    """
+    i = frame
+    # Data
+    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
+
+    # Azimuthal Profile
+    arg_vortex = np.searchsorted(rad, vortex_location)
+    kernel_size = 1 # num_theta / 200
+    density_at_vortex = smooth(normalized_density[arg_vortex,:], kernel_size)
+
+    # Variation
+    max_density = np.max(density_at_vortex)
+    avg_density = np.average(density_at_vortex)
+
+    variation = max_density / avg_density
+    return variation
+
+def get_vortensity_variation(frame, vortex_location):
+    """
+    return variation in density (defined to be max / avg at a particular radius)
+    """
+    i = frame
+    # Data
+    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
+
+    # Azimuthal Profile
+    arg_vortex = np.searchsorted(rad, vortex_location)
+    kernel_size = 1 # num_theta / 200
+    density_at_vortex = smooth(normalized_density[arg_vortex,:], kernel_size)
+
+    # Variation
+    max_density = np.max(density_at_vortex)
+    avg_density = np.average(density_at_vortex)
+
+    variation = max_density / avg_density
+    return variation
+
 ##### PLOTTING #####
 
 # Make Directory
@@ -153,7 +195,12 @@ my_dpi = 100
 fontsize = 14
 linewidth = 4
 
-def plot_vortex_location(min_frame = 100, max_frame = num_frames, rate = 5):
+def plot_vortex_location(min_frame = 100, max_frame = num_frames, rate = 5, figure = True):
+    """
+    boolean option to plot vortex location
+    regardless, return vortex location using local min of vortensity
+    """
+
     frame_range = range(min_frame, max_frame, rate)
 
     vortex_locations_d = []
@@ -165,26 +212,52 @@ def plot_vortex_location(min_frame = 100, max_frame = num_frames, rate = 5):
         vortex_location_v = find_vortensity_min(frame)
         vortex_locations_v.append(vortex_location_v)
 
+    if figure:
+        # Set up figure
+        fig = plot.figure()
+        plot.plot(frame_range, vortex_locations_d, "b", linewidth = linewidth)
+        plot.plot(frame_range, vortex_locations_v, "r", linewidth = linewidth)
+
+        # Annotate
+        plot.xlabel("Orbit", fontsize = fontsize)
+        plot.ylabel("Vortex Location", fontsize = fontsize)
+        #plot.title("Vortex Location", fontsize = fontsize + 1)
+
+        # Save and Close
+        plot.savefig("%s/vortexLocation.png" % (save_directory), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
+        plot.close(fig) # Close Figure (to avoid too many figures)
+
+    return vortex_locations_v
+
+
+def plot_azimuthal_variation(vortex_locations, min_frame = 100, max_frame = num_frames, rate = 5, figure = True):
+    """ 
+    Plot "density variation" and "vortensity variation" around the center of the vortex
+    Requires same frame range as with vortex locations
+    """
+
+    frame_range = range(min_frame, max_frame, rate)
+
+    variations = []
+    for i, frame in enumerate(frame_range):
+        variation = get_density_variation(frame, vortex_locations[i])
+        variations.append(variation)
+
     # Set up figure
     fig = plot.figure()
-    plot.plot(frame_range, vortex_locations_d, "b", linewidth = linewidth)
-    plot.plot(frame_range, vortex_locations_v, "r", linewidth = linewidth)
+    plot.plot(frame_range, variations, "b", linewidth = linewidth)
     #plot.scatter(frame_range, vortex_locations)
 
     # Annotate
     plot.xlabel("Orbit", fontsize = fontsize)
-    plot.ylabel("Vortex Location", fontsize = fontsize)
+    plot.ylabel("Density Variation", fontsize = fontsize)
     #plot.title("Vortex Location", fontsize = fontsize + 1)
 
     # Save and Close
-    #plot.savefig("%s/vortexLocation_byDensity.png" % (save_directory), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/vortexStrength.png" % (save_directory), bbox_inches = 'tight', dpi = my_dpi)
     plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
-
-
-def make_plot(interval):
-    # Plot "density variation" and "vortensity variation" around the center of the vortex
-    pass
 
 #### PLOTTING ####
 
@@ -197,7 +270,8 @@ for d_f in density_files:
     if frame_number > max_frame:
         max_frame = frame_number
 
-plot_vortex_location(max_frame = max_frame)
+vortex_locations = plot_vortex_location(max_frame = max_frame)
+plot_azimuthal_variation(vortex_locations, max_frame = max_frame)
 
 # if len(sys.argv) > 1:
 #     frame_number = int(sys.argv[1])
