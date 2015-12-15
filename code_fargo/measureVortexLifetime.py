@@ -162,23 +162,31 @@ def get_density_variation(frame, vortex_location):
 
 def get_vortensity_variation(frame, vortex_location):
     """
-    return variation in density (defined to be max / avg at a particular radius)
+    return variation in vortensity (defined to be min / avg at a particular radius)
     """
     i = frame
     # Data
     density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
+    vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
+    vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+
+    vorticity = curl(vrad, vtheta, rad, theta)
+    vortensity = vorticity / normalized_density[1:, 1:]
+
     # Azimuthal Profile
     arg_vortex = np.searchsorted(rad, vortex_location)
-    kernel_size = 1 # num_theta / 200
-    density_at_vortex = smooth(normalized_density[arg_vortex,:], kernel_size)
+    kernel_size = num_theta / 200
+    vortensity_at_vortex = smooth(vortensity[arg_vortex,:], kernel_size)
 
     # Variation
-    max_density = np.max(density_at_vortex)
-    avg_density = np.average(density_at_vortex)
+    min_vortensity = np.min(vortensity_at_vortex)
+    avg_vortensity = np.average(vortensity_at_vortex)
 
-    variation = max_density / avg_density
+    print min_vortensity
+
+    variation = (min_vortensity / avg_vortensity)
     return variation
 
 ##### PLOTTING #####
@@ -239,14 +247,19 @@ def plot_azimuthal_variation(vortex_locations, min_frame = 100, max_frame = num_
 
     frame_range = range(min_frame, max_frame, rate)
 
-    variations = []
+    variations_d = []
+    variations_v = []
     for i, frame in enumerate(frame_range):
-        variation = get_density_variation(frame, vortex_locations[i])
-        variations.append(variation)
+        variation_d = get_density_variation(frame, vortex_locations[i])
+        variations_d.append(variation_d)
+
+        variation_v = get_vortensity_variation(frame, vortex_locations[i])
+        variations_v.append(variation_v)
 
     # Set up figure
     fig = plot.figure()
-    plot.plot(frame_range, variations, "b", linewidth = linewidth)
+    plot.plot(frame_range, variations_d, "b", linewidth = linewidth)
+    plot.plot(frame_range, variations_v, "r", linewidth = linewidth)
     #plot.scatter(frame_range, vortex_locations)
 
     # Annotate
