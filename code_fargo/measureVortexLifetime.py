@@ -235,7 +235,7 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
 
     #print min_vortensity
 
-    variation = (1 + avg_vortensity - min_vortensity) / avg_vortensity
+    variation = (1 + avg_vortensity - min_vortensity) / (2 * avg_vortensity)
     return variation
 
 ##### PLOTTING #####
@@ -321,6 +321,9 @@ def plot_azimuthal_variation(vortex_locations, min_frame = 100, max_frame = num_
     plot.plot(frame_range, variations_d, "b", linewidth = linewidth)
     plot.plot(frame_range, variations_v, "r", linewidth = linewidth)
     #plot.scatter(frame_range, vortex_locations)
+
+    # Limits
+    plot.ylim(0, 10)
 
     # Annotate
     plot.xlabel("Orbit", fontsize = fontsize)
