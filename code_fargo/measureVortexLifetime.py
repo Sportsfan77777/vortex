@@ -2,7 +2,7 @@
 Measure vortex lifetime
 
 Criteria from Fu+14:
-A vortex is deemed “dead” after either the averaged azimuthal density
+A vortex is deemed "dead" after either the averaged azimuthal density
 variation or the averaged azimuthal potential vorticity variation within 10H
 (scale height) wide band around the vortex drops below 10%.
 
@@ -24,6 +24,8 @@ from multiprocessing import Pool
 import math
 import numpy as np
 
+from scipy import signal as sig
+from scipy.ndimage import filters as ff
 
 import matplotlib
 #matplotlib.use('Agg')
@@ -45,7 +47,7 @@ if not os.path.exists(param_fn):
     subprocess.Popen(split_command)
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-num_frames = fargo_par["Ntot"] * fargo_par["Ninterm"]
+num_frames = int(fargo_par["Ntot"]) * int(fargo_par["Ninterm"])
 
 num_rad = np.loadtxt("dims.dat")[-2]
 num_theta = np.loadtxt("dims.dat")[-1]
@@ -85,18 +87,18 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # sm
 # Truncate
 def truncate(array, start = 1.2, stop = 3.0):
     """ truncates azimuthally averaged array between two radii """
-    return array[np.searchsorted(used_rad, start) : np.searchsorted(used_rad, stop)]
+    return array[np.searchsorted(rad, start) : np.searchsorted(rad, stop)]
 
 def find_density_max(frame):
     """ returns radius with maximum azimuthally averaged density """
     i = frame
     # Data
-    truncated_rad = truncate(used_rad)
+    truncated_rad = truncate(rad)
 
     density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) / surface_density_zero
     avg_density = truncate(np.average(density, axis = 1))
 
-    kernel_size = len(avg_density) / 5
+    kernel_size = 1
     smoothed_avg_density = smooth(avg_density, kernel_size)
 
     arg_max = np.argmax(smoothed_avg_density)
@@ -123,8 +125,8 @@ my_dpi = 100
 fontsize = 14
 linewidth = 4
 
-def plot_vortex_location(min_frame = 100, max_frame = num_frames):
-    frame_range = range(min_frame, max_frame)
+def plot_vortex_location(min_frame = 100, max_frame = num_frames, rate = 5):
+    frame_range = range(min_frame, max_frame, rate)
 
     vortex_locations = []
     for frame in frame_range:
@@ -135,21 +137,22 @@ def plot_vortex_location(min_frame = 100, max_frame = num_frames):
     # Set up figure
     fig = plot.figure()
     plot.plot(frame_range, vortex_locations, linewidth = linewidth)
+    #plot.scatter(frame_range, vortex_locations)
 
     # Annotate
     plot.xlabel("Orbit", fontsize = fontsize)
-    plot.ylabel("Azimuthally Averaged Vortensity", fontsize = fontsize)
-    plot.title("Vortex Location", fontsize = fontsize + 1)
+    plot.ylabel("Vortex Location", fontsize = fontsize)
+    #plot.title("Vortex Location", fontsize = fontsize + 1)
 
     # Save and Close
-    plot.savefig("%s/vortexLocation_byDensity.png" % (save_directory), bbox_inches = 'tight', dpi = my_dpi)
-    #plot.show()
+    #plot.savefig("%s/vortexLocation_byDensity.png" % (save_directory), bbox_inches = 'tight', dpi = my_dpi)
+    plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
 def make_plot(interval):
     # Plot "density variation" and "vortensity variation" around the center of the vortex
-
+    pass
 
 #### PLOTTING ####
 
