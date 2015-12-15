@@ -139,7 +139,7 @@ def find_vortensity_min(frame):
     return radius_min
 
 
-def get_density_variation(frame, vortex_location):
+def get_density_variation(frame, vortex_location, figure = False):
     """
     return variation in density (defined to be max / avg at a particular radius)
     """
@@ -153,6 +153,30 @@ def get_density_variation(frame, vortex_location):
     kernel_size = 1 # num_theta / 200
     density_at_vortex = smooth(normalized_density[arg_vortex,:], kernel_size)
 
+    # Plot
+    if figure:
+        fig = plot.figure()
+
+        # Axis
+        angles = np.linspace(0, 2 * np.pi, 7)
+        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+
+        plot.xlim(0, 2 * np.pi)
+        plot.xticks(angles, degree_angles)
+
+        # Plot
+        plot.plot(theta, normalized_density[arg_vortex,:], linewidth = linewidth)
+
+        # Annotate
+        plot.xlabel("Theta", fontsize = fontsize)
+        plot.ylabel("Density", fontsize = fontsize)
+
+        # Save and Close
+        directory = "azimuthalDensity"
+        plot.savefig("%s/azimuthalDensity_%04d.png" % (directory, i), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
+        plot.close(fig) # Close Figure (to avoid too many figures)
+
     # Variation
     max_density = np.max(density_at_vortex)
     avg_density = np.average(density_at_vortex)
@@ -160,7 +184,7 @@ def get_density_variation(frame, vortex_location):
     variation = max_density / avg_density
     return variation
 
-def get_vortensity_variation(frame, vortex_location):
+def get_vortensity_variation(frame, vortex_location, figure = False):
     """
     return variation in vortensity (defined to be min / avg at a particular radius)
     """
@@ -180,13 +204,37 @@ def get_vortensity_variation(frame, vortex_location):
     kernel_size = num_theta / 200
     vortensity_at_vortex = smooth(vortensity[arg_vortex,:], kernel_size)
 
+    # Plot
+    if figure:
+        fig = plot.figure()
+
+        # Axis
+        angles = np.linspace(0, 2 * np.pi, 7)
+        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+
+        plot.xlim(0, 2 * np.pi)
+        plot.xticks(angles, degree_angles)
+
+        # Plot
+        plot.plot(theta[1:], vortensity[arg_vortex,:], linewidth = linewidth)
+
+        # Annotate
+        plot.xlabel("Theta", fontsize = fontsize)
+        plot.ylabel("Vortensity", fontsize = fontsize)
+
+        # Save and Close
+        directory = "azimuthalVortensity"
+        plot.savefig("%s/azimuthalVortensity_%04d.png" % (directory, i), bbox_inches = 'tight', dpi = my_dpi)
+        #plot.show()
+        plot.close(fig) # Close Figure (to avoid too many figures)
+
     # Variation
     min_vortensity = np.min(vortensity_at_vortex)
-    avg_vortensity = np.average(vortensity_at_vortex)
+    avg_vortensity = np.median(vortensity_at_vortex)
 
-    print min_vortensity
+    #print min_vortensity
 
-    variation = (min_vortensity / avg_vortensity)
+    variation = (1 + avg_vortensity - min_vortensity) / avg_vortensity
     return variation
 
 ##### PLOTTING #####
@@ -264,7 +312,7 @@ def plot_azimuthal_variation(vortex_locations, min_frame = 100, max_frame = num_
 
     # Annotate
     plot.xlabel("Orbit", fontsize = fontsize)
-    plot.ylabel("Density Variation", fontsize = fontsize)
+    plot.ylabel("Variation", fontsize = fontsize)
     #plot.title("Vortex Location", fontsize = fontsize + 1)
 
     # Save and Close
