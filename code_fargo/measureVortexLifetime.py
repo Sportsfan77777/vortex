@@ -101,6 +101,7 @@ def find_density_max(frame):
     kernel_size = 1
     smoothed_avg_density = smooth(avg_density, kernel_size)
 
+    # Retrieve radius with max value
     arg_max = np.argmax(smoothed_avg_density)
     radius_max = truncated_rad[arg_max]
 
@@ -108,7 +109,34 @@ def find_density_max(frame):
 
 def find_vortensity_min(frame):
     """ returns radius with maximum azimuthally averaged density """
-    pass
+    i = frame
+
+    # Find density max (Search for vortensity minimum only near the density max)
+    density_max = find_density_max(frame)
+    start = density_max - (0.2 * (scale_height / 0.06))
+    stop = density_max + (0.1 * (scale_height / 0.06))
+
+    # Data
+    truncated_rad = truncate(rad, start = start, stop = stop)
+
+    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
+
+    vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
+    vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+
+    vorticity = curl(vrad, vtheta, rad, theta)
+    vortensity = vorticity / normalized_density[1:, 1:]
+    avg_vortensity = truncate(np.average(vortensity, axis = 1), start = start, stop = stop)
+
+    kernel_size = 1
+    smoothed_avg_vortensity = smooth(avg_vortensity, kernel_size)
+
+    # Retrieve radius with min value
+    arg_min = np.argmin(smoothed_avg_vortensity)
+    radius_min = truncated_rad[arg_min]
+
+    return radius_min
 
 
 ##### PLOTTING #####
@@ -128,15 +156,19 @@ linewidth = 4
 def plot_vortex_location(min_frame = 100, max_frame = num_frames, rate = 5):
     frame_range = range(min_frame, max_frame, rate)
 
-    vortex_locations = []
+    vortex_locations_d = []
+    vortex_locations_v = []
     for frame in frame_range:
-        vortex_location = find_density_max(frame)
-        vortex_locations.append(vortex_location)
+        vortex_location_d = find_density_max(frame)
+        vortex_locations_d.append(vortex_location_d)
 
+        vortex_location_v = find_vortensity_min(frame)
+        vortex_locations_v.append(vortex_location_v)
 
     # Set up figure
     fig = plot.figure()
-    plot.plot(frame_range, vortex_locations, linewidth = linewidth)
+    plot.plot(frame_range, vortex_locations_d, "b", linewidth = linewidth)
+    plot.plot(frame_range, vortex_locations_v, "r", linewidth = linewidth)
     #plot.scatter(frame_range, vortex_locations)
 
     # Annotate
