@@ -224,13 +224,14 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
 
         # Save and Close
         directory = "azimuthalVortensity"
+
         plot.savefig("%s/azimuthalVortensity_%04d.png" % (directory, i), bbox_inches = 'tight', dpi = my_dpi)
         #plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     # Variation
     min_vortensity = np.min(vortensity_at_vortex)
-    avg_vortensity = np.median(vortensity_at_vortex)
+    avg_vortensity = np.average(vortensity_at_vortex)
 
     #print min_vortensity
 
@@ -239,11 +240,22 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
 
 ##### PLOTTING #####
 
-# Make Directory
+# Make Directories
 try:
     os.mkdir(save_directory)
 except:
     print "Directory Already Exists"
+
+try:
+    os.mkdir("azimuthalDensity")
+except:
+    pass
+
+try:
+    os.mkdir("azimuthalVortensity")
+except:
+    pass
+
 
 # Plot Parameters
 my_dpi = 100
