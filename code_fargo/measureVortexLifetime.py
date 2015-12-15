@@ -34,34 +34,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 
-save_directory = "averagedVorticityMaps"
-
-### Movie Commands ###
-def make_movies():
-    # Movie Parameters
-    fps = 5
-
-    path = save_directory + "/vorticityMap_%03d.png"
-    output = save_directory + "/vorticityMap.mov"
-
-    zoom_path = save_directory + "/zoom_vorticityMap_%03d.png"
-    zoom_output = save_directory + "/vorticityMap_zoom.mov"
-
-    # Movie Command
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-# Make only movies and then return
-if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
-    make_movies()
-    # Terminate
-    quit()
-
+save_directory = "lifetime"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -71,6 +44,8 @@ if not os.path.exists(param_fn):
     split_command = command.split()
     subprocess.Popen(split_command)
 fargo_par = pickle.load(open(param_fn, "rb"))
+
+num_frames = fargo_par["Ntot"] * fargo_par["Ninterm"]
 
 num_rad = np.loadtxt("dims.dat")[-2]
 num_theta = np.loadtxt("dims.dat")[-1]
@@ -103,6 +78,37 @@ def curl(v_rad, v_theta, rad, theta):
 
     return z_curl
 
+### Find Vortex ###
+
+# Smoothing Function
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+# Truncate
+def truncate(array, start = 1.2, stop = 3.0):
+    """ truncates azimuthally averaged array between two radii """
+    return array[np.searchsorted(used_rad, start) : np.searchsorted(used_rad, stop)]
+
+def find_density_max(frame):
+    """ returns radius with maximum azimuthally averaged density """
+    i = frame
+    # Data
+    truncated_rad = truncate(used_rad)
+
+    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) / surface_density_zero
+    avg_density = truncate(np.average(density, axis = 1))
+
+    kernel_size = len(avg_density) / 5
+    smoothed_avg_density = smooth(avg_density, kernel_size)
+
+    arg_max = np.argmax(smoothed_avg_density)
+    radius_max = truncated_rad[arg_max]
+
+    return radius_max
+
+def find_vortensity_min(frame):
+    """ returns radius with maximum azimuthally averaged density """
+    pass
+
+
 ##### PLOTTING #####
 
 # Make Directory
@@ -112,93 +118,74 @@ except:
     print "Directory Already Exists"
 
 # Plot Parameters
-rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
 fontsize = 14
 linewidth = 4
 
+def plot_vortex_location(min_frame = 100, max_frame = num_frames):
+    frame_range = range(min_frame, max_frame)
+
+    vortex_locations = []
+    for frame in frame_range:
+        vortex_location = find_density_max(frame)
+        vortex_locations.append(vortex_location)
+
+
+    # Set up figure
+    fig = plot.figure()
+    plot.plot(frame_range, vortex_locations, linewidth = linewidth)
+
+    # Annotate
+    plot.xlabel("Orbit", fontsize = fontsize)
+    plot.ylabel("Azimuthally Averaged Vortensity", fontsize = fontsize)
+    plot.title("Vortex Location", fontsize = fontsize + 1)
+
+    # Save and Close
+    plot.savefig("%s/vortexLocation_byDensity.png" % (save_directory), bbox_inches = 'tight', dpi = my_dpi)
+    #plot.show()
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+
 def make_plot(interval):
     # Plot "density variation" and "vortensity variation" around the center of the vortex
 
-def make_plot(frame):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+#### PLOTTING ####
 
-        # Axis
-        plot.ylim(0, 1.3)
-        if axis == "zoom":
-            x = (rad - 1) / scale_height
-            prefix = "zoom_"
-            plot.xlim(0, 40) # to match the ApJL paper
-            #plot.ylim(0, 1.3)
-            xlabel = r"($r - r_p$) $/$ $h$"
-        else:
-            x = rad
-            prefix = ""
-            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-            xlabel = "Radius"
+# Search for maximum frame
+density_files = glob.glob("gasdens*.dat")
+max_frame = 0
+for d_f in density_files:
+    name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
+    frame_number = int(name[7:]) # just 999
+    if frame_number > max_frame:
+        max_frame = frame_number
 
-        # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
-        normalized_density = density / surface_density_zero
+plot_vortex_location(max_frame = max_frame)
 
-        vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
-        vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+# if len(sys.argv) > 1:
+#     frame_number = int(sys.argv[1])
+#     make_plot(frame_number)
+# else:
+#     # Search for maximum frame
+#     density_files = glob.glob("gasdens*.dat")
+#     max_frame = 0
+#     for d_f in density_files:
+#         name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
+#         frame_number = int(name[7:]) # just 999
+#         if frame_number > max_frame:
+#             max_frame = frame_number
+#     num_frames = max_frame + 1
 
-        vorticity = curl(vrad, vtheta, rad, theta)
-        vortensity = vorticity / normalized_density[1:, 1:]
-        averaged_w = np.average(vortensity, axis = 1)
+#     #for i in range(num_frames):
+#     #    make_plot(i)
 
-        ### Plot ###
-        plot.plot(x[1:], averaged_w, linewidth = linewidth)
+#     p = Pool() # default number of processes is multiprocessing.cpu_count()
+#     p.map(make_plot, range(num_frames))
+#     p.terminate()
 
-        # Annotate
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel("Azimuthally Averaged Vortensity", fontsize = fontsize)
-        plot.title("Averaged Vortensity at Orbit %d" % orbit, fontsize = fontsize + 1)
-
-        # Save and Close
-        plot.savefig("%s/%saveragedVorticity_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        #plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
-
-    i = frame
-    #choose_axis(i, "normal")
-    choose_axis(i, "zoom")
-
-
-
-##### Plot One File or All Files #####
-
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    make_plot(frame_number)
-else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = 0
-    for d_f in density_files:
-        name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
-        frame_number = int(name[7:]) # just 999
-        if frame_number > max_frame:
-            max_frame = frame_number
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    p = Pool() # default number of processes is multiprocessing.cpu_count()
-    p.map(make_plot, range(num_frames))
-    p.terminate()
-
-    #### Make Movies ####
-    make_movies()
+#     #### Make Movies ####
+#     make_movies()
 
 
