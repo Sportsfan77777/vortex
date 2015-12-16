@@ -219,7 +219,7 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
                                              weights = weights(half_width), axis = 0), kernel_size)
     # Replace values above maximum with maximum
     max_value = 0.3
-    vortensity_at_vortex[max_value > 0.25] = max_value
+    vortensity_at_vortex[vortensity_at_vortex > max_value] = max_value
 
     # Plot
     if figure:
