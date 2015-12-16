@@ -184,7 +184,7 @@ def get_density_variation(frame, vortex_location, figure = False):
     variation = max_density / avg_density
     return variation
 
-def get_vortensity_variation(frame, vortex_location, figure = True):
+def get_vortensity_variation(frame, vortex_location, figure = False):
     """
     return variation in vortensity (defined to be min / avg at a particular radius)
     """
