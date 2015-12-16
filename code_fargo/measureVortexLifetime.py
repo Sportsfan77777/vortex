@@ -184,7 +184,7 @@ def get_density_variation(frame, vortex_location, figure = False):
     variation = max_density / avg_density
     return variation
 
-def get_vortensity_variation(frame, vortex_location, figure = False):
+def get_vortensity_variation(frame, vortex_location, figure = True):
     """
     return variation in vortensity (defined to be min / avg at a particular radius)
     """
@@ -199,10 +199,11 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
     vorticity = curl(vrad, vtheta, rad, theta)
     vortensity = vorticity / normalized_density[1:, 1:]
 
-    # Azimuthal Profile
+    # Azimuthal Profile (Average over width of vortex)
     arg_vortex = np.searchsorted(rad, vortex_location)
+    half_width = int(12 * (num_rad / 512.0))
     kernel_size = num_theta / 200
-    vortensity_at_vortex = smooth(vortensity[arg_vortex,:], kernel_size)
+    vortensity_at_vortex = smooth(np.average(vortensity[(arg_vortex - half_width):(arg_vortex + half_width), :], axis = 0), kernel_size)
 
     # Plot
     if figure:
@@ -323,7 +324,7 @@ def plot_azimuthal_variation(vortex_locations, min_frame = 100, max_frame = num_
     #plot.scatter(frame_range, vortex_locations)
 
     # Limits
-    plot.ylim(0, 10)
+    plot.ylim(0, 5)
 
     # Annotate
     plot.xlabel("Orbit", fontsize = fontsize)
