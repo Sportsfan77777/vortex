@@ -82,12 +82,24 @@ def curl(v_rad, v_theta, rad, theta):
 
 ### Find Vortex ###
 
+## Helper Functions ##
+
 # Smoothing Function
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 # Truncate
 def truncate(array, start = 1.2, stop = 3.0):
     """ truncates azimuthally averaged array between two radii """
     return array[np.searchsorted(rad, start) : np.searchsorted(rad, stop)]
+
+def weights(half_width):
+    """ weights = [0.5, ..., 1.0, 1.0, ..., 0.5] """
+    first_half = np.linspace(0.5, 1, half_width)
+    second_half = np.linspace(1, 0.5, half_width)
+
+    weight = np.concatenate((first_half, second_half))
+    return weight
+
+## Location in Data ##
 
 def find_density_max(frame):
     """ returns radius with maximum azimuthally averaged density """
@@ -201,9 +213,13 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
 
     # Azimuthal Profile (Average over width of vortex)
     arg_vortex = np.searchsorted(rad, vortex_location)
-    half_width = int(12 * (num_rad / 512.0))
+    half_width = int(16 * (num_rad / 512.0))
     kernel_size = num_theta / 200
-    vortensity_at_vortex = smooth(np.average(vortensity[(arg_vortex - half_width):(arg_vortex + half_width), :], axis = 0), kernel_size)
+    vortensity_at_vortex = smooth(np.average(vortensity[(arg_vortex - half_width):(arg_vortex + half_width), :], 
+                                             weights = weights(half_width), axis = 0), kernel_size)
+    # Replace values above maximum with maximum
+    max_value = 0.3
+    vortensity_at_vortex[max_value > 0.25] = max_value
 
     # Plot
     if figure:
@@ -217,7 +233,7 @@ def get_vortensity_variation(frame, vortex_location, figure = False):
         plot.xticks(angles, degree_angles)
 
         # Plot
-        plot.plot(theta[1:], vortensity[arg_vortex,:], linewidth = linewidth)
+        plot.plot(theta[1:], vortensity_at_vortex, linewidth = linewidth)
 
         # Annotate
         plot.xlabel("Theta", fontsize = fontsize)
