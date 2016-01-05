@@ -4,6 +4,10 @@ plots torque over time
  *** uses a smoothing function ***
 """
 
+import sys
+import os
+import subprocess
+
 import numpy as np
 #import matplotlib
 #matplotlib.use('Agg')
