@@ -42,8 +42,8 @@ x = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
 viscosity = float(fargo_par["Viscosity"])
-times = np.loadtxt("orbit.dat")[0] # Note this is a different 'x' for plotting
-radius = np.loadtxt("orbit.dat")[2] # really 'a', not 'r'
+times = np.loadtxt("orbit0.dat")[0] # Note this is a different 'x' for plotting
+radius = np.loadtxt("orbit0.dat")[2] # really 'a', not 'r'
 def analytic_torque(rate = 10):
     """ returns time and torque at that time in [x, y] format """
     select = range(0, len(radius), rate)
