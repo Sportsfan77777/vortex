@@ -42,13 +42,13 @@ x = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
 viscosity = float(fargo_par["Viscosity"])
-times = np.loadtxt("orbit0.dat")[0] # Note this is a different 'x' for plotting
-radius = np.loadtxt("orbit0.dat")[2] # really 'a', not 'r'
+times = np.loadtxt("orbit0.dat")[:, 0] # Note this is a different 'x' for plotting
+radii = np.loadtxt("orbit0.dat")[:, 2] # really 'a', not 'r'
 def analytic_torque(rate = 10):
     """ returns time and torque at that time in [x, y] format """
-    select = range(0, len(radius), rate)
-    x = times[select] / (2 * np.pi)
-    y = planet_mass * viscosity * np.power(np.array(radius[select]), -1.5)
+    select = range(0, len(radii), rate)
+    x = times / (2 * np.pi)
+    y = planet_mass * viscosity * np.power(np.array(radii[select]), -1.5)
     # y = torque = J / t = (M R^2 \Omega) / (R^2 / \nu)
     # y = M * \nu * \Omega
     return [x, y]
@@ -88,7 +88,7 @@ def make_plot(rla = True):
 
     # Curves
     # Analytic
-    plot.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth - 1)
+    plot.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
 
     # Simulation
     plot.plot(x, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
@@ -128,5 +128,5 @@ def make_plot(rla = True):
 
 ### PLOTTING ###
 
-make_plot(rla = True) # Roche Lobe Tapering
 make_plot(rla = False) # No Roche Lobe Avoidance
+make_plot(rla = True) # Roche Lobe Tapering
