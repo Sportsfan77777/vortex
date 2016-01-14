@@ -37,17 +37,17 @@ rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 
 data = np.loadtxt("tqwk0.dat")
 select = range(0, len(data[:,-1]), rate)
-x = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
+xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
 viscosity = float(fargo_par["Viscosity"])
 times = np.loadtxt("orbit0.dat")[:, 0] # Note this is a different 'x' for plotting
 radii = np.loadtxt("orbit0.dat")[:, 2] # really 'a', not 'r'
-def analytic_torque(rate = 10):
+def analytic_torque(rate = 50):
     """ returns time and torque at that time in [x, y] format """
     select = range(0, len(radii), rate)
-    x = times / (2 * np.pi)
+    x = times[select] / (2 * np.pi)
     y = planet_mass * viscosity * np.power(np.array(radii[select]), -1.5)
     # y = torque = J / t = (M R^2 \Omega) / (R^2 / \nu)
     # y = M * \nu * \Omega
@@ -91,19 +91,19 @@ def make_plot(rla = True):
     plot.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
 
     # Simulation
-    plot.plot(x, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
-    plot.plot(x, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
-    plot.plot(x, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
-    plot.plot(x, y4, c = "orange", alpha = alpha, linewidth = linewidth - 1)
+    plot.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
+    plot.plot(xs, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
+    plot.plot(xs, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
+    plot.plot(xs, y4, c = "orange", alpha = alpha, linewidth = linewidth - 1)
 
     # Smoothed from Simulation
-    plot.plot(x, s1, c = "r", label = "Inner", linewidth = linewidth)
-    plot.plot(x, s2, c = "g", label = "Outer", linewidth = linewidth)
-    plot.plot(x, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
-    plot.plot(x, s4, c = "orange", linewidth = linewidth)
+    plot.plot(xs, s1, c = "r", label = "Inner", linewidth = linewidth)
+    plot.plot(xs, s2, c = "g", label = "Outer", linewidth = linewidth)
+    plot.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
+    plot.plot(xs, s4, c = "orange", linewidth = linewidth)
 
 
-    plot.plot([x[0], x[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
+    plot.plot([xs[0], xs[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
 
     plot.legend()
 
