@@ -183,6 +183,8 @@ if len(sys.argv) > 1:
         # Plot Sample
         max_frame = find_max_frame()
         sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
+        for i in sample:
+            make_plot(i)
     else:
         # Plot Single
         make_plot(frame_number, show = True)
