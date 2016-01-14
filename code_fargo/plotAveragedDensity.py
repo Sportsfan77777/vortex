@@ -20,7 +20,7 @@ import math
 import numpy as np
 
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 from matplotlib import rc
 from matplotlib import pyplot as plot
 
@@ -88,7 +88,7 @@ my_dpi = 100
 fontsize = 14
 linewidth = 4
 
-def make_plot(frame):
+def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     def choose_axis(i, axis):
         # Orbit Number
@@ -125,7 +125,8 @@ def make_plot(frame):
 
         # Save and Close
         plot.savefig("averagedDensity/%savg_density_%03d.png" % (prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        #plot.show()
+        if show:
+            plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
@@ -136,7 +137,7 @@ def make_plot(frame):
 
 if len(sys.argv) > 1:
     frame_number = int(sys.argv[1])
-    make_plot(frame_number)
+    make_plot(frame_number, show = True)
 else:
     # Search for maximum frame
     density_files = glob.glob("gasdens*.dat")
@@ -150,6 +151,8 @@ else:
 
     #for i in range(num_frames):
     #    make_plot(i)
+
+    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
 
     p = Pool() # default number of processes is multiprocessing.cpu_count()
     p.map(make_plot, range(num_frames))

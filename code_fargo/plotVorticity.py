@@ -110,7 +110,7 @@ clim = [0, 0.2]
 fontsize = 14
 my_dpi = 100
 
-def make_plot(frame):
+def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     def choose_axis(i, axis):
         # Orbit Number
@@ -161,7 +161,8 @@ def make_plot(frame):
 
         # Save and Close
         plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        #plot.show()
+        if show:
+            plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
@@ -174,7 +175,7 @@ def make_plot(frame):
 
 if len(sys.argv) > 1:
     frame_number = int(sys.argv[1])
-    make_plot(frame_number)
+    make_plot(frame_number, show = True)
 else:
     # Search for maximum frame
     density_files = glob.glob("gasdens*.dat")
