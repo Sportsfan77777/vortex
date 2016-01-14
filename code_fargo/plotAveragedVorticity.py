@@ -3,6 +3,7 @@ plot 2-D vorticity maps (really vortensity = vorticity / density)
 
 python plotVorticity.py
 python plotVorticity.py frame_number
+python plotVorticity.py -1  <<<===== Plots a sample
 python plotVorticity.py -m
 """
 
@@ -167,28 +168,41 @@ def make_plot(frame, show = True):
 
 ##### Plot One File or All Files #####
 
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    make_plot(frame_number, show)
-else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
+def find_max_frame():
     max_frame = 0
     for d_f in density_files:
         name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
         frame_number = int(name[7:]) # just 999
         if frame_number > max_frame:
             max_frame = frame_number
+    return max_frame
+
+if len(sys.argv) > 1:
+    frame_number = int(sys.argv[1])
+    if frame_number == -1:
+        # Plot Sample
+        max_frame = find_max_frame()
+        sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
+    else:
+        # Plot Single
+        make_plot(frame_number, show = True)
+else:
+    # Search for maximum frame
+    density_files = glob.glob("gasdens*.dat")
+    max_frame = find_max_frame()
     num_frames = max_frame + 1
 
     #for i in range(num_frames):
     #    make_plot(i)
+
+    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
 
     p = Pool() # default number of processes is multiprocessing.cpu_count()
     p.map(make_plot, range(num_frames))
     p.terminate()
 
     #### Make Movies ####
-    make_movies()
+    #make_movies()
+
 
 
