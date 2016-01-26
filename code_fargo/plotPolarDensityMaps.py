@@ -110,7 +110,7 @@ def make_plot(frame, show = False):
             prefix = ""
             rmax = float(fargo_par["Rmax"])
 
-        plot.xyicks([], []) # Angles
+        plot.xticks([], []) # Angles
         plot.yticks([rmax], ["%.1f" % rmax]) # Max Radius
         plot.ylim(0, rmax)
 
