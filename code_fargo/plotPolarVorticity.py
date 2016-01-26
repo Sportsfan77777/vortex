@@ -123,7 +123,7 @@ def make_plot(frame, show = False):
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+        ax = fig.add_subplot(111, polar = True)
 
         # Axis
         if axis == "zoom":
