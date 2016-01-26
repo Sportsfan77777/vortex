@@ -109,11 +109,9 @@ def make_plot(frame, show = False):
         plot.ylim(0, 2 * np.pi)
         plot.yticks(angles, degree_angles)
         if axis == "zoom":
-            x = rad
             prefix = "zoom_"
             ax.set_rmax(2.4) # to match ApJL paper
         else:
-            x = rad
             prefix = ""
 
         # Data
@@ -121,7 +119,7 @@ def make_plot(frame, show = False):
         normalized_density = density / surface_density_zero
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(theta, rad, np.transpose(normalized_density), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
