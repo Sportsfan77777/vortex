@@ -14,13 +14,13 @@ import shutil
 
 # Get Sample
 
+# cd to the argument directory
 directory = sys.argv[1]
-sample = pickle.load("%s/sample.p" % directory)
+os.chdir(directory)
+
+sample = pickle.load("sample.p" % directory)
 
 ##### Make Movie #####
-
-# cd directory
-os.chdir(directory)
 
 # Get all files
 files = glob.glob("*.png" % directory)
