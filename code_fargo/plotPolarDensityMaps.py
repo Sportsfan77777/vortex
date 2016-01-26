@@ -108,7 +108,7 @@ def make_plot(frame, show = False):
             rmax = 2.4 # to match ApJL paper
         else:
             prefix = ""
-            rmax = fargo_par["Rmax"]
+            rmax = float(fargo_par["Rmax"])
 
         ax.set_rmax(rmax)
         ax.get_yaxis().set_ticks(["%.1f" % rmax])
