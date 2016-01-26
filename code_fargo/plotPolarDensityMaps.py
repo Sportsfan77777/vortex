@@ -126,8 +126,6 @@ def make_plot(frame, show = False):
         result.set_clim(clim[0], clim[1])
 
         # Annotate
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
         plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
