@@ -110,8 +110,9 @@ def make_plot(frame, show = False):
             prefix = ""
             rmax = float(fargo_par["Rmax"])
 
-        plot.yticks([rmax], ["%.1f" % rmax])
-        ax.set_rmax(rmax)
+        plot.xyicks([], []) # Angles
+        plot.yticks([rmax], ["%.1f" % rmax]) # Max Radius
+        plot.ylim(0, rmax)
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
