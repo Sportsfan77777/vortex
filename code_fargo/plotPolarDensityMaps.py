@@ -103,16 +103,15 @@ def make_plot(frame, show = False):
         ax = fig.add_subplot(111, polar = True) 
 
         # Axis
-        angles = np.linspace(0, 2 * np.pi, 7)
-        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
-
-        plot.ylim(0, 2 * np.pi)
-        plot.yticks(angles, degree_angles)
         if axis == "zoom":
             prefix = "zoom_"
-            ax.set_rmax(2.4) # to match ApJL paper
+            rmax = 2.4 # to match ApJL paper
         else:
             prefix = ""
+            rmax = fargo_par["Rmax"]
+
+        ax.set_rmax(rmax)
+        ax.get_yaxis().set_ticks([rmax])
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
