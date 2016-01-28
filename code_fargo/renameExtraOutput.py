@@ -12,15 +12,14 @@ import subprocess
 import glob
 
 prefixes = ['gasdens', 'gasvrad', 'gasvtheta']
-new_prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta'] # re-named prefixes
+new_prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta']
 
 density_files = glob.glob("*gasdens*.dat")
 
 def find_max_frame():
     max_frame = 0
     for d_f in density_files:
-        rename = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
-        name = rename.split("_")[-1]
+        name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
         frame_number = int(name[7:]) # just 999
         if frame_number > max_frame:
             max_frame = frame_number
@@ -32,14 +31,16 @@ num_frames = find_max_frame() + 1
 
 rate = 5
 
-for new_prefix in new_prefixes:
+for prefix, new_prefix in zip(prefixes, new_prefixes):
     for i in range(num_frames):
         if (i % rate) == 0:
             # File should be kept
             pass
         else:
-            # Delete File
-            old = "%s%d.dat" % (new_prefix, i) # Note only re-named files can be deleted
-        
-            os.remove(old)
-            #print old
+            # Rename file
+            old = "%s%d.dat" % (prefix, i)
+            new = "%s%d.dat" %(new_prefix, i)
+
+            shutil.move(old, new)
+            #print old, new
+
