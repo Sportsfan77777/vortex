@@ -48,7 +48,7 @@ def analytic_torque(rate = 50):
     """ returns time and torque at that time in [x, y] format """
     select = range(0, len(radii), rate)
     x = times[select] / (2 * np.pi)
-    y = planet_mass * viscosity * (2 * np.pi * np.power(np.array(radii[select]), -1.5))
+    y = planet_mass * viscosity * np.power(np.array(radii[select]), -1.5)
     # y = torque = J / t = (M R^2 \Omega) / (R^2 / \nu)
     # y = M * \nu * \Omega
     return [x, y]
