@@ -32,14 +32,16 @@ num_frames = find_max_frame() + 1
 
 rate = 5
 
-for new_prefix in new_prefixes:
+for prefix in prefixes:
     for i in range(num_frames):
         if (i % rate) == 0:
-            # File should be kept
-            pass
-        else:
-            # Delete File
-            old = "%s%d.dat" % (new_prefix, i) # Note only re-named files can be deleted
-        
-            os.remove(old)
-            #print old
+            # All that is left should be re-numbered
+            new_number = i / rate
+
+            old = "%s%d.dat" % (prefix, i)
+            new = "%s%d.dat" % (prefix, new_number)
+
+            #shutil.move(old, new)
+            print old, new
+
+
