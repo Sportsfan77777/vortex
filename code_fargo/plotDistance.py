@@ -33,7 +33,7 @@ rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 data = np.loadtxt("orbit0.dat")
 select = range(0, len(data[:,-1]), rate)
 xs = (data[:,0])[select] / (2 * np.pi) # Convert to num_orbits
-ys = (data[:,2])[select] # Planet Semi-Major Axis
+sm_axes = (data[:,2])[select] # Planet Semi-Major Axis
 eccs = (data[:,1])[select] # Planet Eccentricity
 
 # Plot Parameters
@@ -43,20 +43,21 @@ linewidth = 3
 
 def make_plot():
     # Curves
+    ys = sm_axes
     qs = np.array([a * (1 - e) for (a, e) in zip(ys, eccs)])
 
-    plot.plot(xs, ys, alpha = alpha, linewidth = linewidth, label = "a")
-    plot.plot(xs, qs, alpha = alpha, linewidth = linewidth, label = "q")
+    plot.plot(xs, ys, c = "blue", linewidth = linewidth, label = "a")
+    plot.plot(xs, qs, c = "purple", alpha = alpha, linewidth = linewidth, label = "q")
 
     # Annotate
-    plot.title("Accretion Over Time", fontsize = fontsize + 2)
+    plot.title("Distance Over Time", fontsize = fontsize + 2)
     plot.xlabel("Timestep", fontsize = fontsize)
-    plot.ylabel("Planet Distance", fontsize = fontsize)
+    plot.ylabel("Planet Distance ('a' or 'q')", fontsize = fontsize)
 
     plot.legend()
 
     # Limits
-    plot.ylim(1, 1.05)
+    #plot.ylim(0.95, 1.05)
 
     # Save and Close
     plot.savefig("planetDistance.png", bbox_inches = 'tight')

@@ -33,17 +33,16 @@ rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 data = np.loadtxt("bigplanet0.dat")
 select = range(0, len(data[:,-1]), rate)
 xs = (data[:,-2])[select] / (2 * np.pi) # Convert to num_orbits
-ys = (data[:,5])[select] # Planet Mass
+masses = (data[:,5])[select] # Planet Mass
 
 # Plot Parameters
-alpha = 0.2 # for non-smoothed curves
 fontsize = 14
 linewidth = 3
 
 def make_plot():
     # Curves
-    ys = ys / ys[0]
-    plot.plot(xs, ys, alpha = alpha, linewidth = linewidth)
+    ys = masses / masses[0]
+    plot.plot(xs, ys, linewidth = linewidth)
 
     # Annotate
     plot.title("Accretion Over Time", fontsize = fontsize + 2)
@@ -51,7 +50,7 @@ def make_plot():
     plot.ylabel("Planet Mass / Initial Mass", fontsize = fontsize)
 
     # Limits
-    plot.ylim(1, 1.05)
+    #plot.ylim(1, 1.05)
 
     # Save and Close
     plot.savefig("planetMass.png", bbox_inches = 'tight')
