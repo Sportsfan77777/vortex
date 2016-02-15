@@ -1,0 +1,70 @@
+"""
+plots torque over time
+
+ *** uses a smoothing function ***
+"""
+
+import sys
+import os
+import subprocess
+import pickle
+
+import numpy as np
+#import matplotlib
+#matplotlib.use('Agg')
+from matplotlib import pyplot as plot
+from matplotlib import rcParams as rc
+
+from scipy import signal as sig
+from scipy.ndimage import filters as ff
+
+### Get FARGO Parameters ###
+# Create param file if it doesn't already exist
+param_fn = "params.p"
+if not os.path.exists(param_fn):
+    command = "python pickleParameters.py"
+    split_command = command.split()
+    subprocess.Popen(split_command)
+fargo_par = pickle.load(open(param_fn, "rb"))
+
+# Load Data (and choose subset) = x-axis
+rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
+
+data = np.loadtxt("orbit0.dat")
+select = range(0, len(data[:,-1]), rate)
+xs = (data[:,0])[select] / (2 * np.pi) # Convert to num_orbits
+ys = (data[:,2])[select] # Planet Semi-Major Axis
+eccs = (data[:,1])[select] # Planet Eccentricity
+
+# Plot Parameters
+alpha = 0.2 # for non-smoothed curves
+fontsize = 14
+linewidth = 3
+
+def make_plot():
+    # Curves
+    qs = np.array([a * (1 - e) for (a, e) in zip(ys, eccs)])
+
+    plot.plot(xs, ys, alpha = alpha, linewidth = linewidth, label = "a")
+    plot.plot(xs, qs, alpha = alpha, linewidth = linewidth, label = "q")
+
+    # Annotate
+    plot.title("Accretion Over Time", fontsize = fontsize + 2)
+    plot.xlabel("Timestep", fontsize = fontsize)
+    plot.ylabel("Planet Distance", fontsize = fontsize)
+
+    plot.legend()
+
+    # Limits
+    plot.ylim(1, 1.05)
+
+    # Save and Close
+    plot.savefig("planetDistance.png", bbox_inches = 'tight')
+    plot.show()
+
+    plot.cla()
+
+
+### PLOTTING ###
+
+make_plot()
