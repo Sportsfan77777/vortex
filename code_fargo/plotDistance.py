@@ -63,7 +63,7 @@ def make_plot():
     plot.plot(xs, qs, c = "purple", alpha = alpha, linewidth = linewidth, label = "q")
 
     # Analytic
-    plot.plot(xs, ys_analytic, c = "black", alpha = alpha, linewidth = linewidth, label = "ideal")
+    plot.plot(xs, ys_analytic, c = "black", linewidth = linewidth, label = "ideal")
 
     # Annotate
     plot.title("Distance Over Time", fontsize = fontsize + 2)
@@ -73,7 +73,9 @@ def make_plot():
     plot.legend()
 
     # Limits
-    #plot.ylim(0.95, 1.05)
+    mins = [min(ys), min(qs), min(ys_analytic)]
+    maxes = [max(ys), max(qs), max(ys_analytic)]
+    plot.ylim(min(mins)- 0.02, max(maxes) + 0.04)
 
     # Save and Close
     plot.savefig("planetDistance.png", bbox_inches = 'tight')
