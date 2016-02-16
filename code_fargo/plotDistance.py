@@ -36,6 +36,18 @@ xs = (data[:,0])[select] / (2 * np.pi) # Convert to num_orbits
 sm_axes = (data[:,2])[select] # Planet Semi-Major Axis
 eccs = (data[:,1])[select] # Planet Eccentricity
 
+# Calculate Analytic Rate
+viscosity = float(fargo_par["Viscosity"])
+delta_t = data[1,0] - data[0,0]
+def next_a(previous_a, delta_t):
+    rate = previous_a**2 / viscosity
+    return previous_a - (rate)(delta_t)
+ys_analytic = [sm_axes[0]]
+# Iterate through times
+for i, x in enumerate(xs):
+    a = next_a(ys_analytic[-1], delta_t)
+    ys_analytic.append(a)
+
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
 fontsize = 14
@@ -46,8 +58,12 @@ def make_plot():
     ys = sm_axes
     qs = np.array([a * (1 - e) for (a, e) in zip(ys, eccs)])
 
+    # Data
     plot.plot(xs, ys, c = "blue", linewidth = linewidth, label = "a")
     plot.plot(xs, qs, c = "purple", alpha = alpha, linewidth = linewidth, label = "q")
+
+    # Analytic
+    plot.plot(xs, ys_analytic, c = "black", alpha = alpha, linewidth = linewidth, label = "ideal"))
 
     # Annotate
     plot.title("Distance Over Time", fontsize = fontsize + 2)
