@@ -76,6 +76,7 @@ def add_to_plot(frame, choice = "normal", show = False):
         else:
             x = rad
             prefix = ""
+            plot.xlim(0, int(fargo_par["Rmax"]))
             xlabel = "Radius"
             
         # Data
@@ -108,16 +109,18 @@ def make_plot(prefix = "", show = False):
 ##### Plot One File or All Files #####
 
 # Set up figure
-fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+
 
 ### Plot Sample ###
 # Full Range
+fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 for i in sample_range:
     add_to_plot(i, choice = "normal")
 
 make_plot(show = True)
 
 # Zoomed Range
+fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 for i in sample_range:
     add_to_plot(i, choice = "zoom")
 
