@@ -66,9 +66,6 @@ def add_to_plot(frame, choice = "normal", show = False):
         time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
         orbit = int(round(time / (2 * np.pi), 0)) * i
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-
         # Axis
         if axis == "zoom":
             x = (rad - 1) / scale_height
@@ -109,6 +106,9 @@ def make_plot(prefix = "", show = False):
 
 
 ##### Plot One File or All Files #####
+
+# Set up figure
+fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
 ### Plot Sample ###
 # Full Range
