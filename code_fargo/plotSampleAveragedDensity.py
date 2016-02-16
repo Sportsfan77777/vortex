@@ -102,10 +102,10 @@ def make_plot(prefix = "", show = False):
     plot.legend()
 
     # Save and Close
-    plot.savefig("%s/%savg_density_%03d.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/%savg_density_%s.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
-    plot.close(fig) # Close Figure (to avoid too many figures)
+    plot.cla() # Close Figure (to avoid too many figures)
 
 
 ##### Plot One File or All Files #####
