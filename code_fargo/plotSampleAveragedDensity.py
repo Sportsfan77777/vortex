@@ -89,15 +89,16 @@ def add_to_plot(frame, choice = "normal", show = False):
         ### Plot ###
         plot.plot(x, averagedDensity, linewidth = linewidth, label = "%d" % frame)
 
+        # Annotate
+        plot.xlabel(xlabel, fontsize = fontsize)
+        plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
+        #plot.title("", fontsize = fontsize + 1)
+
     i = frame
     choose_axis(i, choice)
 
 def make_plot(prefix = "", show = False):
     # Annotate
-    plot.xlabel(xlabel, fontsize = fontsize)
-    plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
-    #plot.title("", fontsize = fontsize + 1)
-
     plot.legend()
 
     # Save and Close
