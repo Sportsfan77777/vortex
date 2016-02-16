@@ -63,7 +63,7 @@ def make_plot():
     plot.plot(xs, qs, c = "purple", alpha = alpha, linewidth = linewidth, label = "q")
 
     # Analytic
-    plot.plot(xs, ys_analytic, c = "black", alpha = alpha, linewidth = linewidth, label = "ideal"))
+    plot.plot(xs, ys_analytic, c = "black", alpha = alpha, linewidth = linewidth, label = "ideal")
 
     # Annotate
     plot.title("Distance Over Time", fontsize = fontsize + 2)
