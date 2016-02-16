@@ -76,7 +76,7 @@ def add_to_plot(frame, choice = "normal", show = False):
         else:
             x = rad
             prefix = ""
-            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
+            plot.xlim(float(fargo_par["Rmin"]) - 0.05, float(fargo_par["Rmax"]) + 0.05)
             xlabel = "Radius"
             
         # Data
@@ -103,7 +103,6 @@ def make_plot(prefix = "", show = False):
     plot.savefig("%s/%savg_density_%s.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
-    plot.cla() # Close Figure (to avoid too many figures)
 
 
 ##### Plot One File or All Files #####
@@ -113,14 +112,15 @@ def make_plot(prefix = "", show = False):
 
 ### Plot Sample ###
 # Full Range
-plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 for i in sample_range:
     add_to_plot(i, choice = "normal")
 
 make_plot(show = True)
+plot.close(fig)
 
 # Zoomed Range
-plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 for i in sample_range:
     add_to_plot(i, choice = "zoom")
 
