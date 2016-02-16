@@ -76,7 +76,7 @@ def add_to_plot(frame, choice = "normal", show = False):
         else:
             x = rad
             prefix = ""
-            plot.xlim(0, int(fargo_par["Rmax"]))
+            plot.xlim(0, float(fargo_par["Rmax"]))
             xlabel = "Radius"
             
         # Data
