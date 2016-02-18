@@ -26,6 +26,14 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
+## Check frame ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    frame = 0
+else:
+    # fargo
+    frame = 1
 
 save_directory = "polarVorticityMaps"
 
@@ -95,7 +103,8 @@ def curl(v_rad, v_theta, rad, theta):
     z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
 
     # Shift out of rotating frame (http://arxiv.org/pdf/astro-ph/0605237v2.pdf)
-    z_curl += 2
+    if frame == 1:
+        z_curl += 2
 
     return z_curl
 

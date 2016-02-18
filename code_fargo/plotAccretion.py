@@ -18,6 +18,15 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
+## Set file names ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    planet_fn = "bigplanet1.dat"
+else:
+    # fargo
+    planet_fn = "bigplanet0.dat"
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -30,7 +39,7 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 # Load Data (and choose subset) = x-axis
 rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 
-data = np.loadtxt("bigplanet0.dat")
+data = np.loadtxt(planet_fn)
 select = range(0, len(data[:,-1]), rate)
 xs = (data[:,-2])[select] / (2 * np.pi) # Convert to num_orbits
 masses = (data[:,5])[select] # Planet Mass

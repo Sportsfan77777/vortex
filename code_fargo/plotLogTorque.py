@@ -18,6 +18,17 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
+## Set file names ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    torque_fn = "tqwk1.dat"
+    orbit_fn = "orbit1.dat"
+else:
+    # fargo
+    torque_fn = "tqwk0.dat"
+    orbit_fn = "orbit0.dat"
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -35,15 +46,15 @@ ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 # Load Data (and choose subset) = x-axis
 rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 
-data = np.loadtxt("tqwk0.dat")
+data = np.loadtxt(torque_fn)
 select = range(0, len(data[:,-1]), rate)
 xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
 viscosity = float(fargo_par["Viscosity"])
-times = np.loadtxt("orbit0.dat")[:, 0] # Note this is a different 'x' for plotting
-radii = np.loadtxt("orbit0.dat")[:, 2] # really 'a', not 'r'
+times = np.loadtxt(orbit_fn)[:, 0] # Note this is a different 'x' for plotting
+radii = np.loadtxt(orbit_fn)[:, 2] # really 'a', not 'r'
 def analytic_torque(rate = 50):
     """ returns time and torque at that time in [x, y] format """
     select = range(0, len(radii), rate)
@@ -110,7 +121,7 @@ def make_plot(rla = True):
     # Annotate
 
     plot.title(title, fontsize = fontsize + 2)
-    plot.xlabel("Timestep", fontsize = fontsize)
+    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Torque", fontsize = fontsize)
 
     # Layout
