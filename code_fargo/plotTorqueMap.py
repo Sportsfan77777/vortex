@@ -70,7 +70,12 @@ def torque(radius, theta, density):
 
     return torque_density
 
+# Plot Parameters
+rcParams['figure.figsize'] = 5, 10
+my_dpi = 100
 
+fontsize = 14
+linewidth = 3
 
 def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
