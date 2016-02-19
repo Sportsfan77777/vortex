@@ -127,7 +127,7 @@ def make_plot(rla = True):
     # Layout
 
     plot.yscale('log')
-    plot.ylim(10**(-10), 10**(-4))
+    plot.ylim(10**(-10), 10**(-3))
 
     # Save and Close
 
