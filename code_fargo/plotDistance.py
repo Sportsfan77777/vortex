@@ -79,7 +79,7 @@ def make_plot():
     plot.xlabel("Timestep", fontsize = fontsize)
     plot.ylabel("Planet Distance ('a' or 'q')", fontsize = fontsize)
 
-    plot.legend()
+    plot.legend(loc = "upper left")
 
     # Limits
     mins = [min(ys), min(qs), min(ys_analytic)]
