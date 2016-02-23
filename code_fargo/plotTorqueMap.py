@@ -55,18 +55,22 @@ def torque(radius, theta, density):
     d_rad = np.diff(rad)
     d_theta = np.diff(theta)
 
-    # Relevant Vectors
-    r_element = np.array([radius * np.cos(theta), radius * np.cos(theta)]) # to fluid element
-    r_p = np.array([1, 0]) # to planet
+    # Relevant Vectors + Quantities
+    r_element = np.array([np.outer(radius, np.cos(theta)), np.outer(radius, np.sin(theta))]) # to fluid element 
+    r_diff = np.array([np.outer(radius, np.cos(theta)) - 1, np.outer(radius, np.sin(theta))]) # to fluid element 
 
-    r_diff = r_element - r_p
+    dist_sq = np.linalg.norm(r_diff)**2
+
+    print np.shape(r_element), np.shape(r_diff)
+
+    print np.shape(dist_sq)
 
     # Torque
-    coeff = BigG * planet_mass * density / np.dot(r_diff, r_diff)
-    direction = np.cross(r_element, r_diff)
+    coeff = BigG * planet_mass * density / dist_sq
+    direction = np.cross(r_element, r_diff, axis = 0)
 
-    torque_density = coeff * direction * radius # get rid of radius when area is included
-    #area = radius * d_rad * d_theta
+    torque_density = coeff * direction
+    #area = d_rad**2 * d_theta
 
     return torque_density
 
@@ -76,6 +80,10 @@ my_dpi = 100
 
 fontsize = 14
 linewidth = 3
+
+cmap = "RdYlBu_r"
+clim = [-16, 0]
+#clim = [-2, 2] # direction-only clim
 
 def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
@@ -110,13 +118,14 @@ def make_plot(frame, show = False):
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
-        log_torque = np.log(torque(rad, theta, normalized_density))
+        log_torque = np.log(np.abs(torque(rad, theta, normalized_density)))
+        print np.shape(log_torque)
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(torque), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(log_torque), cmap = cmap)
     
         fig.colorbar(result)
-        #result.set_clim(clim[0], clim[1])
+        result.set_clim(clim[0], clim[1])
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
