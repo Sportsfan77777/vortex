@@ -55,24 +55,32 @@ def torque(radius, theta, density):
     d_rad = np.diff(rad)
     d_theta = np.diff(theta)
 
+    d_rad = np.append(d_rad, d_rad[-1])
+    d_theta = np.append(d_theta, d_theta[-1])
+
     # Relevant Vectors + Quantities
     r_element = np.array([np.outer(radius, np.cos(theta)), np.outer(radius, np.sin(theta))]) # to fluid element 
     r_diff = np.array([np.outer(radius, np.cos(theta)) - 1, np.outer(radius, np.sin(theta))]) # to fluid element 
 
-    dist_sq = np.linalg.norm(r_diff)**2
-
-    print np.shape(r_element), np.shape(r_diff)
-
-    print np.shape(dist_sq)
+    dist_sq = np.linalg.norm(r_diff, axis = 0)**2
 
     # Torque
     coeff = BigG * planet_mass * density / dist_sq
     direction = np.cross(r_element, r_diff, axis = 0)
 
     torque_density = coeff * direction
-    #area = d_rad**2 * d_theta
+    area = radius[:, None] * np.outer(d_rad, d_theta)
 
-    return torque_density
+    print area[-1, -1]
+    print np.shape(area)
+
+    return torque_density * area
+
+def total_inner_torque():
+    pass
+
+def total_outer_torque():
+    pass
 
 # Plot Parameters
 rcParams['figure.figsize'] = 5, 10
@@ -82,7 +90,7 @@ fontsize = 14
 linewidth = 3
 
 cmap = "RdYlBu_r"
-clim = [-16, 0]
+clim = [-10, -6]
 #clim = [-2, 2] # direction-only clim
 
 def make_plot(frame, show = False):
@@ -118,8 +126,7 @@ def make_plot(frame, show = False):
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
-        log_torque = np.log(np.abs(torque(rad, theta, normalized_density)))
-        print np.shape(log_torque)
+        log_torque = np.log(np.abs(torque(rad, theta, normalized_density))) / np.log(10) # log torque in base 10
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(log_torque), cmap = cmap)
