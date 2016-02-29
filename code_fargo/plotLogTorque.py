@@ -100,7 +100,7 @@ def make_plot(rla = True):
 
     # Figure
     fig = plot.figure(figsize=(8, 6)) 
-    gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1]) 
+    gs = gridspec.GridSpec(2, 1, height_ratios=[7, 1]) 
     ax1 = plot.subplot(gs[0])
     ax2 = plot.subplot(gs[1])
 
