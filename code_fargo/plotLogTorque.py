@@ -143,7 +143,7 @@ def make_plot(rla = True):
     yticks = [1, 3]
     ytick_labels = ["Outward", "Inward"]
     ax2.set_yticks(yticks)
-    ax2.set_ytick_labels(ytick_labels)
+    ax2.set_yticklabels(ytick_labels)
 
     # Save and Close
 
