@@ -99,10 +99,10 @@ def make_plot(rla = True):
     s4 = (np.sign(s2 - s1)) + 2
 
     # Figure
-    fig = plt.figure(figsize=(8, 6)) 
-    gs = gridspec.GridSpec(2, height_ratios=[3, 1]) 
-    ax1 = plt.subplot(gs[0])
-    ax2 = plt.subplot(gs[1])
+    fig = plot.figure(figsize=(8, 6)) 
+    gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1]) 
+    ax1 = plot.subplot(gs[0])
+    ax2 = plot.subplot(gs[1])
 
     # Curves
     # Analytic
@@ -123,6 +123,14 @@ def make_plot(rla = True):
     ax1.plot([xs[0], xs[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
 
     ax1.legend()
+    
+    # Layout
+    fig.subplots_adjust(hspace = 0) # connect two panels together
+
+    ax1.set_yscale('log')
+    ax1.set_ylim(10**(-10), 10**(-3))
+
+    ax2.set_ylim(0, 4) # Inward (3) or Outward (1)
 
     # Annotate
 
@@ -132,15 +140,8 @@ def make_plot(rla = True):
 
     yticks = [1, 3]
     ytick_labels = ["Outward", "Inward"]
-    ax2.set_ticks(yticks, ytick_labels)
+    ax2.set_yticks(yticks, ytick_labels)
 
-    # Layout
-    fig.subplots_adjust(hspace = 0) # connect two panels together
-
-    ax1.set_yscale('log')
-    ax1.set_ylim(10**(-10), 10**(-3))
-
-    ax2.set_ylim(0, 4) # Inward (3) or Outward (1)
 
     # Save and Close
 
