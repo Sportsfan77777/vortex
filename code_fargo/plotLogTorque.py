@@ -122,9 +122,9 @@ def make_plot(rla = True):
 
     # Annotate
 
-    ax1.title(title, fontsize = fontsize + 2)
-    ax2.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    ax1.ylabel("Torque", fontsize = fontsize)
+    ax1.set_title(title, fontsize = fontsize + 2)
+    ax2.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
+    ax1.set_ylabel("Torque", fontsize = fontsize)
 
     # Layout
 
