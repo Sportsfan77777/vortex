@@ -89,13 +89,13 @@ def make_plot(rla = True):
     y1 = np.abs(smooth(y1_base, ks_small)[select]) # Torque from Inner Disk 
     y2 = np.abs(smooth(y2_base, ks_small)[select]) # Torque from Outer Disk
     y3 = np.abs(y2 - y1) # Difference
-    y4 = (np.sign(y2 - y1)) + 3 # Sign
+    y4 = (np.sign(y2 - y1)) + 2 # Sign (inward is 3, outward is 1)
     y5 = analytic[1] # Analytic Reference
 
     s1 = np.abs(smooth(y1_base, ks)[select]) # Torque from Inner Disk (smoothed)
     s2 = np.abs(smooth(y2_base, ks)[select]) # Torque from Outer Disk (smoothed)
     s3 = np.abs(s2 - s1)
-    s4 = (np.sign(s2 - s1)) + 3
+    s4 = (np.sign(s2 - s1)) + 2
 
     # Figure
     fig, (ax1, ax2) = plot.subplots(2, sharex = True)
