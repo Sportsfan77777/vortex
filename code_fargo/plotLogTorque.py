@@ -13,6 +13,7 @@ import numpy as np
 #import matplotlib
 #matplotlib.use('Agg')
 from matplotlib import pyplot as plot
+from matplotlib import gridspec
 from matplotlib import rcParams as rc
 
 from scipy import signal as sig
@@ -98,11 +99,14 @@ def make_plot(rla = True):
     s4 = (np.sign(s2 - s1)) + 2
 
     # Figure
-    fig, (ax1, ax2) = plot.subplots(2, sharex = True)
+    fig = plt.figure(figsize=(8, 6)) 
+    gs = gridspec.GridSpec(2, height_ratios=[3, 1]) 
+    ax1 = plt.subplot(gs[0])
+    ax2 = plt.subplot(gs[1])
 
     # Curves
     # Analytic
-    plot.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
+    ax1.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
 
     # Simulation
     ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
@@ -126,7 +130,12 @@ def make_plot(rla = True):
     ax2.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
     ax1.set_ylabel("Torque", fontsize = fontsize)
 
+    yticks = [1, 3]
+    ytick_labels = ["Outward", "Inward"]
+    ax2.set_ticks(yticks, ytick_labels)
+
     # Layout
+    fig.subplots_adjust(hspace = 0) # connect two panels together
 
     ax1.set_yscale('log')
     ax1.set_ylim(10**(-10), 10**(-3))
@@ -138,7 +147,7 @@ def make_plot(rla = True):
     plot.savefig(save_fn, bbox_inches = 'tight')
     plot.show()
 
-    plot.cla(fig)
+    plot.close(fig)
 
 
 ### PLOTTING ###
