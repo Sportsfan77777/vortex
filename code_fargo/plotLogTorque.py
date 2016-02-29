@@ -98,7 +98,7 @@ def make_plot(rla = True):
     s4 = (np.sign(s2 - s1)) + 3
 
     # Figure
-    f, (ax1, ax2) = plot.subplots(2, sharex = True)
+    fig, (ax1, ax2) = plot.subplots(2, sharex = True)
 
     # Curves
     # Analytic
@@ -116,28 +116,29 @@ def make_plot(rla = True):
     ax1.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
     ax2.plot(xs, s4, c = "orange", linewidth = linewidth)
 
+    ax1.plot([xs[0], xs[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
 
-    plot.plot([xs[0], xs[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
-
-    plot.legend()
+    ax1.legend()
 
     # Annotate
 
-    plot.title(title, fontsize = fontsize + 2)
-    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Torque", fontsize = fontsize)
+    ax1.title(title, fontsize = fontsize + 2)
+    ax2.xlabel("Number of Planet Orbits", fontsize = fontsize)
+    ax1.ylabel("Torque", fontsize = fontsize)
 
     # Layout
 
-    plot.yscale('log')
-    plot.ylim(10**(-10), 10**(-3))
+    ax1.set_yscale('log')
+    ax1.set_ylim(10**(-10), 10**(-3))
+
+    ax2.set_ylim(0, 4) # Inward (3) or Outward (1)
 
     # Save and Close
 
     plot.savefig(save_fn, bbox_inches = 'tight')
     plot.show()
 
-    plot.cla()
+    plot.cla(fig)
 
 
 ### PLOTTING ###
