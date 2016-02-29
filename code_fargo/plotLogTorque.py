@@ -89,29 +89,32 @@ def make_plot(rla = True):
     y1 = np.abs(smooth(y1_base, ks_small)[select]) # Torque from Inner Disk 
     y2 = np.abs(smooth(y2_base, ks_small)[select]) # Torque from Outer Disk
     y3 = np.abs(y2 - y1) # Difference
-    y4 = (np.sign(y2 - y1) * 10**(-9)) + 3 * 10**(-9) # Sign
+    y4 = (np.sign(y2 - y1)) + 3 # Sign
     y5 = analytic[1] # Analytic Reference
 
     s1 = np.abs(smooth(y1_base, ks)[select]) # Torque from Inner Disk (smoothed)
     s2 = np.abs(smooth(y2_base, ks)[select]) # Torque from Outer Disk (smoothed)
     s3 = np.abs(s2 - s1)
-    s4 = (np.sign(s2 - s1) * 10**(-9)) + 3 * 10**(-9)
+    s4 = (np.sign(s2 - s1)) + 3
+
+    # Figure
+    f, (ax1, ax2) = plot.subplots(2, sharex = True)
 
     # Curves
     # Analytic
     plot.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
 
     # Simulation
-    plot.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
-    plot.plot(xs, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
-    plot.plot(xs, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
-    plot.plot(xs, y4, c = "orange", alpha = alpha, linewidth = linewidth - 1)
+    ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
+    ax1.plot(xs, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
+    ax1.plot(xs, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
+    ax2.plot(xs, y4, c = "orange", alpha = alpha, linewidth = linewidth - 1)
 
     # Smoothed from Simulation
-    plot.plot(xs, s1, c = "r", label = "Inner", linewidth = linewidth)
-    plot.plot(xs, s2, c = "g", label = "Outer", linewidth = linewidth)
-    plot.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
-    plot.plot(xs, s4, c = "orange", linewidth = linewidth)
+    ax1.plot(xs, s1, c = "r", label = "Inner", linewidth = linewidth)
+    ax1.plot(xs, s2, c = "g", label = "Outer", linewidth = linewidth)
+    ax1.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
+    ax2.plot(xs, s4, c = "orange", linewidth = linewidth)
 
 
     plot.plot([xs[0], xs[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
