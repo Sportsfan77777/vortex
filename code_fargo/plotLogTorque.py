@@ -120,11 +120,12 @@ def make_plot(rla = True):
     ax1.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
     ax2.plot(xs, s4, c = "orange", linewidth = linewidth)
 
-    ax1.plot([xs[0], xs[-1]], [0, 0], c = "black", linewidth = linewidth) # Zero Reference Line
+    ax1.plot([xs[0], xs[-1]], [0, 0], c = "black", label = "Analytic", linewidth = linewidth) # Zero Reference Line
 
     ax1.legend()
     
     # Layout
+
     fig.subplots_adjust(hspace = 0) # connect two panels together
 
     ax1.set_yscale('log')
@@ -138,10 +139,11 @@ def make_plot(rla = True):
     ax2.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
     ax1.set_ylabel("Torque", fontsize = fontsize)
 
+    ax1.set_xticks([])
     yticks = [1, 3]
     ytick_labels = ["Outward", "Inward"]
-    ax2.set_yticks(yticks, ytick_labels)
-
+    ax2.set_yticks(yticks)
+    ax2.set_ytick_labels(ytick_labels)
 
     # Save and Close
 
