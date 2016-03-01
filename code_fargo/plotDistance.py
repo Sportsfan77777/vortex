@@ -76,7 +76,7 @@ def make_plot():
 
     # Annotate
     plot.title("Distance Over Time", fontsize = fontsize + 2)
-    plot.xlabel("Timestep", fontsize = fontsize)
+    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Planet Distance ('a' or 'q')", fontsize = fontsize)
 
     plot.legend(loc = "upper left")
