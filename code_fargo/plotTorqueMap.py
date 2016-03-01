@@ -23,8 +23,6 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
-save_directory = "torqueMaps"
-
 # Constants #
 BigG = 1
 planet_mass = 0.005
@@ -62,7 +60,7 @@ def torque(radius, theta, density):
     r_element = np.array([np.outer(radius, np.cos(theta)), np.outer(radius, np.sin(theta))]) # to fluid element 
     r_diff = np.array([np.outer(radius, np.cos(theta)) - 1, np.outer(radius, np.sin(theta))]) # to fluid element 
 
-    dist_sq = np.linalg.norm(r_diff, axis = 0)**2
+    dist_sq = np.einsum("ijk,ijk->jk", r_diff, r_diff)
 
     # Torque
     coeff = BigG * planet_mass * density / dist_sq
@@ -81,6 +79,13 @@ def total_inner_torque():
 
 def total_outer_torque():
     pass
+
+# Make Directory
+save_directory = "torqueMaps"
+try:
+    os.mkdir(directory)
+except:
+    print "Directory Already Exists"
 
 # Plot Parameters
 rcParams['figure.figsize'] = 5, 10
