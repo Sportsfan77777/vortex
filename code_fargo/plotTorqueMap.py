@@ -83,7 +83,7 @@ def total_outer_torque():
 # Make Directory
 save_directory = "torqueMaps"
 try:
-    os.mkdir(directory)
+    os.mkdir(save_directory)
 except:
     print "Directory Already Exists"
 
