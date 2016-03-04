@@ -1,8 +1,8 @@
 """
-plots contributions to torque for each cell
+plots log contributions to torque for each cell
 
 Usage:
-python plotTorqueMap.py frame_number
+python plotLogTorqueMap.py frame_number
 """
 
 import sys
@@ -25,9 +25,8 @@ from pylab import fromfile
 
 import util
 
-# Constants #
-BigG = 1
-planet_mass = 0.005
+# Constants
+planet_mass = 0.005 # not really (should read this in somehow)
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -48,7 +47,7 @@ surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
 # Make Directory
-save_directory = "torqueMaps"
+save_directory = "polarTorqueMaps"
 try:
     os.mkdir(save_directory)
 except:
@@ -61,8 +60,8 @@ my_dpi = 100
 fontsize = 14
 linewidth = 3
 
-cmap = "gnuplot"
-clim = [10**(-9), 10**(-7)]
+cmap = "RdYlBu_r"
+clim = [-9, -7]
 #clim = [-2, 2] # direction-only clim
 
 def make_plot(frame, show = False):
@@ -74,7 +73,7 @@ def make_plot(frame, show = False):
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+        ax = fig.add_subplot(111, polar = True)
 
         # Axis
         angles = np.linspace(0, 2 * np.pi, 7)
@@ -83,34 +82,33 @@ def make_plot(frame, show = False):
         plot.ylim(0, 2 * np.pi)
         plot.yticks(angles, degree_angles)
 
+        # Axis
         if axis == "zoom":
-            x = (rad - 1) / scale_height
             prefix = "zoom_"
-            plot.xlim(0, 40) # to match the ApJL paper
-            xlabel = r"($r - r_p$) $/$ $h$"
+            rmax = 2.4 # to match ApJL paper
         else:
-            x = rad
             prefix = ""
-            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-            xlabel = "Radius"
+            rmax = float(fargo_par["Rmax"])
+
+        plot.xticks([], []) # Angles
+        plot.yticks([rmax], ["%.1f" % rmax]) # Max Radius
+        plot.ylim(0, rmax)
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
-        torque_map = util.torque(rad, theta, normalized_density, )
+        torque_map = util.torque(rad, theta, normalized_density, planet_mass = planet_mass)
         abs_torque = np.abs(torque_map)
         log_torque = np.log(abs_torque) / np.log(10) # log torque in base 10
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(abs_torque), cmap = cmap)
+        result = ax.pcolormesh(theta, rad, log_torque, cmap = cmap)
     
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
         # Annotate
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
         plot.title("Torque Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close

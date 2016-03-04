@@ -1,8 +1,8 @@
 """
-plots contributions to torque for each cell
+plots log contributions to torque for each cell
 
 Usage:
-python plotTorqueMap.py frame_number
+python plotLogTorqueMap.py frame_number
 """
 
 import sys
@@ -62,7 +62,7 @@ fontsize = 14
 linewidth = 3
 
 cmap = "gnuplot"
-clim = [10**(-9), 10**(-7)]
+clim = [-9, -7]
 #clim = [-2, 2] # direction-only clim
 
 def make_plot(frame, show = False):
@@ -98,12 +98,12 @@ def make_plot(frame, show = False):
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
-        torque_map = util.torque(rad, theta, normalized_density, )
+        torque_map = util.torque(rad, theta, normalized_density)
         abs_torque = np.abs(torque_map)
         log_torque = np.log(abs_torque) / np.log(10) # log torque in base 10
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(abs_torque), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(log_torque), cmap = cmap)
     
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
