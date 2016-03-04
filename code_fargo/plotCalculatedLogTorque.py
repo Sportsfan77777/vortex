@@ -65,12 +65,12 @@ inner_torque_array = []
 outer_torque_array = []
 for frame in range(num_frames):
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    torqueMap = util.torque(radius, theta, density)
+    torqueMap = util.torque(rad, theta, density)
 
-    inner_torque = util.inner_torque(radius, theta, torqueMap)
+    inner_torque = util.inner_torque(rad, theta, torqueMap)
     inner_torque_array.append(inner_torque)
 
-    outer_torque = util.inner_torque(radius, theta, torqueMap)
+    outer_torque = util.inner_torque(rad, theta, torqueMap)
     outer_torque_array.append(outer_torque)
 
 #### Calculate Data (and choose subset) = x-axis #####
@@ -97,20 +97,21 @@ fontsize = 14
 linewidth = 2
 
 def make_plot():
-    # Data
+    # Base Data
 
     y1_base = inner_torque_array[:]
     y2_base = outer_torque_array[:]
-
     analytic = analytic_torque()
 
-    # Curves
+    # Regular Data
 
     y1 = np.abs(smooth(y1_base, ks_small)) # Torque from Inner Disk 
     y2 = np.abs(smooth(y2_base, ks_small)) # Torque from Outer Disk
     y3 = np.abs(y2 - y1) # Difference
     y4 = (np.sign(y2 - y1)) + 2 # Sign (inward is 3, outward is 1)
     y5 = analytic[1] # Analytic Reference
+
+    # Smoothed 
 
     s1 = np.abs(smooth(y1_base, ks)) # Torque from Inner Disk (smoothed)
     s2 = np.abs(smooth(y2_base, ks)) # Torque from Outer Disk (smoothed)
