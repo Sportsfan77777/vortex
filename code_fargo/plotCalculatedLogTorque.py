@@ -58,7 +58,7 @@ max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
 rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
-select = range(0, len(data[:,-1]), rate)
+select = range(0, num_frames, rate)
 xs = (range(num_frames))[select]
 
 inner_torque_array = []
