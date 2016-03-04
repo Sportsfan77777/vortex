@@ -32,9 +32,6 @@ def torque(radius, theta, density, planet_mass = 0.005):
     torque_density = coeff * direction
     area = radius[:, None] * np.outer(d_rad, d_theta)
 
-    print area[-1, -1]
-    print np.shape(area)
-
     return torque_density * area
 
 def inner_torque(radius, theta, torque_map, planet_loc = 1.0):
