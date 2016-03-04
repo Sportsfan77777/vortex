@@ -57,9 +57,7 @@ ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
-rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
-select = range(0, num_frames, rate)
-xs = (range(num_frames))[select]
+xs = range(num_frames))
 
 inner_torque_array = []
 outer_torque_array = []
@@ -106,14 +104,14 @@ def make_plot(rla = True):
 
     # Curves
 
-    y1 = np.abs(smooth(y1_base, ks_small)[select]) # Torque from Inner Disk 
-    y2 = np.abs(smooth(y2_base, ks_small)[select]) # Torque from Outer Disk
+    y1 = np.abs(smooth(y1_base, ks_small)) # Torque from Inner Disk 
+    y2 = np.abs(smooth(y2_base, ks_small)) # Torque from Outer Disk
     y3 = np.abs(y2 - y1) # Difference
     y4 = (np.sign(y2 - y1)) + 2 # Sign (inward is 3, outward is 1)
     y5 = analytic[1] # Analytic Reference
 
-    s1 = np.abs(smooth(y1_base, ks)[select]) # Torque from Inner Disk (smoothed)
-    s2 = np.abs(smooth(y2_base, ks)[select]) # Torque from Outer Disk (smoothed)
+    s1 = np.abs(smooth(y1_base, ks)) # Torque from Inner Disk (smoothed)
+    s2 = np.abs(smooth(y2_base, ks)) # Torque from Outer Disk (smoothed)
     s3 = np.abs(s2 - s1)
     s4 = (np.sign(s2 - s1)) + 2
 
