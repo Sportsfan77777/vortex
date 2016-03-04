@@ -54,10 +54,12 @@ ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 
 ######################################################
 #### Calculate Data (and choose subset) = x-axis #####
-rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
-
 max_frame = util.find_max_frame()
 num_frames = max_frame + 1
+
+rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
+select = range(0, len(data[:,-1]), rate)
+xs = (range(num_frames))[select]
 
 inner_torque_array = []
 outer_torque_array = []
@@ -74,9 +76,6 @@ for frame in range(num_frames):
 #### Calculate Data (and choose subset) = x-axis #####
 ######################################################
 
-data = np.loadtxt(torque_fn)
-select = range(0, len(data[:,-1]), rate)
-xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
