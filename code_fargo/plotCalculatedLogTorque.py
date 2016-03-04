@@ -19,6 +19,8 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
+from pylab import fromfile
+
 import util
 
 ## Set file names ##
@@ -57,7 +59,7 @@ ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
-xs = range(num_frames))
+xs = range(num_frames)
 
 inner_torque_array = []
 outer_torque_array = []
@@ -94,7 +96,7 @@ alpha = 0.2 # for non-smoothed curves
 fontsize = 14
 linewidth = 2
 
-def make_plot(rla = True):
+def make_plot():
     # Data
 
     y1_base = inner_torque_array[:]
