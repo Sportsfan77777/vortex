@@ -12,9 +12,13 @@ import utilTorque
 
 torque = utilTorque.torque
 
-innerTorque = utilTorque.total_inner_torque
+inner_torque = utilTorque.inner_torque
 
-outerTorque = utilTorque.total_outer_torque
+outer_torque = utilTorque.outer_torque
+
+inner_torque_contributions = utilTorque.inner_torque_contributions
+
+outer_torque_contributions = utilTorque.outer_torque_contributions
 
 #### Vorticity ####
 

@@ -37,16 +37,34 @@ def torque(radius, theta, density, planet_mass = 0.005):
 
     return torque_density * area
 
-def total_inner_torque(radius, theta, density, planet_loc = 1.0):
+def inner_torque(radius, theta, torque_map, planet_loc = 1.0):
     """ sums up contribution from inner disk only """
     planet_index = np.searchsorted(radius, planet_loc)
 
-    inner_torque = np.sum(density[:planet_index])
+    inner_torque = np.sum(torque_map[:planet_index])
     return inner_torque
 
-def total_outer_torque():
+def outer_torque(radius, theta, torque_map, planet_loc = 1.0):
     """ sums up contribution from outer disk only """
     planet_index = np.searchsorted(radius, planet_loc)
 
-    outer_torque = np.sum(density[planet_index:])
+    outer_torque = np.sum(torque_map[planet_index:])
     return outer_torque
+
+def inner_torque_contributions(radius, theta, torque_map, planet_loc = 1.0):
+    """ sums up contribution from each half of the inner disk only """
+    planet_index = np.searchsorted(radius, planet_loc)
+    pi_index = np.searchsorted(theta, np.pi)
+
+    lower_torque = np.sum(torque_map[:planet_index, :pi_index])
+    upper_torque = np.sum(torque_map[:planet_index, pi_index:])
+    return [lower_torque, upper_torque]
+
+def outer_torque_contributions(radius, theta, torque_map, planet_loc = 1.0):
+    """ sums up contribution from each half of the inner disk only """
+    planet_index = np.searchsorted(radius, planet_loc)
+    pi_index = np.searchsorted(theta, np.pi)
+
+    lower_torque = np.sum(torque_map[planet_index:, :pi_index])
+    upper_torque = np.sum(torque_map[planet_index:, pi_index:])
+    return [lower_torque, upper_torque]
