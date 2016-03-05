@@ -51,7 +51,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 # Smoothing Function
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
-ks = 10.0 # Kernel Size
+ks = 25.0 # Kernel Size
 ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 
 # Load Data
@@ -116,7 +116,7 @@ def make_plot():
 
     # Curves
     # Analytic
-    #ax1.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
+    ax1.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
 
     # Simulation
     ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
