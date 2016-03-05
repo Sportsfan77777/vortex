@@ -51,7 +51,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 # Smoothing Function
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
-ks = 50.0 # Kernel Size
+ks = 10.0 # Kernel Size
 ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 
 # Load Data
@@ -59,7 +59,7 @@ max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
 data = np.load("calcTorque.npy")
-not_filled = (np.where(data[0, :] == -1))[0] # first index that is not filled
+not_filled = (np.where(data[0, :] == -1))[0][0] # first index that is not filled
 data = data[:, :not_filled] # filter out un-filled values of array
 
 xs = data[0, :]
