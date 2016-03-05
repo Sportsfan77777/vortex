@@ -136,7 +136,10 @@ def make_plot():
     
     # Layout
 
-    fig.subplots_adjust(hspace = 0) # connect two panels together
+    fig.subplots_adjust(hspace = 0.2) # connect two panels together
+
+    ax1.set_xlim(0, xs[-1])
+    ax2.set_xlim(0, xs[-1])
 
     ax1.set_yscale('log')
     ax1.set_ylim(10**(-10), 10**(-3))
