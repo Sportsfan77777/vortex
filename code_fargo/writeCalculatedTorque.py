@@ -37,6 +37,8 @@ npy_fn = "calcTorque.npy"
 npy_file = open(npy_fn, 'wb')
 
 binary_array = np.zeros((8, num_frames))
+np.save(npy_file, binary_array)
+npy_file.close()
 
 ## Text ##
 dat_fn = "calcTorque.dat"
@@ -57,8 +59,9 @@ g = "Outer (+)".center(column_widths[6])
 h = "Outer (-)".center(column_widths[7])
 first_line = "%s %s %s %s %s %s %s %s\n" % (a, b, c, d, e, f, g, h)
 dat_file.write(first_line)
+dat_file.close()
 
-#### Calculate Data and Write to Text File ####
+#### Calculate Data and Write to Files ####
 for frame in range(num_frames):
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     torqueMap = util.torque(rad, theta, density)
@@ -82,7 +85,11 @@ for frame in range(num_frames):
     h = ("%.8f" % (outer_torque_halves[1] * scaling)).center(column_widths[7])
 
     line = "%s %s %s %s %s %s %s %s\n" % (a, b, c, d, e, f, g, h)
+
+    # Write to File
+    dat_file = open(dat_fn, 'w')
     dat_file.write(line)
+    dat_file.close()
 
     # Fill in entries
     binary_array[0, frame] = frame
@@ -94,11 +101,9 @@ for frame in range(num_frames):
     binary_array[6, frame] = outer_torque_halves[0]
     binary_array[7, frame] = outer_torque_halves[1]
 
-# Write to Binary
-np.save(npy_file, binary_array)
-
-# Close Files
-npy_file.close()
-dat_file.close()
+    # Write to Binary
+    npy_file = open(npy_fn, 'wb')
+    np.save(npy_file, binary_array)
+    npy_file.close()
 
 

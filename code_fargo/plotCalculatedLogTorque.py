@@ -54,28 +54,12 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # sm
 ks = 50.0 # Kernel Size
 ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 
-######################################################
-#### Calculate Data (and choose subset) = x-axis #####
+# Load Data
 max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
 xs = range(num_frames)
-
-inner_torque_array = []
-outer_torque_array = []
-for frame in range(num_frames):
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    torqueMap = util.torque(rad, theta, density)
-
-    inner_torque = util.inner_torque(rad, theta, torqueMap)
-    inner_torque_array.append(inner_torque)
-
-    outer_torque = util.inner_torque(rad, theta, torqueMap)
-    outer_torque_array.append(outer_torque)
-
-#### Calculate Data (and choose subset) = x-axis #####
-######################################################
-
+data = np.load("calcTorque.npy")
 
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
@@ -99,8 +83,8 @@ linewidth = 2
 def make_plot():
     # Base Data
 
-    y1_base = inner_torque_array[:]
-    y2_base = outer_torque_array[:]
+    y1_base = data[2, :] # Inner
+    y2_base = data[3, :] # Outer
     analytic = analytic_torque()
 
     # Regular Data
