@@ -29,6 +29,7 @@ rad = np.loadtxt("used_rad.dat")[:-1]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 max_frame = util.find_max_frame()
+num_frames = max_frame + 1
 
 #### Set Up and Binary Output (.npy) and Text Output (.dat) ####
 ## Binary ##
@@ -46,14 +47,14 @@ dat_file = open(dat_fn, 'w')
 column_widths = 12 * np.ones(8)
 column_widths[0] = 7
 
-a = "Frame"
-b = "Total"
-c = "Inner"
-d = "Outer"
-e = "Inner (+)"
-f = "Inner (-)"
-g = "Outer (+)"
-h = "Outer (-)"
+a = "Frame".center(column_widths[0])
+b = "Total".center(column_widths[1])
+c = "Inner".center(column_widths[2])
+d = "Outer".center(column_widths[3])
+e = "Inner (+)".center(column_widths[4])
+f = "Inner (-)".center(column_widths[5])
+g = "Outer (+)".center(column_widths[6])
+h = "Outer (-)".center(column_widths[7])
 first_line = "%s %s %s %s %s %s %s %s\n" % (a, b, c, d, e, f, g, h)
 dat_file.write(first_line)
 
@@ -70,7 +71,7 @@ for frame in range(num_frames):
     net_torque = inner_torque + outer_torque
 
     # Format into strings
-    a = ("%d" % frame).center(column_widths[0])
+    a = ("%d" % int(frame)).center(column_widths[0])
     b = ("%.8f" % net_torque).center(column_widths[1])
     c = ("%.8f" % inner_torque).center(column_widths[2])
     d = ("%.8f" % outer_torque).center(column_widths[3])
