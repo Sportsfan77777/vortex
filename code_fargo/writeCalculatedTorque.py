@@ -44,7 +44,7 @@ dat_file = open(dat_fn, 'w')
 
 # (1) Frame, (2) Total, (3) Inner, (4) Outer, 
 # (5) InnerPositive, (6) InnerNegative, (7) OuterPositive, (8) OuterNegative
-column_widths = 12 * np.ones(8)
+column_widths = 14 * np.ones(8, dtype = int)
 column_widths[0] = 7
 
 a = "Frame".center(column_widths[0])
@@ -71,14 +71,15 @@ for frame in range(num_frames):
     net_torque = inner_torque + outer_torque
 
     # Format into strings
-    a = ("%d" % int(frame)).center(column_widths[0])
-    b = ("%.8f" % net_torque).center(column_widths[1])
-    c = ("%.8f" % inner_torque).center(column_widths[2])
-    d = ("%.8f" % outer_torque).center(column_widths[3])
-    e = ("%.8f" % inner_torque_halves[0]).center(column_widths[4])
-    f = ("%.8f" % inner_torque_halves[1]).center(column_widths[5])
-    g = ("%.8f" % outer_torque_halves[0]).center(column_widths[6])
-    h = ("%.8f" % outer_torque_halves[1]).center(column_widths[7])
+    scaling = 10**6 # multiply by one million to make things readable
+    a = ("%d" % frame).center(column_widths[0])
+    b = ("%.8f" % net_torque * scaling).center(column_widths[1])
+    c = ("%.8f" % inner_torque * scaling).center(column_widths[2])
+    d = ("%.8f" % outer_torque * scaling).center(column_widths[3])
+    e = ("%.8f" % inner_torque_halves[0] * scaling).center(column_widths[4])
+    f = ("%.8f" % inner_torque_halves[1] * scaling).center(column_widths[5])
+    g = ("%.8f" % outer_torque_halves[0] * scaling).center(column_widths[6])
+    h = ("%.8f" % outer_torque_halves[1] * scaling).center(column_widths[7])
 
     line = "%s %s %s %s %s %s %s %s\n" % (a, b, c, d, e, f, g, h)
     dat_file.write(line)
