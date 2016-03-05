@@ -73,13 +73,13 @@ for frame in range(num_frames):
     # Format into strings
     scaling = 10**6 # multiply by one million to make things readable
     a = ("%d" % frame).center(column_widths[0])
-    b = ("%.8f" % net_torque * scaling).center(column_widths[1])
-    c = ("%.8f" % inner_torque * scaling).center(column_widths[2])
-    d = ("%.8f" % outer_torque * scaling).center(column_widths[3])
-    e = ("%.8f" % inner_torque_halves[0] * scaling).center(column_widths[4])
-    f = ("%.8f" % inner_torque_halves[1] * scaling).center(column_widths[5])
-    g = ("%.8f" % outer_torque_halves[0] * scaling).center(column_widths[6])
-    h = ("%.8f" % outer_torque_halves[1] * scaling).center(column_widths[7])
+    b = ("%.8f" % (net_torque * scaling)).center(column_widths[1])
+    c = ("%.8f" % (inner_torque * scaling)).center(column_widths[2])
+    d = ("%.8f" % (outer_torque * scaling)).center(column_widths[3])
+    e = ("%.8f" % (inner_torque_halves[0] * scaling)).center(column_widths[4])
+    f = ("%.8f" % (inner_torque_halves[1] * scaling)).center(column_widths[5])
+    g = ("%.8f" % (outer_torque_halves[0] * scaling)).center(column_widths[6])
+    h = ("%.8f" % (outer_torque_halves[1] * scaling)).center(column_widths[7])
 
     line = "%s %s %s %s %s %s %s %s\n" % (a, b, c, d, e, f, g, h)
     dat_file.write(line)
