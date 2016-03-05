@@ -59,6 +59,7 @@ max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
 data = np.load("calcTorque.npy")
+data = data[np.where(data != 1)] # filter out un-filled values of array
 xs = data[0, :]
 
 # Load Planet Data for Analytic Comparison
@@ -110,7 +111,7 @@ def make_plot():
 
     # Curves
     # Analytic
-    ax1.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
+    #ax1.plot(analytic[0], analytic[1], c = "black", linewidth = linewidth)
 
     # Simulation
     ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)

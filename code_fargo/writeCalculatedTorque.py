@@ -36,7 +36,7 @@ num_frames = max_frame + 1
 npy_fn = "calcTorque.npy"
 npy_file = open(npy_fn, 'wb')
 
-binary_array = np.zeros((8, num_frames))
+binary_array = np.zeros((8, num_frames)) - 1 # initialize to -1
 np.save(npy_file, binary_array)
 npy_file.close()
 
