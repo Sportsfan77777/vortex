@@ -87,7 +87,7 @@ for frame in range(num_frames):
     line = "%s %s %s %s %s %s %s %s\n" % (a, b, c, d, e, f, g, h)
 
     # Write to File
-    dat_file = open(dat_fn, 'w')
+    dat_file = open(dat_fn, 'a')
     dat_file.write(line)
     dat_file.close()
 
