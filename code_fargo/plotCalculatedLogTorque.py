@@ -58,8 +58,8 @@ ks_small = ks / 3.0 # Smaller kernel to check the normal kernel
 max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
-xs = range(num_frames)
 data = np.load("calcTorque.npy")
+xs = data[0, :]
 
 # Load Planet Data for Analytic Comparison
 planet_mass = 0.005 # In the future, load this from dictionary
