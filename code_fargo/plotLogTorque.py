@@ -126,7 +126,7 @@ def make_plot(rla = True):
     
     # Layout
 
-    fig.subplots_adjust(hspace = 0.2) # connect two panels together
+    fig.subplots_adjust(hspace = 0.07) # connect two panels together
 
     ax1.set_xlim(0, xs[-1])
     ax2.set_xlim(0, xs[-1])
