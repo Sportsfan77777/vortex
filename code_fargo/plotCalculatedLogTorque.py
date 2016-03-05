@@ -59,8 +59,11 @@ max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
 data = np.load("calcTorque.npy")
-not_filled = (np.where(data[0, :] == -1))[0][0] # first index that is not filled
-data = data[:, :not_filled] # filter out un-filled values of array
+try:
+    not_filled = (np.where(data[0, :] == -1))[0][0] # first index that is not filled
+    data = data[:, :not_filled] # filter out un-filled values of array
+except:
+    pass
 
 xs = data[0, :]
 
