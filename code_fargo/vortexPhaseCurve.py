@@ -113,8 +113,8 @@ vortex_phases = (180.0 / np.pi) * (np.array(vortex_phases))
 
 ##### PLOTTING #####
 
-# Find minimum vortensity in radial profile
-# Find minimum vortensity in azimuthal profile at argmin of radial profile
+linewidth = 4
+fontsize = 14
 
 def make_plot():
     # Curves
