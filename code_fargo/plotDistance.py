@@ -49,7 +49,7 @@ eccs = (data[:,1])[select] # Planet Eccentricity
 viscosity = float(fargo_par["Viscosity"])
 delta_t = data[1,0] - data[0,0]
 def next_a(previous_a, delta_t):
-    timescale = previous_a**2 / viscosity
+    timescale = (3.0 / 2) * previous_a**2 / viscosity
     return previous_a * (1 - delta_t / timescale)
 
 ys_analytic = [sm_axes[0]]
