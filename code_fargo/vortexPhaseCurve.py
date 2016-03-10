@@ -80,7 +80,7 @@ end = 250
 times = range(150, 250)
 vortex_phases = []
 for i in times:
-	# Get radial vortensity profile
+    # Get radial vortensity profile
 
     density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
@@ -101,9 +101,10 @@ for i in times:
     vortex_theta_index = np.argmin(vortensity[vortex_rad_index, :])
 
     vortex_theta = theta[vortex_theta_index]
-    previous_theta = vortex_phases[-1]
-    while (previous_theta > vortex_theta):
-    	vortex_theta += 2 * np.pi # should be greater than previous theta
+    if len(vortex_phases) > 0:
+        previous_theta = vortex_phases[-1]
+        while (previous_theta > vortex_theta):
+            vortex_theta += 2 * np.pi # should be greater than previous theta
 
     vortex_phases.append(vortex_theta)
 # Convert to degrees
@@ -116,7 +117,7 @@ vortex_phases = (180.0 / np.pi) * (np.array(vortex_phases))
 # Find minimum vortensity in azimuthal profile at argmin of radial profile
 
 def make_plot():
-	# Curves
+    # Curves
     plot.plot(times, vortex_phases, linewidth = linewidth)
 
     # Annotate
