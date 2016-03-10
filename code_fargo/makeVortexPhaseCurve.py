@@ -3,7 +3,7 @@ plots vortex phase curve
 uses slope to calculate vortex rotational period
 
 Usage:
-python vortexPhaseCurve.py
+python makeVortexPhaseCurve.py
 """
 
 import sys
