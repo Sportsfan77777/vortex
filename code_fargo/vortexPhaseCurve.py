@@ -75,6 +75,9 @@ def curl(v_rad, v_theta, rad, theta):
     return z_curl
 
 # Data
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+kernel_size = int(int(fargo_par["Nsec"]) / 10.0)
+
 start = 150
 end = 250
 times = range(start, end)
@@ -98,7 +101,7 @@ for i in times:
     vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start:])
 
     vortex_rad_index = vortex_rad_outer_index + outer_disk_start
-    vortex_theta_index = np.argmin(vortensity[vortex_rad_index, :])
+    vortex_theta_index = np.argmin(smooth(vortensity[vortex_rad_index, :]), kernel_size)
 
     vortex_theta = theta[vortex_theta_index]
     if len(vortex_phases) > 0:
@@ -106,7 +109,7 @@ for i in times:
         while (previous_theta < vortex_theta):
             vortex_theta -= 2 * np.pi # should be less than previous theta
     vortex_phases.append(vortex_theta)
-    
+
 # Convert to degrees
 vortex_phases = (180.0 / np.pi) * (np.array(vortex_phases))
 
