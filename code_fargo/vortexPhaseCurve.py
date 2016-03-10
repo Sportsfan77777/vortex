@@ -139,6 +139,7 @@ def make_plot():
 
     plot.cla()
 
-print "Average Slope: %.2f" % np.mean(np.gradient(vortex_phases))
+gradient = np.gradient(vortex_phases)
+print "Mean Slope: %.2f, Median Slope: %.2f" % (np.mean(gradient), np.median(gradient))
 
 make_plot()
