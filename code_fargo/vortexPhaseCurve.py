@@ -98,7 +98,7 @@ for i in times:
     vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start:])
 
     vortex_rad_index = vortex_rad_outer_index + outer_disk_start
-    vortex_theta_index = np.argmin(vortensity[vortex_rad, :])
+    vortex_theta_index = np.argmin(vortensity[vortex_rad_index, :])
 
     vortex_theta = theta[vortex_theta_index]
     previous_theta = vortex_phases[-1]
