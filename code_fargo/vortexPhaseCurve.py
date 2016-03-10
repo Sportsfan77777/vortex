@@ -103,10 +103,10 @@ for i in times:
     vortex_theta = theta[vortex_theta_index]
     if len(vortex_phases) > 0:
         previous_theta = vortex_phases[-1]
-        while (previous_theta > vortex_theta):
-            vortex_theta += 2 * np.pi # should be greater than previous theta
-
+        while (previous_theta < vortex_theta):
+            vortex_theta -= 2 * np.pi # should be less than previous theta
     vortex_phases.append(vortex_theta)
+    
 # Convert to degrees
 vortex_phases = (180.0 / np.pi) * (np.array(vortex_phases))
 
