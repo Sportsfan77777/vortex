@@ -80,8 +80,12 @@ def curl(v_rad, v_theta, rad, theta):
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 kernel_size = int(int(fargo_par["Nsec"]) / 10.0)
 
-start = 150
-end = 250
+if (len(sys.argv) == 3):
+    start = int(sys.argv[1])
+    end = int(sys.argv[2])
+else:
+    start = 150
+    end = 250
 times = range(start, end)
 vortex_phases = []
 for i in times:
