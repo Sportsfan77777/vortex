@@ -77,7 +77,7 @@ def curl(v_rad, v_theta, rad, theta):
 # Data
 start = 150
 end = 250
-times = range(150, 250)
+times = range(start, end)
 vortex_phases = []
 for i in times:
     # Get radial vortensity profile
