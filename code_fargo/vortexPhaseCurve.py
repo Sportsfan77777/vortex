@@ -16,6 +16,8 @@ from multiprocessing import Pool
 import math
 import numpy as np
 
+from scipy.ndimage import filters as ff
+
 import matplotlib
 #matplotlib.use('Agg')
 from matplotlib import rcParams as rc
