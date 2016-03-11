@@ -119,10 +119,10 @@ for i in range(num_frames):
     vortensity = vorticity / normalized_density[1:, 1:]
 
     # the vortex is any cell where the vortensity is between the thresholds of 0.0 and 0.2
-    vortex_indices = np.where(vortensity < 0.2 and vortensity > 0.0)
+    #vortex_indices = np.where(vortensity < 0.2 and vortensity > 0.0)
 
     torqueMap = util.torque(rad, theta, density)
-    vortexTorque = np.sum(torqueMap[vortex_indices])
+    vortexTorque = np.sum(torqueMap[(vortensity < 0.2) & (vortensity > 0.0)])
 
     # get phase too
     outer_disk_start = np.searchsorted(rad, 1.2) # look for min vortensity beyond r = 1.2
