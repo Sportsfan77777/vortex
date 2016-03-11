@@ -108,7 +108,7 @@ dat_file.close()
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 kernel_size = int(int(fargo_par["Nsec"]) / 10.0)
 
-for i in range(num_frames)
+for i in range(num_frames):
 	density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
