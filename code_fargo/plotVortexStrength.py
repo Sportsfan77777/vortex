@@ -58,7 +58,8 @@ max_frame = util.find_max_frame()
 num_frames = max_frame + 1
 
 ### Data ###
-xs = range(num_frames)
+rate = 10
+times = range(100, num_frames, rate)
 
 # Planet Location
 orbit_data = np.loadtxt(orbit_fn)
@@ -66,7 +67,7 @@ sm_axes = orbit_data[:, 2] # Planet Semi-Major Axis
 
 # Radial Density Profiles
 strengths = []
-for frame in range(num_frames):
+for frame in times:
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     averagedDensity = np.average(density, axis = 1) / surface_density
 
@@ -103,6 +104,7 @@ linewidth = 4
 
 def make_plot():
 	# Data
+	xs = np.array(times)
 	ys = np.array(strengths)
 
 	# Curves
