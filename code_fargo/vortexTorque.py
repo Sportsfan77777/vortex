@@ -117,6 +117,7 @@ for i in range(num_frames):
 
     vorticity = curl(vrad, vtheta, rad, theta)
     vortensity = vorticity / normalized_density[1:, 1:]
+    averaged_w = np.average(vortensity, axis = 1)
 
     # the vortex is any cell where the vortensity is between the thresholds of 0.0 and 0.2
     #vortex_indices = np.where(vortensity < 0.2 and vortensity > 0.0)
