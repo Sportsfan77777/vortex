@@ -132,7 +132,8 @@ for frame in range(num_frames):
 
     ### Get Phase Too ###
     outer_disk_start = np.searchsorted(rad, 1.2) # look for min vortensity beyond r = 1.2
-    vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start:])
+    outer_disk_start = np.searchsorted(rad, 2.5) # look for min vortensity before r = 2.5
+    vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start : outer_disk_end])
 
     vortex_rad_index = vortex_rad_outer_index + outer_disk_start
 
