@@ -103,25 +103,25 @@ linewidth = 4
 
 
 def make_plot():
-	# Data
-	xs = np.array(times)
-	ys = np.array(strengths)
+    # Data
+    xs = np.array(times)
+    ys = np.array(strengths)
 
-	# Curves
-	plot.plot(xs, ys)
+    # Curves
+    plot.plot(xs, ys)
 
-	# Annotate
-	plot.xlim("Number of Planet Orbits")
-	plot.ylabel("Vortex Peak Strength")
+    # Annotate
+    plot.xlabel("Number of Planet Orbits")
+    plot.ylabel("Vortex Peak Strength")
 
-	# Limits
-	plot.xlim(xs[0], xs[-1])
+    # Limits
+    plot.xlim(xs[0], xs[-1])
 
-	# Save + Close
-	plot.savefig("vortexPeakStrength.png")
-	plot.show()
+    # Save + Close
+    plot.savefig("vortexPeakStrength.png")
+    plot.show()
 
-	plot.close()
+    plot.close()
 
 
 make_plot()
