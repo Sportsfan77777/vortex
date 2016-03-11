@@ -84,7 +84,7 @@ def curl(v_rad, v_theta, rad, theta):
 npy_fn = "vortexTorque.npy"
 npy_file = open(npy_fn, 'wb')
 
-binary_array = np.zeros((8, num_frames)) - 1 # initialize to -1
+binary_array = np.zeros((3, num_frames)) - 1 # initialize to -1
 np.save(npy_file, binary_array)
 npy_file.close()
 
@@ -105,9 +105,8 @@ dat_file.write(first_line)
 dat_file.close()
 
 # Data
-
-
-#### Add vortex phase into here (make it a separate function --- put it in util)
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+kernel_size = int(int(fargo_par["Nsec"]) / 10.0)
 
 for i in range(num_frames)
 	density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
@@ -124,3 +123,35 @@ for i in range(num_frames)
 
     torqueMap = util.torque(rad, theta, density)
     vortexTorque = np.sum(torqueMap[vortex_indices])
+
+    # get phase too
+    outer_disk_start = np.searchsorted(rad, 1.2) # look for min vortensity beyond r = 1.2
+    vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start:])
+
+    vortex_rad_index = vortex_rad_outer_index + outer_disk_start
+    vortex_theta_index = np.argmin(smooth(vortensity[vortex_rad_index, :], kernel_size))
+
+    vortex_theta = theta[vortex_theta_index] * (180.0 / np.pi)
+
+    # Format into strings
+    scaling = 10**6 # multiply by one million to make things readable
+    a = ("%d" % frame).center(column_widths[0])
+    b = ("%.2f" % (vortex_theta)).center(column_widths[1])
+    c = ("%.5f" % (vortexTorque * scaling)).center(column_widths[2])
+
+    line = "%s %s %s\n" % (a, b, c)
+
+    # Write to File
+    dat_file = open(dat_fn, 'a')
+    dat_file.write(line)
+    dat_file.close()
+
+    # Fill in entries
+    binary_array[0, frame] = frame
+    binary_array[1, frame] = vortex_theta
+    binary_array[2, frame] = vortexTorque
+
+    # Write to Binary
+    npy_file = open(npy_fn, 'wb')
+    np.save(npy_file, binary_array)
+    npy_file.close()
