@@ -117,6 +117,8 @@ def make_plot():
 
 	# Save + Close
 	plot.savefig("vortexPeakStrength.png")
+	plot.show()
+	
 	plot.close()
 
 
