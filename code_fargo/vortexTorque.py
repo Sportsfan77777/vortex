@@ -146,7 +146,7 @@ for frame in range(num_frames):
         vortex_theta = theta[vortex_theta_index]
         vortex_thetas.append(vortex_theta)
 
-    final_vortex_theta = np.median(vortex_thetas)
+    final_vortex_theta = np.median(vortex_thetas) * (180.0 / np.pi)
 
     # Format into strings
     scaling = 10**6 # multiply by one million to make things readable
