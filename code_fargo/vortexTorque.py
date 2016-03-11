@@ -95,7 +95,7 @@ dat_file = open(dat_fn, 'w')
 
 # (1) Frame, (2) Total, (3) Inner, (4) Outer, 
 # (5) InnerPositive, (6) InnerNegative, (7) OuterPositive, (8) OuterNegative
-column_widths = 14 * np.ones(2, dtype = int)
+column_widths = 14 * np.ones(3, dtype = int)
 column_widths[0] = 7
 
 a = "Frame".center(column_widths[0])
