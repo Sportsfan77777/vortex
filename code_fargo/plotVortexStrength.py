@@ -67,7 +67,7 @@ sm_axes = orbit_data[:, 2] # Planet Semi-Major Axis
 # Radial Density Profiles
 strengths = []
 for frame in range(num_frames):
-    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     averagedDensity = np.average(density, axis = 1) / surface_density
 
     # Find Peak
@@ -118,7 +118,7 @@ def make_plot():
 	# Save + Close
 	plot.savefig("vortexPeakStrength.png")
 	plot.show()
-	
+
 	plot.close()
 
 
