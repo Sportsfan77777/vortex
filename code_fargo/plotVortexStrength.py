@@ -95,9 +95,6 @@ for frame in times:
 ##### PLOTTING #####
 
 # Plot Parameters
-rcParams['figure.figsize'] = 5, 10
-my_dpi = 100
-
 fontsize = 14
 linewidth = 4
 
@@ -108,11 +105,11 @@ def make_plot():
     ys = np.array(strengths)
 
     # Curves
-    plot.plot(xs, ys)
+    plot.plot(xs, ys, linewidth = linewidth)
 
     # Annotate
-    plot.xlabel("Number of Planet Orbits")
-    plot.ylabel("Vortex Peak Strength")
+    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+    plot.ylabel("Vortex Peak Strength", fontsize = fontsize)
 
     # Limits
     plot.xlim(xs[0], xs[-1])
