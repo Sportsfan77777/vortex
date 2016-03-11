@@ -81,11 +81,13 @@ def curl(v_rad, v_theta, rad, theta):
     return z_curl
 
 #### Set Up and Binary Output (.npy) and Text Output (.dat) ####
+num_columns = 3
+
 ## Binary ##
 npy_fn = "vortexTorque.npy"
 npy_file = open(npy_fn, 'wb')
 
-binary_array = np.zeros((3, num_frames)) - 1 # initialize to -1
+binary_array = np.zeros((num_columns, num_frames)) - 1 # initialize to -1
 np.save(npy_file, binary_array)
 npy_file.close()
 
@@ -95,12 +97,13 @@ dat_file = open(dat_fn, 'w')
 
 # (1) Frame, (2) Total, (3) Inner, (4) Outer, 
 # (5) InnerPositive, (6) InnerNegative, (7) OuterPositive, (8) OuterNegative
-column_widths = 14 * np.ones(3, dtype = int)
+column_widths = 14 * np.ones(num_columns, dtype = int)
 column_widths[0] = 7
+column_widths[1] = 10
 
 a = "Frame".center(column_widths[0])
-b = "Phasee".center(column_widths[0])
-c = "Vortex Torque".center(column_widths[1])
+b = "Phase".center(column_widths[1])
+c = "Vortex Torque".center(column_widths[2])
 first_line = "%s %s %s\n" % (a, b, c)
 dat_file.write(first_line)
 dat_file.close()
@@ -109,12 +112,12 @@ dat_file.close()
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 kernel_size = int(int(fargo_par["Nsec"]) / 10.0)
 
-for i in range(num_frames):
-    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+for frame in range(num_frames):
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
-    vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
-    vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+    vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
+    vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
     vorticity = curl(vrad, vtheta, rad, theta)
     vortensity = vorticity / normalized_density[1:, 1:]
@@ -139,7 +142,7 @@ for i in range(num_frames):
     scaling = 10**6 # multiply by one million to make things readable
     a = ("%d" % frame).center(column_widths[0])
     b = ("%.2f" % (vortex_theta)).center(column_widths[1])
-    c = ("%.5f" % (vortexTorque * scaling)).center(column_widths[2])
+    c = ("%.8f" % (vortexTorque * scaling)).center(column_widths[2])
 
     line = "%s %s %s\n" % (a, b, c)
 
