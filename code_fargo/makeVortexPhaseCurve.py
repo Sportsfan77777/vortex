@@ -101,20 +101,29 @@ for i in times:
     vortensity = vorticity / normalized_density[1:, 1:]
     averaged_w = np.average(vortensity, axis = 1)
 
-    # Find vortex
+    ### Find vortex ###
 
     outer_disk_start = np.searchsorted(rad, 1.2) # look for min vortensity beyond r = 1.2
     vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start:])
 
     vortex_rad_index = vortex_rad_outer_index + outer_disk_start
-    vortex_theta_index = np.argmin(smooth(vortensity[vortex_rad_index, :], kernel_size))
 
-    vortex_theta = theta[vortex_theta_index]
+    # Check 10 + 1 + 10 profiles
+    dr = 10 # 10 indices
+    vortex_width = range(vortex_rad_index - dr, vortex_rad_index + dr + 1)
+    vortex_thetas = []
+    for rad_index in vortex_width:
+        vortex_theta_index = np.argmin(smooth(vortensity[rad_index, :], kernel_size))
+        vortex_theta = theta[vortex_theta_index]
+        vortex_thetas.append(vortex_theta)
+
+    final_vortex_theta = np.median(vortex_thetas)
+
     if len(vortex_phases) > 0:
         previous_theta = vortex_phases[-1]
-        while (previous_theta < vortex_theta):
-            vortex_theta -= 2 * np.pi # should be less than previous theta
-    vortex_phases.append(vortex_theta)
+        while (previous_theta < final_vortex_theta):
+            final_vortex_theta -= 2 * np.pi # should be less than previous theta
+    vortex_phases.append(final_vortex_theta)
 
 # Convert to degrees
 vortex_phases = (180.0 / np.pi) * (np.array(vortex_phases))

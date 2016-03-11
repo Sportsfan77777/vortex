@@ -123,25 +123,34 @@ for frame in range(num_frames):
     vortensity = vorticity / normalized_density[1:, 1:]
     averaged_w = np.average(vortensity, axis = 1)
 
+    ### Vortex Torque ###
     # the vortex is any cell where the vortensity is between the thresholds of 0.0 and 0.2
     #vortex_indices = np.where(vortensity < 0.2 and vortensity > 0.0)
 
     torqueMap = util.torque(rad, theta, density)
     vortexTorque = np.sum(torqueMap[(vortensity < 0.2) & (vortensity > 0.0)])
 
-    # get phase too
+    ### Get Phase Too ###
     outer_disk_start = np.searchsorted(rad, 1.2) # look for min vortensity beyond r = 1.2
     vortex_rad_outer_index = np.argmin(averaged_w[outer_disk_start:])
 
     vortex_rad_index = vortex_rad_outer_index + outer_disk_start
-    vortex_theta_index = np.argmin(smooth(vortensity[vortex_rad_index, :], kernel_size))
 
-    vortex_theta = theta[vortex_theta_index] * (180.0 / np.pi)
+    # Check 10 + 1 + 10 profiles
+    dr = 10 # 10 indices
+    vortex_width = range(vortex_rad_index - dr, vortex_rad_index + dr + 1)
+    vortex_thetas = []
+    for rad_index in vortex_width:
+        vortex_theta_index = np.argmin(smooth(vortensity[rad_index, :], kernel_size))
+        vortex_theta = theta[vortex_theta_index]
+        vortex_thetas.append(vortex_theta)
+
+    final_vortex_theta = np.median(vortex_thetas)
 
     # Format into strings
     scaling = 10**6 # multiply by one million to make things readable
     a = ("%d" % frame).center(column_widths[0])
-    b = ("%.2f" % (vortex_theta)).center(column_widths[1])
+    b = ("%.2f" % (final_vortex_theta)).center(column_widths[1])
     c = ("%.8f" % (vortexTorque * scaling)).center(column_widths[2])
 
     line = "%s %s %s\n" % (a, b, c)
@@ -153,7 +162,7 @@ for frame in range(num_frames):
 
     # Fill in entries
     binary_array[0, frame] = frame
-    binary_array[1, frame] = vortex_theta
+    binary_array[1, frame] = final_vortex_theta
     binary_array[2, frame] = vortexTorque
 
     # Write to Binary
