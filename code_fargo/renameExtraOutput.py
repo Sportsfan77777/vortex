@@ -26,7 +26,7 @@ if os.path.exists(fargo_fn):
     prefixes += prefixes2D1D
 
     new_prefixes2D1D = [new_prefix + "1D" for new_prefix in new_prefixes]
-    new_prefixes2D1D_extra += ["rm" + extra_prefix for extra_prefix in prefixes2D1D_extra]
+    new_prefixes2D1D_extra = ["rm" + extra_prefix for extra_prefix in prefixes2D1D_extra]
     new_prefixes2D1D += new_prefixes2D1D_extra
     new_prefixes += new_prefixes2D1D
 
