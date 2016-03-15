@@ -11,22 +11,23 @@ import shutil
 import subprocess
 import glob
 
+import util
+
+# All File Prefixes
 prefixes = ['gasdens', 'gasvrad', 'gasvtheta']
 new_prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta'] # re-named prefixes
 
-density_files = glob.glob("*gasdens*.dat")
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    prefixes2D1D = [prefix + "1D" for prefix in prefixes]
+    prefixes += prefixes2D1D
 
-def find_max_frame():
-    max_frame = 0
-    for d_f in density_files:
-        rename = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
-        name = rename.split("_")[-1]
-        frame_number = int(name[7:]) # just 999
-        if frame_number > max_frame:
-            max_frame = frame_number
-    return max_frame
+    new_prefixes2D1D = [new_prefix + "1D" for new_prefix in new_prefixes]
+    new_prefixes += new_prefixes2D1D
 
-num_frames = find_max_frame() + 1
+# Find number of frames
+max_frame = util.find_max_frame()
+num_frames = max_frame + 1
 
 ############# ############# ############# #############
 
