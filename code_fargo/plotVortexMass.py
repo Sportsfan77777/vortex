@@ -120,8 +120,16 @@ def vortex_mass(radius, theta, density, vortensity):
     return total_mass
 
 ### Data ###
-rate = 10
-times = range(0, num_frames, rate)
+initial_rate = 2
+initial_end = 200
+
+middle_rate = 5
+middle_end = 500
+
+later_rate = 25
+later_end = num_frames
+
+times = range(1, initial_end, initial_rate) + range(initial_end, middle_end, middle_rate) + range(middle_end, later_end, later_rate)
 
 vortex_masses = []
 for frame in times:
@@ -159,6 +167,7 @@ def make_plot():
 
     # Limits
     plot.xlim(xs[0], xs[-1])
+    plot.xscale("log")
     plot.yscale("log")
 
     # Save + Close
