@@ -125,7 +125,7 @@ def make_plot(frame, show = False):
         plot.title("Averaged Gas Density at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("averagedDensity/%savg_density_%03d.png" % (prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("averagedDensity/%savg_density_%04d.png" % (prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
