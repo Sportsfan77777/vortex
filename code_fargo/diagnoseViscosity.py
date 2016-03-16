@@ -68,14 +68,14 @@ linewidth = 4
 def make_plot(frame):
 	# Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * i
+    orbit = int(round(time / (2 * np.pi), 0)) * frame
 
     # Set up figure
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     # Data
     vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
-    pseudo_viscosity = (2.0 / 3) * (np.multiply(rad, vrad)) # should be equal to viscosity
+    pseudo_viscosity = (2.0 / 3) * (np.multiply(rad[:, None], vrad)) # should be equal to viscosity
     avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
 
     # Curves
@@ -97,5 +97,5 @@ def make_plot(frame):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
-frame = sys.argv[1]
+frame = int(sys.argv[1])
 make_plot(frame)
