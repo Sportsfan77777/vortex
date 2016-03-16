@@ -115,7 +115,7 @@ def make_plot(rla = True):
     ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
     ax1.plot(xs, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
     #ax1.plot(xs, y3, c = "purple", alpha = alpha, linewidth = linewidth - 1)
-    ax1.plot(xs, y4, c = "cyan", alpha = alpha, linewidth = linewidth - 1)
+    #ax1.plot(xs, y4, c = "cyan", alpha = alpha, linewidth = linewidth - 1)
     #ax1.plot(xs, y5, c = "b", alpha = alpha, linewidth = linewidth - 1)
     ax2.plot(xs, y6, c = "orange", alpha = alpha, linewidth = linewidth - 1)
 
