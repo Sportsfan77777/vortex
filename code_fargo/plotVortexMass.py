@@ -157,6 +157,7 @@ def make_plot():
 
     # Limits
     plot.xlim(xs[0], xs[-1])
+    plot.yscale("log")
 
     # Save + Close
     plot.savefig("vortexMass.png")
