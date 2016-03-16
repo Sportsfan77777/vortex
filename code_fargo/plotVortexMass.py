@@ -108,7 +108,7 @@ def vortex_mass(radius, theta, density, vortensity):
 
     # Do not include vorticity < 0 or vorticity > 0.2 (non-vortex mostly falls into the latter)
     zoom_vortensity = vortensity[inner_disk_index : outer_disk_index]
-    zoom_density[(zoom_vortensity < 0.0) || (zoom_vortensity > 0.2)] = 0
+    zoom_density[(zoom_vortensity < 0.0) | (zoom_vortensity > 0.2)] = 0
 
     # Multiply each density grid cell by its area
     zoom_area = area[inner_disk_index : outer_disk_index]
