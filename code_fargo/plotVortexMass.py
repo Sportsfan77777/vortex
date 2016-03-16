@@ -88,7 +88,7 @@ def curl(v_rad, v_theta, rad, theta):
 # Vortex Mass
 inner_disk_rad = 1.2
 outer_disk_rad = 2.5
-def vortex_mass(radius, theta, density, vortensity, out = None):
+def vortex_mass(radius, theta, density, vortensity):
     """ total mass contained in vortex """
     # Differentials
     d_rad = np.diff(radius)
@@ -115,12 +115,9 @@ def vortex_mass(radius, theta, density, vortensity, out = None):
     zoom_area = area[inner_disk_index : outer_disk_index]
     vortex_mass_grid = zoom_density * zoom_area
 
-    # Output cells in used in vortex calculation (everything else is zero)
-    out = zoom_density
-
     # Find total mass in vortex
     total_mass = np.sum(vortex_mass_grid)
-    return total_mass
+    return total_mass, zoom_density
 
 ### Data ###
 def map_one_vortex(frame):
@@ -134,8 +131,7 @@ def map_one_vortex(frame):
     vorticity = curl(vrad, vtheta, rad, theta)
     vortensity = vorticity / normalized_density[1:, 1:]
 
-    vortex_map = [] # output for 2-D map
-    this_vortex_mass = vortex_mass(rad, theta, density, vortensity, out = vortex_map)
+    this_vortex_mass, vortex_map = vortex_mass(rad, theta, density, vortensity)
 
     print "Vortex Mass at Frame %d: %.8f" % (frame, this_vortex_mass)
     return vortex_map
@@ -165,7 +161,7 @@ def gather_vortex_over_time():
         vorticity = curl(vrad, vtheta, rad, theta)
         vortensity = vorticity / normalized_density[1:, 1:]
 
-        vortex_mass_i = vortex_mass(rad, theta, density, vortensity)
+        vortex_mass_i, _ = vortex_mass(rad, theta, density, vortensity)
         vortex_masses.append(vortex_mass_i)
 
 
