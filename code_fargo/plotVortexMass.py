@@ -184,7 +184,7 @@ def make_map_plot(frame):
     outer_disk_index = np.searchsorted(rad, outer_disk_rad)
 
     xs = rad[inner_disk_index : outer_disk_index]
-    vortex_map = map_one_vortex(frame)
+    vortex_map = map_one_vortex(frame) / surface_density_zero
 
     # Set up figure
     fig = plot.figure()
