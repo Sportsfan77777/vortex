@@ -4,7 +4,8 @@ in reality, the vortex should be at ~1.7 to 2.0
 the vorticity thresholds are not perfect (density thresholds based on 50% of peak might work better)
 
 Usage:
-python plotVortexMass.py
+python plotVortexMass.py        <===  plots vortex mass over time
+python plotVortexMass.py frame  <===  shows 2-D plot of which grid cells are used in vortex
 """
 
 import sys
@@ -85,7 +86,9 @@ def curl(v_rad, v_theta, rad, theta):
     return z_curl
 
 # Vortex Mass
-def vortex_mass(radius, theta, density, vortensity):
+inner_disk_rad = 1.2
+outer_disk_rad = 2.5
+def vortex_mass(radius, theta, density, vortensity, out = None):
     """ total mass contained in vortex """
     # Differentials
     d_rad = np.diff(radius)
@@ -98,10 +101,8 @@ def vortex_mass(radius, theta, density, vortensity):
 
     ### Zero out density outside of vortex ###
     # Do not include r < 1.2 or r > 2.5 regardless
-    inner_disk_rad = 1.2
+    
     inner_disk_index = np.searchsorted(radius, inner_disk_rad)
-
-    outer_disk_rad = 2.5
     outer_disk_index = np.searchsorted(radius, outer_disk_rad)
     
     zoom_density = density[inner_disk_index : outer_disk_index]
@@ -114,25 +115,16 @@ def vortex_mass(radius, theta, density, vortensity):
     zoom_area = area[inner_disk_index : outer_disk_index]
     vortex_mass_grid = zoom_density * zoom_area
 
-    # Find total mass in vortex
+    # Output cells in used in vortex calculation (everything else is zero)
+    out = zoom_density
 
+    # Find total mass in vortex
     total_mass = np.sum(vortex_mass_grid)
     return total_mass
 
 ### Data ###
-initial_rate = 2
-initial_end = 200
-
-middle_rate = 5
-middle_end = 500
-
-later_rate = 25
-later_end = num_frames
-
-times = range(1, initial_end, initial_rate) + range(initial_end, middle_end, middle_rate) + range(middle_end, later_end, later_rate)
-
-vortex_masses = []
-for frame in times:
+def map_one_vortex(frame):
+    """ get 2-D grid showing vortex """
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
@@ -142,15 +134,86 @@ for frame in times:
     vorticity = curl(vrad, vtheta, rad, theta)
     vortensity = vorticity / normalized_density[1:, 1:]
 
-    vortex_mass_i = vortex_mass(rad, theta, density, vortensity)
-    vortex_masses.append(vortex_mass_i)
+    vortex_map = [] # output for 2-D map
+    this_vortex_mass = vortex_mass(rad, theta, density, vortensity, out = vortex_map)
+
+    print "Vortex Mass at Frame %d: %.8f" % (frame, this_vortex_mass)
+    return vortex_map
+
+
+def gather_vortex_over_time():
+    """ add up vortex mass over time """
+    initial_rate = 2
+    initial_end = 200
+
+    middle_rate = 5
+    middle_end = 500
+
+    later_rate = 25
+    later_end = num_frames
+
+    times = range(1, initial_end, initial_rate) + range(initial_end, middle_end, middle_rate) + range(middle_end, later_end, later_rate)
+
+    vortex_masses = []
+    for frame in times:
+        density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+        normalized_density = density / surface_density_zero
+
+        vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
+        vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
+
+        vorticity = curl(vrad, vtheta, rad, theta)
+        vortensity = vorticity / normalized_density[1:, 1:]
+
+        vortex_mass_i = vortex_mass(rad, theta, density, vortensity)
+        vortex_masses.append(vortex_mass_i)
 
 
 ##### PLOTTING #####
 
 # Plot Parameters
+cmap = "RdYlBu_r"
+clim = [0, 2]
+
 fontsize = 14
 linewidth = 4
+
+def make_map_plot(frame):
+    # Data
+    inner_disk_index = np.searchsorted(rad, inner_disk_rad)
+    outer_disk_index = np.searchsorted(rad, outer_disk_rad)
+
+    xs = rad[inner_disk_index : outer_disk_index]
+    vortex_map = map_one_vortex(frame)
+
+    # Set up figure
+    fig = plot.figure()
+    ax = fig.add_subplot(111)
+
+    # Curves
+    result = ax.pcolormesh(xs, theta, np.transpose(vortex_map), cmap = cmap)
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
+
+    # Limits
+    plot.xlim(inner_disk_rad, outer_disk_rad)
+
+    angles = np.linspace(0, 2 * np.pi, 7)
+    degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+
+    plot.ylim(0, 2 * np.pi)
+    plot.yticks(angles, degree_angles)
+
+    # Annotate
+    plot.xlabel("Radius", fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+
+    # Save + Close
+    plot.savefig("%s/vortexMass_%04d.png" % (save_directory, frame))
+    plot.show()
+
+    plot.close(fig)
 
 def make_plot():
     # Data
@@ -177,5 +240,19 @@ def make_plot():
     plot.close()
 
 
-make_plot()
+if (len(sys.argv) > 1):
+    # Make Directory
+    directory = "vortexMassMaps"
+    try:
+        os.mkdir(directory)
+    except:
+        print "Directory Already Exists"
+
+    # plot map of vortex at a particular frame
+    frame = int(sys.argv[1])
+    make_map_plot(frame)
+else:
+    # plot vortex mass over time
+    gather_vortex_over_time()
+    make_plot()
 
