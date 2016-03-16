@@ -126,8 +126,6 @@ times = range(0, num_frames, rate)
 vortex_masses = []
 for frame in times:
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    normalized_density = density / surface_density_zero
-
     vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
     vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
