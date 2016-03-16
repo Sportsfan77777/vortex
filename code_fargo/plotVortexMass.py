@@ -175,6 +175,10 @@ fontsize = 14
 linewidth = 4
 
 def make_map_plot(frame):
+    # Orbit Number
+    time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+    orbit = int(round(time / (2 * np.pi), 0)) * frame
+
     # Data
     inner_disk_index = np.searchsorted(rad, inner_disk_rad)
     outer_disk_index = np.searchsorted(rad, outer_disk_rad)
@@ -203,7 +207,7 @@ def make_map_plot(frame):
     # Annotate
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+    plot.title("Vortex Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
     # Save + Close
     plot.savefig("%s/vortexMass_%04d.png" % (save_directory, frame))
