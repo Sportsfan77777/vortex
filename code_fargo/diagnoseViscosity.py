@@ -79,7 +79,8 @@ def make_plot(frame):
     avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
 
     # Curves
-    plot.plot(rad, avg_pseudo_viscosity, linewidth = linewidth)
+    plot.plot(rad, np.abs(avg_pseudo_viscosity), color = "red", linewidth = linewidth)
+    plot.plot(rad, avg_pseudo_viscosity, color = "blue", linewidth = linewidth) # to distinguish positive from negative
     plot.plot([rad[0], rad[-1]], [viscosity, viscosity], color = "black", linewidth = linewidth - 1)
 
     # Limits
