@@ -242,9 +242,9 @@ def make_plot():
 
 if (len(sys.argv) > 1):
     # Make Directory
-    directory = "vortexMassMaps"
+    save_directory = "vortexMassMaps"
     try:
-        os.mkdir(directory)
+        os.mkdir(save_directory)
     except:
         print "Directory Already Exists"
 
