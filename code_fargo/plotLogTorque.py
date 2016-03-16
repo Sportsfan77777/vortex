@@ -73,14 +73,14 @@ linewidth = 2
 def make_plot(rla = True):
     if not rla:
         # No Roche Lobe Avoidance
-        y1_base = data[:,1]
-        y2_base = data[:,2]
+        y1_base = planet_mass * data[:,1]
+        y2_base = planet_mass * data[:,2]
         title = "Torque (0th): %s x %s" % (fargo_par["Nrad"], fargo_par["Nsec"])
         save_fn = "TorqueZerothOrder.png"
     else:
         # Roche Lobe Tapering
-        y1_base = data[:,3]
-        y2_base = data[:,4]
+        y1_base = planet_mass * data[:,3]
+        y2_base = planet_mass * data[:,4]
         title = "Torque (1st): %s x %s" % (fargo_par["Nrad"], fargo_par["Nsec"])
         save_fn = "TorqueFirstOrder.png"
 
@@ -114,17 +114,17 @@ def make_plot(rla = True):
     # Simulation
     ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
     ax1.plot(xs, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
-    ax1.plot(xs, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
+    #ax1.plot(xs, y3, c = "purple", alpha = alpha, linewidth = linewidth - 1)
     ax1.plot(xs, y4, c = "cyan", alpha = alpha, linewidth = linewidth - 1)
-    ax1.plot(xs, y5, c = "purple", alpha = alpha, linewidth = linewidth - 1)
+    #ax1.plot(xs, y5, c = "b", alpha = alpha, linewidth = linewidth - 1)
     ax2.plot(xs, y6, c = "orange", alpha = alpha, linewidth = linewidth - 1)
 
     # Smoothed from Simulation
     ax1.plot(xs, s1, c = "r", label = "Inner", linewidth = linewidth)
     ax1.plot(xs, s2, c = "g", label = "Outer", linewidth = linewidth)
-    ax1.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
+    #x1.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
     ax1.plot(xs, s4, c = "cyan", label = "Total (out)", linewidth = linewidth)
-    ax1.plot(xs, s5, c = "purple", label = "Total (in)", linewidth = linewidth)
+    ax1.plot(xs, s5, c = "b", label = "Total (in)", linewidth = linewidth)
     ax2.plot(xs, s6, c = "orange", linewidth = linewidth)
 
     ax1.plot([xs[0], xs[-1]], [0, 0], c = "black", label = "Analytic", linewidth = linewidth) # Zero Reference Line
@@ -139,7 +139,7 @@ def make_plot(rla = True):
     ax2.set_xlim(0, xs[-1])
 
     ax1.set_yscale('log')
-    ax1.set_ylim(10**(-10), 10**(-3))
+    ax1.set_ylim(10**(-10), 10**(-5))
 
     ax2.set_ylim(0, 4) # Inward (3) or Outward (1)
 
