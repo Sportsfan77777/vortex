@@ -90,13 +90,16 @@ def make_plot(rla = True):
     y1 = np.abs(smooth(y1_base, ks_small)[select]) # Torque from Inner Disk 
     y2 = np.abs(smooth(y2_base, ks_small)[select]) # Torque from Outer Disk
     y3 = np.abs(y2 - y1) # Difference
-    y4 = (np.sign(y2 - y1)) + 2 # Sign (inward is 3, outward is 1)
-    y5 = analytic[1] # Analytic Reference
+    y4 = smooth(y1_base + y2_base, ks_small)[select] # Total Torque (Outward Part)
+    y5 = -smooth(y1_base + y2_base, ks_small)[select] # Total Torque (Inward Part)
+    y6 = (np.sign(y2 - y1)) + 2 # Sign (inward is 3, outward is 1)
 
     s1 = np.abs(smooth(y1_base, ks)[select]) # Torque from Inner Disk (smoothed)
     s2 = np.abs(smooth(y2_base, ks)[select]) # Torque from Outer Disk (smoothed)
     s3 = np.abs(s2 - s1)
-    s4 = (np.sign(s2 - s1)) + 2
+    s4 = smooth(y1_base + y2_base, ks)[select] # Torque from Outer Disk (smoothed) (Outward Part)
+    s5 = -smooth(y1_base + y2_base, ks)[select] # Torque from Outer Disk (smoothed) (Inward Part)
+    s6 = (np.sign(s2 - s1)) + 2
 
     # Figure
     fig = plot.figure(figsize=(8, 6)) 
@@ -112,13 +115,17 @@ def make_plot(rla = True):
     ax1.plot(xs, y1, c = "r", alpha = alpha, linewidth = linewidth - 1)
     ax1.plot(xs, y2, c = "g", alpha = alpha, linewidth = linewidth - 1)
     ax1.plot(xs, y3, c = "b", alpha = alpha, linewidth = linewidth - 1)
-    ax2.plot(xs, y4, c = "orange", alpha = alpha, linewidth = linewidth - 1)
+    ax1.plot(xs, y4, c = "cyan", alpha = alpha, linewidth = linewidth - 1)
+    ax1.plot(xs, y5, c = "purple", alpha = alpha, linewidth = linewidth - 1)
+    ax2.plot(xs, y6, c = "orange", alpha = alpha, linewidth = linewidth - 1)
 
     # Smoothed from Simulation
     ax1.plot(xs, s1, c = "r", label = "Inner", linewidth = linewidth)
     ax1.plot(xs, s2, c = "g", label = "Outer", linewidth = linewidth)
     ax1.plot(xs, s3, c = "b", label = "Inner + Outer", linewidth = linewidth)
-    ax2.plot(xs, s4, c = "orange", linewidth = linewidth)
+    ax1.plot(xs, s4, c = "cyan", label = "Total (out)", linewidth = linewidth)
+    ax1.plot(xs, s5, c = "purple", label = "Total (in)", linewidth = linewidth)
+    ax2.plot(xs, s6, c = "orange", linewidth = linewidth)
 
     ax1.plot([xs[0], xs[-1]], [0, 0], c = "black", label = "Analytic", linewidth = linewidth) # Zero Reference Line
 
