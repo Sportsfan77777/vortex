@@ -53,7 +53,7 @@ num_theta = np.loadtxt("dims.dat")[-1]
 rad = np.loadtxt("used_rad.dat")[:-1]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density = float(fargo_par["Sigma0"])
+surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
 mass_taper = float(fargo_par["MassTaper"])
@@ -126,11 +126,13 @@ times = range(0, num_frames, rate)
 vortex_masses = []
 for frame in times:
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
+
     vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
     vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
     vorticity = curl(vrad, vtheta, rad, theta)
-    vortensity = vorticity / density[1:, 1:]
+    vortensity = vorticity / normalized_density[1:, 1:]
 
     vortex_mass_i = vortex_mass(rad, theta, density, vortensity)
     vortex_masses.append(vortex_mass_i)
