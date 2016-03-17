@@ -139,6 +139,7 @@ def make_plot(frame, show = False):
     plot.xlim(float(fargo_par["Rmin"]), 1.0)
 
     # Data
+    x = rad
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
