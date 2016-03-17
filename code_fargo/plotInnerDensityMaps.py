@@ -111,7 +111,7 @@ def make_plot(frame, show = False):
 
     # Data
     x = rad
-    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
     ### Plot ###
