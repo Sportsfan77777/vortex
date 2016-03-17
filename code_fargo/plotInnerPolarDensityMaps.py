@@ -88,6 +88,7 @@ cmap = "RdYlBu_r"
 clim = [0, 5]
 
 fontsize = 14
+my_dpi = 100
 
 def make_plot(frame, show = False):
     # Orbit Number
