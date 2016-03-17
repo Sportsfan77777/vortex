@@ -121,50 +121,48 @@ fontsize = 14
 my_dpi = 100
 
 def make_plot(frame, show = False):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * frame
+    # Orbit Number
+    time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+    orbit = int(round(time / (2 * np.pi), 0)) * frame
 
-        # Set up figure
-        fig = plot.figure()
-        ax = fig.add_subplot(111)
+    # Set up figure
+    fig = plot.figure()
+    ax = fig.add_subplot(111)
 
-        # Axis
-        angles = np.linspace(0, 2 * np.pi, 7)
-        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+    # Axis
+    angles = np.linspace(0, 2 * np.pi, 7)
+    degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
 
-        plot.ylim(0, 2 * np.pi)
-        plot.yticks(angles, degree_angles)
+    plot.ylim(0, 2 * np.pi)
+    plot.yticks(angles, degree_angles)
 
-        plot.xlim(float(fargo_par["Rmin"]), 1.0)
+    plot.xlim(float(fargo_par["Rmin"]), 1.0)
 
-        # Data
-        density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-        normalized_density = density / surface_density_zero
+    # Data
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
 
-        vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
-        vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
+    vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
+    vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
-        vorticity = curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
+    vorticity = curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
 
-        ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
-    
-        fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+    ### Plot ###
+    result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
 
-        # Annotate
-        plot.xlabel("Radius", fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
 
-        # Save and Close
-        plot.savefig("%s/vorticityMap_%03d.png" % (save_directory, frame), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
+    # Annotate
+    plot.xlabel("Radius", fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.title("Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+
+    # Save and Close
+    plot.savefig("%s/vorticityMap_%03d.png" % (save_directory, frame), bbox_inches = 'tight', dpi = my_dpi)
+    if show:
+        plot.show()
+    plot.close(fig) # Close Figure (to avoid too many figures)
 
 
 
