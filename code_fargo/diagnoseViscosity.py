@@ -79,8 +79,8 @@ def make_plot(frame):
     avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
 
     # Curves
-    plot.plot(rad, np.abs(avg_pseudo_viscosity), color = "red", linewidth = linewidth)
-    plot.plot(rad, avg_pseudo_viscosity, color = "blue", linewidth = linewidth) # to distinguish positive from negative
+    plot.plot(rad, avg_pseudo_viscosity, color = "blue", label = "+", linewidth = linewidth) # positive
+    plot.plot(rad, -avg_pseudo_viscosity, color = "red", label = "-", linewidth = linewidth) # negative
     plot.plot([rad[0], rad[-1]], [viscosity, viscosity], color = "black", linewidth = linewidth - 1)
 
     # Limits
@@ -91,6 +91,8 @@ def make_plot(frame):
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel("Pseudo Viscosity", fontsize = fontsize)
     plot.title("Orbit %d" % orbit, fontsize = fontsize + 1)
+
+    plot.legend(loc = "upper right")
 
     # Save + Close
     plot.savefig("%s/viscosity_diagnosis_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
