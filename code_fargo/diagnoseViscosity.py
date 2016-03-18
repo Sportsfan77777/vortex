@@ -82,6 +82,7 @@ def make_plot(frame):
         avg_pseudo_viscosity = (2.0 / 3) * (np.multiply(rad, vrad)) # should be equal to viscosity
     else:
         # fargo
+        rad = np.loadtxt("used_rad.dat")[:-1]
         vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
         pseudo_viscosity = (2.0 / 3) * (np.multiply(rad[:, None], vrad)) # should be equal to viscosity
         avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
