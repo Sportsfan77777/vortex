@@ -85,6 +85,7 @@ def make_plot():
     mins = [min(ys), min(qs), min(ys_analytic)]
     maxes = [max(ys), max(qs), max(ys_analytic)]
     plot.ylim(min(mins)- 0.002, max(maxes) + 0.015)
+    plot.xlim(0, xs[-1])
 
     # Save and Close
     plot.savefig("planetDistance.png", bbox_inches = 'tight')
