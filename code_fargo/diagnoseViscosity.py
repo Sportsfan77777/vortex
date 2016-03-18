@@ -66,7 +66,7 @@ fontsize = 14
 linewidth = 4
 
 def make_plot(frame):
-	# Orbit Number
+    # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     orbit = int(round(time / (2 * np.pi), 0)) * frame
 
@@ -74,9 +74,17 @@ def make_plot(frame):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     # Data
-    vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
-    pseudo_viscosity = (2.0 / 3) * (np.multiply(rad[:, None], vrad)) # should be equal to viscosity
-    avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
+    fargo_fn = "fargo2D1D"
+    if os.path.exists(fargo_fn):
+        # fargo2D1D
+        vrad = fromfile("gasvrad1D%d.dat" % frame)
+        pseudo_viscosity = (2.0 / 3) * (np.multiply(rad, vrad)) # should be equal to viscosity
+        avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
+    else:
+        # fargo
+        vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
+        pseudo_viscosity = (2.0 / 3) * (np.multiply(rad[:, None], vrad)) # should be equal to viscosity
+        avg_pseudo_viscosity = np.average(pseudo_viscosity, axis = 1) # radial pseudo-viscosity
 
     # Curves
     plot.plot(rad, avg_pseudo_viscosity, color = "blue", label = "+", linewidth = linewidth) # positive
