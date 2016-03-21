@@ -142,7 +142,7 @@ def make_plot():
     ax2.set_xlim(0, xs[-1])
 
     ax1.set_yscale('log')
-    ax1.set_ylim(10**(-10), 10**(-3))
+    ax1.set_ylim(10**(-11), 10**(-5))
 
     ax2.set_ylim(0, 4) # Inward (3) or Outward (1)
 
