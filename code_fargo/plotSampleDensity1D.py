@@ -24,7 +24,7 @@ from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
 ### Choose Sample ###
-sample_name = "by300"
+sample_name = "by200"
 sample_range = np.linspace(0, 2000, 11)
 
 ### Get FARGO Parameters ###
@@ -48,7 +48,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ##### PLOTTING #####
 
 # Make Directory
-directory = "averagedDensity"
+directory = "density1D"
 try:
     os.mkdir(directory)
 except:
@@ -100,7 +100,7 @@ def make_plot(prefix = "", show = False):
     plot.legend()
 
     # Save and Close
-    plot.savefig("%s/%savg_density_%s.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/%sdensity1D_%s.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
 
