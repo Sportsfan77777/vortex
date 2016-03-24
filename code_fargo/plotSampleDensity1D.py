@@ -82,7 +82,7 @@ def add_to_plot(frame, choice = "normal", show = False):
             xlabel = "Radius"
             
         # Data
-        avergedDensity = fromfile("gasdens1D%d.dat" % i) / surface_density
+        averagedDensity = fromfile("gasdens1D%d.dat" % i) / surface_density
 
         ### Plot ###
         plot.plot(x, averagedDensity, linewidth = linewidth, label = "%d" % frame)
