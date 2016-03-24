@@ -22,8 +22,8 @@ from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
 ### Choose Sample ###
-sample_name = "by300"
-sample_range = np.linspace(0, 1500, 6)
+sample_name = "by200"
+sample_range = np.linspace(0, 2000, 11)
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
