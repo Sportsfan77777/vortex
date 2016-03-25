@@ -72,7 +72,7 @@ def add_to_plot(frame, choice = "normal", show = False):
     plot.xlim(float(fargo_par["Rmin1D"]) - 0.05, 1.0)
         
     # Data
-    averagedDensity = (fromfile("gasdens.ascii_rad.%d.dat" % frame).reshape(num_rad, 2))[:, 1] / surface_density
+    averagedDensity = (np.loadtxt("gasdens.ascii_rad.%d.dat" % frame))[:, 1] / surface_density
 
     ### Plot ###
     plot.plot(x, averagedDensity, linewidth = linewidth, label = "%d" % frame)
