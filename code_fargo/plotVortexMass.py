@@ -30,6 +30,15 @@ from pylab import fromfile
 
 import util
 
+## Check frame ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    frame = 0
+else:
+    # fargo
+    frame = 1
+
 ## Set file names ##
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
