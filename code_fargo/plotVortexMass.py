@@ -148,17 +148,6 @@ def map_one_vortex(frame):
 
 def gather_vortex_over_time():
     """ add up vortex mass over time """
-    initial_rate = 2
-    initial_end = 200
-
-    middle_rate = 5
-    middle_end = 500
-
-    later_rate = 25
-    later_end = num_frames
-
-    times = range(1, initial_end, initial_rate) + range(initial_end, middle_end, middle_rate) + range(middle_end, later_end, later_rate)
-
     vortex_masses = []
     for frame in times:
         density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
@@ -173,6 +162,18 @@ def gather_vortex_over_time():
         vortex_mass_i, _ = vortex_mass(rad, theta, density, vortensity)
         vortex_masses.append(vortex_mass_i)
 
+### Times ###
+
+initial_rate = 2
+initial_end = 200
+
+middle_rate = 5
+middle_end = 500
+
+later_rate = 25
+later_end = num_frames
+
+times = range(1, initial_end, initial_rate) + range(initial_end, middle_end, middle_rate) + range(middle_end, later_end, later_rate)
 
 ##### PLOTTING #####
 
