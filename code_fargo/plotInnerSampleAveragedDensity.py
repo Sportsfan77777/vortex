@@ -68,6 +68,7 @@ def add_to_plot(frame, show = False):
     x = rad
     prefix = ""
     plot.xlim(float(fargo_par["Rmin"]) - 0.05, 1.0)
+    plot.ylim(0, 5.0)
         
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
