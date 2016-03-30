@@ -182,6 +182,7 @@ PlanetarySystem *sys;
   while (dtemp < 0.999999999*DT) {
     MassTaper = PhysicalTime/(MASSTAPER*2.0*M_PI);
     MassTaper = (MassTaper > 1.0 ? 1.0 : pow(sin(MassTaper*M_PI/2.0),2.0));
+    //MassTaper = (MassTaper < 0.001 ? 0.001 : MassTaper); //*** ##### MASS TAPER EDIT HERE ##### ***//
     if (IsDisk == YES) {
       CommunicateBoundaries (Rho,Vrad,Vtheta,Label);
       if (SloppyCFL == NO) {

@@ -57,7 +57,9 @@ int t;
     Yplanet = sys->y[i];
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
-    MplanetVirtual = sys->mass[i];
+    MplanetVirtual = sys->mass[i]*MassTaper; //*** ###### MASS TAPER EDIT HERE ###### ***//
+    //printf ("Output1");
+    //fflush (stdout);
     WritePlanetFile (t, i);
   }
 }
@@ -88,7 +90,9 @@ int t;
     Yplanet = sys->y[i];
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
-    MplanetVirtual = sys->mass[i];
+    MplanetVirtual = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
+    //printf ("Output2");
+    //fflush (stdout);
     WriteBigPlanetFile (t, i);
   }
 }

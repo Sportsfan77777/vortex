@@ -41,7 +41,9 @@ PlanetarySystem *sys;
       Yplanet = sys->y[k];
       VXplanet = sys->vx[k];
       VYplanet = sys->vy[k];
-      Mplanet = sys->mass[k];
+      Mplanet = sys->mass[k]*MassTaper + 0.000001; //*** ##### MASS TAPER EDIT HERE ##### ***//
+      printf ("Planet1");
+      fflush (stdout);
       Rplanet = sqrt(Xplanet*Xplanet+Yplanet*Yplanet);
       RRoche = pow((1.0/3.0*Mplanet),(1.0/3.0))*Rplanet; /* Central mass is 1.0 */
       i_min=0;
@@ -107,11 +109,15 @@ PlanetarySystem *sys;
       PxPlanet += dPxPlanet;
       PyPlanet += dPyPlanet;
       Mplanet  += dMplanet;
+      //printf ("mpi reduce\n");
+      //fflush (stdout);
       if (sys->FeelDisk[k] == YES) {
-	sys->vx[k] = PxPlanet/Mplanet;
-	sys->vy[k] = PyPlanet/Mplanet;
+	//sys->vx[k] = PxPlanet/Mplanet; // get rid of disk material, but don't let it affect planet
+	//sys->vy[k] = PyPlanet/Mplanet;
       }
-      sys->mass[k] = Mplanet;
+      //sys->mass[k] = Mplanet;
+      //printf ("done accreting\n");
+      //fflush (stdout);
     }
   }
 }
