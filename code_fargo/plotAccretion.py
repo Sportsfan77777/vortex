@@ -18,6 +18,8 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
+from readTitle import readTitle
+
 ## Set file names ##
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
@@ -54,7 +56,8 @@ def make_plot():
     plot.plot(xs, ys, linewidth = linewidth)
 
     # Annotate
-    plot.title("Accretion Over Time", fontsize = fontsize + 2)
+    this_title = readTitle()
+    plot.title("%s" % this_title, fontsize = fontsize + 2)
     plot.xlabel("Timestep", fontsize = fontsize)
     plot.ylabel("Planet Mass / Initial Mass", fontsize = fontsize)
 

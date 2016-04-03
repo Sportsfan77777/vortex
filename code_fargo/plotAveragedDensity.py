@@ -28,6 +28,8 @@ from matplotlib import pyplot as plot
 from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
+from readTitle import readTitle
+
 ### Movie Commands ###
 def make_movies():
     # Movie Parameters
@@ -120,9 +122,10 @@ def make_plot(frame, show = False):
         plot.plot(x, averagedDensity, linewidth = linewidth)
 
         # Annotate
+        this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
-        plot.title("Averaged Gas Density at Orbit %d" % orbit, fontsize = fontsize + 1)
+        plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("averagedDensity/%savg_density_%04d.png" % (prefix, i), bbox_inches = 'tight', dpi = my_dpi)

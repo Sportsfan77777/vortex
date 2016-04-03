@@ -19,6 +19,8 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
+from readTitle import readTitle
+
 ## Set file names ##
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
@@ -71,17 +73,18 @@ fontsize = 14
 linewidth = 2
 
 def make_plot(rla = True):
+    this_title = readTitle()
     if not rla:
         # No Roche Lobe Avoidance
         y1_base = planet_mass * data[:,1]
         y2_base = planet_mass * data[:,2]
-        title = "Torque (0th): %s x %s" % (fargo_par["Nrad"], fargo_par["Nsec"])
+        title = "Torque (0th): %s" % (this_title)
         save_fn = "TorqueZerothOrder.png"
     else:
         # Roche Lobe Tapering
         y1_base = planet_mass * data[:,3]
         y2_base = planet_mass * data[:,4]
-        title = "Torque (1st): %s x %s" % (fargo_par["Nrad"], fargo_par["Nsec"])
+        title = "Torque (1st): %s" % (this_title)
         save_fn = "TorqueFirstOrder.png"
 
     # Data

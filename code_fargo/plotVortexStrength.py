@@ -98,7 +98,6 @@ for frame in times:
 fontsize = 14
 linewidth = 4
 
-
 def make_plot():
     # Data
     xs = np.array(times)
