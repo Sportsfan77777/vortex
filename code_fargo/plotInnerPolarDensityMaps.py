@@ -17,6 +17,7 @@ from multiprocessing import Pool
 import math
 import numpy as np
 
+from readTitle import readTitle
 
 import matplotlib
 #matplotlib.use('Agg')
@@ -116,7 +117,8 @@ def make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     # Annotate
-    plot.title("Gas Density Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+    this_title = readTitle()
+    plot.title("Gas Density Map at Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
     # Save and Close
     plot.savefig("%s/innerDensityMap_%04d.png" % (save_directory, frame), bbox_inches = 'tight', dpi = my_dpi)

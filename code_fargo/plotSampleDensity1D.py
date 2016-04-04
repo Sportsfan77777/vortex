@@ -23,6 +23,8 @@ from matplotlib import pyplot as plot
 from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
+from readTitle import readTitle
+
 ### Choose Sample ###
 sample_name = "by200"
 sample_range = np.linspace(0, 2000, 11)
@@ -89,9 +91,10 @@ def add_to_plot(frame, choice = "normal", show = False):
         plot.plot(x, averagedDensity, linewidth = linewidth, label = "%d" % frame)
 
         # Annotate
+        this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("1-D Density", fontsize = fontsize)
-        #plot.title("", fontsize = fontsize + 1)
+        plot.title("%s" % this_title, fontsize = fontsize + 1)
 
     i = frame
     choose_axis(i, choice)

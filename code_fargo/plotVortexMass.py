@@ -29,6 +29,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+from readTitle import readTitle
 
 ## Check frame ##
 fargo_fn = "fargo2D1D"
@@ -214,9 +215,10 @@ def make_map_plot(frame):
     plot.yticks(angles, degree_angles)
 
     # Annotate
+    this_title = readTitle()
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Vortex Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+    plot.title("Vortex Map at Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
     # Save + Close
     plot.savefig("%s/vortexMass_%04d.png" % (save_directory, frame))
@@ -233,9 +235,10 @@ def make_plot():
     plot.plot(xs, ys, linewidth = linewidth)
 
     # Annotate
+    this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Vortex Mass", fontsize = fontsize)
-    plot.title("Mass Tapering: %d" % mass_taper, fontsize = fontsize + 1)
+    plot.title("Mass Tapering: %d, Title: %s" % (mass_taper, this_title), fontsize = fontsize + 1)
 
     # Limits
     plot.xlim(xs[0], xs[-1])
