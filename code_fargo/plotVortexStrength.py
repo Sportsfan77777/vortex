@@ -26,6 +26,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+from readTitle import readTitle
 
 ## Set file names ##
 fargo_fn = "fargo2D1D"
@@ -107,8 +108,10 @@ def make_plot():
     plot.plot(xs, ys, linewidth = linewidth)
 
     # Annotate
+    this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Vortex Peak Strength", fontsize = fontsize)
+    plot.title(this_title, fontsize = fontsize)
 
     # Limits
     plot.xlim(xs[0], xs[-1])
