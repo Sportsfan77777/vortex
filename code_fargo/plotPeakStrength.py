@@ -2,7 +2,7 @@
 plots (peak density) / (pseudo-half-width) / (radial distance to planet)**2 over time
 
 Usage:
-python plotVortexStrength.py
+python plotPeakStrength.py
 """
 
 import sys
@@ -110,14 +110,14 @@ def make_plot():
     # Annotate
     this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Vortex Peak Strength", fontsize = fontsize)
+    plot.ylabel("Peak Strength", fontsize = fontsize)
     plot.title(this_title, fontsize = fontsize)
 
     # Limits
     plot.xlim(xs[0], xs[-1])
 
     # Save + Close
-    plot.savefig("vortexPeakStrength.png")
+    plot.savefig("peakStrength.png")
     plot.show()
 
     plot.close()
