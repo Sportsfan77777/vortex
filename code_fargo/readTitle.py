@@ -13,9 +13,9 @@ import pickle
 def readTitle():
 	fn = "title.p"
 	title = pickle.load(open(fn, "rb"))
-	return title
+	return "[%s]" % title
 
 
 if __name__ == "__main__":
 	title = readTitle()
-	print "Title: %s" % title
+	print "Title: [%s]" % title
