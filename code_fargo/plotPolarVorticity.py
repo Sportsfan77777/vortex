@@ -26,6 +26,8 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
+from readTitle import readTitle
+
 ## Check frame ##
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
@@ -162,7 +164,8 @@ def make_plot(frame, show = False):
         result.set_clim(clim[0], clim[1])
 
         # Annotate
-        plot.title("Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+        this_title = readTitle()
+        plot.title("Vortensity Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
