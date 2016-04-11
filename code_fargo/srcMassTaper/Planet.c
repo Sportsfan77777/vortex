@@ -42,8 +42,8 @@ PlanetarySystem *sys;
       VXplanet = sys->vx[k];
       VYplanet = sys->vy[k];
       Mplanet = sys->mass[k]*MassTaper + 0.000001; //*** ##### MASS TAPER EDIT HERE ##### ***//
-      printf ("Planet1");
-      fflush (stdout);
+      //printf ("Planet1");
+      //fflush (stdout);
       Rplanet = sqrt(Xplanet*Xplanet+Yplanet*Yplanet);
       RRoche = pow((1.0/3.0*Mplanet),(1.0/3.0))*Rplanet; /* Central mass is 1.0 */
       i_min=0;
