@@ -52,7 +52,7 @@ linewidth = 3
 
 def make_plot():
     # Curves
-    ys = masses / masses[0]
+    ys = masses / float(fargo_par["PlanetMass"])
     plot.plot(xs, ys, linewidth = linewidth)
 
     # Annotate
