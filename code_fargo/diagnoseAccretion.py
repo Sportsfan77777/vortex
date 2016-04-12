@@ -85,9 +85,9 @@ def make_plot():
     near_planet = 1.1
     radius_near_planet = np.searchsorted(rad, near_planet)
     radial_velocity_at_planet = np.zeros(mass_taper)
-    for i in range(mass_taper):
+    for frame in range(mass_taper):
         vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
-        radial_velocity_at_planet[i] = np.average(vrad[radius_near_planet, :])
+        radial_velocity_at_planet[frame] = np.average(vrad[radius_near_planet, :])
 
     radius = 1.0
     radial_accretion = 2.0 * np.pi * radius * radial_velocity_at_planet
