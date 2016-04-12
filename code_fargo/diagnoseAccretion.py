@@ -109,7 +109,7 @@ def make_plot():
     this_title = readTitle()
     plot.xlabel("Time", fontsize = fontsize)
     plot.ylabel("Accretion Rate", fontsize = fontsize)
-    plot.title("Orbit %d for %s" % (orbit, this_title), fontsize = fontsize + 1)
+    plot.title("Accretion for %s" % (this_title), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right")
 
