@@ -112,7 +112,7 @@ def make_plot():
     plot.ylabel("Accretion Rate", fontsize = fontsize)
     plot.title("Accretion for %s" % (this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right")
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.1, 1.0)) # outside of plot
 
     # Save + Close
     plot.savefig("accretion_diagnosis.png", bbox_inches = 'tight', dpi = my_dpi)
