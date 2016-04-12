@@ -78,8 +78,6 @@ def make_plot():
     masses = (data[:, 5]) # Planet Mass from 0 to Mass Taper
     tapering_accretion = np.diff(masses[:mass_taper + 1])
 
-    print masses[mass_taper + 1], masses[-1]
-
     # Measure 2: Viscosity
     viscous_accretion = 3.0 * np.pi * surface_density * viscosity
 
