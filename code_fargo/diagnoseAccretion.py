@@ -28,6 +28,15 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+## Set file names ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    planet_fn = "bigplanet1.dat"
+else:
+    # fargo
+    planet_fn = "bigplanet0.dat"
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
