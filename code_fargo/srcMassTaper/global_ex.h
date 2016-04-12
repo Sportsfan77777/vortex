@@ -43,3 +43,4 @@ extern PolarGrid *RhoStar, *RhoInt, *Potential;
 extern boolean LogGrid;
 extern boolean OverridesOutputdir;
 extern char NewOutputdir[1024];
+extern boolean FakeAccretion;

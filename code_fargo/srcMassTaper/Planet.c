@@ -8,6 +8,8 @@ designed by W. Kley.
 
 #include "fargo.h"
 
+extern boolean FakeAccretion;
+
 void AccreteOntoPlanets (Rho, Vrad, Vtheta, dt, sys)
 real dt;
 PolarGrid *Rho, *Vrad, *Vtheta;
@@ -111,13 +113,18 @@ PlanetarySystem *sys;
       Mplanet  += dMplanet;
       //printf ("mpi reduce\n");
       //fflush (stdout);
-      if (sys->FeelDisk[k] == YES) {
-	//sys->vx[k] = PxPlanet/Mplanet; // get rid of disk material, but don't let it affect planet
-	//sys->vy[k] = PyPlanet/Mplanet;
+      if (FakeAccretion == YES) {
+          // pass (get rid of disk material, but don't let it affect planet)
       }
-      //sys->mass[k] = Mplanet;
-      //printf ("done accreting\n");
-      //fflush (stdout);
+      else {
+          if (sys->FeelDisk[k] == YES) {
+    	        sys->vx[k] = PxPlanet/Mplanet;
+    	        sys->vy[k] = PyPlanet/Mplanet;
+          }
+          sys->mass[k] = Mplanet;
+          printf ("done accreting\n");
+          fflush (stdout);
+      }
     }
   }
 }

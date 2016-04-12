@@ -25,3 +25,4 @@ PolarGrid *RhoStar, *RhoInt, *Potential;
 boolean LogGrid;
 boolean OverridesOutputdir;
 char NewOutputdir[1024];
+boolean FakeAccretion;
