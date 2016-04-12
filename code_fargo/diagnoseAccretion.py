@@ -94,7 +94,7 @@ def make_plot():
         radial_velocity_at_planet[i] = np.average(vrad[radius_near_planet, :])
 
     radius = 1.0
-    radial_accretion = 2.0 * np.pi * radius * surface_density * radial_velocity_at_planet
+    radial_accretion = -2.0 * np.pi * radius * surface_density * radial_velocity_at_planet
 
     # Curves
     plot.plot(xs, tapering_accretion, color = "blue", label = "taper", linewidth = linewidth)
