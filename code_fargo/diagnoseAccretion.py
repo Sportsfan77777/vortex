@@ -75,14 +75,16 @@ def make_plot():
 
     # Measure 1: Diff Mass Accretion
     data = np.loadtxt(planet_fn)
-    masses = (data[:mass_taper + 1, 5]) # Planet Mass from 0 to Mass Taper
-    tapering_accretion = np.diff(masses)
+    masses = (data[:, 5]) # Planet Mass from 0 to Mass Taper
+    tapering_accretion = np.diff(masses[:mass_taper + 1])
+
+    print masses[mass_taper+1], masses[-1]
 
     # Measure 2: Viscosity
     viscous_accretion = 3.0 * np.pi * surface_density * viscosity
 
     # Measure 3: Radial Velocity
-    near_planet = 1.15
+    near_planet = 1.05
     radius_near_planet = np.searchsorted(rad, near_planet)
     
     rate = 10
@@ -93,7 +95,7 @@ def make_plot():
         vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
         radial_velocity_at_planet[i] = np.average(vrad[radius_near_planet, :])
 
-    radius = 1.03
+    radius = 1.0
     radial_accretion = 2.0 * np.pi * radius * surface_density * radial_velocity_at_planet
 
     # Curves
