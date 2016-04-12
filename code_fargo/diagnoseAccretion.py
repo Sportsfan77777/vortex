@@ -93,13 +93,14 @@ def make_plot():
         vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
         radial_velocity_at_planet[i] = np.average(vrad[radius_near_planet, :])
 
-    radius = 1.0
-    radial_accretion = -2.0 * np.pi * radius * surface_density * radial_velocity_at_planet
+    radius = 1.05
+    radial_accretion = 2.0 * np.pi * radius * surface_density * radial_velocity_at_planet
 
     # Curves
     plot.plot(xs, tapering_accretion, color = "blue", label = "taper", linewidth = linewidth)
     plot.plot([xs[0], xs[-1]], [viscous_accretion, viscous_accretion], color = "black", label = "viscous", linewidth = linewidth)
-    plot.plot(xs_vrad, radial_velocity_at_planet, color = "red", label = "v_rad", linewidth = linewidth)
+    plot.plot(xs_vrad, radial_velocity_at_planet, color = "red", label = "v_rad (+)", linewidth = linewidth) # Positive
+    plot.plot(xs_vrad, -radial_velocity_at_planet, color = "orange", label = "v_rad (-)", linewidth = linewidth) # Negative
 
     # Limits
     plot.xlim(xs[0], xs[-1])
