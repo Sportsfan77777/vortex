@@ -32,10 +32,10 @@ from readTitle import readTitle
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
     # fargo2D1D
-    planet_fn = "bigplanet1.dat"
+    planet_fn = "planet1.dat"
 else:
     # fargo
-    planet_fn = "bigplanet0.dat"
+    planet_fn = "planet0.dat"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -78,7 +78,7 @@ def make_plot():
     masses = (data[:, 5]) # Planet Mass from 0 to Mass Taper
     tapering_accretion = np.diff(masses[:mass_taper + 1])
 
-    print masses[mass_taper+1], masses[-1]
+    print masses[mass_taper + 1], masses[-1]
 
     # Measure 2: Viscosity
     viscous_accretion = 3.0 * np.pi * surface_density * viscosity
