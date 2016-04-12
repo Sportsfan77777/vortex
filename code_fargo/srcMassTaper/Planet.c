@@ -122,8 +122,8 @@ PlanetarySystem *sys;
     	        sys->vy[k] = PyPlanet/Mplanet;
           }
           sys->mass[k] = Mplanet;
-          printf ("done accreting\n");
-          fflush (stdout);
+          //printf ("done accreting\n");
+          //fflush (stdout);
       }
     }
   }
