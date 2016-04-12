@@ -47,10 +47,9 @@ surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 viscosity = float(fargo_par["Viscosity"])
 
-mass_taper = int(round(float((fargo_par["MassTaper"])), 0)
+mass_taper = int(round(float((fargo_par["MassTaper"])), 0))
 
 ##### PLOTTING #####
-
 
 # Plot Parameters
 my_dpi = 100
