@@ -84,10 +84,10 @@ def make_plot():
     # Measure 3: Radial Velocity
     near_planet = 1.1
     radius_near_planet = np.searchsorted(rad, near_planet)
-    radial_velocity_at_planet = np.zeros(mass_taper)
-
+    
     rate = 10
     xs_vrad = range(0, mass_taper, rate)
+    radial_velocity_at_planet = np.zeros(len(xs_vrad))
 
     for frame in xs_vrad:
         vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
