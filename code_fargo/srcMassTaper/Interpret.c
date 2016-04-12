@@ -25,7 +25,7 @@ boolean         FastTransport = YES, GuidingCenter = NO;
 boolean         IsDisk = YES, NonReflecting = NO, Corotating = NO, OuterSourceMass = NO;
 boolean         Write_Density = YES, Write_Velocity = YES, Indirect_Term = YES;
 boolean         FakeAccretion = NO;
-//boolean         Sin_Squared = YES, Parabola = NO;
+boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -197,6 +197,10 @@ char *filename;
 
   // #### NEW VARIABLES #### //
   if ((*FAKEACCRETION == 'y') || (*FAKEACCRETION == 'Y')) FakeAccretion = YES;
+
+  if ((*TAPERPROFILE == 's') || (*TAPERPROFILE == 'S')) SinSquaredTaper = YES;
+  else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
+  else {}
 }
 
 void PrintUsage (execname)
