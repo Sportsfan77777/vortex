@@ -82,7 +82,7 @@ def make_plot():
     viscous_accretion = 3.0 * np.pi * surface_density * viscosity
 
     # Measure 3: Radial Velocity
-    near_planet = 1.1
+    near_planet = 1.15
     radius_near_planet = np.searchsorted(rad, near_planet)
     
     rate = 10
@@ -103,7 +103,7 @@ def make_plot():
 
     # Limits
     plot.xlim(xs[0], xs[-1])
-    #plot.yscale('log')
+    plot.yscale('log')
 
     # Annotate
     this_title = readTitle()
