@@ -97,7 +97,7 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
-        blank_density = (fromfile("gasdens%d.dat" % blank_frame)).reshape(num_rad, num_theta))
+        blank_density = (fromfile("gasdens%d.dat" % blank_frame).reshape(num_rad, num_theta))
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
 
         normalized_density = (density - blank_frame) / surface_density_zero # Diff
