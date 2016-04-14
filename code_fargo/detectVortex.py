@@ -100,7 +100,7 @@ def make_plot(frame, show = False):
         blank_density = (fromfile("gasdens%d.dat" % blank_frame).reshape(num_rad, num_theta))
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
 
-        normalized_density = (density - blank_frame) / surface_density_zero # Diff
+        normalized_density = (density - blank_density) / surface_density_zero # Diff
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
