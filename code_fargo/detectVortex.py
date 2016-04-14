@@ -63,7 +63,7 @@ except:
 
 # Plot Parameters
 cmap = "afmhot"
-clim = [0, 0.5]
+clim = [0, 0.3]
 
 fontsize = 14
 my_dpi = 100
@@ -103,7 +103,7 @@ def make_plot(frame, show = False):
         normalized_density = (density - blank_density) / surface_density_zero # Diff
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(np.abs(normalized_density)), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
@@ -111,7 +111,7 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title("Gas Difference Density Map at Orbit %d (- Orbit %d)\n%s" % (orbit, blank_frame, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sdiff_densityMap_%04d-%04d.png" % (save_directory, prefix, i, blank_frame), bbox_inches = 'tight', dpi = my_dpi)

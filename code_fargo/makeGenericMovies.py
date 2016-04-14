@@ -28,17 +28,17 @@ def make_movies():
 
 #### Paths + Names ###
 save_directory = "."
-name = "zoom_densityMap_"
+name = "zoom_vorticityMap_"
 tmp_name = "%s%s" % (tmp_prefix, name)
 #movie_name = name
-movie_name = name + "upTo1400"
+movie_name = name + "upTo1600_5MJ_visc7_taper1000"
 
 # Re-number if necessary
 base_path = save_directory
 base_name = name
 
-old_range = np.linspace(0, 1400, 15)
-new_range = range(15)
+old_range = np.linspace(0, 1600, 17)
+new_range = range(17)
 renumber(old_range, new_range, base_path = base_path, base_name = base_name)
 
 # Make Movies
