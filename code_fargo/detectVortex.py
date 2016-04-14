@@ -33,7 +33,7 @@ save_directory = "gasDifferenceDensityMaps"
 # Choose Blank Frame (with no Rossby Wave Instability) to compare a vortex frame to
 blank_frame = 200
 if (len(sys.argv) > 2):
-    blank_frame = sys.argv[2]
+    blank_frame = int(sys.argv[2])
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
