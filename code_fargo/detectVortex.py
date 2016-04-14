@@ -62,8 +62,8 @@ except:
     print "Directory Already Exists"
 
 # Plot Parameters
-cmap = "coolwarm"
-clim = [-1, 2]
+cmap = "afmhot"
+clim = [0, 0.5]
 
 fontsize = 14
 my_dpi = 100
@@ -103,7 +103,7 @@ def make_plot(frame, show = False):
         normalized_density = (density - blank_density) / surface_density_zero # Diff
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(np.abs(normalized_density)), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
