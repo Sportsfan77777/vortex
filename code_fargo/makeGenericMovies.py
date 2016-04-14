@@ -16,9 +16,9 @@ from renumber_to_tmp import delete_tmp_files
 ### Movie Commands ###
 def make_movies():
     # Movie Parameter
-    fps = 1
+    fps = 3
 
-    path = "%s/%s%s.png" % (save_directory, tmp_name, "%03d")
+    path = "%s/%s%s.png" % (save_directory, tmp_name, "%04d-0120")
     output = "%s/%s.mov" % (save_directory, movie_name)
 
     ### Make Movie Command ###
@@ -28,17 +28,17 @@ def make_movies():
 
 #### Paths + Names ###
 save_directory = "."
-name = "zoom_vorticityMap_"
+name = "zoom_diff_densityMap_"
 tmp_name = "%s%s" % (tmp_prefix, name)
 #movie_name = name
-movie_name = name + "upTo1600_5MJ_visc7_taper1000"
+movie_name = name + "120-300_1MJ_visc7_taper500"
 
 # Re-number if necessary
 base_path = save_directory
 base_name = name
 
-old_range = np.linspace(0, 1600, 17)
-new_range = range(17)
+old_range = np.linspace(120, 300, 37)
+new_range = range(37)
 renumber(old_range, new_range, base_path = base_path, base_name = base_name)
 
 # Make Movies

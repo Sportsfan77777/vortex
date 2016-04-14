@@ -114,7 +114,7 @@ def make_plot(frame, show = False):
         plot.title("Gas Difference Density Map at Orbit %d (- Orbit %d)\n%s" % (orbit, blank_frame, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sdiff_densityMap_%04d-%04d.png" % (save_directory, prefix, i, blank_frame), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%sdiff_densityMap_%04d-%04d.png" % (save_directory, prefix, blank_frame, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
