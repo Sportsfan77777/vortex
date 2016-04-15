@@ -85,7 +85,10 @@ def find_min(averagedDensity, peak_rad):
         # No Gap Yet
         return peak_rad, 0
 
-def find_slope(averagedDensity, start, end):
+def find_slope(averagedDensity, start_rad, end_rad):
+    start = np.searchsorted(rad, start_rad)
+    end = np.searchsorted(rad, end_rad)
+
     derivative_around_vortex = np.diff(averagedDensity[start : end + 1]) / np.diff(rad[start : end + 1])
     slope_magnitudes = np.abs(derivative_around_vortex)
 
@@ -127,10 +130,10 @@ for frame in times:
     amplitude = peak_density - min_density
 
     # Calculated Weighted Average of Derivative Between Min_Rad and (Peak_Rad + (Peak_Rad - Min_Rad))
-    start_index = min_rad
-    end_index = 2 * peak_rad - min_rad # Equal Width on Both Sides of Peak
+    start_rad = min_rad
+    end_rad = 2.0 * peak_rad - min_rad # Equal Width on Both Sides of Peak
 
-    weighted_mean_derivative = find_slope(averagedDensity, start_index, end_index)
+    weighted_mean_derivative = find_slope(averagedDensity, start_rad end_rad)
 
     # Combine into metric
     strength_metric = amplitude * weighted_mean_derivative
