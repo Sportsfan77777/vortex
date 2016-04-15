@@ -64,8 +64,9 @@ def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
     peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start:])
 
-    peak_rad = rad[outer_disk_start + peak_rad_outer_index]
-    peak_density = averagedDensity[peak_rad]
+    peak_index = outer_disk_start + peak_rad_outer_index
+    peak_rad = rad[peak_index]
+    peak_density = averagedDensity[peak_index]
 
     print "Max", peak_rad, peak_density
     return peak_rad, peak_density
@@ -76,8 +77,9 @@ def find_min(averagedDensity, peak_rad):
         outer_disk_end = np.searchsorted(rad, peak_rad)
         min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : outer_disk_end])
 
-        min_rad = rad[outer_disk_start + min_rad_outer_index]
-        min_density = averagedDensity[min_rad]
+        min_index = outer_disk_start + min_rad_outer_index
+        min_rad = rad[min_index]
+        min_density = averagedDensity[min_index]
 
         print "Min", min_rad, min_density
         return min_rad, min_density
@@ -133,7 +135,7 @@ for frame in times:
     start_rad = min_rad
     end_rad = 2.0 * peak_rad - min_rad # Equal Width on Both Sides of Peak
 
-    weighted_mean_derivative = find_slope(averagedDensity, start_rad end_rad)
+    weighted_mean_derivative = find_slope(averagedDensity, start_rad, end_rad)
 
     # Combine into metric
     strength_metric = amplitude * weighted_mean_derivative
