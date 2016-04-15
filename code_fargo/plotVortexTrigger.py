@@ -83,12 +83,16 @@ def find_slope(averagedDensity, start, end):
     slope_magnitudes = np.abs(derivative_around_vortex)
 
     # Weight based on proximity to peak
-    num_points = len(slope_magnitudes)
-    sigma = num_points / 3
-    gaussian_weights = gaussian(num_points, sigma)
+    try:
+        num_points = len(slope_magnitudes)
+        sigma = num_points / 3
+        gaussian_weights = gaussian(num_points, sigma)
 
-    mean_slope = np.average(slope_magnitudes, weights = gaussian_weights)
-    return mean_slope
+        mean_slope = np.average(slope_magnitudes, weights = gaussian_weights)
+        return mean_slope
+    except:
+        # No Gap Yet
+        return 0
 
 ### Data ###
 rate = 25
