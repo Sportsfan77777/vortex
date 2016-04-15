@@ -35,7 +35,7 @@ name = "RWI_Trigger"
 
 base_directory = pickle.load(open("base_dir.p", "rb"))
 
-directories = ["one_jupiter/visc7/taper1000", "one_jupiter/visc7/taper1000", "five_jupiters/visc6/taper1000", "five_jupiters/visc6/parabolicTaper1000", "five_jupiters/visc7/template"]
+directories = ["one_jupiter/visc7/taper500", "one_jupiter/visc7/taper1000", "five_jupiters/visc6/taper1000", "five_jupiters/visc6/parabolicTaper1000", "five_jupiters/visc7/template"]
 frame_numbers = [165, 290, 162, 245, 144]
 save_directory = "./"
 
@@ -91,8 +91,10 @@ os.chdir(working_directory)
 rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
-fontsize = 14
+alpha = 0.7
 linewidth = 4
+
+fontsize = 14
 
 def make_plot(show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
@@ -117,11 +119,16 @@ def make_plot(show = False):
             xlabel = "Radius"
 
         ### Plot ###
+        # Initial Profile (for comparison)
+        y = [x_i**(-1) for x_i in rad]
+        plot.plot(x, y, linewidth = linewidth - 1, linestyle = "- -", alpha = alpha)
+
+        # Different Radial Profiles
         for (this_x, this_y, frame, this_title) in zip(xs, ys, frame_numbers, titles):
             if axis == "zoom":
                 this_x = (this_x - 1) / scale_height
             label = "%s for %d" % (this_title, frame)
-            plot.plot(this_x, this_y, label = this_title, linewidth = linewidth)
+            plot.plot(this_x, this_y, label = this_title, linewidth = linewidth, alpha = alpha)
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
