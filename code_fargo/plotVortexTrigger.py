@@ -73,7 +73,8 @@ def find_peak(averagedDensity):
 def find_min(averagedDensity, peak_rad):
     try:
         outer_disk_start = np.searchsorted(rad, 1.0) # look for max radial density beyond r = 1.1
-        min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : peak_rad])
+        outer_disk_end = np.searchsorted(rad, peak_rad)
+        min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : outer_disk_end])
 
         min_rad = rad[outer_disk_start + min_rad_outer_index]
         min_density = averagedDensity[min_rad]
