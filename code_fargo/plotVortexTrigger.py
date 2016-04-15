@@ -131,6 +131,8 @@ for frame in times:
     strength_metric = amplitude * weighted_mean_derivative
     strengths.append(strength_metric)
 
+    print frame, strength_metric
+
 
 ##### PLOTTING #####
 
