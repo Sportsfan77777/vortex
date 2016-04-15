@@ -110,12 +110,13 @@ def make_plot(show = False):
         if axis == "zoom":
             x = (rad - 1) / scale_height
             prefix = "zoom_"
-            plot.xlim(0, 40) # to match the ApJL paper
+            plot.xlim(0, 20)
             plot.ylim(0, 1.2)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
+            plot.xlim(0.5, 1.5)
             xlabel = "Radius"
 
         ### Plot ###
