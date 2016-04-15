@@ -45,7 +45,7 @@ xs = []
 ys = []
 titles = []
 
-for (directory, frame) in zip(directories, frames):
+for (directory, frame) in zip(directories, frame_numbers):
     os.chdir(directory)
 
     ### Get FARGO Parameters ###
