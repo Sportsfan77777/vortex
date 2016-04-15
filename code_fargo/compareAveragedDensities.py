@@ -33,9 +33,14 @@ from readTitle import readTitle
 
 name = "RWI_Trigger"
 
+base_directory = pickle.load("base_dir.p")
+
 directories = []
 frame_numbers = []
 save_directory = "./"
+
+# Pre-pend Base Directory
+directories = [base_directory + d for d in directories]
 
 # Store Current Directory for Later
 working_directory = os.getcwd()
