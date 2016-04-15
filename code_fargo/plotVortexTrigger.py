@@ -79,7 +79,7 @@ def find_min(averagedDensity, peak_rad):
     return min_rad, min_density
 
 def find_slope(averagedDensity, start, end):
-    derivative_around_vortex = np.diff(averagedDensity[start : end + 1])
+    derivative_around_vortex = np.diff(averagedDensity[start : end + 1]) / np.diff(rad[start : end + 1])
     slope_magnitudes = np.abs(derivative_around_vortex)
 
     # Weight based on proximity to peak
