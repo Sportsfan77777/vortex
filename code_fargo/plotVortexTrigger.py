@@ -70,13 +70,17 @@ def find_peak(averagedDensity):
     return peak_rad, peak_density
 
 def find_min(averagedDensity, peak_rad):
-    outer_disk_start = np.searchsorted(rad, 1.0) # look for max radial density beyond r = 1.1
-    min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start:])
+    try:
+        outer_disk_start = np.searchsorted(rad, 1.0) # look for max radial density beyond r = 1.1
+        min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start:])
 
-    min_rad = rad[outer_disk_start + min_rad_outer_index]
-    min_density = averagedDensity[min_rad]
+        min_rad = rad[outer_disk_start + min_rad_outer_index]
+        min_density = averagedDensity[min_rad]
 
-    return min_rad, min_density
+        return min_rad, min_density
+    except:
+        # No Gap Yet
+        return peak_rad, 0
 
 def find_slope(averagedDensity, start, end):
     derivative_around_vortex = np.diff(averagedDensity[start : end + 1]) / np.diff(rad[start : end + 1])
