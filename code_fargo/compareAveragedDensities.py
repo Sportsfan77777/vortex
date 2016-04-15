@@ -33,7 +33,7 @@ from readTitle import readTitle
 
 name = "RWI_Trigger"
 
-base_directory = pickle.load("base_dir.p")
+base_directory = pickle.load(open("base_dir.p", "rb"))
 
 directories = []
 frame_numbers = []
