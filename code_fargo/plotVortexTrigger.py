@@ -74,7 +74,7 @@ def find_min(averagedDensity, peak_rad):
     min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start:])
 
     min_rad = rad[outer_disk_start + min_rad_outer_index]
-    peak_density = averagedDensity[vortex_rad]
+    min_density = averagedDensity[min_rad]
 
     return min_rad, min_density
 
