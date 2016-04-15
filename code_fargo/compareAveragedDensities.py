@@ -119,9 +119,6 @@ def make_plot(show = False):
             xlabel = "Radius"
 
         ### Plot ###
-        # Initial Profile (for comparison)
-        y = [x_i**(-1) for x_i in rad]
-        plot.plot(x, y, linewidth = linewidth - 1, linestyle = "- -", alpha = alpha)
 
         # Different Radial Profiles
         for (this_x, this_y, frame, this_title) in zip(xs, ys, frame_numbers, titles):
@@ -129,6 +126,10 @@ def make_plot(show = False):
                 this_x = (this_x - 1) / scale_height
             label = "%s for %d" % (this_title, frame)
             plot.plot(this_x, this_y, label = this_title, linewidth = linewidth, alpha = alpha)
+
+        # Initial Profile (for comparison)
+        y = [x_i**(-1) for x_i in rad]
+        plot.plot(x, y, linewidth = linewidth - 1, color = "black", linestyle = "--", alpha = alpha)
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
