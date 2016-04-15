@@ -31,12 +31,14 @@ from pylab import fromfile
 
 from readTitle import readTitle
 
-name = "RWI_Trigger"
+name = "singleMode"
 
 base_directory = pickle.load(open("base_dir.p", "rb"))
 
 directories = ["one_jupiter/visc7/taper500", "one_jupiter/visc7/taper1000", "five_jupiters/visc6/taper1000", "five_jupiters/visc6/parabolicTaper1000", "five_jupiters/visc7/template"]
-frame_numbers = [165, 290, 162, 245, 144]
+#frame_numbers = [165, 290, 162, 245, 144]
+frame_numbers = [205, 335, 202, 310, 176]
+#frame_numbers = [235, 430, 230, 420, 200]
 save_directory = "./"
 
 # Pre-pend Base Directory
@@ -116,7 +118,8 @@ def make_plot(show = False):
         else:
             x = rad
             prefix = ""
-            plot.xlim(0.5, 1.5)
+            plot.xlim(0.5, 2.5)
+            plot.ylim(0, 2.5)
             xlabel = "Radius"
 
         ### Plot ###
