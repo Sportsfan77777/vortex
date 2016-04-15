@@ -67,16 +67,18 @@ def find_peak(averagedDensity):
     peak_rad = rad[outer_disk_start + peak_rad_outer_index]
     peak_density = averagedDensity[peak_rad]
 
+    print "Max", peak_rad, peak_density
     return peak_rad, peak_density
 
 def find_min(averagedDensity, peak_rad):
     try:
         outer_disk_start = np.searchsorted(rad, 1.0) # look for max radial density beyond r = 1.1
-        min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start:])
+        min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : peak_rad])
 
         min_rad = rad[outer_disk_start + min_rad_outer_index]
         min_density = averagedDensity[min_rad]
 
+        print "Min", min_rad, min_density
         return min_rad, min_density
     except:
         # No Gap Yet
@@ -91,8 +93,10 @@ def find_slope(averagedDensity, start, end):
         num_points = len(slope_magnitudes)
         sigma = num_points / 3
         gaussian_weights = gaussian(num_points, sigma)
+        print "Gaussian", sigma, gaussian_weights
 
         mean_slope = np.average(slope_magnitudes, weights = gaussian_weights)
+        print "Slope", mean_slope
         return mean_slope
     except:
         # No Gap Yet
@@ -132,6 +136,7 @@ for frame in times:
     strengths.append(strength_metric)
 
     print frame, strength_metric
+    print ""
 
 
 ##### PLOTTING #####
