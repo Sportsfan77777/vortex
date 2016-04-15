@@ -68,7 +68,7 @@ def find_peak(averagedDensity):
     peak_rad = rad[peak_index]
     peak_density = averagedDensity[peak_index]
 
-    print "Max", peak_rad, peak_density
+    #print "Max", peak_rad, peak_density
     return peak_rad, peak_density
 
 def find_min(averagedDensity, peak_rad):
@@ -81,7 +81,7 @@ def find_min(averagedDensity, peak_rad):
         min_rad = rad[min_index]
         min_density = averagedDensity[min_index]
 
-        print "Min", min_rad, min_density
+        #print "Min", min_rad, min_density
         return min_rad, min_density
     except:
         # No Gap Yet
@@ -99,10 +99,10 @@ def find_slope(averagedDensity, start_rad, end_rad):
         num_points = len(slope_magnitudes)
         sigma = num_points / 3
         gaussian_weights = gaussian(num_points, sigma)
-        print "Gaussian", sigma, gaussian_weights
+        #print "Gaussian", sigma, gaussian_weights
 
         mean_slope = np.average(slope_magnitudes, weights = gaussian_weights)
-        print "Slope", mean_slope
+        #print "Slope", mean_slope
         return mean_slope
     except:
         # No Gap Yet
@@ -117,6 +117,8 @@ orbit_data = np.loadtxt(orbit_fn)
 sm_axes = orbit_data[:, 2] # Planet Semi-Major Axis
 
 # Radial Density Profiles
+amplitudes = []
+derivatives = []
 strengths = []
 for frame in times:
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
@@ -137,17 +139,22 @@ for frame in times:
 
     weighted_mean_derivative = find_slope(averagedDensity, start_rad, end_rad)
 
+    # Track
+    amplitudes.append(amplitude)
+    derivatives.append(weighted_mean_derivative)
+
     # Combine into metric
     strength_metric = amplitude * weighted_mean_derivative
     strengths.append(strength_metric)
 
-    print frame, strength_metric
-    print ""
+    #print frame, strength_metric
+    #print ""
 
 
 ##### PLOTTING #####
 
 # Plot Parameters
+alpha = 0.5
 fontsize = 14
 linewidth = 4
 
@@ -157,7 +164,9 @@ def make_plot():
     ys = np.array(strengths)
 
     # Curves
-    plot.plot(xs, ys, linewidth = linewidth)
+    plot.plot(xs, strengths, c = "blue", linewidth = linewidth)
+    plot.plot(xs, amplitudes, c = "red", linewidth = linewidth - 1, alpha = alpha)
+    plot.plot(xs, derivatives, c = "green", linewidth = linewidth - 1, alpha = alpha)
 
     # Annotate
     this_title = readTitle()
