@@ -35,8 +35,8 @@ name = "RWI_Trigger"
 
 base_directory = pickle.load(open("base_dir.p", "rb"))
 
-directories = []
-frame_numbers = []
+directories = ["one_jupiter/visc7/taper1000", "one_jupiter/visc7/taper1000", "five_jupiters/visc6/taper1000", "five_jupiters/visc6/parabolicTaper1000", "five_jupiters/visc7/template"]
+frame_numbers = [165, 290, 162, 245, 144]
 save_directory = "./"
 
 # Pre-pend Base Directory
@@ -80,7 +80,7 @@ for (directory, frame) in zip(directories, frame_numbers):
 
     # Add Data to Collective
     xs.append(rad)
-    ys.append(averaged_density)
+    ys.append(averagedDensity)
     titles.append(this_title)
 
 ##### PLOTTING #####
@@ -118,6 +118,8 @@ def make_plot(show = False):
 
         ### Plot ###
         for (this_x, this_y, frame, this_title) in zip(xs, ys, frame_numbers, titles):
+            if axis == "zoom":
+                this_x = (this_x - 1) / scale_height
             label = "%s for %d" % (this_title, frame)
             plot.plot(this_x, this_y, label = this_title, linewidth = linewidth)
 
@@ -125,6 +127,8 @@ def make_plot(show = False):
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
         plot.title("%s" % (name), fontsize = fontsize + 1)
+
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.36, 1.0)) # outside of plot
 
         # Save and Close
         plot.savefig("%savg_density_%s.png" % (prefix, name), bbox_inches = 'tight', dpi = my_dpi)
@@ -138,4 +142,4 @@ def make_plot(show = False):
 
 ##### Plot One File or All Files #####
 
-make_plot(frame_number, show = True)
+make_plot(show = True)
