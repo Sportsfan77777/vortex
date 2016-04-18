@@ -115,7 +115,7 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    for radius, azimuthal_profile in zip(azithumal_radii, azimuthal_profiles):
+    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
         plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
     # Axis
