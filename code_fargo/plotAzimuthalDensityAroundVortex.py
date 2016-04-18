@@ -53,7 +53,7 @@ def find_peak(averagedDensity):
     peak_rad = rad[peak_index]
     peak_density = averagedDensity[peak_index]
 
-    return peak_index, peak_rad, peak_density
+    return peak_rad, peak_density
 
 def find_min(averagedDensity, peak_rad):
     try:
