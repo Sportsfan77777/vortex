@@ -136,7 +136,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.36, 1.0)) # outside of plot)
 
     # Save and Close
-    plot.savefig("averagedDensity/%savg_density_%04d.png" % (prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/azimuthal_density_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
