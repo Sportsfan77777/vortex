@@ -72,20 +72,22 @@ def find_min(averagedDensity, peak_rad):
         return peak_rad, 0
 
 #### Data ####
-# Find Peak in Radial Profile (in Outer Disk)
-density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
-averagedDensity = np.average(density, axis = 1)
 
-peak_rad, peak_density = find_peak(averagedDensity)
-min_rad, min_density = find_min(averagedDensity, peak_rad)
+def get_data(frame):
+    # Find Peak in Radial Profile (in Outer Disk)
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
+    averagedDensity = np.average(density, axis = 1)
 
-# Gather Azimuthal Profiles
-num_profiles = 15
-spread = peak_rad - min_rad # make this vortex-dependent instead (?)
+    peak_rad, peak_density = find_peak(averagedDensity)
+    min_rad, min_density = find_min(averagedDensity, peak_rad)
 
-azithumal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
-azithumal_indices = [np.searchsorted(radius) for radius in azithumal_radii]
-azimuthal_profiles = [density[:, azithumal_index] for azithumal_index in azithumal_indices]
+    # Gather Azimuthal Profiles
+    num_profiles = 15
+    spread = peak_rad - min_rad # make this vortex-dependent instead (?)
+
+    azithumal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
+    azithumal_indices = [np.searchsorted(radius) for radius in azithumal_radii]
+    azimuthal_profiles = [density[:, azithumal_index] for azithumal_index in azithumal_indices]
 
 ##### PLOTTING #####
 
@@ -114,7 +116,7 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     for radius, azimuthal_profile in zip(azithumal_radii, azimuthal_profiles):
-    	plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
     # Axis
     angles = np.linspace(0, 2 * np.pi, 7)
@@ -146,9 +148,11 @@ if len(sys.argv) > 1:
         max_frame = util.find_max_frame()
         sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
+            get_data(i)
             make_plot(i)
     else:
         # Plot Single
+        get_data(frame_number)
         make_plot(frame_number, show = True)
 else:
     # Search for maximum frame
