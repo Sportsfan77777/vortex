@@ -91,10 +91,10 @@ for frame in times:
     peak_rad, peak_density = find_peak(averagedDensity)
 
     # Zone off 10 scale heights around the vortex
-    #spread = 5.0 * scale_height # half-width
-    #start_index = np.searchsorted(rad, peak_rad - spread)
-    #end_index = np.searchsorted(rad, peak_rad + spread)
-    #density_in_vortex_zone = density[start_index : end_index, :]
+    spread = 5.0 * scale_height # half-width
+    start_index = np.searchsorted(rad, peak_rad - spread)
+    end_index = np.searchsorted(rad, peak_rad + spread)
+    density_in_vortex_zone = density[start_index : end_index, :]
 
     # Find Peak
     peak_in_vortex_zone = np.max(density_in_vortex_zone)
