@@ -83,7 +83,7 @@ def get_data(frame):
 
     # Gather Azimuthal Profiles
     num_profiles = 15
-    spread = peak_rad - min_rad # make this vortex-dependent instead (?)
+    spread = 0.5 * (peak_rad - min_rad) # make this vortex-dependent instead (?)
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
@@ -133,7 +133,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.ylabel("Azimuthal Density", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot)
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save and Close
     plot.savefig("%s/azimuthal_density_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
