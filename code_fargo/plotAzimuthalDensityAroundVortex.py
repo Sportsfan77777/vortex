@@ -87,7 +87,7 @@ def get_data(frame):
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
-    azimuthal_profiles = [density[:, azimuthal_index] for azimuthal_index in azimuthal_indices]
+    azimuthal_profiles = [density[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
 
     return azimuthal_radii, azimuthal_profiles
 
