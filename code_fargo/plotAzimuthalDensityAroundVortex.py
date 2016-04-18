@@ -85,9 +85,9 @@ def get_data(frame):
     num_profiles = 15
     spread = peak_rad - min_rad # make this vortex-dependent instead (?)
 
-    azithumal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
-    azithumal_indices = [np.searchsorted(rad, this_radius) for this_radius in azithumal_radii]
-    azimuthal_profiles = [density[:, azithumal_index] for azithumal_index in azithumal_indices]
+    azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
+    azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
+    azimuthal_profiles = [density[:, azimuthal_index] for azimuthal_index in azimuthal_indices]
 
 ##### PLOTTING #####
 
