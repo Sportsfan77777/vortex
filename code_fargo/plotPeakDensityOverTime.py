@@ -72,7 +72,7 @@ def find_peak(averagedDensity):
     return peak_rad, peak_density
 
 ### Data ###
-rate = 25
+rate = 2
 times = range(50, num_frames, rate)
 
 # Planet Location
@@ -91,22 +91,22 @@ for frame in times:
     peak_rad, peak_density = find_peak(averagedDensity)
 
     # Zone off 10 scale heights around the vortex
-    spread = 5.0 * scale_height # half-width
-    start_index = np.searchsorted(rad, peak_rad - spread)
-    end_index = np.searchsorted(rad, peak_rad + spread)
-    density_in_vortex_zone = density[start_index : end_index, :]
+    #spread = 5.0 * scale_height # half-width
+    #start_index = np.searchsorted(rad, peak_rad - spread)
+    #end_index = np.searchsorted(rad, peak_rad + spread)
+    #density_in_vortex_zone = density[start_index : end_index, :]
 
     # Find Peak
     peak_in_vortex_zone = np.max(density_in_vortex_zone)
 
     # Find Sigmas
-    sigma = np.std(density[peak_rad, :])
-    zone_sigma = np.std(density_in_vortex_zone)
+    #sigma = np.std(density[peak_rad, :])
+    #zone_sigma = np.std(density_in_vortex_zone)
 
     # Track
     peaks.append(peak_in_vortex_zone)
-    sigmas.append(sigma)
-    zone_sigmas.append(zone_sigma)
+    #sigmas.append(sigma)
+    #zone_sigmas.append(zone_sigma)
 
 
 ##### PLOTTING #####
@@ -122,13 +122,13 @@ def make_plot():
 
     # Curves
     plot.plot(xs, peaks, c = "blue", linewidth = linewidth, label = r"$\rho_{peak}$")
-    plot.plot(xs, sigmas, c = "red", linewidth = linewidth - 1, alpha = alpha, label = r"$\sigma$")
-    plot.plot(xs, zone_sigmas, c = "green", linewidth = linewidth - 1, alpha = alpha, label = r"$\sigma_{zone}$")
+    #plot.plot(xs, sigmas, c = "red", linewidth = linewidth - 1, alpha = alpha, label = r"$\sigma$")
+    #plot.plot(xs, zone_sigmas, c = "green", linewidth = linewidth - 1, alpha = alpha, label = r"$\sigma_{zone}$")
 
     # Annotate
     this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Zone Peak, (Sigma, Zone Sigma)", fontsize = fontsize)
+    plot.ylabel("Peak Density", fontsize = fontsize)
     plot.title(this_title, fontsize = fontsize)
 
     # Limits
