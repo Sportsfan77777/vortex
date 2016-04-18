@@ -124,8 +124,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     angles = np.linspace(0, 2 * np.pi, 7)
     degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
 
-    plot.ylim(0, 2 * np.pi)
-    plot.yticks(angles, degree_angles)
+    plot.xlim(0, 2 * np.pi)
+    plot.xticks(angles, degree_angles)
 
     # Annotate
     this_title = readTitle()
@@ -133,7 +133,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.ylabel("Azimuthal Density", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.36, 1.0)) # outside of plot)
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot)
 
     # Save and Close
     plot.savefig("%s/azimuthal_density_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
