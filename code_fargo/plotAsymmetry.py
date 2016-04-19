@@ -75,7 +75,7 @@ def measure_asymmetry(frame):
     # For each profile, measure the azimuthal extent of the vortex (density > 1.0)
     threshold = 1.0
 
-    vortex_value = 360.0 / fargo_par["Nsec"]
+    vortex_value = 360.0 / float(fargo_par["Nsec"])
     background_value = 0.0
 
     asymmetry_values = []
@@ -114,8 +114,8 @@ vortex_avg_densities = []
 for frame in frame_range:
     asymmetry, avg_density = measure_asymmetry(frame)
 
-    vortex_azimuthal_widths.append(vortex_azimuthal_widths)
-    vortex_avg_densities.append(vortex_avg_densities)
+    vortex_azimuthal_widths.append(asymmetry)
+    vortex_avg_densities.append(avg_density)
 
 ##### PLOTTING #####
 
