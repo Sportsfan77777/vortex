@@ -93,7 +93,7 @@ def measure_asymmetry(frame):
         # Get Density
         copy = azimuthal_profile[azimuthal_profile > threshold]
 
-        avg_density = np.mean(azimuthal_profile)
+        avg_density = np.mean(copy)
         avg_densities.append(avg_density)
 
     # Take Median of Profiles between -H and +H about peak in radial density profile
@@ -137,10 +137,6 @@ linewidth = 4
 color = ["blue", "red"]
 
 def make_plot():
-    # Orbit Number
-    time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * frame
-
     # Set up figure
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
     ax1 = fig.add_subplot(111)
@@ -155,16 +151,17 @@ def make_plot():
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     ax1.set_ylabel("Azimuthal Extent", fontsize = fontsize, color = color[0])
     ax2.set_ylabel("Mean Density", fontsize = fontsize, color = color[1])
-    plot.title("Vortex Properties: %s" % (orbit, this_title), fontsize = fontsize + 1)
+    plot.title("Vortex Properties: %s" % (this_title), fontsize = fontsize + 1)
 
-    for (tick1, tick2) in zip(ax1.get_yticklabels(), ax2.get_yticklabels()):
+    for tick1 in ax1.get_yticklabels():
         tick1.set_color(color[0])
+
+    for tick2 in ax2.get_yticklabels():
         tick2.set_color(color[1])
 
     # Save and Close
     plot.savefig("vortex_asymmetry.png", bbox_inches = 'tight', dpi = my_dpi)
-    if show:
-        plot.show()
+    plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
