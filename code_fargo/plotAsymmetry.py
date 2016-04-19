@@ -58,6 +58,8 @@ def find_peak(averagedDensity):
 
 #### Data ####
 
+threshold = 1.0 # Vortex is Above Threshold
+
 def measure_asymmetry(frame):
     # Find Peak in Radial Profile (in Outer Disk)
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
@@ -73,9 +75,7 @@ def measure_asymmetry(frame):
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
     azimuthal_profiles = [density[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
 
-    # For each profile, measure the azimuthal extent of the vortex (density > 1.0)
-    threshold = 1.0
-
+    # For each profile, measure the azimuthal extent of the vortex (density > threshold = 1.0)
     vortex_value = 360.0 / float(fargo_par["Nsec"])
     background_value = 0.0
 
