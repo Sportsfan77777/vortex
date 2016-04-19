@@ -165,10 +165,10 @@ def make_plot():
     ax2 = ax1.twinx()
 
     ### Plot ###
-    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = normal_alpha * offset)
+    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 2, alpha = normal_alpha * offset)
     ax2.plot(frame_range, smoothed_vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = smooth_alpha * offset)
 
-    ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = normal_alpha)
+    ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth - 2, alpha = normal_alpha)
     ax1.plot(frame_range, smoothed_vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = smooth_alpha) # Dominant Line (that is why it is last)
 
     # Limits
