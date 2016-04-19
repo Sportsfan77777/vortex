@@ -14,6 +14,7 @@ from multiprocessing import Pool
 
 import math
 import numpy as np
+from scipy.ndimage import filters as ff
 
 import matplotlib
 #matplotlib.use('Agg')
@@ -110,7 +111,7 @@ def measure_asymmetry(frame):
     return asymmetry, avg_density
 
 ## Use These Frames ##
-rate = 20
+rate = 10
 start_of_vortex = 10
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
@@ -123,6 +124,13 @@ for frame in frame_range:
 
     vortex_azimuthal_widths.append(asymmetry)
     vortex_avg_densities.append(avg_density)
+
+## Smooth Both Arrays
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+
+kernel_size = 10
+vortex_azimuthal_widths = smooth(vortex_azimuthal_widths, kernel_size)
+vortex_avg_densities = smooth(vortex_avg_densities, kernel_size)
 
 ##### PLOTTING #####
 
@@ -150,8 +158,18 @@ def make_plot():
     ax2 = ax1.twinx()
 
     ### Plot ###
-    ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth)
     ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = alpha)
+    ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth) # Dominant Line (that is why it is last)
+
+    # Limits
+    if np.max(vortex_azimuthal_widths) > 180:
+        ax1.set_ylim(0, 360)
+    else:
+        ax1.set_ylim(0, 180)
+
+    max_density = np.max(vortex_avg_densities)
+    max_y = np.ceil(2.0 * max_density) / 2.0 # round up to the nearest 0.5
+    ax2.set_ylim(threshold, max_y)
 
     # Annotate
     this_title = readTitle()
