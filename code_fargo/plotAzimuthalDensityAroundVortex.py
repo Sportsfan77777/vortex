@@ -83,7 +83,7 @@ def get_data(frame):
 
     # Gather Azimuthal Profiles
     num_profiles = 15
-    spread = 0.5 * (peak_rad - min_rad) # make this vortex-dependent instead (?)
+    spread = 5.0 * scale_height # half-width
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
