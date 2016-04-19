@@ -100,8 +100,8 @@ def measure_asymmetry(frame):
     asymmetry = np.median(asymmetry_values)
 
     # Get Mean Density of Vortex within One Scale Height
-    start = azimuthal_radii[0]
-    end = azimuthal_radii[-1]
+    start = azimuthal_indices[0]
+    end = azimuthal_indices[-1]
     vortex_zone = density[start : end, :]
 
     vortex_densities = vortex_zone[vortex_zone > threshold]
