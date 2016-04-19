@@ -54,6 +54,12 @@ select = range(0, len(data[:, -1]), rate)
 xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 
 ### Data ###
+## For Comparison (Smoothed)
+ks = 50
+smooth_torque = smooth(data[:, 4], ks)
+median_torque = np.median(smooth_torque)
+
+## For Deviations (Sampled)
 outer_disk_torque = planet_mass * (data[:, 4])[select] # Column 4 is the Outer Disk Torque with Roche Lobe Tapering
 log_outer_disk_torque = np.log(outer_disk_torque) / np.log(10.0)
 
@@ -78,8 +84,9 @@ def make_plot(rla = True):
     fig = plot.figure(figsize = (8, 6)) 
 
     # Curves
-    plot.plot(xs, outer_disk_torque, linewidth = linewidth, alpha = alpha)
-    plot.plot(xs[start : end], torque_deviations, linewidth = linewidth)
+    plot.plot(xs, outer_disk_torque, color = "blue", linewidth = linewidth, alpha = alpha)
+    plot.plot(xs[start : end], torque_deviations, color = "red", linewidth = linewidth)
+    plot.plot(xs[start : end], (torque_deviations / smooth_torque) * median_torque, color = "green", linewidth = linewidth)
     
     # Limits
     plot.xlim(0, xs[-1])
