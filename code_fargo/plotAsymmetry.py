@@ -108,6 +108,10 @@ def measure_asymmetry(frame):
     vortex_densities = vortex_zone[vortex_zone > threshold]
     avg_density = np.mean(vortex_densities)
 
+    if avg_density != avg_density:
+        # Detect Nan
+        avg_density = threshold
+
     return asymmetry, avg_density
 
 ## Use These Frames ##
