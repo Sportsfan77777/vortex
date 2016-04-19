@@ -150,8 +150,9 @@ rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
 smooth_alpha = 1.0
-normal_alpha = 0.6
-offset_alpha = 0.15
+normal_alpha = 0.35
+offset = 0.7 # 70%
+
 fontsize = 14
 linewidth = 4
 
@@ -164,8 +165,8 @@ def make_plot():
     ax2 = ax1.twinx()
 
     ### Plot ###
-    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = normal_alpha - offset_alpha)
-    ax2.plot(frame_range, smoothed_vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = smooth_alpha - offset_alpha)
+    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = normal_alpha * offset)
+    ax2.plot(frame_range, smoothed_vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = smooth_alpha * offset)
 
     ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = normal_alpha)
     ax1.plot(frame_range, smoothed_vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = smooth_alpha) # Dominant Line (that is why it is last)
@@ -176,15 +177,15 @@ def make_plot():
         degree_angles = ["%d" % d_a for d_a in angles]
 
         ax1.set_ylim(0, 360)
-        ax1.set_xticks(angles, degree_angles)
+        ax1.set_yticks(angles, degree_angles)
     else:
         angles = np.linspace(0, 180, 7)
         degree_angles = ["%d" % d_a for d_a in angles]
 
         ax1.set_ylim(0, 180)
-        ax1.set_xticks(angles, degree_angles)
+        ax1.set_yticks(angles, degree_angles)
 
-    max_density = np.max(vortex_avg_densities)
+    max_density = np.max(smoothed_vortex_avg_densities)
     max_y = np.ceil(2.0 * max_density) / 2.0 # round up to the nearest 0.5
     ax2.set_ylim(threshold, max_y)
 
