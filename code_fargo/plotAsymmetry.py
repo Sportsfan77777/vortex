@@ -115,7 +115,7 @@ def measure_asymmetry(frame):
     return asymmetry, avg_density
 
 ## Use These Frames ##
-rate = 10
+rate = 5
 start_of_vortex = 10
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
@@ -132,9 +132,9 @@ for frame in frame_range:
 ## Smooth Both Arrays
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
-kernel_size = 10
-vortex_azimuthal_widths = smooth(vortex_azimuthal_widths, kernel_size)
-vortex_avg_densities = smooth(vortex_avg_densities, kernel_size)
+kernel_size = 5
+smoothed_vortex_azimuthal_widths = smooth(vortex_azimuthal_widths, kernel_size)
+smoothed_vortex_avg_densities = smooth(vortex_avg_densities, kernel_size)
 
 ##### PLOTTING #####
 
@@ -149,7 +149,9 @@ vortex_avg_densities = smooth(vortex_avg_densities, kernel_size)
 rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
-alpha = 0.65
+smooth_alpha = 1.0
+normal_alpha = 0.6
+offset_alpha = 0.15
 fontsize = 14
 linewidth = 4
 
@@ -162,14 +164,25 @@ def make_plot():
     ax2 = ax1.twinx()
 
     ### Plot ###
-    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = alpha)
-    ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth) # Dominant Line (that is why it is last)
+    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = normal_alpha - offset_alpha)
+    ax2.plot(frame_range, smoothed_vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = smooth_alpha - offset_alpha)
+
+    ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = normal_alpha)
+    ax1.plot(frame_range, smoothed_vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = smooth_alpha) # Dominant Line (that is why it is last)
 
     # Limits
     if np.max(vortex_azimuthal_widths) > 180:
+        angles = np.linspace(0, 360, 7)
+        degree_angles = ["%d" % d_a for d_a in angles]
+
         ax1.set_ylim(0, 360)
+        ax1.set_xticks(angles, degree_angles)
     else:
+        angles = np.linspace(0, 180, 7)
+        degree_angles = ["%d" % d_a for d_a in angles]
+
         ax1.set_ylim(0, 180)
+        ax1.set_xticks(angles, degree_angles)
 
     max_density = np.max(vortex_avg_densities)
     max_y = np.ceil(2.0 * max_density) / 2.0 # round up to the nearest 0.5
