@@ -56,7 +56,7 @@ xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 ### Data ###
 ## For Comparison (Smoothed)
 ks = 50
-smooth_torque = smooth(data[:, 4], ks)
+smooth_torque = np.abs(smooth(data[:, 4], ks))
 median_torque = np.median(smooth_torque)
 
 ## For Deviations (Sampled)
@@ -105,6 +105,13 @@ def make_plot(rla = True):
     plot.savefig("torqueDeviation.png", bbox_inches = 'tight')
     plot.show()
 
+    plot.close(fig)
+
+    ### Second Plot with just sigma_torque / torque
+    plot.plot(xs[start : end], (torque_deviations / smooth_torque), color = "green", linewidth = linewidth)
+
+    plot.savefig("relativeTorqueDeviation.png")
+    plot.show()
     plot.close(fig)
 
 
