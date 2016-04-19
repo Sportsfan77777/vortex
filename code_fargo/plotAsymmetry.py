@@ -98,13 +98,20 @@ def measure_asymmetry(frame):
 
     # Take Median of Profiles between -H and +H about peak in radial density profile
     asymmetry = np.median(asymmetry_values)
-    avg_density = np.median(avg_densities)
+
+    # Get Mean Density of Vortex within One Scale Height
+    start = azimuthal_radii[0]
+    end = azimuthal_radii[-1]
+    vortex_zone = density[start : end, :]
+
+    vortex_densities = vortex_zone[vortex_zone > threshold]
+    avg_density = np.mean(vortex_densities)
 
     return asymmetry, avg_density
 
 ## Use These Frames ##
 rate = 20
-start_of_vortex = 100
+start_of_vortex = 10
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
@@ -144,7 +151,7 @@ def make_plot():
 
     ### Plot ###
     ax1.plot(frame_range, vortex_azimuthal_widths, color = color[0], linewidth = linewidth)
-    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth)
+    ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = alpha)
 
     # Annotate
     this_title = readTitle()
