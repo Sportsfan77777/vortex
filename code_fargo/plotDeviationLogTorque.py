@@ -39,7 +39,7 @@ if not os.path.exists(param_fn):
     subprocess.Popen(split_command)
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-planet_mass = fargo_par["PlanetMass"]
+planet_mass = float(fargo_par["PlanetMass"])
 
 # Smoothing Function
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
@@ -50,11 +50,11 @@ ks_small = 1.0 # ks / 3.0 # Smaller kernel to check the normal kernel
 rate = 5 # If 1, choose all of the data. If >1, choose all_data / rate
 
 data = np.loadtxt(torque_fn)
-select = range(0, len(data[:,-1]), rate)
+select = range(0, len(data[:, -1]), rate)
 xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 
 ### Data ###
-outer_disk_torque = planet_mass * data[:, 4] # Column 4 is the Outer Disk Torque with Roche Lobe Tapering
+outer_disk_torque = planet_mass * (data[:, 4])[select] # Column 4 is the Outer Disk Torque with Roche Lobe Tapering
 log_outer_disk_torque = np.log(outer_disk_torque) / np.log(10.0)
 
 half_width = 5
@@ -74,11 +74,6 @@ fontsize = 14
 linewidth = 2
 
 def make_plot(rla = True):
-    # Data
-    analytic = analytic_torque()
-
-    #y2 = np.abs(smooth(outer_disk_torque, ks_small)[select]) # Torque from Outer Disk
-
     # Figure
     fig = plot.figure(figsize = (8, 6)) 
 
