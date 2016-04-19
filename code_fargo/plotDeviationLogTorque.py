@@ -56,7 +56,7 @@ xs = (data[:,-1])[select] / (2 * np.pi) # Convert to num_orbits
 ### Data ###
 ## For Comparison (Smoothed)
 ks = 50
-smooth_torque = np.abs(smooth(data[:, 4], ks))
+smooth_torque = np.abs(smooth(data[:, 4], ks))[select]
 median_torque = np.median(smooth_torque)
 
 ## For Deviations (Sampled)
@@ -86,7 +86,7 @@ def make_plot(rla = True):
     # Curves
     plot.plot(xs, outer_disk_torque, color = "blue", linewidth = linewidth, alpha = alpha)
     plot.plot(xs[start : end], torque_deviations, color = "red", linewidth = linewidth)
-    plot.plot(xs[start : end], (torque_deviations / smooth_torque) * median_torque, color = "green", linewidth = linewidth)
+    plot.plot(xs[start : end], (torque_deviations / smooth_torque[start : end]) * median_torque, color = "green", linewidth = linewidth)
     
     # Limits
     plot.xlim(0, xs[-1])
@@ -108,7 +108,7 @@ def make_plot(rla = True):
     plot.close(fig)
 
     ### Second Plot with just sigma_torque / torque
-    plot.plot(xs[start : end], (torque_deviations / smooth_torque), color = "green", linewidth = linewidth)
+    plot.plot(xs[start : end], (torque_deviations / smooth_torque[start : end]), color = "green", linewidth = linewidth)
 
     plot.savefig("relativeTorqueDeviation.png")
     plot.show()
