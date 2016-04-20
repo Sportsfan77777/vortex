@@ -172,7 +172,7 @@ def make_plot():
     ax1.plot(frame_range, smoothed_vortex_azimuthal_widths, color = color[0], linewidth = linewidth, alpha = smooth_alpha) # Dominant Line (that is why it is last)
 
     # Limits
-    if np.max(vortex_azimuthal_widths) > 180:
+    if np.max(smoothed_vortex_azimuthal_widths) > 180:
         angles = np.linspace(0, 360, 7)
         degree_angles = ["%d" % d_a for d_a in angles]
 
