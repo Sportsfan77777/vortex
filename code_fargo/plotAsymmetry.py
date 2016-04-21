@@ -183,7 +183,7 @@ def make_plot():
     ax2 = ax1.twinx()
 
     ### Hatched Region for Quartiles ###
-    ax2.fill_between(frame_range, smoothed_lower_quartiles, smoothed_upper_quartiles, color = color[1], facecolor = "None", alpha = normal_alpha * offset / 2.0, hatch = "\\")
+    ax2.fill_between(frame_range, smoothed_lower_quartiles, smoothed_upper_quartiles, color = color[1], facecolor = "None", alpha = normal_alpha * offset / 1.3, hatch = "\\")
 
     ### Plot ###
     ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 2, alpha = normal_alpha * offset)
