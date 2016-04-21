@@ -197,16 +197,12 @@ def make_plot():
 
     if np.max(smoothed_vortex_azimuthal_widths) > 180:
         angles = np.linspace(0, 360, 7)
-        degree_angles = ["%d" % d_a for d_a in angles]
-
         ax1.set_ylim(0, 360)
-        ax1.set_yticks(angles, degree_angles)
+        ax1.set_yticks(angles)
     else:
         angles = np.linspace(0, 180, 7)
-        degree_angles = ["%d" % d_a for d_a in angles]
-
         ax1.set_ylim(0, 180)
-        ax1.set_yticks(angles, degree_angles)
+        ax1.set_yticks(angles)
 
     max_density = np.max(smoothed_upper_quartiles)
     max_y = np.ceil(2.0 * max_density) / 2.0 # round up to the nearest 0.5
