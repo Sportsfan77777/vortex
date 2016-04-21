@@ -61,6 +61,8 @@ def find_peak(averagedDensity):
 threshold = 1.0 # Vortex is Above Threshold
 
 def measure_asymmetry(frame):
+    print frame
+
     # Find Peak in Radial Profile (in Outer Disk)
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(density, axis = 1)
@@ -125,8 +127,8 @@ def measure_asymmetry(frame):
 
 ## Use These Frames ##
 rate = 5
-start_of_vortex = 10
-max_frame = util.find_max_frame()
+start_of_vortex = 100 #10
+max_frame = 300 #util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
 vortex_azimuthal_widths = []
@@ -184,7 +186,7 @@ def make_plot():
     ax2 = ax1.twinx()
 
     ### Hatched Region for Quartiles ###
-    ax2.fill_between(frame_range, smoothed_lower_quartiles, smoothed_upper_quartiles, color = color[1], faceolor = "white", hatch = "\\")
+    ax2.fill_between(frame_range, smoothed_lower_quartiles, smoothed_upper_quartiles, color = color[1], facecolor = "None", alpha = normal_alpha * offset / 2.0, hatch = "\\")
 
     ### Plot ###
     ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 2, alpha = normal_alpha * offset)
@@ -198,14 +200,14 @@ def make_plot():
         angles = np.linspace(0, 360, 7)
         degree_angles = ["%d" % d_a for d_a in angles]
 
-        plot.set_ylim(0, 360)
-        plot.set_yticks(angles, degree_angles)
+        #ax1.set_ylim(0, 360)
+        ax1.set_yticks(angles, degree_angles)
     else:
         angles = np.linspace(0, 180, 7)
         degree_angles = ["%d" % d_a for d_a in angles]
 
-        plot.set_ylim(0, 180)
-        plot.set_yticks(angles, degree_angles)
+        #ax1.set_ylim(0, 180)
+        ax1.set_yticks(angles, degree_angles)
 
     max_density = np.max(smoothed_upper_quartiles)
     max_y = np.ceil(2.0 * max_density) / 2.0 # round up to the nearest 0.5
