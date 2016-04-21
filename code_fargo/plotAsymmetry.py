@@ -100,7 +100,7 @@ def measure_asymmetry(frame):
     # Take Median of Profiles between -H and +H about peak in radial density profile
     asymmetry = np.median(asymmetry_values)
 
-    # Get Mean Density of Vortex within One Scale Height
+    # Get Mean Density of Vortex within One Scale Height (+ 25% and 75% values)
     start = azimuthal_indices[0]
     end = azimuthal_indices[-1]
     vortex_zone = density[start : end, :]
@@ -108,11 +108,20 @@ def measure_asymmetry(frame):
     vortex_densities = vortex_zone[vortex_zone > threshold]
     avg_density = np.mean(vortex_densities)
 
+    lower_quartile = np.percentile(vortex_densities, 25) # 25%
+    upper_quartile = np.percentile(vortex_densities, 75) # 75%
+
+    # Detect Nan
     if avg_density != avg_density:
-        # Detect Nan
         avg_density = threshold
 
-    return asymmetry, avg_density
+    if lower_quartile != lower_quartile:
+        lower_quartile = threshold
+
+    if upper_quartile != upper_quartile:
+        upper_quartile = threshold
+
+    return asymmetry, avg_density, lower_quartile, upper_quartile
 
 ## Use These Frames ##
 rate = 5
@@ -121,20 +130,30 @@ max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
 vortex_azimuthal_widths = []
+
 vortex_avg_densities = []
+upper_quartiles = []
+lower_quartiles = []
 
 for frame in frame_range:
-    asymmetry, avg_density = measure_asymmetry(frame)
+    asymmetry, avg_density, lower_quartile, upper_quartile = measure_asymmetry(frame)
 
     vortex_azimuthal_widths.append(asymmetry)
-    vortex_avg_densities.append(avg_density)
 
-## Smooth Both Arrays
+    vortex_avg_densities.append(avg_density)
+    lower_quartiles.append(lower_quartile)
+    upper_quartiles.append(upper_quartile)
+
+
+## Smooth Each Array
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
 kernel_size = 5
 smoothed_vortex_azimuthal_widths = smooth(vortex_azimuthal_widths, kernel_size)
 smoothed_vortex_avg_densities = smooth(vortex_avg_densities, kernel_size)
+
+smoothed_upper_quartiles = smooth(upper_quartiles, kernel_size)
+smoothed_lower_quartiles = smooth(lower_quartiles, kernel_size)
 
 ##### PLOTTING #####
 
@@ -164,6 +183,9 @@ def make_plot():
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twinx()
 
+    ### Hatched Region for Quartiles ###
+    ax2.fill_between(frame_range, smoothed_lower_quartiles, smoothed_upper_quartiles, color = color[1], faceolor = "white", hatch = "\\")
+
     ### Plot ###
     ax2.plot(frame_range, vortex_avg_densities, color = color[1], linewidth = linewidth - 2, alpha = normal_alpha * offset)
     ax2.plot(frame_range, smoothed_vortex_avg_densities, color = color[1], linewidth = linewidth - 1, alpha = smooth_alpha * offset)
@@ -176,16 +198,16 @@ def make_plot():
         angles = np.linspace(0, 360, 7)
         degree_angles = ["%d" % d_a for d_a in angles]
 
-        ax1.set_ylim(0, 360)
-        ax1.set_yticks(angles, degree_angles)
+        plot.set_ylim(0, 360)
+        plot.set_yticks(angles, degree_angles)
     else:
         angles = np.linspace(0, 180, 7)
         degree_angles = ["%d" % d_a for d_a in angles]
 
-        ax1.set_ylim(0, 180)
-        ax1.set_yticks(angles, degree_angles)
+        plot.set_ylim(0, 180)
+        plot.set_yticks(angles, degree_angles)
 
-    max_density = np.max(smoothed_vortex_avg_densities)
+    max_density = np.max(smoothed_upper_quartiles)
     max_y = np.ceil(2.0 * max_density) / 2.0 # round up to the nearest 0.5
     ax2.set_ylim(threshold, max_y)
 
