@@ -110,18 +110,15 @@ def measure_asymmetry(frame):
     vortex_densities = vortex_zone[vortex_zone > threshold]
     avg_density = np.mean(vortex_densities)
 
-    lower_quartile = np.percentile(vortex_densities, 25) # 25%
-    upper_quartile = np.percentile(vortex_densities, 75) # 75%
-
     # Detect Nan
     if avg_density != avg_density:
         avg_density = threshold
-
-    if lower_quartile != lower_quartile:
         lower_quartile = threshold
-
-    if upper_quartile != upper_quartile:
         upper_quartile = threshold
+    else:
+        # If no nan, compute quartiles
+        lower_quartile = np.percentile(vortex_densities, 25) # 25%
+        upper_quartile = np.percentile(vortex_densities, 75) # 75%
 
     return asymmetry, avg_density, lower_quartile, upper_quartile
 
