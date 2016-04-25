@@ -58,7 +58,7 @@ def find_peak(averagedDensity):
 
 #### Data ####
 
-threshold = 1.0 # Vortex is Above Threshold
+threshold = 0.77 # Vortex is Above Threshold ### 1.0 / 1.3 is used because that is the initial density where the vortex forms
 
 def measure_asymmetry(frame):
     print frame
@@ -123,7 +123,7 @@ def measure_asymmetry(frame):
     return asymmetry, avg_density, lower_quartile, upper_quartile
 
 ## Use These Frames ##
-rate = 5
+rate = 25 # 5 works better, but is very slow
 start_of_vortex = 10
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
@@ -210,7 +210,7 @@ def make_plot():
 
     # Annotate
     this_title = readTitle()
-    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+    ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
     ax1.set_ylabel("Azimuthal Extent", fontsize = fontsize, color = color[0])
     ax2.set_ylabel("Mean Density", fontsize = fontsize, color = color[1])
     plot.title("Vortex Properties: %s" % (this_title), fontsize = fontsize + 1)
