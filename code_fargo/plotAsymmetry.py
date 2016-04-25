@@ -222,7 +222,7 @@ def make_plot():
         tick2.set_color(color[1])
 
     # Save and Close
-    plot.savefig("vortex_asymmetry.png", bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("vortex_asymmetry77.png", bbox_inches = 'tight', dpi = my_dpi)
     plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
 
