@@ -229,7 +229,7 @@ real dt;
   vrad   = Vrad->Field;
   vtheta   = Vtheta->Field;
   R_inf = RMIN*1.25;
-  R_sup = RMAX*.84;
+  R_sup = RMAX*.88; // ### was 0.84 originally!!! ###
   for (i = 0; i < nr; i++) {
     for (j = 0; j < ns; j++) {
       l = j+i*ns;
