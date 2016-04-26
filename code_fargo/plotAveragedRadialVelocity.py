@@ -31,7 +31,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "averagedDensity"
+save_directory = "averagedRadialVelocity"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -81,7 +81,7 @@ def make_plot(frame, show = False):
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(0, 1.2)
+            #plot.ylim(0, 1.2)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
@@ -89,20 +89,20 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
             
         # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
-        averagedDensity = np.average(density, axis = 1) / surface_density
+        vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
+        averaged_vrad = np.average(vrad, axis = 1)
 
         ### Plot ###
-        plot.plot(x, averagedDensity, linewidth = linewidth)
+        plot.plot(x, averaged_vrad, linewidth = linewidth)
 
         # Annotate
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
+        plot.ylabel(r"Azimuthally Averaged $V_{rad}$", fontsize = fontsize)
         plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%savg_density_%04d.png" % (directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%savg_radial_velocity_%04d.png" % (directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)

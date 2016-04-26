@@ -129,7 +129,7 @@ def make_plot(show = False):
             if axis == "zoom":
                 this_x = (this_x - 1) / scale_height
             label = "%s for %d" % (this_title, frame)
-            plot.plot(this_x, this_y, label = this_title, linewidth = linewidth, alpha = alpha)
+            plot.plot(this_x, this_y, label = label, linewidth = linewidth, alpha = alpha)
 
         # Initial Profile (for comparison)
         y = [x_i**(-1) for x_i in rad]
