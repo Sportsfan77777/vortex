@@ -26,6 +26,15 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+## Check frame ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    ref_frame = 0
+else:
+    # fargo
+    ref_frame = 1
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -81,7 +90,7 @@ def get_data(frame):
     vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
     vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-    vorticity = util.velocity_curl(vrad, vtheta, rad, theta, average = True, frame = ref_frame)
+    vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
     vortensity = vorticity / normalized_density[1:, 1:]
 
     # Find Peak in Radial Profile (in Outer Disk)
@@ -102,7 +111,7 @@ def get_data(frame):
 ##### PLOTTING #####
 
 # Make Directory
-directory = "azimuthalDensity"
+directory = "azimuthalVortensity"
 try:
     os.mkdir(directory)
 except:
@@ -138,13 +147,13 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     # Annotate
     this_title = readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Density", fontsize = fontsize)
+    plot.ylabel("Azimuthal Vortensity", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save and Close
-    plot.savefig("%s/azimuthal_density_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/azimuthal_vortensity_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
