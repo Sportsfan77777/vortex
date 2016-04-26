@@ -27,7 +27,7 @@ from pylab import fromfile
 
 import util
 
-save_directory = "vorticityMaps"
+save_directory = "vortensityMaps"
 
 ## Check frame ##
 fargo_fn = "fargo2D1D"
@@ -116,7 +116,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 0.5]
+clim = [0, 0.2]
 
 fontsize = 14
 my_dpi = 100
@@ -151,13 +151,16 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
+        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+        normalized_density = density / surface_density_zero
+
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        vorticity = curl(vrad, vtheta, rad, theta)
+        vortensity = curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(vortensity), cmap = cmap)
     
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
@@ -165,10 +168,10 @@ def make_plot(frame, show = False):
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Vorticity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+        plot.title("Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%svortensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
