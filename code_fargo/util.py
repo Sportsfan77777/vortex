@@ -9,6 +9,7 @@ import os
 import glob
 
 import utilTorque
+import utilVorticity
 
 #### Miscellaneous ####
 
