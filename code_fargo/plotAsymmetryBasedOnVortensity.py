@@ -129,7 +129,7 @@ def measure_asymmetry(frame):
     avg_vortensity = np.mean(vortex_vortensities)
 
     # Detect Nan
-    if avg_vortensity != avg_density:
+    if avg_vortensity != avg_vortensity:
         avg_vortensity = threshold
         lower_quartile = threshold
         upper_quartile = threshold
