@@ -1,8 +1,8 @@
 """
-plots (peak density) / (pseudo-half-width) / (radial distance to planet)**2 over time
+plots "weighted average of derivative around vortex" over time
 
 Usage:
-python plotPeakStrength.py
+python plotVortexTrigger.py
 """
 
 import sys

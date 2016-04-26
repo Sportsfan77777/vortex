@@ -38,33 +38,6 @@ else:
     # fargo
     frame = 1
 
-### Movie Commands ###
-def make_movies():
-    # Movie Parameters
-    fps = 5
-
-    path = save_directory + "/vorticityMap_%03d.png"
-    output = save_directory + "/vorticityMap.mov"
-
-    zoom_path = save_directory + "/zoom_vorticityMap_%03d.png"
-    zoom_output = save_directory + "/vorticityMap_zoom.mov"
-
-    # Movie Command
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-# Make only movies and then return
-if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
-    make_movies()
-    # Terminate
-    quit()
-
-
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -82,29 +55,6 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
-
-# Curl function
-def curl(v_rad, v_theta, rad, theta):
-    """ z-component of the curl (because this is a 2-D simulation)"""
-    ### Start Differentials ###
-    d_rad = np.diff(rad)
-    d_theta = np.diff(theta)
-
-    dv_rad = np.diff(v_rad, axis = 1)
-    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
-    ### End Differentials ###
-
-    # z-Determinant
-    partial_one = dv_theta / d_rad[:, None]
-    partial_two = dv_rad / d_theta
-
-    z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
-
-    # Shift out of rotating frame (http://arxiv.org/pdf/astro-ph/0605237v2.pdf)
-    if frame == 1:
-        z_curl += 2
-
-    return z_curl
 
 ##### PLOTTING #####
 
@@ -154,7 +104,7 @@ def make_plot(frame, show = False):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        vorticity = curl(vrad, vtheta, rad, theta)
+        vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = frame)
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)

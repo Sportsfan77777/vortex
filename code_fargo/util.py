@@ -46,3 +46,5 @@ outer_torque_contributions = utilTorque.outer_torque_contributions
 
 #### Vorticity ####
 
+velocity_curl = utilVorticity.velocity_curl
+
