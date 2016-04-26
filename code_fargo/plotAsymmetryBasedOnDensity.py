@@ -175,7 +175,7 @@ offset = 0.7 # 70%
 fontsize = 14
 linewidth = 4
 
-color = ["blue", "red"]
+color = ["blue", "red", "green"]
 
 def make_plot():
     # Set up figure

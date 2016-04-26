@@ -199,7 +199,6 @@ def make_plot():
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twinx()
-    ax3 = ax1.twinx()
 
     ### Hatched Region for Quartiles ###
     ax2.fill_between(frame_range, smoothed_lower_quartiles, smoothed_upper_quartiles, color = color[1], facecolor = "None", alpha = normal_alpha * offset / 1.3, hatch = "\\")
