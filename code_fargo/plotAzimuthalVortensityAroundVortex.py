@@ -87,8 +87,8 @@ def get_data(frame):
     normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(normalized_density, axis = 1)
 
-    vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
-    vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+    vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
+    vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
     vortensity = vorticity / normalized_density[1:, 1:]
