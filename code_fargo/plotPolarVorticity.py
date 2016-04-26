@@ -17,7 +17,6 @@ from multiprocessing import Pool
 import math
 import numpy as np
 
-
 import matplotlib
 #matplotlib.use('Agg')
 from matplotlib import rcParams as rc
@@ -26,6 +25,7 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
+import util
 from readTitle import readTitle
 
 ## Check frame ##
@@ -37,7 +37,7 @@ else:
     # fargo
     frame = 1
 
-save_directory = "polarVorticityMaps"
+save_directory = "polarVortensityMaps"
 
 ### Movie Commands ###
 def make_movies():
@@ -87,29 +87,6 @@ scale_height = float(fargo_par["AspectRatio"])
 res = [int(fargo_par["Nrad"]), int(fargo_par["Nsec"])]
 boundary = fargo_par["InnerBoundary"]
 
-# Curl function
-def curl(v_rad, v_theta, rad, theta):
-    """ z-component of the curl (because this is a 2-D simulation)"""
-    ### Start Differentials ###
-    d_rad = np.diff(rad)
-    d_theta = np.diff(theta)
-
-    dv_rad = np.diff(v_rad, axis = 1)
-    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
-    ### End Differentials ###
-
-    # z-Determinant
-    partial_one = dv_theta / d_rad[:, None]
-    partial_two = dv_rad / d_theta
-
-    z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
-
-    # Shift out of rotating frame (http://arxiv.org/pdf/astro-ph/0605237v2.pdf)
-    if frame == 1:
-        z_curl += 2
-
-    return z_curl
-
 ##### PLOTTING #####
 
 # Make Directory
@@ -155,7 +132,7 @@ def make_plot(frame, show = False):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        vorticity = curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
+        vorticity = util.velocity_curl(vrad, vtheta, rad, theta) / normalized_density[1:, 1:]
 
         ### Plot ###
         result = ax.pcolormesh(theta, rad, vorticity, cmap = cmap)
@@ -168,7 +145,7 @@ def make_plot(frame, show = False):
         plot.title("Vortensity Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%svorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%svortensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)

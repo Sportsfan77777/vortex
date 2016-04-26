@@ -37,34 +37,7 @@ else:
     # fargo
     ref_frame = 1
 
-save_directory = "averagedVorticity"
-
-### Movie Commands ###
-def make_movies():
-    # Movie Parameters
-    fps = 5
-
-    path = save_directory + "/vorticityMap_%03d.png"
-    output = save_directory + "/vorticityMap.mov"
-
-    zoom_path = save_directory + "/zoom_vorticityMap_%03d.png"
-    zoom_output = save_directory + "/vorticityMap_zoom.mov"
-
-    # Movie Command
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-# Make only movies and then return
-if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
-    make_movies()
-    # Terminate
-    quit()
-
+save_directory = "averagedVortensity"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -131,7 +104,8 @@ def make_plot(frame, show = True):
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
         vorticity = util.velocity_curl(vrad, vtheta, rad, theta, average = True, frame = ref_frame)
-        averaged_w = np.average(vorticity, axis = 1)
+        vortensity = vorticity / normalized_density[1:, 1:]
+        averaged_w = np.average(vortensity, axis = 1)
 
         ### Plot ###
         plot.plot(x[1:], averaged_w, linewidth = linewidth)
@@ -139,11 +113,11 @@ def make_plot(frame, show = True):
         # Annotate
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel("Azimuthally Averaged Vorticity", fontsize = fontsize)
+        plot.ylabel("Azimuthally Averaged Vortensity", fontsize = fontsize)
         plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%saveragedVorticity_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%saveragedVortensity_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
