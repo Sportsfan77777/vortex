@@ -8,7 +8,7 @@ manipulate PolarGrid 's or initialize the forces evaluation.
 
 #include "fargo.h"
 
-extern boolean OpenInner, NonReflecting, OuterSourceMass;
+extern boolean OpenInner, NonReflecting, Evanescent, OuterSourceMass;
 extern Pair DiskOnPrimaryAcceleration;
 
 real GasTotalMass (array)
@@ -247,6 +247,7 @@ real dt;
   }
   if (OpenInner == YES) OpenBoundary (Vrad, Rho);
   if (NonReflecting == YES) NonReflectingBoundary (Vrad, Rho);
+  if (Evanescent == YES) StockholmBoundary (Vrad, Vtheta, Rho, dt);
   if (OuterSourceMass == YES) ApplyOuterSourceMass (Rho, Vrad);
 }
 

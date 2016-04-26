@@ -11,7 +11,7 @@ conditions.
 
 #include "fargo.h"
 
-extern boolean OpenInner, NonReflecting;
+extern boolean OpenInner, NonReflecting, Evanescent;
 extern Pair DiskOnPrimaryAcceleration;
 
 Force ComputeForceStockholm (Rho, x, y, rsmoothing, mass)
