@@ -49,7 +49,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ##### PLOTTING #####
 
 # Make Directory
-directory = "averagedDensity"
+directory = "averagedRadialVelocity"
 try:
     os.mkdir(directory)
 except:
@@ -74,27 +74,26 @@ def add_to_plot(frame, choice = "normal", show = False):
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(0, 1.2)
+            #plot.ylim(0, 1.2)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
             plot.xlim(float(fargo_par["Rmin"]) - 0.05, float(fargo_par["Rmax"]) + 0.05)
-            plot.ylim(0, 5.0)
+            #plot.ylim(0, 5.0)
             xlabel = "Radius"
             
         # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
-        log_density = np.log(fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
-        averagedDensity = np.average(density, axis = 1) / surface_density
+        vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
+        averaged_vrad = np.average(vrad, axis = 1)
 
         ### Plot ###
-        plot.plot(x, averagedDensity, linewidth = linewidth, label = "%d" % frame)
+        plot.plot(x, averaged_vrad, linewidth = linewidth, label = "%d" % frame)
 
         # Annotate
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
+        plot.ylabel(r"Azimuthally Averaged $V_{rad}$", fontsize = fontsize)
         plot.title("%s" % this_title, fontsize = fontsize + 1)
 
     i = frame
@@ -105,7 +104,7 @@ def make_plot(prefix = "", show = False):
     plot.legend()
 
     # Save and Close
-    plot.savefig("%s/%savg_density_%s.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/%savg_radial_velocity_%s.png" % (directory, prefix, sample_name), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
 
