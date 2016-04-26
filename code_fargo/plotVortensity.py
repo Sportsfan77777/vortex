@@ -33,10 +33,10 @@ save_directory = "vortensityMaps"
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
     # fargo2D1D
-    frame = 0
+    ref_frame = 0
 else:
     # fargo
-    frame = 1
+    ref_frame = 1
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -107,7 +107,7 @@ def make_plot(frame, show = False):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
-        vortensity = util.velocity_curl(vrad, vtheta, rad, theta, frame = frame) / normalized_density[1:, 1:]
+        vortensity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame) / normalized_density[1:, 1:]
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(vortensity), cmap = cmap)
