@@ -85,7 +85,7 @@ def find_min(averagedDensity, peak_rad):
 def get_data(frame):
     # Load Data Files
     normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
-    averagedDensity = np.average(normalize_density, axis = 1)
+    averagedDensity = np.average(normalized_density, axis = 1)
 
     vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
     vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
