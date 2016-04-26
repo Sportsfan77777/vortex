@@ -97,7 +97,7 @@ def make_plot(frame, show = False):
         vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(vtheta), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(vrad), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
@@ -105,7 +105,7 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title(r"$V_{rad}$ Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title("$Radial Velocity Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sradialVelocityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)

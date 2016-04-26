@@ -59,7 +59,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+clim = [0, 0.5]
 
 fontsize = 14
 my_dpi = 100
@@ -105,7 +105,7 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title(r"$V_{\phi}$ Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title("Azimuthal Velocity Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sthetaVelocityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
