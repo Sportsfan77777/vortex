@@ -132,12 +132,16 @@ def measure_asymmetry(frame):
 
     print "%d: %.1f, %d, %d" % (frame, azimuthal_extent, low_theta_index, high_theta_index)
 
-    # Find Quartiles (25%, 50%, 75%)
-    lower_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 25)
-    avg_density = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 50)
-    upper_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 75)
+    if azimuthal_extent > 5:
+        # Find Quartiles (25%, 50%, 75%)
+        lower_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 25)
+        avg_density = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 50)
+        upper_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 75)
 
-    return azimuthal_extent, avg_density, lower_quartile, upper_quartile
+        return azimuthal_extent, avg_density, lower_quartile, upper_quartile
+    else:
+        # No Vortex Yet (or any features really)
+        return azimuthal_extent, threshold, threshold, threshold
 
 ## Use These Frames ##
 rate = 25 # 5 works better, but is very slow
