@@ -72,10 +72,10 @@ def find_radial_peak(averagedDensity):
     peak_rad = rad[peak_index]
     peak_density = averagedDensity[peak_index]
 
-    return peak_rad, peak_rad_index, peak_density
+    return peak_rad, peak_index, peak_density
 
 def find_azimuthal_peak(azimuthalDensity):
-    twnety_degrees = (np.pi / 180.0) * 20.0
+    twenty_degrees = (np.pi / 180.0) * 20.0
     kernel_size = np.searchsorted(rad, twenty_degrees) # kernel corresponds to 8 degrees
 
     smoothed_density = smooth(azimuthalDensity, kernel_size)
@@ -111,9 +111,9 @@ def measure_asymmetry(frame):
     # Find Peak in Azimuthal Profile (and center around that peak)
     peak_theta, peak_theta_index = find_azimuthal_peak(weighted_azimuthal_profile)
 
-    inital_center = np.searchsorted(theta, np.pi)
+    initial_center = np.searchsorted(theta, np.pi)
 
-    centered_profiles = np.roll(weighted_azimuthal_profile, initial_center - peak_theta_index, axis = 1)
+    centered_profiles = np.roll(azimuthal_profiles, initial_center - peak_theta_index, axis = 1)
     centered_profile = np.roll(weighted_azimuthal_profile, initial_center - peak_theta_index)
 
     # Choose Threshold
@@ -130,7 +130,9 @@ def measure_asymmetry(frame):
     high_theta = np.searchsorted(theta, high_theta_index)
     low_theta = np.searchsorted(theta, low_theta_index)
 
-    azithumal_extent = high_theta - low_theta
+    azithumal_extent = (180.0 / np.pi) * (high_theta - low_theta)
+
+    print "%d: %.1f, %d, %d" % (frame, azithumal_extent, low_theta_index, high_theta_index)
 
     # Find Quartiles (25%, 50%, 75%)
     lower_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 25)
