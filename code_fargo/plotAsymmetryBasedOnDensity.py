@@ -146,7 +146,7 @@ def measure_asymmetry(frame):
 ## Use These Frames ##
 rate = 5 # 5 works better, but is very slow
 start_of_vortex = 0
-max_frame = 1500 #util.find_max_frame()
+max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
 vortex_azimuthal_widths = []
