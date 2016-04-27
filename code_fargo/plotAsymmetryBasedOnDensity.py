@@ -46,7 +46,24 @@ surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
 ### Helper Methods ###
-def find_peak(averagedDensity):
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+
+def gaussian(num_points, scale = 1):
+    """ calculates Gaussian weights """
+    def helper(x, scale = 1):
+        exponent = -0.5 * x**2 / scale**2
+        return np.exp(exponent)
+
+    inputs = 1.0 * np.array(range(num_points))
+    inputs -= np.average(inputs) # center on zero
+
+    array = [helper(value) for value in inputs]
+    array /= np.sum(array) # Normalize
+
+    return array
+
+
+def find_radial_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, 2.2)
     peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start : outer_disk_end])
@@ -55,7 +72,17 @@ def find_peak(averagedDensity):
     peak_rad = rad[peak_index]
     peak_density = averagedDensity[peak_index]
 
-    return peak_rad, peak_density
+    return peak_rad, peak_rad_index, peak_density
+
+def find_azimuthal_peak(azimuthalDensity):
+    twnety_degrees = (np.pi / 180.0) * 20.0
+    kernel_size = np.searchsorted(rad, twenty_degrees) # kernel corresponds to 8 degrees
+
+    smoothed_density = smooth(azimuthalDensity, kernel_size)
+    peak_theta_index = np.argmax(smoothed_density)
+    peak_theta = theta[peak_theta_index]
+
+    return peak_theta, peak_theta_index
 
 #### Data ####
 
@@ -68,58 +95,47 @@ def measure_asymmetry(frame):
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(density, axis = 1)
 
-    peak_rad, peak_density = find_peak(averagedDensity)
+    peak_rad, peak_rad_index, peak_density = find_radial_peak(averagedDensity)
 
-    # Gather Azimuthal Profiles
-    num_profiles = 5
-    spread = 1.0 * scale_height # half-width
+    # Take Weighted Average of Azimuthal Profiles
+    num_profiles = 7
+    weights = gaussian(num_profiles, scale = num_profiles / 2.0)
+    spread = 1.5 * scale_height # half-width
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
-    azimuthal_profiles = [density[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
+    azimuthal_profiles = np.array([density[azimuthal_index, :] for azimuthal_index in azimuthal_indices])
 
-    # For each profile, measure the azimuthal extent of the vortex (density > threshold = 1.0)
-    vortex_value = 360.0 / float(fargo_par["Nsec"])
-    background_value = 0.0
+    weighted_azimuthal_profile = np.average(azimuthal_profiles, weights = weights, axis = 0)
 
-    asymmetry_values = []
-    avg_densities = []
-    for azimuthal_profile in azimuthal_profiles:
-        # Get Asymmetry
-        copy = np.zeros(np.shape(azimuthal_profile))
+    # Find Peak in Azimuthal Profile (and center around that peak)
+    peak_theta, peak_theta_index = find_azimuthal_peak(weighted_azimuthal_profile)
 
-        copy[azimuthal_profile < threshold] = background_value
-        copy[azimuthal_profile >= threshold] = vortex_value
+    inital_center = np.searchsorted(theta, np.pi)
 
-        azithumal_extent = np.sum(copy) # should be the angle spanned by the vortex (in degrees)
-        asymmetry_values.append(azithumal_extent)
+    centered_profiles = np.roll(weighted_azimuthal_profile, initial_center - peak_theta_index, axis = 1)
+    centered_profile = np.roll(weighted_azimuthal_profile, initial_center - peak_theta_index)
 
-        # Get Density
-        copy = azimuthal_profile[azimuthal_profile > threshold]
+    # Choose Threshold
+    #pass
 
-        avg_density = np.mean(copy)
-        avg_densities.append(avg_density)
+    # Find Bounds Marked by Threshold
+    high_bound_index = np.argmax(centered_profile[initial_center : ] < threshold)
+    low_bound_index = np.argmax((centered_profile[::-1])[len(centered_profile) - initial_center : ] < threshold)
 
-    # Take Median of Profiles between -H and +H about peak in radial density profile
-    asymmetry = np.median(asymmetry_values)
+    # Convert Back to Thetas and Indices
+    high_theta_index = (initial_center) + high_bound_index
+    low_theta_index = (len(centered_profile) - initial_center) - low_bound_index
 
-    # Get Mean Density of Vortex within One Scale Height (+ 25% and 75% values)
-    start = azimuthal_indices[0]
-    end = azimuthal_indices[-1]
-    vortex_zone = density[start : end, :]
+    high_theta = np.searchsorted(theta, high_theta_index)
+    low_theta = np.searchsorted(theta, low_theta_index)
 
-    vortex_densities = vortex_zone[vortex_zone > threshold]
-    avg_density = np.mean(vortex_densities)
+    azithumal_extent = high_theta - low_theta
 
-    # Detect Nan
-    if avg_density != avg_density:
-        avg_density = threshold
-        lower_quartile = threshold
-        upper_quartile = threshold
-    else:
-        # If no nan, compute quartiles
-        lower_quartile = np.percentile(vortex_densities, 25) # 25%
-        upper_quartile = np.percentile(vortex_densities, 75) # 75%
+    # Find Quartiles (25%, 50%, 75%)
+    lower_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 25)
+    avg_density = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 50)
+    upper_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 75)
 
     return asymmetry, avg_density, lower_quartile, upper_quartile
 
@@ -146,9 +162,8 @@ for frame in frame_range:
 
 
 ## Smooth Each Array
-smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
-
 kernel_size = 5
+
 smoothed_vortex_azimuthal_widths = smooth(vortex_azimuthal_widths, kernel_size)
 smoothed_vortex_avg_densities = smooth(vortex_avg_densities, kernel_size)
 
@@ -226,7 +241,7 @@ def make_plot():
         tick2.set_color(color[1])
 
     # Save and Close
-    plot.savefig("vortex_asymmetry77.png", bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("vortex_asymmetry77_v2.png", bbox_inches = 'tight', dpi = my_dpi)
     plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
 
