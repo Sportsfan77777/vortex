@@ -108,7 +108,7 @@ def make_plot(frame, show = False):
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
         vortensity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame) / normalized_density[1:, 1:]
-        avg_vortensity = np.average(vortensity, mean = 1)
+        avg_vortensity = np.average(vortensity, axis = 1)
 
         excess_vortensity = avg_vortensity[:, None] - vortensity #### Vortex is Positive ####
 
