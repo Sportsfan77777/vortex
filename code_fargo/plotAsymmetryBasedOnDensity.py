@@ -89,8 +89,6 @@ def find_azimuthal_peak(azimuthalDensity):
 threshold = 0.77 # Vortex is Above Threshold ### 1.0 / 1.3 is used because that is the initial density where the vortex forms
 
 def measure_asymmetry(frame):
-    print frame
-
     # Find Peak in Radial Profile (in Outer Disk)
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(density, axis = 1)
@@ -127,19 +125,19 @@ def measure_asymmetry(frame):
     high_theta_index = (initial_center) + high_bound_index
     low_theta_index = (len(centered_profile) - initial_center) - low_bound_index
 
-    high_theta = np.searchsorted(theta, high_theta_index)
-    low_theta = np.searchsorted(theta, low_theta_index)
+    high_theta = theta[high_theta_index]
+    low_theta = theta[low_theta_index]
 
-    azithumal_extent = (180.0 / np.pi) * (high_theta - low_theta)
+    azimuthal_extent = (180.0 / np.pi) * (high_theta - low_theta)
 
-    print "%d: %.1f, %d, %d" % (frame, azithumal_extent, low_theta_index, high_theta_index)
+    print "%d: %.1f, %d, %d" % (frame, azimuthal_extent, low_theta_index, high_theta_index)
 
     # Find Quartiles (25%, 50%, 75%)
     lower_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 25)
     avg_density = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 50)
     upper_quartile = np.percentile(centered_profiles[:, low_theta_index : high_theta_index], 75)
 
-    return asymmetry, avg_density, lower_quartile, upper_quartile
+    return azimuthal_extent, avg_density, lower_quartile, upper_quartile
 
 ## Use These Frames ##
 rate = 25 # 5 works better, but is very slow
