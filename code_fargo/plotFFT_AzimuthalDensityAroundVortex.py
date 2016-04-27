@@ -26,15 +26,6 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-## Check frame ##
-fargo_fn = "fargo2D1D"
-if os.path.exists(fargo_fn):
-    # fargo2D1D
-    ref_frame = 0
-else:
-    # fargo
-    ref_frame = 1
-
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -83,17 +74,9 @@ def find_min(averagedDensity, peak_rad):
 #### Data ####
 
 def get_data(frame):
-    # Load Data Files
-    normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
-    averagedDensity = np.average(normalized_density, axis = 1)
-
-    vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
-    vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
-
-    vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
-    vortensity = vorticity / normalized_density[1:, 1:]
-
     # Find Peak in Radial Profile (in Outer Disk)
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
+    averagedDensity = np.average(density, axis = 1)
 
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)
@@ -104,14 +87,14 @@ def get_data(frame):
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
-    azimuthal_profiles = [np.fft.fft(vortensity[azimuthal_index, :]) for azimuthal_index in azimuthal_indices]
+    azimuthal_profiles = [np.fft.fft(density[azimuthal_index, :]) for azimuthal_index in azimuthal_indices]
 
     return azimuthal_radii, azimuthal_profiles
 
 ##### PLOTTING #####
 
 # Make Directory
-directory = "fftAzimuthalVortensity"
+directory = "fftAzimuthalDensity"
 try:
     os.mkdir(directory)
 except:
@@ -134,7 +117,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    xs = range(len(theta[:-1]))
+    xs = range(len(theta))
 
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
         plot.plot(xs, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
@@ -149,13 +132,13 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     # Annotate
     this_title = readTitle()
     plot.xlabel("m", fontsize = fontsize)
-    plot.ylabel("Azimuthal Vortensity FFT", fontsize = fontsize)
+    plot.ylabel("Azimuthal Density FFT", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save and Close
-    plot.savefig("%s/fft_azimuthal_vortensity_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/fft_azimuthal_density_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
