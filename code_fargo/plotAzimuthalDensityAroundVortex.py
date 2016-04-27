@@ -82,8 +82,8 @@ def get_data(frame):
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
     # Gather Azimuthal Profiles
-    num_profiles = 15
-    spread = 5.0 * scale_height # half-width
+    num_profiles = 5
+    spread = 2.0 * scale_height # half-width
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
