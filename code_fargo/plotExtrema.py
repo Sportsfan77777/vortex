@@ -123,7 +123,7 @@ maximum_densities = []
 minimum_vortensities = []
 
 for frame in frame_range:
-    max_density, min_vortensity = measure_asymmetry(frame)
+    max_density, min_vortensity = find_extrema(frame)
 
     maximum_densities.append(max_density)
     minimum_vortensities.append(min_vortensity)
@@ -172,7 +172,7 @@ def make_plot():
     # Limits
     plot.xlim(frame_range[0], frame_range[-1])
 
-    ax1.set_ylim(0. 3.5) # Density Range
+    ax1.set_ylim(0, 3.5) # Density Range
     ax2.set_ylim(0, 0.3) # Vortensity Range
 
     # Annotate
