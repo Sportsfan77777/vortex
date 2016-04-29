@@ -27,6 +27,15 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+## Check frame ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    ref_frame = 0
+else:
+    # fargo
+    ref_frame = 1
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -47,21 +56,6 @@ scale_height = float(fargo_par["AspectRatio"])
 
 ### Helper Methods ###
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
-
-def gaussian(num_points, scale = 1):
-    """ calculates Gaussian weights """
-    def helper(x, scale = 1):
-        exponent = -0.5 * x**2 / scale**2
-        return np.exp(exponent)
-
-    inputs = 1.0 * np.array(range(num_points))
-    inputs -= np.average(inputs) # center on zero
-
-    array = [helper(value) for value in inputs]
-    array /= np.sum(array) # Normalize
-
-    return array
-
 
 def find_radial_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
