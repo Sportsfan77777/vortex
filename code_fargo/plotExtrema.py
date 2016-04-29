@@ -96,7 +96,7 @@ def find_extrema(frame):
     vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
-    vortensity = vorticity / normalized_density[1:, 1:]
+    vortensity = vorticity / density[1:, 1:]
 
     # Find Peak in Radial Profile (in Outer Disk)
     peak_rad, peak_rad_index, peak_density = find_radial_peak(averagedDensity)
