@@ -80,6 +80,7 @@ def find_azimuthal_extrema(azimuthalProfile, maximum = True):
 
     smoothed_profile = smooth(azimuthalProfile, kernel_size)
     peak_theta_index = extrema(smoothed_profile)
+
     peak_theta = theta[peak_theta_index]
     peak_value = azimuthalProfile[peak_theta_index]
 
@@ -102,8 +103,10 @@ def find_extrema(frame):
     peak_rad, peak_rad_index, peak_density = find_radial_peak(averagedDensity)
 
     # Find Peaks in Azimuthal Profiles (and center around that peak)
-    density_peak_theta, density_theta_index, max_density = find_azimuthal_extrema(density[peak_rad_index : ], maximum = True) # Max
-    vortensity_peak_theta, vortensity_peak_theta_index, min_vortensity = find_azimuthal_extrema(vortensity[peak_rad_index : ], maximum = False) # Min
+    density_peak_theta, density_theta_index, max_density = find_azimuthal_extrema(density[peak_rad_index], maximum = True) # Max
+    vortensity_peak_theta, vortensity_peak_theta_index, min_vortensity = find_azimuthal_extrema(vortensity[peak_rad_index], maximum = False) # Min
+
+    print "%d, %.2f, %.3f" % (frame, max_density, min_vortensity)
 
     return max_density, min_vortensity
 
