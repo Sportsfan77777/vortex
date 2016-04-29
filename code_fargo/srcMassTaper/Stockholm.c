@@ -245,7 +245,7 @@ real dt;
 	tau = 2.0*M_PI*pow(RMIN, 1.5);
       }
       if (ramp > 1e-15) {
-	tau /= 3.0; 		/* Called three times per timestep  */
+	tau /= FOLDNUMBER; 		/* Called three times per timestep ---- CHANGED to PARAMETER */
 	rad = Rmed[i];
 	dens0 = SigmaMed[i];
 	vrad0 = -3.0*VISCOSITY/rad*(-SIGMASLOPE+.5);

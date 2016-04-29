@@ -56,5 +56,6 @@ InitVariables()
   // New Variables
   var("FAKEACCRETION", FAKEACCRETION, STRING, NO, "YES");
   var("TAPERPROFILE", TAPERPROFILE, STRING, NO, "YES");
+  var("FOLDNUMBER", &FOLDNUMBER, REAL, NO, "10.0");
 }
 
