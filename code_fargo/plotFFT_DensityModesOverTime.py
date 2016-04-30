@@ -130,7 +130,7 @@ rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
 fontsize = 14
-linewidth = 2
+linewidth = 3
 
 def make_plot():
     # Set up figure
@@ -157,7 +157,7 @@ def make_plot():
     plot.ylabel("Density Mode Amplitudes", fontsize = fontsize)
     plot.title("%s" % (this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.15, 1.0)) # outside of plot
 
     # Save and Close
     plot.savefig("fft_density_modes.png", bbox_inches = 'tight', dpi = my_dpi)
