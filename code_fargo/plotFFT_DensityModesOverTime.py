@@ -97,9 +97,10 @@ def get_data(frame_i, frame, modes = default_modes):
     # Normalize by m = 0 mode (integral of density), Take Absolute Value
     azimuthal_profiles = np.array([np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles])
 
-    for m, mode in len(default_modes):
+    for m, mode in enumerate(modes):
         modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode])
 
+    print frame, np.max(azimuthal_profiles)
 
 #### Gather Data Over Time ####
 
@@ -138,17 +139,22 @@ def make_plot():
     ### Plot ###
 
     for i, mode in enumerate(default_modes):
-        plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, label = "%d" % mode)
+        alpha = 0.4
+        if mode == 1:
+            alpha = 1.0
+        if mode == 3 or mode == 5:
+            alpha = 0.7
+        plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
     # Axis
-    plot.xlim(1, 6) # Only First Six m > 0 Modes
+    plot.xlim(0, frame_range[-1])
     plot.ylim(10**(-3.5), 10**(-0.5))
     plot.yscale("log")
 
     # Annotate
     this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("FFT Density Modes", fontsize = fontsize)
+    plot.ylabel("Density Mode Amplitudes", fontsize = fontsize)
     plot.title("%s" % (this_title), fontsize = fontsize + 1)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
