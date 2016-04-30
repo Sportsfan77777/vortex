@@ -100,7 +100,7 @@ def get_data(frame_i, frame, modes = default_modes):
     for m, mode in enumerate(modes):
         modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode])
 
-    print frame, np.max(azimuthal_profiles)
+    print "%d: %.4f, %.4f, %.4f, %.4f, %.4f" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]))
 
 #### Gather Data Over Time ####
 
@@ -130,7 +130,7 @@ rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
 fontsize = 14
-linewidth = 4
+linewidth = 2
 
 def make_plot():
     # Set up figure
@@ -148,7 +148,7 @@ def make_plot():
 
     # Axis
     plot.xlim(0, frame_range[-1])
-    plot.ylim(10**(-3.5), 10**(-0.5))
+    plot.ylim(10**(-3.5), 10**(0.0))
     plot.yscale("log")
 
     # Annotate
@@ -157,8 +157,7 @@ def make_plot():
     plot.ylabel("Density Mode Amplitudes", fontsize = fontsize)
     plot.title("%s" % (this_title), fontsize = fontsize + 1)
 
-    #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
-    plot.legend(loc = "upper right")
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
     # Save and Close
     plot.savefig("fft_density_modes.png", bbox_inches = 'tight', dpi = my_dpi)
