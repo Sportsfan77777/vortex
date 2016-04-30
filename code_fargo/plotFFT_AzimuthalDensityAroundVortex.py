@@ -127,6 +127,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     # Axis
     plot.xlim(0, 6) # Only First Six m > 0 Modes
+    plot.ylim(10**(-3), 1)
     plot.yscale("log")
 
     # Annotate
