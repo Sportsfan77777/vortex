@@ -83,11 +83,14 @@ def get_data(frame):
 
     # Gather Azimuthal Profiles
     num_profiles = 5
-    spread = 2.0 * scale_height # half-width
+    spread = 1.0 * scale_height # half-width
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
-    azimuthal_profiles = [np.fft.fft(density[azimuthal_index, :]) for azimuthal_index in azimuthal_indices]
+    azimuthal_profiles = np.array([np.fft.fft(density[azimuthal_index, :]) for azimuthal_index in azimuthal_indices])
+
+    # Normalize by m = 0 mode (integral of density), Take Absolute Value
+    azimuthal_profiles = [np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles]
 
     return azimuthal_radii, azimuthal_profiles
 
@@ -123,11 +126,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
         plot.plot(xs, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
     # Axis
-    angles = np.linspace(0, 2 * np.pi, 7)
-    degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
-
-    plot.xlim(0, 2 * np.pi)
-    plot.xticks(angles, degree_angles)
+    plot.xlim(0, 6) # Only First Six m > 0 Modes
+    plot.yscale("log")
 
     # Annotate
     this_title = readTitle()
