@@ -26,6 +26,15 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+## Check frame ##
+fargo_fn = "fargo2D1D"
+if os.path.exists(fargo_fn):
+    # fargo2D1D
+    ref_frame = 0
+else:
+    # fargo
+    ref_frame = 1
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
