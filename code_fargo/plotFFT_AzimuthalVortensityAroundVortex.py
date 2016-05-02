@@ -109,7 +109,22 @@ def get_data(frame):
     # Normalize by m = 0 mode (integral of vortensity), Take Absolute Value
     azimuthal_profiles = [np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles]
 
-    return azimuthal_radii, azimuthal_profiles
+    ### Gather Averaged Profiles ###
+    start_half = azimuthal_indices[1]
+    end_half = azimuthal_indices[-2]
+    avg_half_profile = np.average(vortensity[start_half : end_half, :], axis = 0)
+    avg_half = np.fft.fft(avg_half_profile)
+
+    start_full = azimuthal_indices[0]
+    end_full = azimuthal_indices[-1]
+    avg_full_profile = np.average(vortensity[start_full : end_full, :], axis = 0)
+    avg_full = np.fft.fft(avg_full_profile)
+
+    # Normalize
+    avg_half = np.abs(avg_half / avg_half[0])
+    avg_full = np.abs(avg_full / avg_full[0])
+
+    return azimuthal_radii, azimuthal_profiles, avg_half, avg_full
 
 ##### PLOTTING #####
 
@@ -128,7 +143,7 @@ alpha = 0.65
 fontsize = 14
 linewidth = 4
 
-def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
+def make_plot(frame, azimuthal_radii, azimuthal_profiles, avg_half, avg_full, show = False):
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     orbit = int(round(time / (2 * np.pi), 0)) * frame
@@ -141,6 +156,9 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
         plot.plot(xs, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+
+    plot.plot(xs, avg_half, color = "black", linewidth = linewidth, alpha = 0.7, linestyle = "--")
+    plot.plot(xs, avg_full, color = "black", linewidth = linewidth + 2, linestyle = "--")
 
     # Axis
     plot.xlim(1, 6) # Only First Six m > 0 Modes
@@ -170,12 +188,12 @@ if len(sys.argv) > 1:
         max_frame = util.find_max_frame()
         sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
-            azimuthal_radii, azimuthal_profiles = get_data(i)
+            azimuthal_radii, azimuthal_profiles, avg_half, avg_full = get_data(i)
             make_plot(i, azimuthal_radii, azimuthal_profiles)
     else:
         # Plot Single
         azimuthal_radii, azimuthal_profiles = get_data(frame_number)
-        make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = True)
+        make_plot(frame_number, azimuthal_radii, azimuthal_profiles, avg_half, avg_full, show = True)
 else:
     # Search for maximum frame
     density_files = glob.glob("gasdens*.dat")
