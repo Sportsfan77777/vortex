@@ -192,7 +192,7 @@ if len(sys.argv) > 1:
             make_plot(i, azimuthal_radii, azimuthal_profiles)
     else:
         # Plot Single
-        azimuthal_radii, azimuthal_profiles = get_data(frame_number)
+        azimuthal_radii, azimuthal_profiles, avg_half, avg_full = get_data(frame_number)
         make_plot(frame_number, azimuthal_radii, azimuthal_profiles, avg_half, avg_full, show = True)
 else:
     # Search for maximum frame
