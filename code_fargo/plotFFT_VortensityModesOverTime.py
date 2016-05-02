@@ -26,15 +26,6 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-## Check frame ##
-fargo_fn = "fargo2D1D"
-if os.path.exists(fargo_fn):
-    # fargo2D1D
-    ref_frame = 0
-else:
-    # fargo
-    ref_frame = 1
-
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
@@ -56,6 +47,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ### Helper Methods ###
 def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 2.6) # look for max radial density before r = 2.6
     peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start:])
 
     peak_index = outer_disk_start + peak_rad_outer_index
@@ -82,7 +74,12 @@ def find_min(averagedDensity, peak_rad):
 
 #### Data ####
 
-def get_data(frame):
+num_modes = 6
+default_modes = range(1, num_modes + 1)
+
+def get_data(frame_i, frame, modes = default_modes):
+    """ frame_i is ith frame, frame is frame number """
+
     # Load Data Files
     normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(normalized_density, axis = 1)
@@ -93,8 +90,10 @@ def get_data(frame):
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
     vortensity = vorticity / normalized_density[1:, 1:]
 
-    # Find Peak in Radial Profile (in Outer Disk)
+    peak_rad, peak_density = find_peak(averagedDensity)
+    min_rad, min_density = find_min(averagedDensity, peak_rad)
 
+    # Find Peak in Radial Profile (in Outer Disk)
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
@@ -104,14 +103,34 @@ def get_data(frame):
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
-    azimuthal_profiles = [np.fft.fft(vortensity[azimuthal_index, :]) for azimuthal_index in azimuthal_indices]
+    azimuthal_profiles = np.array([np.fft.fft(vortensity[azimuthal_index, :]) for azimuthal_index in azimuthal_indices])
 
-    return azimuthal_radii, azimuthal_profiles
+    # Normalize by m = 0 mode (integral of density), Take Absolute Value
+    azimuthal_profiles = np.array([np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles])
+
+    for m, mode in enumerate(modes):
+        modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode])
+
+    print "%d: %.4f, %.4f, %.4f, %.4f, %.4f" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]))
+
+#### Gather Data Over Time ####
+
+## Use These Frames ##
+rate = 5 # 5 works better, but is very slow
+start = 10
+max_frame = util.find_max_frame()
+frame_range = range(start, max_frame, rate)
+
+## Track Modes ##
+modes_over_time = np.zeros((num_modes, len(frame_range)))
+
+for i, frame in enumerate(frame_range):
+    get_data(i, frame)
 
 ##### PLOTTING #####
 
 # Make Directory
-directory = "fftAzimuthalVortensity"
+directory = "fftAzimuthalDensity"
 try:
     os.mkdir(directory)
 except:
@@ -121,72 +140,39 @@ except:
 rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
-alpha = 0.65
 fontsize = 14
-linewidth = 4
+linewidth = 3
 
-def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
-    # Orbit Number
-    time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * frame
-
+def make_plot():
     # Set up figure
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    xs = range(len(theta[:-1]))
 
-    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(xs, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+    for i, mode in enumerate(default_modes):
+        alpha = 0.4
+        if mode == 1:
+            alpha = 1.0
+        if mode == 3 or mode == 5:
+            alpha = 0.7
+        plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
     # Axis
-    plot.xlim(1, 6) # Only First Six m > 0 Modes
+    plot.xlim(0, frame_range[-1])
     plot.ylim(10**(-3.5), 10**(0.0))
     plot.yscale("log")
 
     # Annotate
     this_title = readTitle()
-    plot.xlabel("m", fontsize = fontsize)
-    plot.ylabel("Azimuthal Vortensity FFT", fontsize = fontsize)
-    plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
+    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+    plot.ylabel("Vortensity Mode Amplitudes", fontsize = fontsize)
+    plot.title("%s" % (this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot
 
     # Save and Close
-    plot.savefig("%s/fft_azimuthal_vortensity_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
-    if show:
-        plot.show()
+    plot.savefig("fft_vortensity_modes.png", bbox_inches = 'tight', dpi = my_dpi)
+    plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
 
-##### Plot One File or All Files #####
-
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            azimuthal_radii, azimuthal_profiles = get_data(i)
-            make_plot(i, azimuthal_radii, azimuthal_profiles)
-    else:
-        # Plot Single
-        azimuthal_radii, azimuthal_profiles = get_data(frame_number)
-        make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = True)
-else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    #p = Pool() # default number of processes is multiprocessing.cpu_count()
-    #p.map(make_plot, range(num_frames))
-    #p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
+make_plot()
