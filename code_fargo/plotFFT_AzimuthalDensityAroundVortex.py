@@ -96,10 +96,12 @@ def get_data(frame):
     start_half = azimuthal_indices[1]
     end_half = azimuthal_indices[-2]
     avg_half_profile = np.average(density[start_half : end_half, :], axis = 0)
+    avg_half = np.fft.fft(avg_half_profile)
 
     start_full = azimuthal_indices[0]
     end_full = azimuthal_indices[-1]
     avg_full_profile = np.average(density[start_full : end_full, :], axis = 0)
+    avg_full = np.fft.fft(avg_full_profile)
 
     # Normalize
     avg_half = np.abs(avg_half / avg_half[0])
