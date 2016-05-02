@@ -140,8 +140,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, avg_half, avg_full,sho
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
         plot.plot(xs, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
-    plot.plot(xs, avg_half, color = "black", linewidth = linewidth, linestyle = "--")
-    plot.plot(xs, avg_full, color = "black", linewidth = linewidth + 2, alpha = 0.7, linestyle = "--")
+    plot.plot(xs, avg_half, color = "black", linewidth = linewidth, alpha = 0.7, linestyle = "--")
+    plot.plot(xs, avg_full, color = "black", linewidth = linewidth + 2, linestyle = "--")
 
     # Axis
     plot.xlim(1, 6) # Only First Six m > 0 Modes
