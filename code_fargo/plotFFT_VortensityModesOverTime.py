@@ -90,9 +90,6 @@ def get_data(frame_i, frame, modes = default_modes):
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
     vortensity = vorticity / normalized_density[1:, 1:]
 
-    peak_rad, peak_density = find_peak(averagedDensity)
-    min_rad, min_density = find_min(averagedDensity, peak_rad)
-
     # Find Peak in Radial Profile (in Outer Disk)
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)

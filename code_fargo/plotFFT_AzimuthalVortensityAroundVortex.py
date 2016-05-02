@@ -106,6 +106,9 @@ def get_data(frame):
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
     azimuthal_profiles = [np.fft.fft(vortensity[azimuthal_index, :]) for azimuthal_index in azimuthal_indices]
 
+    # Normalize by m = 0 mode (integral of vortensity), Take Absolute Value
+    azimuthal_profiles = [np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles]
+
     return azimuthal_radii, azimuthal_profiles
 
 ##### PLOTTING #####
