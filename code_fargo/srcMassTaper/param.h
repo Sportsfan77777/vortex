@@ -45,4 +45,5 @@ extern	real	TRANSITIONRADIUS;
 extern	real	TRANSITIONRATIO;
 extern	real	TRANSITIONWIDTH;
 extern	real	LAMBDADOUBLING;
-extern	real	FOLDNUMBER;
+extern	real	INNERFOLDNUMBER;
+extern	real	OUTERFOLDNUMBER;

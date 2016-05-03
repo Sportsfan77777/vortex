@@ -237,15 +237,15 @@ real dt;
             if (Rmed[i] > R_sup) {
                 ramp = (Rmed[i]-R_sup)/(RMAX-R_sup); 
                 ramp = ramp*ramp; // parabola
-                tau = 2.0*M_PI*pow(RMAX, 1.5); // at outer boundary
+                tau = 2.0*M_PI*pow(RMAX, 1.5) / OUTERFOLDNUMBER; // at outer boundary
             }
             if (Rmed[i] < R_inf) {
                 ramp = (Rmed[i]-R_inf)/(R_inf-RMIN); 
                 ramp = ramp*ramp; // parabola
-                tau = 2.0*M_PI*pow(RMIN, 1.5); // at inner boundary
+                tau = 2.0*M_PI*pow(RMIN, 1.5) / INNERFOLDNUMBER; // at inner boundary
             }
             if (ramp > 1e-15) {
-                tau /= FOLDNUMBER; /* Called three times per timestep ---- CHANGED to PARAMETER */
+                //tau /= FOLDNUMBER; /* Called three times per timestep ---- CHANGED to PARAMETER */
                 rad = Rmed[i];
                 dens0 = SigmaMed[i];
                 vrad0 = -3.0*VISCOSITY/rad*(-SIGMASLOPE+.5);
