@@ -47,7 +47,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ### Helper Methods ###
 def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 2.6) # look for max radial density before r = 2.6
+    outer_disk_end = np.searchsorted(rad, 2.2) # look for max radial density before r = 2.6
     peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start : outer_disk_end])
 
     peak_index = outer_disk_start + peak_rad_outer_index
