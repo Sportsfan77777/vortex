@@ -150,7 +150,7 @@ def make_plot():
             alpha = 0.7
         plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
-    plot.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth, linestyle = "--")
+    plot.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
 
     # Axis
     plot.xlim(0, frame_range[-1])
