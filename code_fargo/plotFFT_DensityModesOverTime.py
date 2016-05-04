@@ -103,7 +103,7 @@ def get_data(frame_i, frame, modes = default_modes):
 
     single_mode_strength[frame_i] = modes_over_time[0, frame_i] / np.max(modes_over_time[1:, frame_i]) # m = 1 / Max of Higher Number Modes
 
-    print "%d: %.4f, %.4f, %.4f, %.4f, %.4f" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]))
+    print "%d: %.4f, %.4f, %.4f, %.4f, %.4f - [%.4f]" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]), single_mode_strength[frame_i])
 
 #### Gather Data Over Time ####
 
