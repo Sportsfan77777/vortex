@@ -101,6 +101,8 @@ def get_data(frame_i, frame, modes = default_modes):
     for m, mode in enumerate(modes):
         modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode])
 
+    single_mode_strength[frame_i] = modes_over_time[0, frame_i] / np.max(modes_over_time[1:, frame_i]) # m = 1 / Max of Higher Number Modes
+
     print "%d: %.4f, %.4f, %.4f, %.4f, %.4f" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]))
 
 #### Gather Data Over Time ####
@@ -113,6 +115,7 @@ frame_range = range(start, max_frame, rate)
 
 ## Track Modes ##
 modes_over_time = np.zeros((num_modes, len(frame_range)))
+single_mode_strength = np.zeros(len(frame_range))
 
 for i, frame in enumerate(frame_range):
     get_data(i, frame)
@@ -147,9 +150,11 @@ def make_plot():
             alpha = 0.7
         plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
+    plot.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth, linestyle = "--")
+
     # Axis
     plot.xlim(0, frame_range[-1])
-    plot.ylim(10**(-3.5), 10**(0.0))
+    plot.ylim(10**(-3.5), 10**(1.0))
     plot.yscale("log")
 
     # Annotate
