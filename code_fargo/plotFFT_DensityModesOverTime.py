@@ -151,6 +151,7 @@ def make_plot():
         plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
     plot.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
+    plot.plot(frame_range, np.ones(len(frame_range)), color = "black", linewidth = 1) # Reference Line at 1.0
 
     # Axis
     plot.xlim(0, frame_range[-1])
