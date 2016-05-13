@@ -123,7 +123,7 @@ def make_plot(frame, show = False):
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("ExcessVortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+        plot.title("Excess Vortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sexcessVortensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
