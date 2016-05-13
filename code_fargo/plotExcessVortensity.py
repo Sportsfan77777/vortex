@@ -27,7 +27,7 @@ from pylab import fromfile
 
 import util
 
-save_directory = "excessVorticityMaps"
+save_directory = "excessVortensityMaps"
 
 ## Check frame ##
 fargo_fn = "fargo2D1D"
@@ -66,7 +66,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0.5, 2.5]
+clim = [0, 0.2]
 
 fontsize = 14
 my_dpi = 100
@@ -101,18 +101,21 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
+        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+        normalized_density = density / surface_density_zero
+
         vrad = np.array(fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
         vtheta = np.array(fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
 
         vtheta_keplerian = np.array(fromfile("gasvtheta0.dat").reshape(num_rad, num_theta))
 
-        # Subtract off Keplerian velocity (and rotate back into non-rotating frame???)
+        # Subtract off Keplerian Velocity
         vtheta -= (vtheta_keplerian)
 
-        vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = 0)
+        vortensity = util.velocity_curl(vrad, vtheta, rad, theta, frame = 0) / normalized_density[1:, 1:]
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(vortensity), cmap = cmap)
     
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
@@ -120,10 +123,10 @@ def make_plot(frame, show = False):
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Vorticity (v - vK) Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+        plot.title("ExcessVortensity Map at Orbit %d" % orbit, fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sexcessVorticityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%sexcessVortensityMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
@@ -131,8 +134,6 @@ def make_plot(frame, show = False):
     i = frame
     choose_axis(i, "normal")
     choose_axis(i, "zoom")
-
-
 
 ##### Plot One File or All Files #####
 
