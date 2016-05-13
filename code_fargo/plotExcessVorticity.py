@@ -112,7 +112,7 @@ def make_plot(frame, show = False):
         vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = 0)
 
         # Divide out Angular Frequency (for Rossby Number)
-        vorticity /= (np.array([r**(-1.5)) for r in rad]))[:, None]
+        vorticity = vorticity / (np.array([r**(-1.5) for r in rad[:-1]]))[:, None]
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
