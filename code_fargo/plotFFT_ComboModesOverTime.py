@@ -133,6 +133,7 @@ frame_range = range(start, max_frame, rate)
 
 ## Track Modes ##
 modes_over_time = np.zeros((num_modes, len(frame_range)))
+single_mode_strength = np.zeros(len(frame_range))
 
 for i, frame in enumerate(frame_range):
     get_data(i, frame)
