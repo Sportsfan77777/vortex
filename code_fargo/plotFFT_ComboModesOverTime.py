@@ -99,7 +99,7 @@ def get_data(frame_i, frame, modes = default_modes):
     vtheta = np.array(fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta)) - vtheta_keplerian
 
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = ref_frame)
-    combo = density[:-1, :-1] * vorticity
+    combo = normalized_density[:-1, :-1] * vorticity
 
     # Find Peak in Radial Profile (in Outer Disk)
     peak_rad, peak_density = find_peak(averagedDensity)
