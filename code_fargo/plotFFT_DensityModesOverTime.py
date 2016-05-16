@@ -19,6 +19,7 @@ import matplotlib
 #matplotlib.use('Agg')
 from matplotlib import rc
 from matplotlib import pyplot as plot
+from matplotlib import gridspec
 
 from pylab import rcParams # replace with rc ???
 from pylab import fromfile
@@ -138,8 +139,12 @@ linewidth = 3
 
 def make_plot():
     # Set up figure
-    fig, (ax1, ax2) = plot.subplots(2, figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    fig.subplots_adjust(hspace = 3)
+    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    gs = gridspec.GridSpec(2, height_ratios = [2, 5])
+    ax1 = fig.add_subplot(gs[0])
+    ax2 = fig.add_subplot(gs[1], sharex = ax1)
+
+    #fig.subplots_adjust(hspace = 1)
 
     ### Plot ###
 
@@ -149,26 +154,26 @@ def make_plot():
             alpha = 1.0
         if mode == 3 or mode == 5:
             alpha = 0.7
-        ax1.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
+        ax2.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
-    ax2.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
-    ax2.plot(frame_range, np.ones(len(frame_range)), color = "black", linewidth = 1) # Reference Line at 1.0
+    ax1.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
+    ax1.plot(frame_range, np.ones(len(frame_range)), color = "black", linewidth = 1) # Reference Line at 1.0
 
     # Limits
-    ax1.set_xlim(0, frame_range[-1])
-    ax1.set_ylim(10**(-3.5), 10**(0.0))
-    ax1.set_yscale("log")
-
-    ax2.set_ylim(10**(-1.0), 10**(1.0))
+    ax2.set_xlim(0, frame_range[-1])
+    ax2.set_ylim(10**(-3.5), 10**(0.0))
     ax2.set_yscale("log")
+
+    ax1.set_ylim(10**(-1.0), 10**(1.0))
+    ax1.set_yscale("log")
 
     # Annotate
     this_title = readTitle()
-    ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
-    ax1.set_ylabel("Density Mode Amplitudes", fontsize = fontsize)
-    plot.title("%s" % (this_title), fontsize = fontsize + 1)
+    ax2.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
+    ax2.set_ylabel("Density Mode Amplitudes", fontsize = fontsize)
+    ax1.set_title("%s" % (this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot
+    ax1.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot
 
     # Save and Close
     plot.savefig("fft_density_modes.png", bbox_inches = 'tight', dpi = my_dpi)
