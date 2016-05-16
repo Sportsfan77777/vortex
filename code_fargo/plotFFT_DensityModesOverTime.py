@@ -124,7 +124,7 @@ for i, frame in enumerate(frame_range):
 # Highlight Vortex
 vortex_highlighter = np.copy(single_mode_strength)
 vortex_highlighter[vortex_highlighter < 1] -= 10**5 # m = 1 subdominant, make negative to remove from log plot
-vortex_highlighter[modes_over_time[1, :] < 0.1] -= 10**5 # m = 1 < 0.1
+vortex_highlighter[modes_over_time[0, :] < 0.1] -= 10**5 # m = 1 < 0.1
 
 ##### PLOTTING #####
 
