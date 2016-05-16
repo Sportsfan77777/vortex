@@ -99,7 +99,7 @@ def get_data(frame_i, frame, modes = default_modes):
     azimuthal_profiles = np.array([np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles])
 
     for m, mode in enumerate(modes):
-        modes_over_time[m, frame_i] = np.sqrt(np.sum(np.power(azimuthal_profiles[:, mode]))) #np.max(azimuthal_profiles[:, mode])
+        modes_over_time[m, frame_i] = np.sqrt(np.sum(np.power(azimuthal_profiles[:, mode], 2))) #np.max(azimuthal_profiles[:, mode])
 
     single_mode_strength[frame_i] = modes_over_time[0, frame_i] / np.max(modes_over_time[1:, frame_i]) # m = 1 / Max of Higher Number Modes
 
