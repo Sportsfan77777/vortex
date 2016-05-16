@@ -88,7 +88,7 @@ def find_azimuthal_extrema(azimuthalProfile, maximum = True):
 
 #### Data ####
 
-def find_extrema(frame):
+def find_extrema(i, frame):
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(density, axis = 1)
@@ -108,7 +108,9 @@ def find_extrema(frame):
 
     print "%d, %.2f, %.3f" % (frame, max_density, min_vortensity)
 
-    return max_density, min_vortensity
+    #return max_density, min_vortensity
+    maximum_densities[i] = max_density
+    minimum_vortensities[i] = min_vortensity
 
 ## Use These Frames ##
 rate = 5 # 5 works better, but is very slow
@@ -116,14 +118,11 @@ start_of_vortex = 0
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
-maximum_densities = []
-minimum_vortensities = []
+maximum_densities = np.array(len(frame_range))
+minimum_vortensities = np.array(len(frame_range))
 
-for frame in frame_range:
-    max_density, min_vortensity = find_extrema(frame)
-
-    maximum_densities.append(max_density)
-    minimum_vortensities.append(min_vortensity)
+for i, frame in frame_range:
+    find_extrema(i, frame)
 
 ## Smooth Each Array
 kernel_size = 5
