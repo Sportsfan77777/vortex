@@ -99,7 +99,7 @@ def get_data(frame_i, frame, modes = default_modes):
     azimuthal_profiles = np.array([np.abs(azimuthal_profile / azimuthal_profile[0]) for azimuthal_profile in azimuthal_profiles])
 
     for m, mode in enumerate(modes):
-        modes_over_time[m, frame_i] = np.sqrt(np.sum(np.power(azimuthal_profiles[:, mode], 2))) #np.max(azimuthal_profiles[:, mode])
+        modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode]) #np.sqrt(np.sum(np.power(azimuthal_profiles[:, mode], 2))) 
 
     single_mode_strength[frame_i] = modes_over_time[0, frame_i] / np.max(modes_over_time[1:, frame_i]) # m = 1 / Max of Higher Number Modes
 
@@ -108,7 +108,7 @@ def get_data(frame_i, frame, modes = default_modes):
 #### Gather Data Over Time ####
 
 ## Use These Frames ##
-rate = 5 # 5 works better, but is very slow
+rate = 50 # 5 works better, but is very slow
 start = 10
 max_frame = util.find_max_frame()
 frame_range = range(start, max_frame, rate)
@@ -138,7 +138,8 @@ linewidth = 3
 
 def make_plot():
     # Set up figure
-    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig, (ax1, ax2) = plot.subplots(2, figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig.subplots_adjust(hspace = 3)
 
     ### Plot ###
 
@@ -148,26 +149,29 @@ def make_plot():
             alpha = 1.0
         if mode == 3 or mode == 5:
             alpha = 0.7
-        plot.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
+        ax1.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
-    plot.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
-    plot.plot(frame_range, np.ones(len(frame_range)), color = "black", linewidth = 1) # Reference Line at 1.0
+    ax2.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
+    ax2.plot(frame_range, np.ones(len(frame_range)), color = "black", linewidth = 1) # Reference Line at 1.0
 
-    # Axis
-    plot.xlim(0, frame_range[-1])
-    plot.ylim(10**(-3.5), 10**(1.0))
-    plot.yscale("log")
+    # Limits
+    ax1.set_xlim(0, frame_range[-1])
+    ax1.set_ylim(10**(-3.5), 10**(0.0))
+    ax1.set_yscale("log")
+
+    ax2.set_ylim(10**(-1.0), 10**(1.0))
+    ax2.set_yscale("log")
 
     # Annotate
     this_title = readTitle()
-    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Density Mode Amplitudes", fontsize = fontsize)
+    ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
+    ax1.set_ylabel("Density Mode Amplitudes", fontsize = fontsize)
     plot.title("%s" % (this_title), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot
 
     # Save and Close
-    plot.savefig("fft_density_modes_sssq.png", bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("fft_density_modes.png", bbox_inches = 'tight', dpi = my_dpi)
     plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
 
