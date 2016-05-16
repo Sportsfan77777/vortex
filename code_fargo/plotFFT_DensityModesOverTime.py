@@ -121,6 +121,11 @@ single_mode_strength = np.zeros(len(frame_range))
 for i, frame in enumerate(frame_range):
     get_data(i, frame)
 
+# Highlight Vortex
+vortex_highlighter = np.copy(single_mode_strength)
+vortex_highlighter[vortex_highlighter < 1] -= 10**5 # m = 1 subdominant, make negative to remove from log plot
+vortex_highlighter[modes_over_time[1, :] < 0.1]] -= 10**5 # m = 1 < 0.1
+
 ##### PLOTTING #####
 
 # Make Directory
@@ -156,8 +161,10 @@ def make_plot():
             alpha = 0.7
         ax2.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
+
+
     ax1.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
-    ax1.plot(frame_range[single_mode_strength > 1], single_mode_strength[single_mode_strength > 1], color = "orange", linewidth = linewidth)
+    ax1.plot(frame_range, vortex_highlighter, color = "orange", linewidth = linewidth)
     ax1.plot([0, frame_range[-1]], np.ones(2), color = "black", linewidth = 1) # Reference Line at 1.0
 
     # Limits
