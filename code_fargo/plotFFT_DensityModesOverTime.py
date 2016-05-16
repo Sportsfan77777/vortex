@@ -112,7 +112,7 @@ def get_data(frame_i, frame, modes = default_modes):
 rate = 50 # 5 works better, but is very slow
 start = 10
 max_frame = util.find_max_frame()
-frame_range = range(start, max_frame, rate)
+frame_range = np.array(range(start, max_frame, rate))
 
 ## Track Modes ##
 modes_over_time = np.zeros((num_modes, len(frame_range)))
