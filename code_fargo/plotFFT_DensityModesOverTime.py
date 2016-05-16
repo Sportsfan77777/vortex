@@ -171,9 +171,10 @@ def make_plot():
     this_title = readTitle()
     ax2.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
     ax2.set_ylabel("Density Mode Amplitudes", fontsize = fontsize)
+    ax1.set_ylabel("m = 1 Strength", fontsize = fontsize)
     ax1.set_title("%s" % (this_title), fontsize = fontsize + 1)
 
-    ax1.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot
+    ax2.legend(loc = "upper right", bbox_to_anchor = (1.2, 1.0)) # outside of plot
 
     # Save and Close
     plot.savefig("fft_density_modes.png", bbox_inches = 'tight', dpi = my_dpi)
