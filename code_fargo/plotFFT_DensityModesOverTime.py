@@ -140,7 +140,7 @@ linewidth = 3
 def make_plot():
     # Set up figure
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    gs = gridspec.GridSpec(2, 1, height_ratios = [2, 5])
+    gs = gridspec.GridSpec(2, 1, height_ratios = [5, 11])
     ax1 = fig.add_subplot(gs[0])
     ax2 = fig.add_subplot(gs[1], sharex = ax1)
 
@@ -157,7 +157,8 @@ def make_plot():
         ax2.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
     ax1.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
-    ax1.plot(frame_range, np.ones(len(frame_range)), color = "black", linewidth = 1) # Reference Line at 1.0
+    ax1.plot(frame_range[single_mode_strength > 1], single_mode_strength[single_mode_strength > 1], color = "orange", linewidth = linewidth)
+    ax1.plot([0, frame_range[-1]], np.ones(2), color = "black", linewidth = 1) # Reference Line at 1.0
 
     # Limits
     ax2.set_xlim(0, frame_range[-1])
