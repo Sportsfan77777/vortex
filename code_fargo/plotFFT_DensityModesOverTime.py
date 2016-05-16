@@ -140,7 +140,7 @@ linewidth = 3
 def make_plot():
     # Set up figure
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    gs = gridspec.GridSpec(2, height_ratios = [2, 5])
+    gs = gridspec.GridSpec(2, 1, height_ratios = [2, 5])
     ax1 = fig.add_subplot(gs[0])
     ax2 = fig.add_subplot(gs[1], sharex = ax1)
 
