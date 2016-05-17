@@ -14,6 +14,7 @@ from multiprocessing import Pool
 
 import math
 import numpy as np
+from scipy.ndimage import filters as ff
 
 import matplotlib
 #matplotlib.use('Agg')
@@ -46,6 +47,8 @@ surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
 ### Helper Methods ###
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+
 def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, 2.2) # look for max radial density before r = 2.6
@@ -103,7 +106,7 @@ def get_data(frame_i, frame, modes = default_modes):
         modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode]) #np.sqrt(np.sum(np.power(azimuthal_profiles[:, mode], 2))) 
 
     single_mode_strength[frame_i] = modes_over_time[0, frame_i] / np.max(modes_over_time[1:, frame_i]) # m = 1 / Max of Higher Number Modes
-    single_mode_concentration[frame_i] = 10.0 * np.std(azimuthal_profiles[:, 1]) / modes_over_time[0, frame_i]
+    single_mode_concentration[frame_i] = np.std(azimuthal_profiles[:, 1]) / modes_over_time[0, frame_i]
 
     print "%d: %.4f, %.4f, %.4f, %.4f, %.4f - [%.4f, %.4f]" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]), single_mode_strength[frame_i], single_mode_concentration[frame_i])
 
@@ -123,7 +126,13 @@ single_mode_concentration = np.zeros(len(frame_range))
 for i, frame in enumerate(frame_range):
     get_data(i, frame)
 
+# Smooth?
+kernel_size = 5
+single_mode_strength = smooth(single_mode_strength, kernel_size)
+single_mode_concentration = smooth(single_mode_concentration, kernel_size)
+
 # Highlight Vortex
+
 vortex_highlighter = np.copy(single_mode_strength)
 vortex_highlighter[vortex_highlighter < 1] -= 10**5 # m = 1 subdominant, make negative to remove from log plot
 #vortex_highlighter[modes_over_time[0, :] < 0.1] -= 10**5 # m = 1 < 0.1
@@ -174,7 +183,7 @@ def make_plot():
     ax2.set_ylim(10**(-3.5), 10**(0.0))
     ax2.set_yscale("log")
 
-    ax1.set_ylim(10**(-1.0), 10**(1.0))
+    ax1.set_ylim(10**(-2.0), 10**(1.0))
     ax1.set_yscale("log")
 
     # Annotate
