@@ -103,13 +103,14 @@ def get_data(frame_i, frame, modes = default_modes):
         modes_over_time[m, frame_i] = np.max(azimuthal_profiles[:, mode]) #np.sqrt(np.sum(np.power(azimuthal_profiles[:, mode], 2))) 
 
     single_mode_strength[frame_i] = modes_over_time[0, frame_i] / np.max(modes_over_time[1:, frame_i]) # m = 1 / Max of Higher Number Modes
+    single_mode_concentration[frame_i] = 10.0 * np.std(azimuthal_profiles[:, 1]) / modes_over_time[0, frame_i]
 
     print "%d: %.4f, %.4f, %.4f, %.4f, %.4f - [%.4f]" % (frame, np.max(azimuthal_profiles[:, 1]), np.max(azimuthal_profiles[:, 2]), np.max(azimuthal_profiles[:, 3]), np.max(azimuthal_profiles[:, 4]), np.max(azimuthal_profiles[:, 5]), single_mode_strength[frame_i])
 
 #### Gather Data Over Time ####
 
 ## Use These Frames ##
-rate = 50 # 5 works better, but is very slow
+rate = 20 # 5 works better, but is very slow
 start = 10
 max_frame = util.find_max_frame()
 frame_range = np.array(range(start, max_frame, rate))
@@ -117,6 +118,7 @@ frame_range = np.array(range(start, max_frame, rate))
 ## Track Modes ##
 modes_over_time = np.zeros((num_modes, len(frame_range)))
 single_mode_strength = np.zeros(len(frame_range))
+single_mode_concentration = np.zeros(len(frame_range))
 
 for i, frame in enumerate(frame_range):
     get_data(i, frame)
@@ -124,7 +126,7 @@ for i, frame in enumerate(frame_range):
 # Highlight Vortex
 vortex_highlighter = np.copy(single_mode_strength)
 vortex_highlighter[vortex_highlighter < 1] -= 10**5 # m = 1 subdominant, make negative to remove from log plot
-vortex_highlighter[modes_over_time[0, :] < 0.1] -= 10**5 # m = 1 < 0.1
+#vortex_highlighter[modes_over_time[0, :] < 0.1] -= 10**5 # m = 1 < 0.1
 
 ##### PLOTTING #####
 
@@ -161,11 +163,11 @@ def make_plot():
             alpha = 0.7
         ax2.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
-
-
     ax1.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
     ax1.plot(frame_range, vortex_highlighter, color = "orange", linewidth = linewidth)
     ax1.plot([0, frame_range[-1]], np.ones(2), color = "black", linewidth = 1) # Reference Line at 1.0
+
+    ax1.plot(frame_range, single_mode_concentration, color = "blue", linestyle = "--", linewidth = linewidth)
 
     # Limits
     ax2.set_xlim(0, frame_range[-1])
