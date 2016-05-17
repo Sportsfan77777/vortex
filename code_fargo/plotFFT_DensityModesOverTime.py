@@ -89,7 +89,7 @@ def get_data(frame_i, frame, modes = default_modes):
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
     # Gather Azimuthal Profiles
-    num_profiles = 5
+    num_profiles = 9
     spread = 1.0 * scale_height # half-width
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
@@ -110,7 +110,7 @@ def get_data(frame_i, frame, modes = default_modes):
 #### Gather Data Over Time ####
 
 ## Use These Frames ##
-rate = 20 # 5 works better, but is very slow
+rate = 5 # 5 works better, but is very slow
 start = 10
 max_frame = util.find_max_frame()
 frame_range = np.array(range(start, max_frame, rate))
@@ -167,7 +167,7 @@ def make_plot():
     ax1.plot(frame_range, vortex_highlighter, color = "orange", linewidth = linewidth)
     ax1.plot([0, frame_range[-1]], np.ones(2), color = "black", linewidth = 1) # Reference Line at 1.0
 
-    ax1.plot(frame_range, single_mode_concentration, color = "blue", linestyle = "--", linewidth = linewidth)
+    ax1.plot(frame_range, single_mode_concentration, color = "blue", linewidth = linewidth - 1)
 
     # Limits
     ax2.set_xlim(0, frame_range[-1])
