@@ -223,6 +223,8 @@ def make_plot():
             alpha = 0.7
         ax2.plot(frame_range, modes_over_time[i, :], linewidth = linewidth, alpha = alpha, label = "%d" % mode)
 
+    ax2.plot([0, frame_range[-1]], 0.1 * np.ones(2), color = "black", linewidth = 1) # Reference Line at 0.1
+
     ax1.plot(frame_range, single_mode_strength, color = "black", linewidth = linewidth)
     #ax1.plot(frame_range, vortex_highlighter, color = "orange", linewidth = linewidth)
     ax1.plot([0, frame_range[-1]], np.ones(2), color = "black", linewidth = 1) # Reference Line at 1.0
