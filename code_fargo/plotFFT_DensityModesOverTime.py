@@ -96,9 +96,9 @@ def mark_vortex_end(frame_range, single_mode):
     # Helper
     def find_consecutive_ranges(array, values, cutoff, greater = True):
         if greater:
-            test = lambda x : values[x] > cutoff
+            test = lambda x : values[np.searchsorted(array, x)] > cutoff
         else:
-            test = lambda x : values[x] > cutoff
+            test = lambda x : values[np.searchsorted(array, x)] > cutoff
 
         ranges = []
         for (match, group) in groupby(array, key = test):
