@@ -92,19 +92,19 @@ def mark_vortex_start(frame_range, single_mode, single_mode_strength):
     start_fn = "start.p"
     pickle.dump(start, open(start_fn, "wb"))
 
-def mark_vortex_end(frame_range, single_mode):
+def mark_vortex_end(frame_range, single_mode, single_mode_concentration):
     # Helper
-    def find_consecutive_ranges(array, values, cutoff, greater = True):
+    def find_consecutive_ranges(array, values, cutoff, ranges = [], greater = True):
         if greater:
             test = lambda x : values[np.searchsorted(array, x)] > cutoff
         else:
             test = lambda x : values[np.searchsorted(array, x)] > cutoff
 
-        ranges = []
         for (match, group) in groupby(array, key = test):
             # Identify start and end of each range
             if match:
                 start = next(group)
+                end = start
                 for end in group:
                     pass
                 this_range = [start, end]
@@ -114,6 +114,7 @@ def mark_vortex_end(frame_range, single_mode):
 
     cutoff = 0.1
     ranges = find_consecutive_ranges(frame_range, single_mode, cutoff)
+    ranges = find_consecutive_ranges(frame_range, single_mode_concentration, cutoff, ranges = ranges, greater = False)
 
     print "Vortex End Candidates: ", [r[-1] for r in ranges]
 
@@ -186,7 +187,7 @@ vortex_highlighter[vortex_highlighter < 1] -= 10**5 # m = 1 subdominant, make ne
 single_mode = modes_over_time[0]
 
 mark_vortex_start(frame_range, single_mode, single_mode_strength)
-mark_vortex_end(frame_range, single_mode)
+mark_vortex_end(frame_range, single_mode, single_mode_concentration)
 
 ##### PLOTTING #####
 
