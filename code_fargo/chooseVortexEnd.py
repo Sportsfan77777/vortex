@@ -17,5 +17,5 @@ if len(end_candidates) == 1:
 	p.dump(end, open(end_fn, "wb"))
 else:
 	print end_candidates
-	end = float(input("Choose the end! "))
+	end = int(input("Choose the end! "))
 	p.dump(end, open(end_fn, "wb"))
