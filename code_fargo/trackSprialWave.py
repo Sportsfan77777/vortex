@@ -81,7 +81,7 @@ def getWaveLocation(frame, start_radius = 1.10, end_radius = 2.30):
             mask[lower_guess_i : ] = 0
             mask[ : upper_guess_i] = 0
 
-        else if upper_guess > 2 * np.pi:
+        elif upper_guess > 2 * np.pi:
             lower_guess_i = np.searchsorted(theta, lower_guess)
             upper_guess_i = np.searchsorted(theta, upper_guess - 2 * np.pi)
 
