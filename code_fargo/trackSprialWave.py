@@ -49,7 +49,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ### Helper Functions ###
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
-def getWaveLocation(frame, start_radius = 1.05, end_radius = 2.30):
+def getWaveLocation(frame, start_radius = 1.10, end_radius = 2.30):
     # Get Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
 
@@ -61,10 +61,45 @@ def getWaveLocation(frame, start_radius = 1.05, end_radius = 2.30):
 
     # Find maxes
     density_near_vortex = density[start_i : end_i]
-    wave_indices = np.argmax(density_near_vortex, axis = 1)
+    wave_indices = np.zeros(len(density_near_vortex))
 
-    convert_to_theta = np.vectorize(lambda x : theta[x])
-    wave_locations = convert_to_theta(wave_indices)
+    guess_theta = 2 * np.pi
+    delta_theta = 8.0 * (np.pi / 180.0)
+    for i, r_i in enumerate(radii):
+        # Guess Bounds
+        upper_guess = guess_theta + delta_theta
+        lower_guess = guess_theta - delta_theta
+
+        # Mask Values Away From Wave 
+        density_ring = density_near_vortex[i]
+        mask = np.ones(len(density_ring)) # 1 is masked
+
+        if lower_guess < 0.0:
+            lower_guess_i = np.searchsorted(theta, lower_guess + 2 * np.pi)
+            upper_guess_i = np.searchsorted(theta, upper_guess)
+
+            mask[lower_guess_i : ] = 0
+            mask[ : upper_guess_i] = 0
+
+        else if upper_guess > 2 * np.pi:
+            lower_guess_i = np.searchsorted(theta, lower_guess)
+            upper_guess_i = np.searchsorted(theta, upper_guess - 2 * np.pi)
+
+            mask[lower_guess_i : ] = 0
+            mask[ : upper_guess_i] = 0
+
+        else:
+            lower_guess_i = np.searchsorted(theta, lower_guess)
+            upper_guess_i = np.searchsorted(theta, upper_guess)
+            
+            mask[lower_guess_i : upper_guess_i] = 0
+
+        masked_density_ring = np.ma.array(density_ring, mask = mask)
+        wave_index = np.ma.argmax(masked_density_ring, fill_value = -1.0)
+
+        # Store Result + Update Next Guess
+        wave_locations[i] = theta[wave_index]
+        guess_theta = wave_locations[i]
 
     return radii, wave_locations
 
