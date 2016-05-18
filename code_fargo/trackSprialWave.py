@@ -86,7 +86,7 @@ my_dpi = 100
 def make_plot(frame, radii, wave_locations, show = False):
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * i
+    orbit = int(round(time / (2 * np.pi), 0)) * frame
 
     # Figure
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
