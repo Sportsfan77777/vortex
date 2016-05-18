@@ -83,7 +83,7 @@ alpha = 0.5
 
 my_dpi = 100
 
-def make_plot(frame, show = False):
+def make_plot(frame, radii, wave_locations, show = False):
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     orbit = int(round(time / (2 * np.pi), 0)) * i
