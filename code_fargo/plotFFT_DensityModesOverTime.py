@@ -82,8 +82,9 @@ def mark_vortex_start(frame_range, single_mode, single_mode_strength):
     # Find first frame beyond 50 (not too early) where single_mode > 0.1 (vortex is strong) and single_mode_strength > 1.0 (vortex is dominant)
     start = -1
     for (frame, single_mode_i, single_mode_strength_i) in zip(frame_range, single_mode, single_mode_strength):
-        if frame > 50 and single_mode_i > 0.1 and single_mode_strength > 1.0:
+        if frame > 50 and single_mode_i > 0.1 and single_mode_strength_i > 1.0:
             start = frame
+            break
 
     print "Vortex Start: %d" % start
 
