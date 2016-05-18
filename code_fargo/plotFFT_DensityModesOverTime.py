@@ -22,6 +22,8 @@ from matplotlib import rc
 from matplotlib import pyplot as plot
 from matplotlib import gridspec
 
+from itertools import groupby
+
 from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
@@ -75,6 +77,48 @@ def find_min(averagedDensity, peak_rad):
     except:
         # No Gap Yet
         return peak_rad, 0
+
+def mark_vortex_start(frame_range, single_mode, single_mode_strength):
+    # Find first frame beyond 50 (not too early) where single_mode > 0.1 (vortex is strong) and single_mode_strength > 1.0 (vortex is dominant)
+    start = -1
+    for (frame, single_mode_i, single_mode_strength_i) in zip(frame_range, single_mode, single_mode_strength):
+        if frame > 50 and single_mode_i > 0.1 and single_mode_strength > 1.0:
+            start = frame
+
+    print "Vortex Start: %d" % start
+
+    # Store in a pickle
+    start_fn = "start.p"
+    pickle.dump(start, open(start_fn, "wb"))
+
+def mark_vortex_end(frame_range, single_mode):
+    # Helper
+    def find_consecutive_ranges(array, values, cutoff, greater = True):
+        if greater:
+            test = lambda x : values[x] > cutoff
+        else:
+            test = lambda x : values[x] > cutoff
+
+        ranges = []
+        for (match, group) in groupby(array, key = test):
+            # Identify start and end of each range
+            if match:
+                start = next(group)
+                for end in group:
+                    pass
+                this_range = [start, end]
+                ranges.append(this_range)
+
+        return ranges
+
+    cutoff = 0.1
+    ranges = find_consecutive_ranges(frame_range, single_mode, cutoff)
+
+    print "Vortex End Candidates: ", [r[-1] for r in ranges]
+
+    # Store in a pickle
+    end_candidates_fn = "end_candidates.p"
+    pickle.dump(ranges, open(end_fn, "wb"))
 
 #### Data ####
 
@@ -136,6 +180,12 @@ single_mode_concentration = smooth(single_mode_concentration, kernel_size)
 vortex_highlighter = np.copy(single_mode_strength)
 vortex_highlighter[vortex_highlighter < 1] -= 10**5 # m = 1 subdominant, make negative to remove from log plot
 #vortex_highlighter[modes_over_time[0, :] < 0.1] -= 10**5 # m = 1 < 0.1
+
+# Mark Start and End
+single_mode = modes_over_time[0]
+
+mark_vortex_start(frame_range, single_mode, single_mode_strength)
+mark_vortex_end(frame_range, single_mode)
 
 ##### PLOTTING #####
 
