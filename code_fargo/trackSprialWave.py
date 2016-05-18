@@ -61,7 +61,7 @@ def getWaveLocation(frame, start_radius = 1.10, end_radius = 2.30):
 
     # Find maxes
     density_near_vortex = density[start_i : end_i]
-    wave_indices = np.zeros(len(density_near_vortex))
+    wave_locations = np.zeros(len(density_near_vortex))
 
     guess_theta = 2 * np.pi
     delta_theta = 8.0 * (np.pi / 180.0)
