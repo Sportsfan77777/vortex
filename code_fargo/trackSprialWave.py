@@ -127,12 +127,11 @@ def make_plot(frame, radii, wave_locations, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     # Data
-    kernel_size = 5
-    smoothed_wave_locations = smooth(wave_locations, kernel_size)
+    #kernel_size = 5
+    #smoothed_wave_locations = smooth(wave_locations, kernel_size)
 
     # Curves
-    plot.plot(radii, wave_locations, linewidth = linewidth - 1, alpha = alpha)
-    plot.plot(radii, smoothed_wave_locations, linewidth = linewidth)
+    plot.plot(radii, wave_locations, linewidth = linewidth)
 
     # Axis
     plot.xlim(radii[0], radii[-1])
