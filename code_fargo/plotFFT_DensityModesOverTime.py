@@ -119,7 +119,7 @@ def mark_vortex_end(frame_range, single_mode):
 
     # Store in a pickle
     end_candidates_fn = "end_candidates.p"
-    pickle.dump(ranges, open(end_fn, "wb"))
+    pickle.dump(ranges, open(end_candidates_fn, "wb"))
 
 #### Data ####
 
