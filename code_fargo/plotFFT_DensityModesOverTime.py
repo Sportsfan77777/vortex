@@ -98,7 +98,7 @@ def mark_vortex_end(frame_range, single_mode, single_mode_concentration):
         if greater:
             test = lambda x : values[np.searchsorted(array, x)] > cutoff
         else:
-            test = lambda x : values[np.searchsorted(array, x)] > cutoff
+            test = lambda x : values[np.searchsorted(array, x)] < cutoff
 
         for (match, group) in groupby(array, key = test):
             # Identify start and end of each range
