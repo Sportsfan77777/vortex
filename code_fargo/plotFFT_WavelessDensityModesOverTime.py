@@ -136,7 +136,7 @@ def subtract_wave(density):
     used_rad, wave_locations = util.getWaveLocation(density, rad, theta, end_radius = end_radius)
 
     # Interpolate in Wave Region
-    delta_theta = 25.0 * (np.pi / 180.0)
+    delta_theta = 30.0 * (np.pi / 180.0)
 
     for i, (r_i, wave_location) in enumerate(zip(used_rad, wave_locations)):
         rad_index = np.searchsorted(rad, r_i)
