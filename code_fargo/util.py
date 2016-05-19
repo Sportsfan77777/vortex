@@ -8,6 +8,8 @@ not to be called
 import os
 import glob
 
+import numpy as np
+
 import utilTorque
 import utilVorticity
 
