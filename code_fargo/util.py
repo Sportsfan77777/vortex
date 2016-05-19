@@ -33,7 +33,7 @@ def find_max_frame():
             max_frame = frame_number
     return max_frame
 
-def getWaveLocation(density, radii, start_radius = 1.10, end_radius = 2.30):
+def getWaveLocation(density, radii, theta, start_radius = 1.10, end_radius = 2.30):
     # Find Limits
     start_i = np.searchsorted(radii, start_radius)
     end_i = np.searchsorted(radii, end_radius)
