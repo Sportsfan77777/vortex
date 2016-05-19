@@ -85,7 +85,7 @@ def subtract_wave(density):
             lower_theta_i = np.searchsorted(theta, lower_theta + 2 * np.pi)
             upper_theta_i = np.searchsorted(theta, upper_theta)
 
-            interpolated_thetas = np.concatenate(theta[lower_theta_i :] - 2 * np.pi, theta[ : upper_theta_i])
+            interpolated_thetas = np.concatenate((theta[lower_theta_i :] - 2 * np.pi, theta[ : upper_theta_i]))
             thetas = np.array([lower_theta, upper_theta])
             values = np.array([density[rad_index, lower_theta_i], density[rad_index, upper_theta_i]])
 
@@ -97,7 +97,7 @@ def subtract_wave(density):
             lower_theta_i = np.searchsorted(theta, lower_theta)
             upper_theta_i = np.searchsorted(theta, upper_theta - 2 * np.pi)
 
-            interpolated_thetas = np.concatenate(theta[lower_theta_i :], theta[ : upper_theta_i] + 2 * np.pi)
+            interpolated_thetas = np.concatenate((theta[lower_theta_i :], theta[ : upper_theta_i] + 2 * np.pi))
             thetas = np.array([lower_theta, upper_theta])
             values = np.array([density[rad_index, lower_theta_i], density[rad_index, upper_theta_i]])
 
