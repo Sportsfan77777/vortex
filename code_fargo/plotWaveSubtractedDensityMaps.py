@@ -91,7 +91,7 @@ def subtract_wave(density):
 
             interpolated_values = np.interp(interpolated_thetas, thetas, values)
             density[rad_index, lower_theta_i :] = interpolated_values[: len(theta[lower_theta_i :])]
-            density[rad_index, : upper_theta_i] = interpolated_values[len(theta[len_theta_i :]) :]
+            density[rad_index, : upper_theta_i] = interpolated_values[len(theta[lower_theta_i :]) :]
 
         elif upper_theta > 2 * np.pi:
             lower_theta_i = np.searchsorted(theta, lower_theta)
