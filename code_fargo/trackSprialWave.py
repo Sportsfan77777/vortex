@@ -64,11 +64,11 @@ def getWaveLocation(frame, start_radius = 1.10, end_radius = 2.30):
     wave_locations = np.zeros(len(density_near_vortex))
 
     guess_theta = 2 * np.pi
-    delta_theta = 8.0 * (np.pi / 180.0)
+    delta_theta = 10.0 * (np.pi / 180.0)
     for i, r_i in enumerate(radii):
         # Guess Bounds
-        upper_guess = guess_theta + delta_theta
-        lower_guess = guess_theta - delta_theta
+        upper_guess = guess_theta # + delta_theta
+        lower_guess = guess_theta - delta_theta # search only below previous location
 
         # Mask Values Away From Wave 
         density_ring = density_near_vortex[i]
