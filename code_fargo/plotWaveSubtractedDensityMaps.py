@@ -63,15 +63,7 @@ def find_peak(averagedDensity):
     peak_density = averagedDensity[peak_index]
 
     return peak_rad, peak_density
-
-def interpolate(ring):
-    start_value = ring[0]
-    end_value = ring[-1]
-
-    for ()
-
-    return ring
-
+    
 ### Data ###
 
 def subtract_wave(density):
