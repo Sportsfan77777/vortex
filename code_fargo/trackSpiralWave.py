@@ -49,15 +49,12 @@ scale_height = float(fargo_par["AspectRatio"])
 ### Helper Functions ###
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
-def getWaveLocation(frame, start_radius = 1.10, end_radius = 2.30):
-    # Get Data
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
-
+def getWaveLocation(density, radii, start_radius = 1.10, end_radius = 2.30):
     # Find Limits
-    start_i = np.searchsorted(rad, start_radius)
-    end_i = np.searchsorted(rad, end_radius)
+    start_i = np.searchsorted(radii, start_radius)
+    end_i = np.searchsorted(radii, end_radius)
 
-    radii = rad[start_i : end_i]
+    radii = radii[start_i : end_i] # truncate to selected range
 
     # Find maxes
     density_near_vortex = density[start_i : end_i]
@@ -164,12 +161,14 @@ if len(sys.argv) > 1:
         max_frame = util.find_max_frame()
         sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
-            radii, wave_locations = getWaveLocation(i)
-            make_plot(i, radii, wave_locations)
+            density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) / surface_density_zero
+            radii, wave_locations = getWaveLocation(density, rad)
+            make_plot(i, density, radii, wave_locations)
     else:
         # Plot Single
-        radii, wave_locations = getWaveLocation(frame_number)
-        make_plot(frame_number, radii, wave_locations, show = True)
+        density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
+        radii, wave_locations = getWaveLocation(density, rad)
+        make_plot(frame_number, density, radii, wave_locations, show = True)
 else:
     # Search for maximum frame
     density_files = glob.glob("gasdens*.dat")
