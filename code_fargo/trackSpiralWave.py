@@ -162,12 +162,12 @@ if len(sys.argv) > 1:
         sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
             density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) / surface_density_zero
-            radii, wave_locations = getWaveLocation(density, rad)
+            radii, wave_locations = util.getWaveLocation(density, rad)
             make_plot(i, density, radii, wave_locations)
     else:
         # Plot Single
         density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
-        radii, wave_locations = getWaveLocation(density, rad)
+        radii, wave_locations = util.getWaveLocation(density, rad)
         make_plot(frame_number, density, radii, wave_locations, show = True)
 else:
     # Search for maximum frame
