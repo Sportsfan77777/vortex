@@ -68,7 +68,7 @@ def subtract_wave(density):
     averagedDensity = np.average(density, axis = 1)
     peak_rad, peak_density = find_peak(averagedDensity)
 
-    used_rad, wave_locations = util.getWaveLocation(density, rad, end_radius = peak_rad + 7 * scale_height)
+    used_rad, wave_locations = util.getWaveLocation(density, rad, theta, end_radius = peak_rad + 7 * scale_height)
 
     # Interpolate in Wave Region
     delta_theta = 15.0 * (np.pi / 180.0)
