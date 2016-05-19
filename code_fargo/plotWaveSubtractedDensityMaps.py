@@ -29,7 +29,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-from trackSprialWave import getWaveLocation
+from trackSpiralWave import getWaveLocation
 
 save_directory = "wavelessGasDensityMaps"
 
@@ -63,7 +63,7 @@ def find_peak(averagedDensity):
     peak_density = averagedDensity[peak_index]
 
     return peak_rad, peak_density
-    
+
 ### Data ###
 
 def subtract_wave(density):
