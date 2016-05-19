@@ -68,10 +68,12 @@ def subtract_wave(density):
     averagedDensity = np.average(density, axis = 1)
     peak_rad, peak_density = find_peak(averagedDensity)
 
-    used_rad, wave_locations = util.getWaveLocation(density, rad, theta, end_radius = peak_rad + 7 * scale_height)
+    end_radius = min(peak_rad + 7 * scale_height, 2.5)
+
+    used_rad, wave_locations = util.getWaveLocation(density, rad, theta, end_radius = end_radius)
 
     # Interpolate in Wave Region
-    delta_theta = 15.0 * (np.pi / 180.0)
+    delta_theta = 17.5 * (np.pi / 180.0)
 
     for i, (r_i, wave_location) in enumerate(zip(used_rad, wave_locations)):
         rad_index = np.searchsorted(rad, r_i)
@@ -80,14 +82,34 @@ def subtract_wave(density):
         upper_theta = wave_location + delta_theta
 
         if lower_theta < 0.0:
-            pass
-        elif upper_theta > 2.0 * np.pi:
-            pass
+            lower_theta_i = np.searchsorted(theta, lower_theta + 2 * np.pi)
+            upper_theta_i = np.searchsorted(theta, upper_theta)
+
+            interpolated_thetas = np.concatenate(theta[lower_theta_i :] - 2 * np.pi, theta[ : upper_theta_i])
+            thetas = np.array([lower_theta, upper_theta])
+            values = np.array([density[rad_index, lower_theta_i], density[rad_index, upper_theta_i]])
+
+            interpolated_values = np.interp(interpolated_thetas, thetas, values)
+            density[rad_index, lower_theta_i :] = interpolated_values[: len(theta[lower_theta_i :])]
+            density[rad_index, : upper_theta_i] = interpolated_values[len(theta[: upper_theta_i]) :]
+
+        elif upper_theta > 2 * np.pi:
+            lower_theta_i = np.searchsorted(theta, lower_theta)
+            upper_theta_i = np.searchsorted(theta, upper_theta - 2 * np.pi)
+
+            interpolated_thetas = np.concatenate(theta[lower_theta_i :], theta[ : upper_theta_i] + 2 * np.pi)
+            thetas = np.array([lower_theta, upper_theta])
+            values = np.array([density[rad_index, lower_theta_i], density[rad_index, upper_theta_i]])
+
+            interpolated_values = np.interp(interpolated_thetas, thetas, values)
+            density[rad_index, lower_theta_i :] = interpolated_values[: len(theta[lower_theta_i :])]
+            density[rad_index, : upper_theta_i] = interpolated_values[len(theta[: upper_theta_i]) :]
+
         else:
             lower_theta_i = np.searchsorted(theta, lower_theta)
             upper_theta_i = np.searchsorted(theta, upper_theta)
 
-            interpolated_thetas = theta[lower_theta_i : upper_theta_i + 1]
+            interpolated_thetas = theta[lower_theta_i : upper_theta_i]
             thetas = np.array([lower_theta_i, upper_theta_i])
             values = np.array([density[rad_index, lower_theta_i], density[rad_index, upper_theta_i]])
 
@@ -155,7 +177,7 @@ def make_plot(frame, show = False):
         plot.title("Waveless Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%swavelessDensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
