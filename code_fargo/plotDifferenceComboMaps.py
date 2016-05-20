@@ -211,7 +211,7 @@ if len(sys.argv) > 1:
     if frame_number == -1:
         # Plot Sample
         max_frame = util.find_max_frame()
-        sample = np.linspace(0, max_frame, 125) # 125 evenly spaced frames
+        sample = np.linspace(1, max_frame, 125) # 125 evenly spaced frames
         
         #for i in sample:
         #    make_plot(i)
