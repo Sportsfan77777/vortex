@@ -26,38 +26,10 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
+import util
 from readTitle import readTitle
 
-
 save_directory = "gasDensityMaps"
-
-
-### Movie Commands ###
-def make_movies():
-    # Movie Parameters
-    fps = 5
-
-    path = save_directory + "/densityMap_%03d.png"
-    output = save_directory + "/densityMap.mov"
-
-    zoom_path = save_directory + "/zoom_densityMap_%03d.png"
-    zoom_output = save_directory + "/densityMap_zoom.mov"
-
-    # Movie Command
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, zoom_path, zoom_output)
-    split_command = command.split()
-    subprocess.Popen(split_command)
-
-# Make only movies and then return
-if (len(sys.argv) > 1) and (sys.argv[1] == "-m"):
-    make_movies()
-    # Terminate
-    quit()
-
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -149,20 +121,11 @@ def make_plot(frame, show = False):
 
 ##### Plot One File or All Files #####
 
-def find_max_frame():
-    max_frame = 0
-    for d_f in density_files:
-        name = d_f.split(".")[0] # for "gasdens999.dat", just "gasdens999"
-        frame_number = int(name[7:]) # just 999
-        if frame_number > max_frame:
-            max_frame = frame_number
-    return max_frame
-
 if len(sys.argv) > 1:
     frame_number = int(sys.argv[1])
     if frame_number == -1:
         # Plot Sample
-        max_frame = find_max_frame()
+        max_frame = util.find_max_frame()
         sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
             make_plot(i)
