@@ -188,9 +188,14 @@ if len(sys.argv) > 1:
     if frame_number == -1:
         # Plot Sample
         max_frame = util.find_max_frame()
-        sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            make_plot(i)
+        sample = np.linspace(0, max_frame, 125) # 125 evenly spaced frames
+        
+        #for i in sample:
+        #    make_plot(i)
+
+        p = Pool(5) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, sample)
+        p.terminate()
     else:
         # Plot Single
         make_plot(frame_number, show = True)
