@@ -168,7 +168,7 @@ def make_plot(frame, show = False):
 
         # Subtract off Keplerian velocity (and rotate back into non-rotating frame???)
         background_vtheta -= (vtheta_keplerian)
-        background_vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = 0)
+        background_vorticity = util.velocity_curl(background_vrad, background_vtheta, rad, theta, frame = 0)
 
         # Divide out Angular Frequency (for Rossby Number)
         background_vorticity = background_vorticity / (np.array([r**(-1.5) for r in rad[:-1]]))[:, None]
