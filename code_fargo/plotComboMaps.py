@@ -122,7 +122,7 @@ def make_plot(frame, show = False):
         plot.ylabel(r"$\phi$", fontsize = fontsize)
         plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
-        ###### Excess Vortensity ######
+        ###### Excess Vorticity ######
         # Select Plot
         plot.subplot(1, 2, 2)
 
@@ -160,6 +160,9 @@ def make_plot(frame, show = False):
 
         ### Plot ###
         result = plot.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
+
+        levels = np.linspace(-0.35, 0.0, 7)
+        plot.contour(x, theta, np.transpose(vorticity), levels = levels, linewidths = 2)
     
         fig.colorbar(result)
         result.set_clim(v_clim[0], v_clim[1])
