@@ -66,9 +66,11 @@ except:
     print "Directory Already Exists"
 
 # Plot Parameters
-cmap = "afmhot"
+d_cmap = "afmhot"
 d_clim = [0, 2]
-v_clim = [-0.35, 0.0]
+
+v_cmap = "afmhot_r"
+v_clim = [-0.2, 0.0]
 
 fontsize = 14
 my_dpi = 100
@@ -114,7 +116,7 @@ def make_plot(frame, show = False):
         diff_density = density - background_density
 
         ### Plot ###
-        result = plot.pcolormesh(x, theta, np.transpose(diff_density), cmap = cmap)
+        result = plot.pcolormesh(x, theta, np.transpose(diff_density), cmap = d_cmap)
         fig.colorbar(result)
         result.set_clim(d_clim[0], d_clim[1])
 
@@ -180,7 +182,7 @@ def make_plot(frame, show = False):
         diff_vorticity = vorticity - background_vorticity
 
         ### Plot ###
-        result = plot.pcolormesh(x, theta, np.transpose(diff_vorticity), cmap = cmap)
+        result = plot.pcolormesh(x, theta, np.transpose(diff_vorticity), cmap = v_cmap)
     
         fig.colorbar(result)
         result.set_clim(v_clim[0], v_clim[1])
