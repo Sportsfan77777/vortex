@@ -66,7 +66,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-a_clim = [0, 2]
+d_clim = [0, 2]
 v_clim = [-0.35, 0.0]
 
 fontsize = 14
@@ -111,9 +111,9 @@ def make_plot(frame, show = False):
         normalized_density = density / surface_density_zero
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        result = plot.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
         fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+        result.set_clim(d_clim[0], d_clim[1])
 
         # Annotate
         this_title = readTitle()
@@ -161,7 +161,7 @@ def make_plot(frame, show = False):
         result = plot.pcolormesh(x, theta, np.transpose(vorticity), cmap = cmap)
     
         fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+        result.set_clim(v_clim[0], v_clim[1])
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
