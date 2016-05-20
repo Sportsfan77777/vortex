@@ -26,6 +26,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+from readTitle import readTitle
 
 save_directory = "comboMaps"
 
@@ -166,7 +167,7 @@ def make_plot(frame, show = False):
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Vorticity (v - vK) Map at Orbit %d" % orbit, fontsize = fontsize + 1)
+        plot.title("Vorticity (v - vK) Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%scomboMap_%03d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
