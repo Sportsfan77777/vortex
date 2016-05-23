@@ -144,12 +144,12 @@ def make_plot():
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     # Curves
-    plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = "Total")
-    plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
+    plot.plot(frame_range, mass_over_time, linewidth = linewidth)
+    #plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
 
     # Reference Lines
     plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
-    plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
+    #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
 
     # Annotate
     this_title = readTitle()
@@ -157,7 +157,7 @@ def make_plot():
     plot.ylabel("Excess Mass", fontsize = fontsize)
     plot.title(this_title, fontsize = fontsize)
 
-    plot.legend(loc = "upper right")
+    #plot.legend(loc = "upper right")
 
     # Limits
     plot.xlim(0, frame_range[-1])
