@@ -45,7 +45,7 @@ num_theta = np.loadtxt("dims.dat")[-1]
 rad = np.loadtxt("used_rad.dat")[:-1]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density = float(fargo_par["Sigma0"])
+surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
 ### Helper Functions ###
