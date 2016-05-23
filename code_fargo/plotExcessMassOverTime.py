@@ -103,7 +103,7 @@ def get_excess_mass(args):
     peak_over_time[i] = peak_diff_density
 
 ## Use These Frames ##
-rate = 5 # 5 works better, but is very slow
+rate = 10 # 5 works better, but is very slow
 start = 10
 max_frame = util.find_max_frame()
 frame_range = np.array(range(start, max_frame + 1, rate))
@@ -111,14 +111,14 @@ frame_range = np.array(range(start, max_frame + 1, rate))
 mass_over_time = np.zeros(len(frame_range))
 peak_over_time = np.zeros(len(frame_range))
 
-#for i, frame in enumerate(frame_range):
-#    get_excess_mass(i, frame)
+for i, frame in enumerate(frame_range):
+    get_excess_mass(i, frame)
 
-pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+#pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-p = Pool(5)
-p.map(get_excess_mass, pool_args)
-p.terminate()
+#p = Pool(5)
+#p.map(get_excess_mass, pool_args)
+#p.terminate()
 
 max_mass = np.max(mass_over_time)
 
@@ -127,10 +127,14 @@ max_mass = np.max(mass_over_time)
 # Plot Parameters
 linewidth = 4
 fontsize = 14
+
+my_dpi = 100
 alpha = 0.5
 
-
 def make_plot():
+    # Figure
+    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+
     # Curves
     plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = "Total")
     plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
