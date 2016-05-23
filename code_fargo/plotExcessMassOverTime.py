@@ -96,6 +96,8 @@ def get_excess_mass(i, frame):
     mass_over_time[i] = excess_mass
     peak_over_time[i] = peak_diff_density
 
+    print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
+
 ## Use These Frames ##
 rate = 5 # 5 works better, but is very slow
 start = 10
