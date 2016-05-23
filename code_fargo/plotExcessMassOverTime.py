@@ -87,16 +87,19 @@ def get_excess_mass(i, frame):
     # Add up mass
     dr = rad[1] - rad[0] # assumes arithmetic grid
 
-    excess_mass = 2 * np.pi * vortex_rad * dr * vortex_excess
+    excess_mass = (2 * np.pi * dr) * vortex_rad * vortex_excess
 
     # Get Peak
     peak_diff_density = np.max(vortex_excess)
+
+    # Print Update
+    print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
 
     # Store Data
     mass_over_time[i] = excess_mass
     peak_over_time[i] = peak_diff_density
 
-    print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
+    
 
 ## Use These Frames ##
 rate = 5 # 5 works better, but is very slow
