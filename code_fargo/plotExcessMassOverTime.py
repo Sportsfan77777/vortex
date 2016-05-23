@@ -111,11 +111,13 @@ frame_range = np.array(range(start, max_frame + 1, rate))
 mass_over_time = np.zeros(len(frame_range))
 peak_over_time = np.zeros(len(frame_range))
 
-for i, frame in enumerate(frame_range):
-    get_excess_mass(i, frame)
+#for i, frame in enumerate(frame_range):
+#    get_excess_mass(i, frame)
+
+pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
 p = Pool(5)
-p.map(get_excess_mass, (i, frame))
+p.map(get_excess_mass, pool_args)
 p.terminate()
 
 max_mass = np.max(mass_over_time)
