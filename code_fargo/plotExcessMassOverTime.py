@@ -112,7 +112,7 @@ mass_over_time = np.zeros(len(frame_range))
 peak_over_time = np.zeros(len(frame_range))
 
 for i, frame in enumerate(frame_range):
-    get_excess_mass(i, frame)
+    get_excess_mass((i, frame))
 
 #pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
