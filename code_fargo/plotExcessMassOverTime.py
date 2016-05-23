@@ -10,7 +10,7 @@ import os
 import subprocess
 import glob
 import pickle
-from multiprocessing import Pool
+from multiprocessing import Pool, mp_array
 
 import math
 import numpy as np
@@ -108,17 +108,20 @@ start = 10
 max_frame = util.find_max_frame()
 frame_range = np.array(range(start, max_frame + 1, rate))
 
-mass_over_time = np.zeros(len(frame_range))
-peak_over_time = np.zeros(len(frame_range))
+#mass_over_time = np.zeros(len(frame_range))
+#peak_over_time = np.zeros(len(frame_range))
 
-for i, frame in enumerate(frame_range):
-    get_excess_mass((i, frame))
+mass_over_time = mp_array("d", len(frame_range))
+peak_over_time = mp_array("d", len(frame_range))
 
-#pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+#for i, frame in enumerate(frame_range):
+#    get_excess_mass((i, frame))
 
-#p = Pool(5)
-#p.map(get_excess_mass, pool_args)
-#p.terminate()
+pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+
+p = Pool(10)
+p.map(get_excess_mass, pool_args)
+p.terminate()
 
 max_mass = np.max(mass_over_time)
 
