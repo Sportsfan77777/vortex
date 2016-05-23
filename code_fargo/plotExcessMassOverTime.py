@@ -10,7 +10,8 @@ import os
 import subprocess
 import glob
 import pickle
-from multiprocessing import Pool, mp_array
+from multiprocessing import Pool
+from multiprocessing import Array as mp_array
 
 import math
 import numpy as np
