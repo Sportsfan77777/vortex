@@ -87,7 +87,7 @@ def get_excess_mass(i, frame):
     # Add up mass
     dr = rad[1] - rad[0] # assumes arithmetic grid
 
-    excess_mass = (2 * np.pi * dr) * vortex_rad * vortex_excess
+    excess_mass = np.sum((2 * np.pi * dr) * np.mult(vortex_rad, vortex_excess))
 
     # Get Peak
     peak_diff_density = np.max(vortex_excess)
