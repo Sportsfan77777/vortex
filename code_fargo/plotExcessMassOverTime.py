@@ -63,7 +63,10 @@ def find_peak(averagedDensity):
 
 ### Data ###
 
-def get_excess_mass(i, frame):
+def get_excess_mass(args):
+    # Unwrap Args
+    i, frame = args
+
     # Get Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
     background_density = (fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta)) / surface_density_zero
@@ -75,7 +78,7 @@ def get_excess_mass(i, frame):
     averagedDensity = np.average(density, axis = 1)
     peak_rad, peak_density = find_peak(averagedDensity)
 
-    vortex_start = np.max(1.0, peak_rad - 5.0 * scale_height)
+    vortex_start = np.max([1.0, peak_rad - 5.0 * scale_height])
     vortex_end = peak_rad + 5.0 * scale_height
 
     vortex_start_i = np.searchsorted(rad, vortex_start)
@@ -87,7 +90,7 @@ def get_excess_mass(i, frame):
     # Add up mass
     dr = rad[1] - rad[0] # assumes arithmetic grid
 
-    excess_mass = np.sum((2 * np.pi * dr) * np.mult(vortex_rad, vortex_excess))
+    excess_mass = np.sum((2 * np.pi * dr) * vortex_rad * vortex_excess)
 
     # Get Peak
     peak_diff_density = np.max(vortex_excess)
@@ -98,8 +101,6 @@ def get_excess_mass(i, frame):
     # Store Data
     mass_over_time[i] = excess_mass
     peak_over_time[i] = peak_diff_density
-
-    
 
 ## Use These Frames ##
 rate = 5 # 5 works better, but is very slow
@@ -113,6 +114,10 @@ peak_over_time = np.zeros(len(frame_range))
 for i, frame in enumerate(frame_range):
     get_excess_mass(i, frame)
 
+p = Pool(5)
+p.map(get_excess_mass, (i, frame))
+p.terminate()
+
 max_mass = np.max(mass_over_time)
 
 ##### PLOTTING #####
@@ -124,10 +129,6 @@ alpha = 0.5
 
 
 def make_plot():
-    # Data
-    xs = np.array(times)
-    ys = np.array(strengths)
-
     # Curves
     plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = "Total")
     plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
