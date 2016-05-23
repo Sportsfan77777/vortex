@@ -125,6 +125,7 @@ p.map(get_excess_mass, pool_args)
 p.terminate()
 
 max_mass = np.max(mass_over_time)
+max_peak = np.max(peak_over_time)
 
 ##### PLOTTING #####
 
@@ -144,8 +145,8 @@ def make_plot():
     plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
 
     # Reference Lines
-    plot.plot(frame_range, 0.10 * max_mass * np.ones(len(frame_range)), linewidth = linewidth - 2, color = "black")
-    plot.plot(frame_range, 0.05 * max_mass * np.ones(len(frame_range)), linewidth = linewidth - 2, color = "black")
+    plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
+    plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
 
     # Annotate
     this_title = readTitle()
@@ -156,7 +157,7 @@ def make_plot():
     plot.legend(loc = "upper right")
 
     # Limits
-    plot.xlim(frame_range[0], frame_range[-1])
+    plot.xlim(0, frame_range[-1])
     #plot.ylim(0.0, 1.0)
 
     # Save + Close
