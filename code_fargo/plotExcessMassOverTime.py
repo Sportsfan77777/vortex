@@ -64,8 +64,8 @@ def find_peak(averagedDensity):
 ### Data ###
 
 def get_excess_mass(i, frame):
-	# Get Data
-	density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
+    # Get Data
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
     background_density = (fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta)) / surface_density_zero
 
     diff_density = density - background_density
