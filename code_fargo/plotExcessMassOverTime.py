@@ -82,7 +82,7 @@ def get_excess_mass(i, frame):
     vortex_end_i = np.searchsorted(rad, vortex_end)
 
     vortex_rad = rad[vortex_start_i : vortex_end_i]
-    vortex_excess = np.average(diff_density[vortex_start_i : vortex_end_i], axis = 1) # 1-D!
+    vortex_excess = np.average(diff_density[vortex_start_i : vortex_end_i], axis = 1)
 
     # Add up mass
     dr = rad[1] - rad[0] # assumes arithmetic grid
