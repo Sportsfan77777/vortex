@@ -151,7 +151,8 @@ def make_plot(frame, show = False):
         fig.gca().add_artist(circle)
 
         # Add minor grid lines
-        plot.grid(b = True, which = 'minor', color="black", linestyle='--')
+        plot.grid(b = True, which = 'minor', color = "black", linestyle='--')
+        plot.minorticks_on()
 
         # Annotate
         this_title = readTitle()
