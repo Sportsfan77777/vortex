@@ -74,6 +74,9 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     new_rs = np.sqrt(np.power(xs_grid, 2) + np.power(ys_grid, 2))
     new_thetas = np.arctan2(ys_grid, xs_grid)
 
+    # Convert from [-pi, pi] to [0, 2 * pi]
+    new_thetas[new_thetas < 0] = new_thetas[new_thetas < 0] + 2 * np.pi
+
     new_interpolated_rs = interpolated_rs(new_rs.ravel())
     new_interpolated_thetas = interpolated_thetas(new_thetas.ravel())
 
@@ -95,7 +98,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [-1, 2]
+clim = [0, 2]
 
 fontsize = 14
 my_dpi = 100
