@@ -134,7 +134,7 @@ def record_lifetime():
     super_cutoff = 0.4
 
     for lifespan in test_lifespans:
-        mass_range = mass_over_time[np.searchsorted(frame_range, lifespan[0]), np.searchsorted(frame_range, lifespan[1])]
+        mass_range = mass_over_time[np.searchsorted(frame_range, lifespan[0]) : np.searchsorted(frame_range, lifespan[1])]
         if np.any(mass_range > super_cutoff):
             lifespans.append(lifespan)
 
