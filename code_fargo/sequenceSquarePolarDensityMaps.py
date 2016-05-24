@@ -31,7 +31,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "sequenceSquarePolarGasDensityMaps"
+save_directory = "squareDensityMapSequences"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -103,16 +103,16 @@ clim = [0, 2]
 fontsize = 14
 my_dpi = 100
 
-def add_to_plot(frame, frame_i, num_frames):
+def add_to_plot(frame, num_frames, frame_i):
     # Declare Subplot
     plot.subplot(1, num_frames, frame_i)
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * i
+    orbit = int(round(time / (2 * np.pi), 0)) * frame_i
 
     # Data
-    density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
+    density = (fromfile("gasdens%d.dat" % frame_i).reshape(num_rad, num_theta)) /surface_density_zero
     xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
     # Axes
@@ -157,7 +157,7 @@ def finish_plot(frame_range, show = True):
             frame_str += "-%d" % frame
 
     # Save and Close
-    plot.savefig("%s/densityMapSequence_%04d.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
@@ -174,6 +174,6 @@ if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
 
     for i, frame in enumerate(frame_range):
-        add_to_plot(frame, i, len(frame_range))
+        add_to_plot(frame, len(frame_range), i)
 
     finish_plot(frame_range)
