@@ -125,6 +125,11 @@ def add_to_plot(frame, frame_i, num_frames):
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
     result.set_clim(clim[0], clim[1])
 
+    # Add Colorbar
+    if frame_i == num_frames - 1:
+        # Only for last frame
+        fig.colorbar(result)
+
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
     fig.gca().add_artist(circle)
@@ -150,9 +155,6 @@ def finish_plot(frame_range, show = True):
             frame_str += "%d" % frame
         else:
             frame_str += "-%d" % frame
-
-    # Add Colorbar
-    fig.colorbar(result)
 
     # Save and Close
     plot.savefig("%s/densityMapSequence_%04d.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
