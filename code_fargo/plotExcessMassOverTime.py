@@ -106,6 +106,53 @@ def get_excess_mass(args):
     mass_over_time[i] = excess_mass
     peak_over_time[i] = peak_diff_density
 
+def record_lifetime():
+    # Helper
+    def find_consecutive_ranges(array, values, cutoff, ranges = [], greater = True):
+        if greater:
+            test = lambda x : values[np.searchsorted(array, x)] > cutoff
+        else:
+            test = lambda x : values[np.searchsorted(array, x)] < cutoff
+
+        for (match, group) in groupby(array, key = test):
+            # Identify start and end of each range
+            if match:
+                start = next(group)
+                end = start
+                for end in group:
+                    pass
+                this_range = [start, end]
+                ranges.append(this_range)
+        return ranges
+
+    # Find Ranges When Vortex is Alive
+    cutoff = 0.2
+    test_lifespans = find_consecutive_ranges(frame_range, mass_over_time, cutoff)
+
+    # Verify Lifespans by checking for a point above the higher cutoff
+    lifespans = []
+    super_cutoff = 0.4
+
+    for lifespan in test_lifespans:
+        mass_range = mass_over_time[np.searchsorted(frame_range, lifespan[0]), np.searchsorted(frame_range, lifespan[1])]
+        if np.any(mass_range > super_cutoff)
+            lifespans.append(lifespan)
+
+    # Add Up Lifetimes
+    total_lifetime = 0
+    for lifespan in lifespans:
+        this_lifetime = lifespan[1] - lifespan[0]
+        total_lifetime += this_lifetime
+
+    # Print
+    print "Lifespans: ", lifespans
+    print "Total Lifetime: ", total_lifetime
+
+    # Pickle
+    pickle.dump(lifespans, open("lifespans.p", "wb"))
+    pickle.dump(total_lifetime, open("lifetime.p", "wb"))
+
+
 ## Use These Frames ##
 rate = 10 # 5 works better, but is very slow
 start = 10
@@ -129,6 +176,10 @@ p.terminate()
 
 max_mass = np.max(mass_over_time)
 max_peak = np.max(peak_over_time)
+
+## Measure Lifetime ##
+
+record_lifetime()
 
 ##### PLOTTING #####
 
