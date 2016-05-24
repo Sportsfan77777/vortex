@@ -146,6 +146,10 @@ def make_plot(frame, show = False):
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
+        # Get rid of interior
+        circle = plot.Circle((0, 0), min(rad), color = "black")
+        fig.gca().add_artist(circle)
+
         # Annotate
         this_title = readTitle()
         plot.xlabel("x", fontsize = fontsize)
