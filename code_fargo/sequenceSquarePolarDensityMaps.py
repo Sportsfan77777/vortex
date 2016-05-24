@@ -31,7 +31,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "squarePolarGasDensityMaps"
+save_directory = "sequenceSquarePolarGasDensityMaps"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -103,12 +103,6 @@ clim = [0, 2]
 fontsize = 14
 my_dpi = 100
 
-def init_plot():
-    # Set up figure
-    #fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    fig = plot.figure(dpi = my_dpi)
-    ax = fig.add_subplot(111)
-
 def add_to_plot(frame, frame_i, num_frames):
     # Declare Subplot
     plot.subplot(1, num_frames, frame_i)
@@ -129,7 +123,6 @@ def add_to_plot(frame, frame_i, num_frames):
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
-    fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
     # Get rid of interior
@@ -158,6 +151,9 @@ def finish_plot(frame_range, show = True):
         else:
             frame_str += "-%d" % frame
 
+    # Add Colorbar
+    fig.colorbar(result)
+
     # Save and Close
     plot.savefig("%s/densityMapSequence_%04d.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
     if show:
@@ -165,9 +161,12 @@ def finish_plot(frame_range, show = True):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
-##### Plot One File or All Files #####
+##### Plot Files #####
 
-init_plot()
+# Set up figure
+#fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+fig = plot.figure(dpi = my_dpi)
+ax = fig.add_subplot(111)
 
 if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
