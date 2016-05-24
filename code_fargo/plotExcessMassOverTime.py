@@ -135,8 +135,13 @@ def record_lifetime():
 
     for lifespan in test_lifespans:
         mass_range = mass_over_time[np.searchsorted(frame_range, lifespan[0]) : np.searchsorted(frame_range, lifespan[1])]
-        if np.any(mass_range > super_cutoff):
+        if (len(mass_range) == 0):
+            # If empty range, do not include
+            pass
+        elif (np.array(mass_range) > super_cutoff).any():
+            # Only include if there is at least one element above the super cutoff
             lifespans.append(lifespan)
+
 
     # Add Up Lifetimes
     total_lifetime = 0
