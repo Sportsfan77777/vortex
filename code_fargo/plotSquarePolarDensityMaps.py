@@ -150,6 +150,9 @@ def make_plot(frame, show = False):
         circle = plot.Circle((0, 0), min(rad), color = "black")
         fig.gca().add_artist(circle)
 
+        # Add minor grid lines
+        plot.grid(b = True, which = 'minor', color="black", linestyle='--')
+
         # Annotate
         this_title = readTitle()
         plot.xlabel("x", fontsize = fontsize)
