@@ -67,7 +67,7 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     # Interpolate rt-grid
 
     interpolated_rs = interpolate(rs, np.arange(len(rs)), bounds_error = False)
-    interpolated_thetas = interpolate(thetas, np.arange(len(thetas)))
+    interpolated_thetas = interpolate(thetas, np.arange(len(thetas)), bounds_error = False)
 
     # Match up xy-grid with rt-grid
 
@@ -81,7 +81,9 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     new_interpolated_rs[new_rs.ravel() > max(rs)] = len(rs) - 1
     new_interpolated_rs[new_rs.ravel() < min(rs)] = 0
 
-    return map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
+    cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
+
+    return xs_grid, ys_grid, cart_data
 
 ##### PLOTTING #####
 
@@ -129,10 +131,10 @@ def make_plot(frame, show = False):
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
-        density_cart = polar_to_cartesian(density, rad, theta)
+        xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(density_cart), cmap = cmap)
+        result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 
