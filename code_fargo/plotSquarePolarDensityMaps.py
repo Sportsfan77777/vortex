@@ -67,7 +67,7 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     # Interpolate rt-grid
 
     interpolated_rs = interpolate(rs, np.arange(len(rs)), bounds_error = False)
-    interpolated_thetas = interpolate(thetas, np.arange(len(t)))
+    interpolated_thetas = interpolate(thetas, np.arange(len(thetas)))
 
     # Match up xy-grid with rt-grid
 
