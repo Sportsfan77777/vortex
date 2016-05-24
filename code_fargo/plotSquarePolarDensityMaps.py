@@ -128,6 +128,7 @@ def make_plot(frame, show = False):
         #    prefix = ""
         #    plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
         #    xlabel = "Radius"
+        xlabel = "Radius"
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
@@ -152,7 +153,7 @@ def make_plot(frame, show = False):
 
     i = frame
     choose_axis(i, "normal")
-    choose_axis(i, "zoom")
+    #choose_axis(i, "zoom")
 
 
 ##### Plot One File or All Files #####
