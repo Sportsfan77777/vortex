@@ -151,7 +151,10 @@ def make_plot(frame, show = False):
         fig.gca().add_artist(circle)
 
         # Add minor grid lines
-        plot.grid(b = True, which = 'minor', color = "black", linestyle='--')
+        alpha = 0.3
+        dashes = [1, 5]
+        plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
+        plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
         plot.minorticks_on()
 
         # Annotate
