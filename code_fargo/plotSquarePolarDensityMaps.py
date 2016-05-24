@@ -95,7 +95,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+clim = [-1, 2]
 
 fontsize = 14
 my_dpi = 100
@@ -112,12 +112,11 @@ def make_plot(frame, show = False):
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
         ax = fig.add_subplot(111)
 
-        # Axis
-        #angles = np.linspace(0, 2 * np.pi, 7)
-        #degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+        # Data
+        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
+        xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
-        #plot.ylim(0, 2 * np.pi)
-        #plot.yticks(angles, degree_angles)
+        # Axis
         #if axis == "zoom":
         #    x = (rad - 1) / scale_height
         #    prefix = "zoom_"
@@ -128,11 +127,16 @@ def make_plot(frame, show = False):
         #    prefix = ""
         #    plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
         #    xlabel = "Radius"
-        xlabel = "Radius"
+        if axis == "zoom":
+            prefix = "zoom_"
+            sq = 2.5
+        else:
+            prefix = ""
+            sq = np.max(xs_grid)
 
-        # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
-        xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
+        plot.xlim(-sq, sq)
+        plot.ylim(-sq, sq)
+        plot.axes().set_aspect('equal')
 
         ### Plot ###
         result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
@@ -141,8 +145,8 @@ def make_plot(frame, show = False):
 
         # Annotate
         this_title = readTitle()
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
+        plot.xlabel("x", fontsize = fontsize)
+        plot.ylabel("y", fontsize = fontsize)
         plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
@@ -153,7 +157,7 @@ def make_plot(frame, show = False):
 
     i = frame
     choose_axis(i, "normal")
-    #choose_axis(i, "zoom")
+    choose_axis(i, "zoom")
 
 
 ##### Plot One File or All Files #####
