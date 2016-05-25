@@ -107,11 +107,11 @@ clim = [0, 2]
 fontsize = 14
 my_dpi = 100
 
-def add_to_plot(prev_ax, frame, num_frames, frame_i):
+def add_to_plot(ax, frame, num_frames, frame_i):
     print frame, num_frames, frame_i
 
     # Declare Subplot
-    ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
+    #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
@@ -129,8 +129,8 @@ def add_to_plot(prev_ax, frame, num_frames, frame_i):
 
     # Axes
     sq = 2.5
-    plot.xlim(-sq, sq)
-    plot.ylim(-sq, sq)
+    ax.set_xlim(-sq, sq)
+    ax.set_ylim(-sq, sq)
     #plot.axes().set_aspect('equal')
 
     ### Plot ###
@@ -139,20 +139,20 @@ def add_to_plot(prev_ax, frame, num_frames, frame_i):
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
-    plot.gca().add_artist(circle)
+    ax.add_artist(circle)
 
     # Add minor grid lines
     alpha = 0.25
     dashes = [1, 5]
-    plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
-    plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
-    plot.minorticks_on()
+    ax.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
+    ax.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
+    ax.minorticks_on()
 
     # Annotate
     #this_title = readTitle()
     #plot.xlabel("x", fontsize = fontsize)
     #plot.ylabel("y", fontsize = fontsize)
-    plot.title(r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
+    ax.set_title(r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Add Colorbar
     if frame_i == num_frames:
@@ -189,11 +189,17 @@ if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
 
     # Set up figure
-    fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    prev_ax = None
+    #fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig = plot.figure(dpi = my_dpi)
+    gs = gridspec.GridSpec(1, len(frame_range))
 
     for i, frame in enumerate(frame_range):
-        prev_ax = add_to_plot(prev_ax, frame, len(frame_range), i + 1)
+        if i == 0:
+            ax = fig.add_subplot(gs[0])
+        else:
+            ax = fig.add_subplot(gs[i], sharey = True)
+
+        add_to_plot(ax, frame, len(frame_range), i + 1)
 
     finish_plot(frame_range)
 
