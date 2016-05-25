@@ -134,7 +134,7 @@ def add_to_plot(frame, num_frames, frame_i):
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
-    fig.gca().add_artist(circle)
+    plot.gca().add_artist(circle)
 
     # Add minor grid lines
     alpha = 0.2
@@ -167,12 +167,13 @@ def finish_plot(frame_range, show = True):
 
 ##### Plot Files #####
 
-# Set up figure
-fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-fig = plot.figure(dpi = my_dpi)
+widths = [700, 1300, 1900, 2500]
 
 if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
+
+    # Set up figure
+    fig = plot.figure(figsize = (widths[len(frame_range) - 1], 600 / my_dpi), dpi = my_dpi)
 
     for i, frame in enumerate(frame_range):
         add_to_plot(frame, len(frame_range), i + 1)
