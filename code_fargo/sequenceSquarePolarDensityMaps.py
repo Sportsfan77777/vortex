@@ -168,9 +168,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
-        im = ax.imshow
-
-        fig.colorbar(im, cax = cax)
+        fig.colorbar(result, cax = cax)
 
     return ax
     
