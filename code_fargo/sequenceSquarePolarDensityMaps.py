@@ -52,6 +52,9 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
+planet_mass = float(fargo_par["PlanetMass"])
+taper_time = float(fargo_par["MassTaper"])
+
 ### Converter ###
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
@@ -115,6 +118,10 @@ def add_to_plot(frame, num_frames, frame_i):
     orbit = int(round(time / (2 * np.pi), 0)) * frame
 
     # Mass
+    if orbit >= taper_time:
+        current_mass = planet_mass / 0.001
+    else:
+        current_mass = np.sin((np.pi / 2) * (orbit / taper_time))
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
@@ -145,16 +152,16 @@ def add_to_plot(frame, num_frames, frame_i):
     #this_title = readTitle()
     #plot.xlabel("x", fontsize = fontsize)
     #plot.ylabel("y", fontsize = fontsize)
-    plot.title("Orbit %d" % (orbit), fontsize = fontsize + 1)
+    plot.title(r"$t = %d$, $m_p(t) = %.2f M_J" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Add Colorbar
     if frame_i == num_frames:
         # Only for last frame
         #divider = make_axes_locatable(ax)
         #cax = divider.append_axes("right", size="5%", pad=0.05)
-        cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
-        fig.colorbar(result, cax = cax)
+        fig.colorbar(result)
     
 
 def finish_plot(frame_range, show = True):
