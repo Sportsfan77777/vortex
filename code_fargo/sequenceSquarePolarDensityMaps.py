@@ -53,9 +53,10 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
+viscosity = float(fargo_par["Viscosity"])
 
 planet_mass = float(fargo_par["PlanetMass"])
-taper_time = float(fargo_par["MassTaper"])
+taper_time = int(fargo_par["MassTaper"])
 
 ### Converter ###
 
@@ -176,6 +177,10 @@ def finish_plot(frame_range, show = True):
         else:
             frame_str += "-%d" % frame
 
+    # Title
+    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{Taper} %d$" % (int(planet_mass / 0.001), int(np.log(viscosity)), taper_time)
+    plot.title(title, y = 1.13, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
     # Save and Close
     plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
     if show:
@@ -191,8 +196,8 @@ if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
 
     # Set up figure
-    #fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    fig = plot.figure(dpi = my_dpi)
+    fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    #fig = plot.figure(dpi = my_dpi)
     gs = gridspec.GridSpec(1, len(frame_range))
 
     for i, frame in enumerate(frame_range):
