@@ -164,7 +164,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     # Add Colorbar
     if frame_i == num_frames:
         # Only for last frame
-        #divider = make_axes_locatable(ax)
+        divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.05)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
