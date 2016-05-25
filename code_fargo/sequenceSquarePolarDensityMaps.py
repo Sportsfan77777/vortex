@@ -111,7 +111,7 @@ def add_to_plot(prev_ax, frame, num_frames, frame_i):
     print frame, num_frames, frame_i
 
     # Declare Subplot
-    ax = plot.subplot(1, num_frames, frame_i, sharey = prev_ax, aspect = "equal")
+    ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
@@ -121,7 +121,7 @@ def add_to_plot(prev_ax, frame, num_frames, frame_i):
     if orbit >= taper_time:
         current_mass = planet_mass / 0.001
     else:
-        current_mass = np.pow(np.sin((np.pi / 2) * (orbit / taper_time)), 2) * (planet_mass / 0.001)
+        current_mass = np.power(np.sin((np.pi / 2) * (orbit / taper_time)), 2) * (planet_mass / 0.001)
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
@@ -152,7 +152,7 @@ def add_to_plot(prev_ax, frame, num_frames, frame_i):
     #this_title = readTitle()
     #plot.xlabel("x", fontsize = fontsize)
     #plot.ylabel("y", fontsize = fontsize)
-    plot.title(r"$t = %d$, $m_p(t) = %.2f M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
+    plot.title(r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Add Colorbar
     if frame_i == num_frames:
