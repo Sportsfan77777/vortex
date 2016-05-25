@@ -199,7 +199,7 @@ if len(sys.argv) > 1:
         if i == 0:
             ax = fig.add_subplot(gs[0])
         else:
-            ax = fig.add_subplot(gs[i], sharey = True)
+            ax = fig.add_subplot(gs[i], sharey = ax)
 
         add_to_plot(ax, frame, len(frame_range), i + 1)
 
