@@ -180,6 +180,7 @@ def finish_plot(frame_range, show = True):
     fig.suptitle(title, y = 1.03, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
+    plot.tight_layout()
 
     frame_str = ""
     for i, frame in enumerate(frame_range):
