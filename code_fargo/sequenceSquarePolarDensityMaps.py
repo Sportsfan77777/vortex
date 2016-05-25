@@ -134,7 +134,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     sq = 2.5
     ax.set_xlim(-sq, sq)
     ax.set_ylim(-sq, sq)
-    #plot.axes().set_aspect('equal')
+    ax.set_aspect('equal')
 
     if frame_i != 1:
         # Remove unless 1st frame
@@ -168,7 +168,9 @@ def add_to_plot(ax, frame, num_frames, frame_i):
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
-        fig.colorbar(result, cax = cax)
+        im = ax.imshow
+
+        fig.colorbar(im, cax = cax)
 
     return ax
     
