@@ -56,7 +56,7 @@ scale_height = float(fargo_par["AspectRatio"])
 viscosity = float(fargo_par["Viscosity"])
 
 planet_mass = float(fargo_par["PlanetMass"])
-taper_time = int(fargo_par["MassTaper"])
+taper_time = int(float(fargo_par["MassTaper"]))
 
 ### Converter ###
 
