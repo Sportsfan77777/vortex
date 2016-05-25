@@ -121,7 +121,7 @@ def add_to_plot(frame, num_frames, frame_i):
     sq = 2.5
     plot.xlim(-sq, sq)
     plot.ylim(-sq, sq)
-    plot.axes().set_aspect('equal')
+    #plot.axes().set_aspect('equal')
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
@@ -168,8 +168,8 @@ def finish_plot(frame_range, show = True):
 ##### Plot Files #####
 
 # Set up figure
-fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-#fig = plot.figure(dpi = my_dpi)
+#fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+fig = plot.figure(dpi = my_dpi)
 
 if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
