@@ -109,7 +109,7 @@ def add_to_plot(frame, num_frames, frame_i):
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * frame_i
+    orbit = int(round(time / (2 * np.pi), 0)) * frame
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame_i).reshape(num_rad, num_theta)) /surface_density_zero
@@ -168,7 +168,6 @@ def finish_plot(frame_range, show = True):
 # Set up figure
 #fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 fig = plot.figure(dpi = my_dpi)
-ax = fig.add_subplot(111)
 
 if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
@@ -177,3 +176,4 @@ if len(sys.argv) > 1:
         add_to_plot(frame, len(frame_range), i)
 
     finish_plot(frame_range)
+
