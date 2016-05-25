@@ -178,8 +178,8 @@ def finish_plot(frame_range, show = True):
             frame_str += "-%d" % frame
 
     # Title
-    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{Taper} %d$" % (int(planet_mass / 0.001), int(np.log(viscosity)), taper_time)
-    plot.title(title, y = 1.13, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{Taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity)), taper_time)
+    fig.suptitle(title, y = 1.13, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
     plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
