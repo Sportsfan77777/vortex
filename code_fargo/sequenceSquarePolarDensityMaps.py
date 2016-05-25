@@ -112,7 +112,7 @@ def add_to_plot(frame, num_frames, frame_i):
     orbit = int(round(time / (2 * np.pi), 0)) * frame
 
     # Data
-    density = (fromfile("gasdens%d.dat" % frame_i).reshape(num_rad, num_theta)) /surface_density_zero
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
     xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
     # Axes
@@ -128,11 +128,11 @@ def add_to_plot(frame, num_frames, frame_i):
     # Add Colorbar
     if frame_i == num_frames - 1:
         # Only for last frame
-        fig.colorbar(result)
+        plot.colorbar(result)
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
-    fig.gca().add_artist(circle)
+    #fig.gca().add_artist(circle)
 
     # Add minor grid lines
     alpha = 0.2
