@@ -166,7 +166,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size = "8%", pad = 0.2)
     #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-    fig.colorbar(result, cax = cax)
+    fig.colorbar(result, label = r"Surface Density $\Sigma / \Sigma_0$", cax = cax)
 
     if frame_i != num_frames:
         fig.delaxes(cax)
