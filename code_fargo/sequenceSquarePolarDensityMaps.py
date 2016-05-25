@@ -107,7 +107,7 @@ def add_to_plot(frame, num_frames, frame_i):
     print frame, num_frames, frame_i
 
     # Declare Subplot
-    plot.subplot(1, num_frames, frame_i)
+    plot.subplot(1, num_frames, frame_i, aspect = "equal")
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
@@ -134,7 +134,7 @@ def add_to_plot(frame, num_frames, frame_i):
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
-    #fig.gca().add_artist(circle)
+    fig.gca().add_artist(circle)
 
     # Add minor grid lines
     alpha = 0.2
@@ -168,7 +168,7 @@ def finish_plot(frame_range, show = True):
 ##### Plot Files #####
 
 # Set up figure
-#fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+fig = plot.figure(figsize = (2000 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 fig = plot.figure(dpi = my_dpi)
 
 if len(sys.argv) > 1:
