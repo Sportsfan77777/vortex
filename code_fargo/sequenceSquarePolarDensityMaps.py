@@ -107,11 +107,13 @@ def add_to_plot(frame, num_frames, frame_i):
     print frame, num_frames, frame_i
 
     # Declare Subplot
-    plot.subplot(1, num_frames, frame_i, aspect = "equal")
+    ax = plot.subplot(1, num_frames, frame_i, aspect = "equal")
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     orbit = int(round(time / (2 * np.pi), 0)) * frame
+
+    # Mass
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
@@ -130,7 +132,10 @@ def add_to_plot(frame, num_frames, frame_i):
     # Add Colorbar
     if frame_i == num_frames:
         # Only for last frame
-        plot.colorbar(result)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+
+        plot.colorbar(result, cax = cax)
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -167,7 +172,7 @@ def finish_plot(frame_range, show = True):
 
 ##### Plot Files #####
 
-widths = [700, 1300, 1900, 2500]
+widths = [700, 1100, 1500, 1900]
 
 if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
