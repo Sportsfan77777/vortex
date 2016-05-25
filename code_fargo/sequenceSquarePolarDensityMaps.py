@@ -167,10 +167,10 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     cax = divider.append_axes("right", size = "8%", pad = 0.2)
     #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
     cbar = fig.colorbar(result, cax = cax)
-    cbar.set_label(r"Surface Density $\Sigma / \Sigma_0$", rotation = 270)
+    cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", rotation = 270, labelpad = 20)
 
     if frame_i != num_frames:
-        fig.delaxes(cax)
+        fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     return ax
     
