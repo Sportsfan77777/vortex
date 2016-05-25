@@ -124,7 +124,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     if orbit >= taper_time:
         current_mass = planet_mass / 0.001
     else:
-        current_mass = np.power(np.sin((np.pi / 2) * (orbit / taper_time)), 2) * (planet_mass / 0.001)
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
@@ -135,6 +135,8 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     ax.set_xlim(-sq, sq)
     ax.set_ylim(-sq, sq)
     #plot.axes().set_aspect('equal')
+
+    ax.set_yticks([])
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
@@ -178,8 +180,8 @@ def finish_plot(frame_range, show = True):
             frame_str += "-%d" % frame
 
     # Title
-    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{Taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity)), taper_time)
-    fig.suptitle(title, y = 1.13, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+    fig.suptitle(title, y = 1.03, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
     plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
