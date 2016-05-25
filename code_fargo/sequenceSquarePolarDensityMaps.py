@@ -128,7 +128,7 @@ def add_to_plot(frame, num_frames, frame_i):
     result.set_clim(clim[0], clim[1])
 
     # Add Colorbar
-    if frame_i == num_frames - 1:
+    if frame_i == num_frames:
         # Only for last frame
         plot.colorbar(result)
 
@@ -175,7 +175,7 @@ if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
 
     for i, frame in enumerate(frame_range):
-        add_to_plot(frame, len(frame_range), i)
+        add_to_plot(frame, len(frame_range), i + 1)
 
     finish_plot(frame_range)
 
