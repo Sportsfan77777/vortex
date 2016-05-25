@@ -138,7 +138,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 
     if frame_i != 1:
         # Remove unless 1st frame
-        ax.set_yticks([])
+        ax.set_yticklabels([])
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
@@ -161,7 +161,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     #plot.ylabel("y", fontsize = fontsize)
     ax.set_title(r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
 
-    # Add Colorbar
+    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     # Only for last frame
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size = "8%", pad = 0.2)
@@ -177,7 +177,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 def finish_plot(frame_range, show = True):
     # Title
     title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-    fig.suptitle(title, y = 1.03, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    fig.suptitle(title, y = 0.95, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
     plot.tight_layout()
