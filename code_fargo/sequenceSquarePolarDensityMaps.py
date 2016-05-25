@@ -107,11 +107,11 @@ clim = [0, 2]
 fontsize = 14
 my_dpi = 100
 
-def add_to_plot(frame, num_frames, frame_i):
+def add_to_plot(prev_ax, frame, num_frames, frame_i):
     print frame, num_frames, frame_i
 
     # Declare Subplot
-    ax = plot.subplot(1, num_frames, frame_i, aspect = "equal")
+    ax = plot.subplot(1, num_frames, frame_i, sharey = prev_ax, aspect = "equal")
 
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
@@ -121,7 +121,7 @@ def add_to_plot(frame, num_frames, frame_i):
     if orbit >= taper_time:
         current_mass = planet_mass / 0.001
     else:
-        current_mass = np.sin((np.pi / 2) * (orbit / taper_time))
+        current_mass = np.pow(np.sin((np.pi / 2) * (orbit / taper_time)), 2) * (planet_mass / 0.001)
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
@@ -142,7 +142,7 @@ def add_to_plot(frame, num_frames, frame_i):
     plot.gca().add_artist(circle)
 
     # Add minor grid lines
-    alpha = 0.2
+    alpha = 0.25
     dashes = [1, 5]
     plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
     plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
@@ -152,7 +152,7 @@ def add_to_plot(frame, num_frames, frame_i):
     #this_title = readTitle()
     #plot.xlabel("x", fontsize = fontsize)
     #plot.ylabel("y", fontsize = fontsize)
-    plot.title(r"$t = %d$, $m_p(t) = %.2f M_J" % (orbit, current_mass), fontsize = fontsize + 1)
+    plot.title(r"$t = %d$, $m_p(t) = %.2f M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Add Colorbar
     if frame_i == num_frames:
@@ -162,6 +162,8 @@ def add_to_plot(frame, num_frames, frame_i):
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
         fig.colorbar(result)
+
+    return ax
     
 
 def finish_plot(frame_range, show = True):
@@ -188,9 +190,10 @@ if len(sys.argv) > 1:
 
     # Set up figure
     fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    prev_ax = None
 
     for i, frame in enumerate(frame_range):
-        add_to_plot(frame, len(frame_range), i + 1)
+        prev_ax = add_to_plot(prev_ax, frame, len(frame_range), i + 1)
 
     finish_plot(frame_range)
 
