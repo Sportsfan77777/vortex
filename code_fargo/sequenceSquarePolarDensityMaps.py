@@ -165,7 +165,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     if frame_i == num_frames:
         # Only for last frame
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="5%", pad=0.05)
+        cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
         fig.colorbar(result, cax = cax)
@@ -174,6 +174,14 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     
 
 def finish_plot(frame_range, show = True):
+    plot.subplots_adjust(wspace = 0.1)
+
+    # Title
+    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+    fig.suptitle(title, y = 1.03, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    # Save and Close
+
     frame_str = ""
     for i, frame in enumerate(frame_range):
         if i == 0:
@@ -181,11 +189,6 @@ def finish_plot(frame_range, show = True):
         else:
             frame_str += "-%d" % frame
 
-    # Title
-    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-    fig.suptitle(title, y = 1.03, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
-
-    # Save and Close
     plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
