@@ -130,14 +130,6 @@ def add_to_plot(frame, num_frames, frame_i):
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
     result.set_clim(clim[0], clim[1])
 
-    # Add Colorbar
-    if frame_i == num_frames:
-        # Only for last frame
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="5%", pad=0.05)
-
-        plot.colorbar(result, cax = cax)
-
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
     plot.gca().add_artist(circle)
@@ -154,6 +146,15 @@ def add_to_plot(frame, num_frames, frame_i):
     #plot.xlabel("x", fontsize = fontsize)
     #plot.ylabel("y", fontsize = fontsize)
     plot.title("Orbit %d" % (orbit), fontsize = fontsize + 1)
+
+    # Add Colorbar
+    if frame_i == num_frames:
+        # Only for last frame
+        #divider = make_axes_locatable(ax)
+        #cax = divider.append_axes("right", size="5%", pad=0.05)
+        cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+
+        fig.colorbar(result, cax = cax)
     
 
 def finish_plot(frame_range, show = True):
