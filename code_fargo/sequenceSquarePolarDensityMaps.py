@@ -136,7 +136,9 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     ax.set_ylim(-sq, sq)
     #plot.axes().set_aspect('equal')
 
-    ax.set_yticks([])
+    if frame_i != 1:
+        # Remove unless 1st frame
+        ax.set_yticks([])
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
@@ -163,10 +165,10 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     if frame_i == num_frames:
         # Only for last frame
         #divider = make_axes_locatable(ax)
-        #cax = divider.append_axes("right", size="5%", pad=0.05)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
 
-        fig.colorbar(result)
+        fig.colorbar(result, cax = cax)
 
     return ax
     
