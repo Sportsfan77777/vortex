@@ -162,20 +162,19 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     ax.set_title(r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Add Colorbar
-    if frame_i == num_frames:
-        # Only for last frame
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+    # Only for last frame
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size = "8%", pad = 0.2)
+    #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+    fig.colorbar(result, cax = cax)
 
-        fig.colorbar(result, cax = cax)
+    if frame_i != num_frames:
+        fig.delaxes(cax)
 
     return ax
     
 
 def finish_plot(frame_range, show = True):
-    plot.subplots_adjust(wspace = 0.1)
-
     # Title
     title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
     fig.suptitle(title, y = 1.03, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
@@ -206,12 +205,13 @@ if len(sys.argv) > 1:
     fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
     #fig = plot.figure(dpi = my_dpi)
     gs = gridspec.GridSpec(1, len(frame_range))
+    plot.subplots_adjust(wspace = 0.1)
 
     for i, frame in enumerate(frame_range):
         if i == 0:
             ax = fig.add_subplot(gs[0])
         else:
-            ax = fig.add_subplot(gs[i], sharey = ax)
+            ax = fig.add_subplot(gs[i])
 
         add_to_plot(ax, frame, len(frame_range), i + 1)
 
