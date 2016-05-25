@@ -173,7 +173,7 @@ if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
 
     # Set up figure
-    fig = plot.figure(figsize = (widths[len(frame_range) - 1], 600 / my_dpi), dpi = my_dpi)
+    fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     for i, frame in enumerate(frame_range):
         add_to_plot(frame, len(frame_range), i + 1)
