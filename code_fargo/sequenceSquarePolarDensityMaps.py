@@ -206,7 +206,6 @@ if len(sys.argv) > 1:
     fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
     #fig = plot.figure(dpi = my_dpi)
     gs = gridspec.GridSpec(1, len(frame_range))
-    plot.subplots_adjust(wspace = 0.1)
 
     for i, frame in enumerate(frame_range):
         if i == 0:
