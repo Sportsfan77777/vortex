@@ -13,20 +13,20 @@ import pickle
 
 ### Data ###
 # M1, v6
-case1_x = [10, 250, 500, 1000]
-case1_y = [1000, 700, 400, 200]
+case1_x = pickle.load(open("case1_tapers.p", "rb")) #[10, 250, 500, 1000]
+case1_y = pickle.load(open("case1_lifetimes.p", "rb")) #[1000, 700, 400, 200]
 
 # M1, v7
-case2_x = [10, 500, 1000, 2000]
-case2_y = [7000, 1500, 1000, 600]
+case2_x = pickle.load(open("case2_tapers.p", "rb")) #[10, 500, 1000, 2000]
+case2_y = pickle.load(open("case2_lifetimes.p", "rb")) #[7000, 1500, 1000, 600]
 
 # M5, v6
-case3_x = [10, 500, 1000, 2000]
-case3_y = [1500, 1200, 500, 300]
+case3_x = pickle.load(open("case3_tapers.p", "rb")) #[10, 500, 1000, 2000]
+case3_y = pickle.load(open("case3_lifetimes.p", "rb")) #[1500, 1200, 500, 300]
 
 # M5, v7
-case4_x = [10, 1000, 2000, 4000]
-case4_y = [14000, 10000, 8000, 5000]
+case4_x = pickle.load(open("case4_tapers.p", "rb")) #[10, 1000, 2000, 4000]
+case4_y = pickle.load(open("case4_lifetimes.p", "rb")) #[14000, 10000, 8000, 5000]
 
 #### Helper Function ####
 
