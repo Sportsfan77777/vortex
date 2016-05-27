@@ -95,7 +95,7 @@ if log_y:
     y_values = [1.0, 300, 1000, 3000, 10000]
     ax.set_yticks(y_values)
 else:
-    plot.ylim(0, max_value)
+    plot.ylim(1, max_value)
 
 x_values = [10, 500, 1000, 2000, 3000, 4000]
 ax.set_xticks(x_values)
@@ -120,27 +120,27 @@ plot.plot([line5_10, line5_10], [vertical_min_value, vertical_max_value], linewi
 
 ## Labels ##
 # 10^-4
-text_y4 = max_value + 0.5
+text_y4 = max_value + 0.15
 plot.text(line4_20, text_y4, "20", horizontalalignment = 'center')
 plot.text(line4_10, text_y4, "10", horizontalalignment = 'center')
 plot.text(line4_5, text_y4, "5", horizontalalignment = 'center')
 
 midpoint4 = (line4_20 + line4_5) / 2.0
-plot.text(midpoint4, text_y4 + 0.5, r"$\dot{M}$ = $10^{-4}$ $M_J$", horizontalalignment = 'center')
+plot.text(midpoint4, text_y4 + 0.25, r"$\dot{M}$ = $10^{-4}$ $M_J$", horizontalalignment = 'center')
 
 # 10^-5
-text_y5 = max_value + 0.3
+text_y5 = max_value + 0.1
 plot.text(line5_20, text_y5, "20 AU", horizontalalignment = 'center')
 plot.text(line5_10, text_y5, "10 AU", horizontalalignment = 'center')
 
 midpoint5 = (line5_20 + line5_10) / 2.0
-plot.text(midpoint5, text_y5 + 0.5, r"$\dot{M}$ = $10^{-5}$ $M_J$", horizontalalignment = 'center')
+plot.text(midpoint5, text_y5 + 0.25, r"$\dot{M}$ = $10^{-5}$ $M_J$", horizontalalignment = 'center')
 
 # Braces
-brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 1)
+brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 0.15)
 plot.plot(brace4_x, text_y4 + brace4_y, color = "black", linewidth = brace_linewidth, clip_on = False)
 
-brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 1)
+brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 0.15)
 plot.plot(brace5_x, text_y5 + brace5_y, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 #### Curves ####
@@ -156,7 +156,7 @@ plot.plot(case1_x, case1_y, marker = "^", markersize = markersize, linewidth = l
 plot.xlabel("Taper Time (in planet orbits)", fontsize = fontsize)
 plot.ylabel("Peak Density", fontsize = fontsize)
 
-legend = plot.legend(loc = "lower right") #, bbox_to_anchor = (legend_x, legend_y))
+legend = plot.legend(loc = "upper right") #, bbox_to_anchor = (legend_x, legend_y))
 
 # Save + Close
 plot.savefig("density_comparison.png", bbox_inches = "tight")
