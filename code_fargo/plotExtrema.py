@@ -132,7 +132,7 @@ smoothed_minimum_vortensities = smooth(minimum_vortensities, kernel_size)
 
 ## Store Max Density ##
 peak_density = np.max(smoothed_maximum_densities)
-pickle.dump(peak_density, open("peak_density.p"))
+pickle.dump(peak_density, open("peak_density.p", "wb"))
 
 ##### PLOTTING #####
 
