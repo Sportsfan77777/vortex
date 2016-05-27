@@ -130,8 +130,8 @@ plot.text(midpoint4, 1.27**2 * text_y4, r"$\dot{M}$ = $10^{-4}$ $M_J$" + "\nat 2
 
 # 10^-5
 text_y5 = 1.20 * max_value
-plot.text(line5_20, text_y5, "20 AU", horizontalalignment = 'center')
-plot.text(line5_10, text_y5, "10 AU", horizontalalignment = 'center')
+plot.text(line5_20, text_y5, "20", horizontalalignment = 'center')
+plot.text(line5_10, text_y5, "10", horizontalalignment = 'center')
 
 midpoint5 = (line5_20 + line5_10) / 2.0
 plot.text(midpoint5, 1.25 * 1.30 * text_y5, r"$\dot{M}$ = $10^{-5}$ $M_J$ at 20 and 10 AU", horizontalalignment = 'center')
