@@ -60,6 +60,7 @@ vertical_linewidth = 2
 brace_linewidth = 2
 fontsize = 14
 markersize = 9
+my_dpi = 100
 
 max_value = 15000
 vertical_min_value = 1
@@ -72,7 +73,7 @@ case3_label = r"$5$ $M_J$, $\nu = 10^{-6}$"
 case4_label = r"$5$ $M_J$, $\nu = 10^{-7}$"
 
 ### Setup Figure ###
-figure = plot.figure()
+figure = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 ax = figure.add_subplot(1, 1, 1)
 
 # Limits

@@ -60,6 +60,7 @@ vertical_linewidth = 2
 brace_linewidth = 2
 fontsize = 14
 markersize = 9
+my_dpi = 100
 
 max_value = 4
 vertical_min_value = 10**(-5)
@@ -72,7 +73,7 @@ case3_label = r"$5$ $M_J$, $\nu = 10^{-6}$"
 case4_label = r"$5$ $M_J$, $\nu = 10^{-7}$"
 
 ### Setup Figure ###
-figure = plot.figure()
+figure = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 ax = figure.add_subplot(1, 1, 1)
 
 # Limits
@@ -144,10 +145,10 @@ brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 0.15)
 plot.plot(brace5_x, text_y5 + brace5_y + 0.1, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 #### Curves ####
-plot.plot(case4_x, case4_y, marker = "s", markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
-plot.plot(case3_x, case3_y, marker = "p", markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
-plot.plot(case2_x, case2_y, marker = "*", markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
-plot.plot(case1_x, case1_y, marker = "^", markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
+plot.plot(case4_x, case4_y, marker = "s", c = 'yellow', markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
+plot.plot(case3_x, case3_y, marker = "p", c = 'blue', markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
+plot.plot(case2_x, case2_y, marker = "*", c = 'black', markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
+plot.plot(case1_x, case1_y, marker = "^", c = 'green', markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
 
 #ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
 #ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
