@@ -34,7 +34,7 @@ from readTitle import readTitle
 ### Paths ###
 base_path = "/rsgrps/kkratterstudents/mhammer/fargo_tests/fargo/mass_tapering_tests/%s/visc%d/evanescent/%s/"
 
-def collect_lifetimes_for_case(case_number):
+def collect_data_for_case(case_number):
     if case_number == 1:
         # 1 MJ, visc6
         mass = "one_jupiter"
@@ -66,6 +66,7 @@ def collect_lifetimes_for_case(case_number):
     write_base = "case%s.p"
 
     lifetimes = []
+    peak_densities = []
     for taper in tapers:
         # cd taper
         os.chdir(this_base_path % taper)
@@ -74,7 +75,9 @@ def collect_lifetimes_for_case(case_number):
         lifetime = pickle.load(open("lifetime.p", "rb"))
         lifetimes.append(lifetime)
 
-        # Read other things
+        # Read Peak Density
+        peak_density = pickle.load(open("peak_density.p", "rb"))
+        peak_densities.append(peak_density)
 
         # cd back
         os.chdir(current_directory)
@@ -89,6 +92,10 @@ def collect_lifetimes_for_case(case_number):
     lifetime_fn = lifetime_fn % case_number
     pickle.dump(lifetimes, open(lifetime_fn, "wb"))
 
-    # Write other things
+    # Write Peak Density
+    peak_density_fn = write_base % "%d_densities.p"
+    peak_density_fn = peak_density_fn % case_number
+    pickle.dump(peak_densities, open(peak_density_fn, "wb"))
 
-collect_lifetimes_for_case(1)
+for i in range(4):
+    collect_data_for_case(i + 1)
