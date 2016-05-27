@@ -126,15 +126,15 @@ plot.text(line4_10, text_y4, "10", horizontalalignment = 'center')
 plot.text(line4_5, text_y4, "5", horizontalalignment = 'center')
 
 midpoint4 = (line4_20 + line4_5) / 2.0
-plot.text(midpoint4, 1.27**2 * text_y4, r"$\dot{M}$ = $10^{-4}$ $M_J$" + "\nat 20, 10, and 5 AU", horizontalalignment = 'center')
+plot.text(midpoint4, 1.29**2 * text_y4, r"$\dot{M}$ = $10^{-4}$ $M_J$" + "\nat 20, 10, and 5 AU", horizontalalignment = 'center')
 
 # 10^-5
-text_y5 = 1.20 * max_value
+text_y5 = 1.15 * max_value
 plot.text(line5_20, text_y5, "20", horizontalalignment = 'center')
 plot.text(line5_10, text_y5, "10", horizontalalignment = 'center')
 
 midpoint5 = (line5_20 + line5_10) / 2.0
-plot.text(midpoint5, 1.25 * 1.30 * text_y5, r"$\dot{M}$ = $10^{-5}$ $M_J$ at 20 and 10 AU", horizontalalignment = 'center')
+plot.text(midpoint5, 1.27**2 * text_y5, r"$\dot{M}$ = $10^{-5}$ $M_J$ at 20 and 10 AU", horizontalalignment = 'center')
 
 # Braces
 brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 10000)
