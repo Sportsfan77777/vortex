@@ -121,7 +121,7 @@ frame_range = range(start_of_vortex, max_frame, rate)
 maximum_densities = np.array(len(frame_range))
 minimum_vortensities = np.array(len(frame_range))
 
-for i, frame in frame_range:
+for i, frame in enumerate(frame_range):
     find_extrema(i, frame)
 
 ## Smooth Each Array ##
