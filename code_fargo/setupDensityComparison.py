@@ -58,7 +58,7 @@ def range_brace(x_min, x_max, mid=0.75,
 linewidth = 4
 vertical_linewidth = 2
 brace_linewidth = 2
-fontsize = 14
+fontsize = 16
 markersize = 9
 my_dpi = 100
 
@@ -73,7 +73,7 @@ case3_label = r"$5$ $M_J$, $\nu = 10^{-6}$"
 case4_label = r"$5$ $M_J$, $\nu = 10^{-7}$"
 
 ### Setup Figure ###
-figure = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+figure = plot.figure(figsize = (850 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 ax = figure.add_subplot(1, 1, 1)
 
 # Limits
