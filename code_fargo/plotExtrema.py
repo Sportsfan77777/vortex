@@ -11,6 +11,7 @@ import subprocess
 import glob
 import pickle
 from multiprocessing import Pool
+from multiprocessing import Array as mp_array
 
 import math
 import numpy as np
@@ -118,11 +119,17 @@ start_of_vortex = 0
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
-maximum_densities = np.zeros(len(frame_range))
-minimum_vortensities = np.zeros(len(frame_range))
+maximum_densities = mp_array("d", len(frame_range))
+minimum_vortensities = mp_array("d", len(frame_range))
 
-for i, frame in enumerate(frame_range):
-    find_extrema(i, frame)
+#for i, frame in enumerate(frame_range):
+#    find_extrema(i, frame)
+
+pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+
+p = Pool(10)
+p.map(find_extrema, pool_args)
+p.terminate()
 
 ## Smooth Each Array ##
 kernel_size = 5
