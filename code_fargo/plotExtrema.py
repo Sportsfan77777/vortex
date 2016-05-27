@@ -118,8 +118,8 @@ start_of_vortex = 0
 max_frame = util.find_max_frame()
 frame_range = range(start_of_vortex, max_frame, rate)
 
-maximum_densities = np.array(len(frame_range))
-minimum_vortensities = np.array(len(frame_range))
+maximum_densities = np.zeros(len(frame_range))
+minimum_vortensities = np.zeros(len(frame_range))
 
 for i, frame in enumerate(frame_range):
     find_extrema(i, frame)
