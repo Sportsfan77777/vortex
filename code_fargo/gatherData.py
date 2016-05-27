@@ -93,7 +93,7 @@ def collect_data_for_case(case_number):
     pickle.dump(lifetimes, open(lifetime_fn, "wb"))
 
     # Write Peak Density
-    peak_density_fn = write_base % "%d_densities.p"
+    peak_density_fn = write_base % "%d_densities"
     peak_density_fn = peak_density_fn % case_number
     pickle.dump(peak_densities, open(peak_density_fn, "wb"))
 
