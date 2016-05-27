@@ -55,6 +55,8 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
+mass_taper = float(fargo_par["MassTaper"])
+
 ### Helper Methods ###
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
@@ -121,7 +123,7 @@ rate = 5 # 5 works better, but is very slow
 start_of_vortex = 0
 max_frame = util.find_max_frame()
 if max_frame > 6000:
-    max_frame = 6000
+    max_frame = np.max([3000, 1.5 * int(mass_taper)])
 frame_range = range(start_of_vortex, max_frame, rate)
 
 maximum_densities = mp_array("d", len(frame_range))
