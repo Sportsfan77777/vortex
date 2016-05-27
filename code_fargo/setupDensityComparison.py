@@ -120,16 +120,16 @@ plot.plot([line5_10, line5_10], [vertical_min_value, vertical_max_value], linewi
 
 ## Labels ##
 # 10^-4
-text_y4 = max_value + 0.09
+text_y4 = max_value + 0.02
 plot.text(line4_20, text_y4, "20", horizontalalignment = 'center')
 plot.text(line4_10, text_y4, "10", horizontalalignment = 'center')
 plot.text(line4_5, text_y4, "5", horizontalalignment = 'center')
 
 midpoint4 = (line4_20 + line4_5) / 2.0
-plot.text(midpoint4, text_y4 + 0.3, r"$\dot{M}$ = $10^{-4}$ $M_J$\nat 20, 10, and 5 AU", horizontalalignment = 'center')
+plot.text(midpoint4, text_y4 + 0.3, r"$\dot{M}$ = $10^{-4}$ $M_J$" + "\nat 20, 10, and 5 AU", horizontalalignment = 'center')
 
 # 10^-5
-text_y5 = max_value + 0.02
+text_y5 = max_value + 0.09
 plot.text(line5_20, text_y5, "20", horizontalalignment = 'center')
 plot.text(line5_10, text_y5, "10", horizontalalignment = 'center')
 
