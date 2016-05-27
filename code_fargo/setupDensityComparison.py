@@ -138,10 +138,10 @@ plot.text(midpoint5, text_y5 + 0.2, r"$\dot{M}$ = $10^{-5}$ $M_J$", horizontalal
 
 # Braces
 brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 0.15)
-plot.plot(brace4_x, text_y4 + brace4_y + 0.03, color = "black", linewidth = brace_linewidth, clip_on = False)
+plot.plot(brace4_x, text_y4 + brace4_y + 0.1, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 0.15)
-plot.plot(brace5_x, text_y5 + brace5_y + 0.03, color = "black", linewidth = brace_linewidth, clip_on = False)
+plot.plot(brace5_x, text_y5 + brace5_y + 0.1, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 #### Curves ####
 plot.plot(case4_x, case4_y, marker = "s", markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
