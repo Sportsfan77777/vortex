@@ -120,6 +120,8 @@ def find_extrema(args):
 rate = 5 # 5 works better, but is very slow
 start_of_vortex = 0
 max_frame = util.find_max_frame()
+if max_frame > 6000:
+    max_frame = 6000
 frame_range = range(start_of_vortex, max_frame, rate)
 
 maximum_densities = mp_array("d", len(frame_range))
