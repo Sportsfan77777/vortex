@@ -124,11 +124,15 @@ minimum_vortensities = np.array(len(frame_range))
 for i, frame in frame_range:
     find_extrema(i, frame)
 
-## Smooth Each Array
+## Smooth Each Array ##
 kernel_size = 5
 
 smoothed_maximum_densities = smooth(maximum_densities, kernel_size)
 smoothed_minimum_vortensities = smooth(minimum_vortensities, kernel_size)
+
+## Store Max Density ##
+peak_density = np.max(smoothed_maximum_densities)
+pickle.dump(peak_density, open("densities.p"))
 
 ##### PLOTTING #####
 
