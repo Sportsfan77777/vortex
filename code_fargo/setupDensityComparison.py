@@ -120,33 +120,33 @@ plot.plot([line5_10, line5_10], [vertical_min_value, vertical_max_value], linewi
 
 ## Labels ##
 # 10^-4
-text_y4 = max_value + 0.15
+text_y4 = max_value + 0.07
 plot.text(line4_20, text_y4, "20", horizontalalignment = 'center')
 plot.text(line4_10, text_y4, "10", horizontalalignment = 'center')
 plot.text(line4_5, text_y4, "5", horizontalalignment = 'center')
 
 midpoint4 = (line4_20 + line4_5) / 2.0
-plot.text(midpoint4, text_y4 + 0.25, r"$\dot{M}$ = $10^{-4}$ $M_J$", horizontalalignment = 'center')
+plot.text(midpoint4, text_y4 + 0.2, r"$\dot{M}$ = $10^{-4}$ $M_J$", horizontalalignment = 'center')
 
 # 10^-5
-text_y5 = max_value + 0.1
+text_y5 = max_value + 0.02
 plot.text(line5_20, text_y5, "20 AU", horizontalalignment = 'center')
 plot.text(line5_10, text_y5, "10 AU", horizontalalignment = 'center')
 
 midpoint5 = (line5_20 + line5_10) / 2.0
-plot.text(midpoint5, text_y5 + 0.25, r"$\dot{M}$ = $10^{-5}$ $M_J$", horizontalalignment = 'center')
+plot.text(midpoint5, text_y5 + 0.2, r"$\dot{M}$ = $10^{-5}$ $M_J$", horizontalalignment = 'center')
 
 # Braces
 brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 0.15)
-plot.plot(brace4_x, text_y4 + brace4_y, color = "black", linewidth = brace_linewidth, clip_on = False)
+plot.plot(brace4_x, text_y4 + brace4_y + 0.03, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 0.15)
-plot.plot(brace5_x, text_y5 + brace5_y, color = "black", linewidth = brace_linewidth, clip_on = False)
+plot.plot(brace5_x, text_y5 + brace5_y + 0.03, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 #### Curves ####
 plot.plot(case4_x, case4_y, marker = "s", markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
-plot.plot(case2_x, case2_y, marker = "*", markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
 plot.plot(case3_x, case3_y, marker = "p", markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
+plot.plot(case2_x, case2_y, marker = "*", markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
 plot.plot(case1_x, case1_y, marker = "^", markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
 
 #ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
