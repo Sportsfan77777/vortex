@@ -89,7 +89,10 @@ def find_azimuthal_extrema(azimuthalProfile, maximum = True):
 
 #### Data ####
 
-def find_extrema(i, frame):
+def find_extrema(args):
+    # Unwrap Args
+    i, frame = args
+
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(density, axis = 1)
