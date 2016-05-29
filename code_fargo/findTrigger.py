@@ -121,8 +121,8 @@ def record_triggers():
     pickle.dump(triggers, open("triggers.p", "wb"))
 
 ## Use These Frames ##
-profile_function = lambda x : (planet_mass / 0.001) * np.power(np.sin((np.pi / 2) * mass_taper), 2)
-profile = [profile_function(x) for x in range(mass_taper)]
+profile_function = lambda x : (planet_mass / 0.001) * np.power(np.sin((np.pi / 2) * (x / mass_taper)), 2)
+profile = [profile_function(x) for x in range(int(mass_taper))]
 
 rate = 1
 start = np.searchsorted(profile, 0.08) # start with 0.08 Jupiter masses
