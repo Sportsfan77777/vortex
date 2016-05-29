@@ -128,7 +128,7 @@ def getWeightedDerivative(frame):
 
 ### Data ###
 trigger_points = pickle.load(open("triggers.p", "rb")) # Dictionary of Thresholds and Associated Frames
-frames = trigger_points.values # Just the frames
+frames = trigger_points.values() # Just the frames
 
 gap_structures = {}
 for frame in frames:
