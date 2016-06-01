@@ -31,6 +31,12 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+import colormaps as cmaps
+plot.register_cmap(name = 'viridis', cmap = cmaps.viridis)
+plot.register_cmap(name = 'inferno', cmap = cmaps.inferno)
+plot.register_cmap(name = 'plasma', cmap = cmaps.plasma)
+plot.register_cmap(name = 'magma', cmap = cmaps.magma)
+
 save_directory = "squarePolarGasDensityMaps"
 
 ### Get FARGO Parameters ###
@@ -50,6 +56,10 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
+viscosity = float(fargo_par["Viscosity"])
+
+planet_mass = float(fargo_par["PlanetMass"])
+taper_time = int(float(fargo_par["MassTaper"]))
 
 ### Converter ###
 
@@ -97,7 +107,7 @@ except:
     print "Directory Already Exists"
 
 # Plot Parameters
-cmap = "RdYlBu_r"
+cmap = "inferno"
 clim = [0, 2]
 
 fontsize = 14
@@ -110,6 +120,12 @@ def make_plot(frame, show = False):
         # Orbit Number
         time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
         orbit = int(round(time / (2 * np.pi), 0)) * i
+
+        # Mass
+        if orbit >= taper_time:
+            current_mass = planet_mass / 0.001
+        else:
+            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
@@ -151,17 +167,18 @@ def make_plot(frame, show = False):
         fig.gca().add_artist(circle)
 
         # Add minor grid lines
-        alpha = 0.35
-        dashes = [2, 7]
-        plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
-        plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
+        alpha = 0.2
+        dashes = [1, 5]
+        #plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
+        #plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
         plot.minorticks_on()
 
         # Annotate
-        this_title = readTitle()
-        plot.xlabel("x", fontsize = fontsize)
-        plot.ylabel("y", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        title1 = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$ $T_{p}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+        title2 = r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass)
+        #plot.xlabel("x", fontsize = fontsize)
+        #plot.ylabel("y", fontsize = fontsize)
+        plot.title("%s\n%s" % (title1, title2), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
@@ -170,7 +187,7 @@ def make_plot(frame, show = False):
         plot.close(fig) # Close Figure (to avoid too many figures)
 
     i = frame
-    choose_axis(i, "normal")
+    #choose_axis(i, "normal")
     choose_axis(i, "zoom")
 
 
@@ -181,9 +198,14 @@ if len(sys.argv) > 1:
     if frame_number == -1:
         # Plot Sample
         max_frame = util.find_max_frame()
-        sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            make_plot(i)
+        sample = np.linspace(0, max_frame, 100) # 100 evenly spaced frames
+        #for i in sample:
+        #    make_plot(i)
+
+        p = Pool(5)
+        p.map(make_plot, sample)
+        p.terminate()
+
     else:
         # Plot Single
         make_plot(frame_number, show = True)
@@ -198,9 +220,9 @@ else:
 
     #### ADD TRY + CATCH BLOCK HERE!!!!! ####
 
-    p = Pool() # default number of processes is multiprocessing.cpu_count()
-    p.map(make_plot, range(num_frames))
-    p.terminate()
+    #p = Pool() # default number of processes is multiprocessing.cpu_count()
+    #p.map(make_plot, range(num_frames))
+    #p.terminate()
 
     #### Make Movies ####
     #make_movies()
