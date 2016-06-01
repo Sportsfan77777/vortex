@@ -86,6 +86,7 @@ def make_plot(frame, show = False):
         else:
             x = rad
             prefix = ""
+            plot.xlim(0, x[-1])
             xlabel = "Radius"
             
         # Data
@@ -98,8 +99,8 @@ def make_plot(frame, show = False):
         # Annotate
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
-        plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.ylabel("Azimuthally-Averaged\n Normalized Density", fontsize = fontsize)
+        plot.title(r"$t = %d$ $\rm{orbits}: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%savg_density_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
