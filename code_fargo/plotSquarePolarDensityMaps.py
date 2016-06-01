@@ -180,7 +180,7 @@ def make_plot(frame, show = False):
 
         # Annotate
         title1 = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$ $T_{p}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-        title2 = r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass)
+        title2 = r"$t = %d$ $T_{p}$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
         plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
