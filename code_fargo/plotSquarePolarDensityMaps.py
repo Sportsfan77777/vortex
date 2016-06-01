@@ -111,7 +111,7 @@ cmap = "inferno"
 clim = [0, 2]
 
 fontsize = 14
-my_dpi = 200
+my_dpi = 100
 
 def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
@@ -128,7 +128,7 @@ def make_plot(frame, show = False):
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
 
         # Set up figure
-        fig = plot.figure(figsize = (700 * 2 / my_dpi, 600 * 2 / my_dpi), dpi = my_dpi)
+        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
         ax = fig.add_subplot(111)
 
         # Data
