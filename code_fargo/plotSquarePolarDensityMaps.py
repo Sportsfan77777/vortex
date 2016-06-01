@@ -130,7 +130,6 @@ def make_plot(frame, show = False):
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
         ax = fig.add_subplot(111)
-        ax2 = ax.twinx()
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
@@ -180,7 +179,7 @@ def make_plot(frame, show = False):
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
         plot.title("%s" % (title2), fontsize = fontsize + 1)
-        ax2.set_title(title1, y = 1.1, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+        plot.text(0.0, 1.1, title1, multialignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
         # Save and Close
         plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
