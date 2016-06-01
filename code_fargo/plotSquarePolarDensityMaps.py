@@ -166,6 +166,10 @@ def make_plot(frame, show = False):
         circle = plot.Circle((0, 0), min(rad), color = "black")
         fig.gca().add_artist(circle)
 
+        # Label star and planet
+        plot.scatter(0, 0, c = "white", markersize = 20, marker = "*") # star
+        plot.scatter(0, 1, c = "white", markersize = 15, marker = "8") # planet
+
         # Add minor grid lines
         alpha = 0.2
         dashes = [1, 5]
@@ -178,8 +182,8 @@ def make_plot(frame, show = False):
         title2 = r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
-        plot.title("%s" % (title2), fontsize = fontsize + 1)
-        plot.text(0.0, 1.1, title1, multialignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+        plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
+        plot.text(0.0, 3.14, title1, multialignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
         # Save and Close
         plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
