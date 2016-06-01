@@ -111,8 +111,7 @@ cmap = "inferno"
 clim = [0, 2]
 
 fontsize = 14
-my_dpi = 100
-
+my_dpi = 200
 
 def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
@@ -129,7 +128,7 @@ def make_plot(frame, show = False):
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
 
         # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+        fig = plot.figure(figsize = (700 * 2 / my_dpi, 600 * 2 / my_dpi), dpi = my_dpi)
         ax = fig.add_subplot(111)
 
         # Data
@@ -189,6 +188,7 @@ def make_plot(frame, show = False):
 
         # Save and Close
         plot.savefig("%s/%ssquareDensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%ssquareDensityMap_%04d.pdf" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi, format = "pdf")
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
@@ -204,12 +204,12 @@ if len(sys.argv) > 1:
     frame_number = int(sys.argv[1])
     if frame_number == -1:
         # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(0, max_frame, 100) # 100 evenly spaced frames
+        max_frame = 125 #util.find_max_frame()
+        sample = np.linspace(0, max_frame, 126) # 100 evenly spaced frames
         #for i in sample:
         #    make_plot(i)
 
-        p = Pool(5)
+        p = Pool(10)
         p.map(make_plot, sample)
         p.terminate()
 
