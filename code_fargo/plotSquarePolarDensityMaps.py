@@ -158,8 +158,8 @@ def make_plot(frame, show = False):
         plot.axes().set_aspect('equal')
 
         # Label star and planet
-        plot.scatter(0, 0, c = "white", markersize = 200, marker = "*") # star
-        plot.scatter(0, 1, c = "white", markersize = 50, marker = "8") # planet
+        plot.scatter(0, 0, c = "white", s = 200, marker = "*") # star
+        plot.scatter(0, 1, c = "white", s = 50, marker = "8") # planet
 
         ### Plot ###
         result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
