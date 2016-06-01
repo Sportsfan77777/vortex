@@ -188,7 +188,6 @@ def make_plot(frame, show = False):
 
         # Save and Close
         plot.savefig("%s/%ssquareDensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        plot.savefig("%s/%ssquareDensityMap_%04d.pdf" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi, format = "pdf")
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
