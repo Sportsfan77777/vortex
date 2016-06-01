@@ -167,8 +167,8 @@ def make_plot(frame, show = False):
         fig.gca().add_artist(circle)
 
         # Label star and planet
-        plot.scatter(0, 0, c = "white", s = 200, marker = "*") # star
-        plot.scatter(0, 1, c = "white", s = 50, marker = "8") # planet
+        plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
+        plot.scatter(0, 1, c = "white", s = 70, marker = "D") # planet
 
         # Add minor grid lines
         alpha = 0.2
