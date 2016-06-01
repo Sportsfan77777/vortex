@@ -116,6 +116,7 @@ my_dpi = 100
 
 def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
+    print frame
     def choose_axis(i, axis):
         # Orbit Number
         time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
