@@ -157,10 +157,6 @@ def make_plot(frame, show = False):
         plot.ylim(-sq, sq)
         plot.axes().set_aspect('equal')
 
-        # Label star and planet
-        plot.scatter(0, 0, c = "white", s = 200, marker = "*") # star
-        plot.scatter(0, 1, c = "white", s = 50, marker = "8") # planet
-
         ### Plot ###
         result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
         fig.colorbar(result)
@@ -169,6 +165,10 @@ def make_plot(frame, show = False):
         # Get rid of interior
         circle = plot.Circle((0, 0), min(rad), color = "black")
         fig.gca().add_artist(circle)
+
+        # Label star and planet
+        plot.scatter(0, 0, c = "white", s = 200, marker = "*") # star
+        plot.scatter(0, 1, c = "white", s = 50, marker = "8") # planet
 
         # Add minor grid lines
         alpha = 0.2
@@ -183,7 +183,7 @@ def make_plot(frame, show = False):
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
         plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
-        plot.text(0.0, 3.14, title1, multialignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+        plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
         # Save and Close
         plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
