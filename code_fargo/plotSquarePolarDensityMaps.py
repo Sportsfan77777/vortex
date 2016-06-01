@@ -178,7 +178,8 @@ def make_plot(frame, show = False):
         title2 = r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
-        plot.title("%s\n%s" % (title1, title2), fontsize = fontsize + 1)
+        plot.title("%s" % (title1, title2), fontsize = fontsize + 1)
+        fig.suptitle(title, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
         # Save and Close
         plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
