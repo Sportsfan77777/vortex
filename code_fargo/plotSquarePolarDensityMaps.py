@@ -169,7 +169,7 @@ def make_plot(frame, show = False):
         # Label star and planet
         planet_size = (current_mass / (planet_mass / 0.001))
         plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-        plot.scatter(0, 1, c = "white", s = 70 * int(planet_size), marker = "D") # planet
+        plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
 
         # Add minor grid lines
         alpha = 0.2
