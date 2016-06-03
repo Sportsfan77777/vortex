@@ -101,7 +101,7 @@ def get_data(frame):
 
     if len(sys.argv) > 2:
         # Supply central theta as an argument
-        peak_theta = sys.argv[2]
+        peak_theta = float(sys.argv[2])
 
     # Gather Azimuthal Profiles
     num_profiles = 5
