@@ -159,8 +159,10 @@ def make_plot(frame, show = False):
 
         ### Plot ###
         result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
-        fig.colorbar(result)
+        cbar = fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
+
+        cbar.set_label(r"Normalized Surface Density", rotation = 270, labelpad = 20)
 
         # Get rid of interior
         circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -179,7 +181,7 @@ def make_plot(frame, show = False):
         plot.minorticks_on()
 
         # Annotate
-        title1 = r"$m_p = %d$ $M_{Jup}$, $\nu = 10^{%d}$, $T_{taper} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+        title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{taper} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
         title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
