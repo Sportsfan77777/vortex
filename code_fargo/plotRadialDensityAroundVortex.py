@@ -99,11 +99,18 @@ def get_data(frame):
 
     peak_theta, peak_theta_index, peak_azimuthal_density = find_azimuthal_peak(density[peak_index])
 
+    if len(sys.argv) > 2:
+        # Supply central theta as an argument
+        peak_theta = sys.argv[2]
+
     # Gather Azimuthal Profiles
     num_profiles = 5
     spread = 30.0 # half-width
 
     radial_theta = np.linspace(peak_theta - spread, peak_theta + spread, num_profiles)
+    radial_theta[radial_theta < 0] += 360.0
+    radial_theta[radial_theta > 360] -= 360.0
+
     radial_indices = [np.searchsorted(theta, this_theta * (np.pi / 180.0)) for this_theta in radial_theta]
     radial_profiles = [density[:, radial_index] for radial_index in radial_indices]
 
