@@ -105,7 +105,7 @@ def get_data(frame):
 
     # Gather Azimuthal Profiles
     pressure = density * (scale_height)**2 * np.power(rad, -1)[:, None]
-    
+
     num_profiles = 5
     spread = 30.0 # half-width
 
@@ -156,8 +156,8 @@ def make_plot(frame, radial_theta, radial_profiles, show = False):
         plot.plot(rad, radial_profile, linewidth = linewidth, alpha = alpha, label = "%.1f" % this_theta)
 
         # Store max for ylim
-        this_max_density = np.max(radial_profile[x_min_i : x_max_i])
-        if this_max_density > max_pressure:
+        this_max_pressure = np.max(radial_profile[x_min_i : x_max_i])
+        if this_max_pressure > max_pressure:
             max_pressure = this_max_pressure
 
 
