@@ -104,7 +104,7 @@ def get_data(frame):
     spread = 30.0 # half-width
 
     radial_theta = np.linspace(peak_theta - spread, peak_theta + spread, num_profiles)
-    radial_indices = [np.searchsorted(theta, this_theta) for this_theta * (np.pi / 180.0) in radial_theta]
+    radial_indices = [np.searchsorted(theta, this_theta * (np.pi / 180.0)) for this_theta in radial_theta]
     radial_profiles = [density[:, radial_index] for radial_index in radial_indices]
 
     return radial_theta, radial_profiles
@@ -135,19 +135,34 @@ def make_plot(frame, radial_theta, radial_profiles, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
+    x_min = 1.0
+    x_max = 2.5
+    x_min_i = np.searchsorted(rad, x_min)
+    x_max_i = np.searchsorted(rad, x_max)
+
+    max_density = 0
+
     for this_theta, radial_profile in zip(radial_theta, radial_profiles):
-        plot.plot(radii, radial_profile, linewidth = linewidth, alpha = alpha, label = "%.1f" % this_theta)
+        print this_theta
+        plot.plot(rad, radial_profile, linewidth = linewidth, alpha = alpha, label = "%.1f" % this_theta)
+
+        # Store max for ylim
+        this_max_density = np.max(radial_profile[x_min_i : x_max_i])
+        if this_max_density > max_density:
+            max_density = this_max_density
+
 
     # Axis
     angles = np.linspace(0, 2 * np.pi, 7)
     degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
 
-    plot.xlim(1.0, 2.5)
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, max_density + 0.3)
 
     # Annotate
     this_title = readTitle()
-    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Radial Density", fontsize = fontsize)
+    plot.xlabel("Radius", fontsize = fontsize + 2)
+    plot.ylabel("Density", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
