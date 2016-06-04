@@ -58,7 +58,8 @@ def find_peak(averagedProfile):
 
     return peak_rad, peak_index, peak_value
 
-def get_concentration_times(pressure_gradients, width = 4 * scale_height, omega = 1, dust_density = 1.2, stokes_number = 1.0):
+default_density = 5.7 * 10**(-9) ## equivalent to 1 g / cm^3 in units of solar masses / (5 AU)^3
+def get_concentration_times(pressure_gradients, width = 4 * scale_height, omega = 1, dust_density = default_density, stokes_number = 1.0):
     stokes_factor = 1.0 / (stokes_number + stokes_number**(-1))
     drift_velocities = stokes_factor * pressure_gradients / dust_density / omega
 
@@ -108,7 +109,7 @@ def get_data(frame):
 
     # Convert to Concentration Time
     omega = peak_rad**(-1.5)
-    inner_concentration_times = get_concentration_times(nner_pressure_gradients, width = half_width, omega = omega)
+    inner_concentration_times = get_concentration_times(inner_pressure_gradients, width = half_width, omega = omega)
     outer_concentration_times = get_concentration_times(outer_pressure_gradients, width = half_width, omega = omega)
 
     return inner_concentration_times, outer_concentration_times
@@ -130,7 +131,7 @@ alpha = 0.65
 fontsize = 14
 linewidth = 4
 
-def make_plot(frame, inner_pressure_gradients, outer_pressure_gradients, show = False):
+def make_plot(frame, inner_times, outer_times, show = False):
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     orbit = int(round(time / (2 * np.pi), 0)) * frame
@@ -140,8 +141,8 @@ def make_plot(frame, inner_pressure_gradients, outer_pressure_gradients, show = 
 
     ### Plot ###
     x = np.linspace(0, 360, num_theta)
-    plot.plot(x, inner_pressure_gradients, linewidth = linewidth, label = "Inner")
-    plot.plot(x, outer_pressure_gradients, linewidth = linewidth, label = "Outer")
+    plot.plot(x, inner_times, linewidth = linewidth, label = "Inner")
+    plot.plot(x, outer_times, linewidth = linewidth, label = "Outer")
 
     # Axis
     angles = np.linspace(0, 360, 7)
@@ -149,7 +150,7 @@ def make_plot(frame, inner_pressure_gradients, outer_pressure_gradients, show = 
 
     plot.xticks(angles)
     plot.xlim(0, 360)
-    plot.ylim(0, 1.1 * np.max(inner_pressure_gradients))
+    plot.ylim(0, 1.1 * np.max(outer_times))
 
     # Annotate
     this_title = readTitle()
@@ -174,12 +175,12 @@ if len(sys.argv) > 1:
         max_frame = util.find_max_frame()
         sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
-            inner_pressure_gradients, outer_pressure_gradients = get_data(i)
-            make_plot(i, inner_pressure_gradients, outer_pressure_gradients)
+            inner_times, outer_times = get_data(i)
+            make_plot(i, inner_times, outer_times)
     else:
         # Plot Single
-        inner_pressure_gradients, outer_pressure_gradients = get_data(frame_number)
-        make_plot(frame_number, inner_pressure_gradients, outer_pressure_gradients, show = True)
+        inner_times, outer_times = get_data(frame_number)
+        make_plot(frame_number, inner_times, outer_times, show = True)
 else:
     # Search for maximum frame
     density_files = glob.glob("gasdens*.dat")
