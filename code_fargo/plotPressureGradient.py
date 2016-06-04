@@ -75,7 +75,7 @@ def get_data(frame):
     peak_index = np.argmax(avg_outer_density)
 
     # Only Look for ArgMax-es near peak
-    scale_height_i = np.searchsorted(rad, scale_height)
+    scale_height_i = np.searchsorted(rad, rad[0] + scale_height)
 
     mask = np.ones(np.shape(outer_density))
     mask[peak_index - scale_height_i : peak_index + scale_height_i] = 0 # only look within +/- 1 scale height
@@ -84,14 +84,19 @@ def get_data(frame):
     pressure = outer_density * (scale_height)**2 * np.power(outer_rad, -1)[:, None]
     masked_pressure = np.ma.array(pressure, mask = mask)
 
-    maxima = np.ma.argmax(masked_pressure, axis = 1)
+    maxima = np.ma.argmax(masked_pressure, axis = 0, fill_value = 0)
+
+    maxima_i = maxima
+    theta_i = np.indices(np.shape(maxima))
 
     # Take Pressure Gradients
-    half_width = 2 * scale_height_i
-    inner_pressure_gradients = np.abs(pressure[maxima] - pressure[maxima - half_width])
-    outer_pressure_gradients = np.abs(pressure[maxima] - pressure[maxima + half_width])
+    num_h = 4
+    half_width_i = num_h * scale_height_i
+    half_width = num_h * scale_height
+    inner_pressure_gradients = np.abs(pressure[maxima_i, theta_i] - pressure[maxima_i - half_width_i, theta_i]) / half_width
+    outer_pressure_gradients = np.abs(pressure[maxima_i, theta_i] - pressure[maxima_i + half_width_i, theta_i]) / half_width
 
-    return inner_pressure_gradients, outer_pressure_gradients
+    return inner_pressure_gradients[0], outer_pressure_gradients[0]
 
 ##### PLOTTING #####
 
@@ -119,14 +124,16 @@ def make_plot(frame, inner_pressure_gradients, outer_pressure_gradients, show = 
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    plot.plot(theta, inner_pressure_gradients, linewidth = linewidth, label = "Inner")
-    plot.plot(theta, outer_pressure_gradients, linewidth = linewidth, label = "Outer")
+    x = np.linspace(0, 360, num_theta)
+    plot.plot(x, inner_pressure_gradients, linewidth = linewidth, label = "Inner")
+    plot.plot(x, outer_pressure_gradients, linewidth = linewidth, label = "Outer")
 
     # Axis
-    angles = np.linspace(0, 2 * np.pi, 7)
+    angles = np.linspace(0, 360, 7)
     degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
 
     plot.xticks(angles)
+    plot.xlim(0, 360)
     plot.ylim(0, 1.1 * np.max(inner_pressure_gradients))
 
     # Annotate
@@ -135,7 +142,7 @@ def make_plot(frame, inner_pressure_gradients, outer_pressure_gradients, show = 
     plot.ylabel("Pressure Gradient", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
+    plot.legend(loc = "upper right") # outside of plot)
 
     # Save and Close
     plot.savefig("%s/pressure_gradient_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
@@ -175,3 +182,4 @@ else:
 
     #### Make Movies ####
     #make_movies()
+
