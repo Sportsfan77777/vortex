@@ -58,8 +58,7 @@ def find_peak(averagedProfile):
 
     return peak_rad, peak_index, peak_value
 
-default_density = 5.7 * 10**(-9) ## equivalent to 1 g / cm^3 in units of solar masses / (5 AU)^3
-def get_concentration_times(pressure_gradients, width = 4 * scale_height, omega = 1, dust_density = default_density, stokes_number = 1.0):
+def get_concentration_times(pressure_gradients, densities, width = 4 * scale_height, omega = 1, stokes_number = 1.0):
     stokes_factor = 1.0 / (stokes_number + stokes_number**(-1))
     drift_velocities = stokes_factor * pressure_gradients / dust_density / omega
 
@@ -108,9 +107,11 @@ def get_data(frame):
     outer_pressure_gradients = outer_pressure_gradients[0]
 
     # Convert to Concentration Time
+    densities = outer_density[maxima_i, theta_i]
+
     omega = peak_rad**(-1.5)
-    inner_concentration_times = get_concentration_times(inner_pressure_gradients, width = half_width, omega = omega)
-    outer_concentration_times = get_concentration_times(outer_pressure_gradients, width = half_width, omega = omega)
+    inner_concentration_times = get_concentration_times(inner_pressure_gradients, densities, width = half_width, omega = omega)
+    outer_concentration_times = get_concentration_times(outer_pressure_gradients, densities, width = half_width, omega = omega)
 
     return inner_concentration_times, outer_concentration_times
 
