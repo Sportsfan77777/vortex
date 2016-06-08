@@ -68,9 +68,9 @@ def find_peak(averagedProfile):
 def calculate_stokes_number(size, dust_density, gas_surface_density):
     return (np.pi / 2) * (size * dust_density) / gas_surface_density
 
-def get_concentration_time(pressure_gradient, surface_density, omega, width = scale_height, stokes_number = 1.0):
+def get_concentration_time(pressure_gradient, gas_surface_density, omega, width = scale_height, stokes_number = 1.0):
     stokes_factor = 1.0 / (stokes_number + stokes_number**(-1))
-    drift_velocities = stokes_factor * pressure_gradient / surface_density / omega[:, None]
+    drift_velocities = stokes_factor * pressure_gradient / gas_surface_density / omega[:, None]
 
     return width / drift_velocities
 
@@ -84,13 +84,13 @@ def get_data(frame):
     # Convert to pressure and pressure gradient
     dr = rad[1] - rad[0]
 
-    sound_speeds = (scale_height)**2 * np.power(outer_rad, -1)
-    pressure = outer_density * sound_speeds[:, None]
-    pressure_gradient = np.abs(np.diff(pressure, axis = 0)) / dr
+    sound_speeds = (scale_height)**2 * np.power(rad, -1)
+    pressure = density * sound_speeds[:, None]
+    pressure_gradient = np.abs(np.diff(pressure, axis = 1)) / dr
 
     # Get Concentration Times
     omega = np.power(rad, -1.5)
-    concentration_times = get_concentration_time(pressure_gradient, surface_density[1:], omega[1:])
+    concentration_times = get_concentration_time(pressure_gradient, density[1:], omega[1:])
 
     return concentration_times
 
@@ -125,7 +125,10 @@ def make_plot(frame, concentration_times, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    plot.pcolormesh(rad[1:], theta, np.transpose(np.log(concentration_times)), cmap = cmap)
+    result = plot.pcolormesh(rad[1:], theta, np.transpose(np.log(concentration_times)), cmap = cmap)
+
+    cbar = fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
 
     # Axis
     plot.xlim(1.0, 2.5)
