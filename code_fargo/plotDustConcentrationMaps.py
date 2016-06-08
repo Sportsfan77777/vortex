@@ -86,7 +86,7 @@ def get_data(frame):
 
     sound_speeds = (scale_height)**2 * np.power(rad, -1)
     pressure = density * sound_speeds[:, None]
-    pressure_gradient = np.abs(np.diff(pressure, axis = 1)) / dr
+    pressure_gradient = np.abs(np.diff(pressure, axis = 0)) / dr
 
     # Get Concentration Times
     omega = np.power(rad, -1.5)
