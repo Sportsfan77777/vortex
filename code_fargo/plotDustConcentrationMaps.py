@@ -82,9 +82,11 @@ def get_data(frame):
     averagedDensity = np.average(density, axis = 1)
 
     # Convert to pressure and pressure gradient
+    dr = rad[1] - rad[0]
+
     sound_speeds = (scale_height)**2 * np.power(outer_rad, -1)
     pressure = outer_density * sound_speeds[:, None]
-    pressure_gradient = np.abs(np.diff(pressure, axis = 0))
+    pressure_gradient = np.abs(np.diff(pressure, axis = 0)) / dr
 
     # Get Concentration Times
     omega = np.power(rad, -1.5)
