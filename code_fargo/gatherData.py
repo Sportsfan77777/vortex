@@ -76,8 +76,8 @@ def collect_data_for_case(case_number):
         lifetimes.append(lifetime)
 
         # Read Peak Density
-        peak_density = pickle.load(open("peak_density.p", "rb"))
-        peak_densities.append(peak_density)
+        #peak_density = pickle.load(open("peak_density.p", "rb"))
+        #peak_densities.append(peak_density)
 
         # cd back
         os.chdir(current_directory)
@@ -93,9 +93,9 @@ def collect_data_for_case(case_number):
     pickle.dump(lifetimes, open(lifetime_fn, "wb"))
 
     # Write Peak Density
-    peak_density_fn = write_base % "%d_densities"
-    peak_density_fn = peak_density_fn % case_number
-    pickle.dump(peak_densities, open(peak_density_fn, "wb"))
+    #peak_density_fn = write_base % "%d_densities"
+    #peak_density_fn = peak_density_fn % case_number
+    #pickle.dump(peak_densities, open(peak_density_fn, "wb"))
 
 for i in range(4):
     collect_data_for_case(i + 1)

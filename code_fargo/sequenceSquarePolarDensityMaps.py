@@ -151,8 +151,8 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     # Add minor grid lines
     alpha = 0.25
     dashes = [1, 5]
-    ax.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
-    ax.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
+    #ax.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
+    #ax.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
     ax.minorticks_on()
 
     # Annotate
@@ -198,7 +198,7 @@ def finish_plot(frame_range, show = True):
 
 ##### Plot Files #####
 
-widths = [700, 1100, 1500, 1900]
+widths = [700, 1100, 1500, 1900, 1900]
 
 if len(sys.argv) > 1:
     frame_range = [int(frame) for frame in sys.argv[1:]]
