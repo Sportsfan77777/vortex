@@ -27,7 +27,7 @@ def max_y(s = default_S):
 # Helper Functions
 
 def semi_minor(angle, aspect_ratio, radius):
-	return radius * (angle * (np.pi / 180.0)) / aspect_ratio
+	return radius * (angle * (np.pi / 180.0)) * 0.06 * 2 #aspect_ratio
 
 def calculate_xi(aspect_ratio):
 	return 1 + aspect_ratio**(-2)
@@ -91,9 +91,21 @@ alpha = 0.3
 my_dpi = 100
 
 def make_plot():
+	# Identify vortex range
+	extent1 = 60
+	start1 = np.searchsorted(ten_xs, -extent1)
+	end1 = np.searchsorted(ten_xs, extent1)
+
+	extent2 = 120
+	start2 = np.searchsorted(thousand_xs, -extent2)
+	end2 = np.searchsorted(thousand_xs, extent2)
+
 	# Curves
-	plot.plot(ten_xs, ten_ys, linewidth = linewidth, label = r"$T_{growth} = 10$ $\rm{orbits}$")
-	plot.plot(thousand_xs, thousand_ys, linewidth = linewidth, label = r"$T_{growth} = 1000$ $\rm{orbits}$")
+	plot.plot(ten_xs, ten_ys, c = "b", alpha = alpha, linewidth = linewidth, linestyle = "--")
+	plot.plot(thousand_xs, thousand_ys, c = "g", alpha = alpha, linewidth = linewidth, linestyle = "--")
+
+	plot.plot(ten_xs[start1 : end1], ten_ys[start1 : end1], c = "b", linewidth = linewidth, label = r"$T_{growth} = 10$ $\rm{orbits}$")
+	plot.plot(thousand_xs[start2 : end2], thousand_ys[start2 : end2], c = "g", linewidth = linewidth, label = r"$T_{growth} = 1000$ $\rm{orbits}$")
 
 	# Axes
 	y_max = max_y(default_S)
