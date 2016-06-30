@@ -67,7 +67,7 @@ rc["ytick.labelsize"] = labelsize
 
 colors = ["g", "b", "k", "y"]
 linestyles = ["-", "-.", "--"]
-dashes = [[10**5, 1], [3, 1], [18, 8]]
+dashes = [[12, 10], [3, 1], [10**5, 1]]
 linewidth = 4
 
 alpha_min = 0.15

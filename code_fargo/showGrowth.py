@@ -38,14 +38,18 @@ colors = ["orange", "g", "k", "b", "y"]
 fig = plot.figure()
 ax = fig.add_subplot(111)
 
-# Definition #
-limit = 10**5
-plot.plot(xs, limit * np.ones(len(xs)), c = "r", linewidth = 2)
-plot.plot(xs, 5 * limit * np.ones(len(xs)), c = "r", linewidth = 2)
-
 # Curves
 for i, (time, ys) in enumerate(zip(growth_times, years)):
-	plot.plot(xs, ys, linewidth = linewidth, c = colors[i], label = r"$T_{growth} = " + str(time) + "$ $T_{planet}$")
+	cutoff = np.searchsorted(ys, 10**5)
+	if cutoff < len(ys):
+		print cutoff, xs[cutoff]
+	plot.plot(xs[:cutoff], ys[:cutoff], alpha = 0.3, linewidth = linewidth, c = colors[i])
+	plot.plot(xs[cutoff:], ys[cutoff:], linewidth = linewidth + 1, c = colors[i], label = r"$T_{growth} = " + str(time) + "$ $T_{planet}$")
+
+	# Definition #
+limit = 10**5
+plot.plot(xs, limit * np.ones(len(xs)), c = "purple", linestyle = "-", linewidth = 2)
+plot.plot(xs, 5 * limit * np.ones(len(xs)), c = "purple", linestyle = "--", linewidth = 2)
 
 # Axes
 plot.xlim(0, xs[-1])
@@ -55,7 +59,7 @@ plot.yscale("log")
 # Annotate
 plot.xlabel("Planet Semimajor Axis (in AU)", fontsize = fontsize)
 plot.ylabel(r"$T_{growth}$ (in years)", fontsize = fontsize)
-plot.title("", fontsize = fontsize + 1)
+plot.title("Runaway Gas Accretion Timescales", fontsize = fontsize + 1)
 
 handles, labels = ax.get_legend_handles_labels()
 plot.legend(reversed(handles), reversed(labels), loc = "lower right")
