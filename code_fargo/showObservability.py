@@ -1,5 +1,5 @@
 """
-compares variables for different taperings
+marks when vortex lifetime corresponds to above a threshold number of years
 
 Usage:
 showObservability.py
@@ -33,10 +33,10 @@ case2_y = [case2_y[0], case2_y[-2], case2_y[-1]]
 
 # M5, v6
 case3_x = pickle.load(open("case3_tapers.p", "rb")) #[10, 500, 1000, 2000]
-case3_x = [case3_x[0], case3_x[-2], case3_x[-1]]
+case3_x = [case3_x[0], case3_x[-2], case3_x[-2]]
 
 case3_y = pickle.load(open("case3_lifetimes.p", "rb")) #[1380, 1350, 660, 610]
-case3_y = [case3_y[0], case3_y[-2], case3_y[-1]]
+case3_y = [case3_y[0], case3_y[-2], case3_y[-2]]
 
 # M5, v7
 case4_x = pickle.load(open("case4_tapers.p", "rb")) #[10, 1000, 2000, 4000]
@@ -53,9 +53,9 @@ cases_y = [case1_y, case2_y, case3_y, case4_y]
 xs = np.linspace(0.1, 50, 400)
 Ts = np.array([x**(1.5) for x in xs])
 
-cases_y_years = []
+cases_yrs = []
 for case_y in cases_y:
-	cases_y_years.append([Ts * lifetime for lifetime in case_y])
+	cases_yrs.append([Ts * lifetime for lifetime in case_y])
 
 ### PLOTTING ###
 # Parameters #
@@ -67,11 +67,16 @@ rc["ytick.labelsize"] = labelsize
 
 colors = ["g", "b", "k", "y"]
 linestyles = ["-", "-.", "--"]
+dashes = [[10**5, 1], [3, 1], [18, 8]]
 linewidth = 4
+
+alpha_min = 0.15
+alpha_max = 0.35
+soft_alphas = [alpha_max, alpha_min, alpha_max]
 
 alpha_min = 0.35
 alpha_max = 0.9
-alphas = [alpha_max, alpha_min, alpha_max]
+hard_alphas = [alpha_max, alpha_min, alpha_max]
 
 ### Labels ###
 case1_label = r"$1$ $M_J$, $\nu = 10^{-6}$, $T_{growth} = "
@@ -81,6 +86,18 @@ case4_label = r"$5$ $M_J$, $\nu = 10^{-7}$, $T_{growth} = "
 
 labels = [case1_label, case2_label, case3_label, case4_label]
 
+### Cutoffs ###
+limit = 10**5
+
+case1_cutoff = np.power(limit / case1_x[-1], 2.0 / 3.0)
+case2_cutoff = np.power(limit / case2_x[-1], 2.0 / 3.0)
+case3_cutoff = np.power(limit / case3_x[-1], 2.0 / 3.0)
+case4_cutoff = np.power(limit / case4_x[-1], 2.0 / 3.0)
+
+cutoffs = [case1_cutoff, case2_cutoff, case3_cutoff, case4_cutoff]
+
+print cutoffs
+
 ## Set up figure ##
 fig = plot.figure()
 ax = fig.add_subplot(111)
@@ -88,21 +105,25 @@ ax = fig.add_subplot(111)
 ### Curves ###
 
 # Definition #
-limit = 10**5
 plot.plot(xs, limit * np.ones(len(xs)), c = "r", linewidth = 2)
 
 # Data #
 
-for i, case_y in enumerate(cases_y_years):
+for i, case_y in enumerate(cases_yrs):
 	for j, ys in enumerate(case_y):
 		label = ""
 		#if j == 0:
 		#	label = labels[i] + str(tapers[i][j]) + "$"
 		if j == len(case_y) - 1:
 			label = labels[i] + str(tapers[i][j]) + "$"
-		print i, j, label
-		if j != 1:
-			plot.plot(xs, ys, c = colors[i], alpha = alphas[j], linewidth = linewidth, linestyle = linestyles[j], label = label)
+
+		cutoff = np.searchsorted(xs, cutoffs[i]) # convert cutoff from AU to index
+
+		if j == 0:
+			plot.plot(xs, ys, c = colors[i], alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], label = label)
+		if j == 2:
+			plot.plot(xs[:cutoff], ys[:cutoff], c = colors[i], alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j])
+			plot.plot(xs[cutoff:], ys[cutoff:], c = colors[i], alpha = hard_alphas[j], linewidth = linewidth + 1, dashes = dashes[j], label = label)
 
 # Axes
 plot.xlim(0, xs[-1])
@@ -110,7 +131,7 @@ plot.ylim(10**(2.5), 10**(6.5))
 plot.yscale("log")
 
 # Annotate
-plot.xlabel(r"Planet Semimajor Axis (in $AU$)", fontsize = fontsize)
+plot.xlabel("Planet Semimajor Axis (in AU)", fontsize = fontsize)
 plot.ylabel("Vortex Lifetime (in years)", fontsize = fontsize)
 plot.title("Vortex Observability", fontsize = fontsize + 1)
 
@@ -118,7 +139,8 @@ handles, labels = ax.get_legend_handles_labels()
 plot.legend(re_sort(handles), re_sort(labels), loc = "lower right")
 
 # Save + Show
-plot.savefig("observability.png")
+plot.savefig("observability.png", bbox_inches = "tight")
+plot.savefig("observability.pdf", bbox_inches = "tight", format = "pdf")
 plot.show()
 
 
