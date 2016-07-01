@@ -54,7 +54,7 @@ def get_dust(x, aspect_ratio, max_density, S = default_S):
 ### PLOTTING ###
 # Options
 growth = [1000, 4000, 1000]
-dashes = [[14, 10, 6, 10], [10**5, 1], [3, 3]]
+dashes = [[8, 6, 4, 6], [10**5, 1], [3, 3]]
 
 mass = [1, 5, 5]
 viscosity = [-7, -7, -6]
@@ -107,7 +107,7 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
         # Labels
         label1 = sizes[i] #+ r"$T_{growth} = 10$ $\rm{orbits}$"
-        label2 = "" #+ r"$, $T_{growth} = " + str(growth[i]) + r"$ $\rm{orbits}$"
+        label2 = sizes[i] #+ r"$, $T_{growth} = " + str(growth[i]) + r"$ $\rm{orbits}$"
 
         # Select Subplot
         ax = fig.add_subplot(1, 3, number + 1)
@@ -125,9 +125,9 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
     plot.yscale("log")
 
     if number == 2:
-        angles = np.linspace(0, 180, 7)
+        angles = np.linspace(0, 120, 5)
     else:
-        angles = np.linspace(0, 150, 6)
+        angles = np.linspace(0, 120, 5)
     plot.xticks(angles)
 
     if number != 0:
@@ -135,18 +135,19 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
         ax.set_yticklabels([])
 
     # Annotate
-    margin = 130
+    margin = 128
+    diff = 5
 
-    top = 3.85
+    top = 3.9
     base1 = 2.9
     split = 2.73
     base2 = 1.7
-    bottom = 1.6
+    bottom = 1.55
 
     # Vertical
-    plot.plot([margin - 7, margin - 7], [10**(bottom), 10**(top)], c = "k")
+    plot.plot([margin - diff, margin - diff], [10**(bottom), 10**(top)], c = "k")
 
-    plot.plot([margin - 7, 180], [10**(top), 10**(top)], c = "k") # Horizontal
+    plot.plot([margin - diff, 180], [10**(top), 10**(top)], c = "k") # Horizontal
 
     plot.text(margin, 10**(base1 + 0.8), r"$T_{growth} = $" + "%d" % 10)
     plot.text(margin, 10**(base1 + 0.6), r"$\chi = $ " + "%.1f" % aspect1)
@@ -154,7 +155,7 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
     plot.text(margin, 10**(base1 + 0.2), r"$dr = $" + "%.02f" % (dr1))
     plot.text(margin, 10**(base1), r"$\rho_{peak} = $" + "%.1f" % density1)
 
-    plot.plot([margin - 7, 180], [10**(split), 10**(split)], c = "k") # Horizontal
+    plot.plot([margin - diff, 180], [10**(split), 10**(split)], c = "k") # Horizontal
 
     plot.text(margin, 10**(base2 + 0.8), r"$T_{growth} = $" + "%d" % growth[number])
     plot.text(margin, 10**(base2 + 0.6), r"$\chi = $ " + "%.1f" % aspect2)
@@ -162,9 +163,9 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
     plot.text(margin, 10**(base2 + 0.2), r"$dr = $" + "%.02f" % (dr2))
     plot.text(margin, 10**(base2), r"$\rho_{peak} = $" + "%.1f" % density2)
 
-    plot.plot([margin - 7, 180], [10**(bottom), 10**(bottom)], c = "k") # Horizontal
+    plot.plot([margin - diff, 180], [10**(bottom), 10**(bottom)], c = "k") # Horizontal
 
-    plot.xlabel(r"$\phi - \phi_{center}$", fontsize = fontsize)
+    plot.xlabel(r"$|\phi - \phi_{center}|$ $\rm{(in}$ $\rm{degrees)}$", fontsize = fontsize)
     if number == 0:
         plot.ylabel("Normalized Dust Density", fontsize = fontsize)
     plot.title(r"$m_p = " + str(mass[number]) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity[number]) + r"}$", fontsize = fontsize + 1, y = 1.01)
