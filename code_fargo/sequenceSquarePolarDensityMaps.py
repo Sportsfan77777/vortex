@@ -206,7 +206,7 @@ def finish_plot(frame_range, show = True):
             frame_str += "-%d" % frame
 
     plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
-    plot.savefig("%s/densityMapSequence_%s.pdf" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi, format = "pdf")
+    plot.savefig("%s/densityMapSequence_%s.pdf" % (save_directory, frame_str), bbox_inches = 'tight', format = "pdf")
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
