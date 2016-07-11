@@ -165,7 +165,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     #this_title = readTitle()
     #plot.xlabel("x", fontsize = fontsize)
     #plot.ylabel("y", fontsize = fontsize)
-    ax.set_title(r"$t = %d$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
+    ax.set_title(r"$t = %d$ $\rm{orbits}$, $m_p(t) = %.2f$ $M_J$" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     # Only for last frame
@@ -183,7 +183,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 
 def finish_plot(frame_range, show = True):
     # Title
-    title = r"$m_p = %d$ $M_J$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $T_p$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+    title = r"$m_p = %d$ $M_J$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
     fig.suptitle(title, y = 0.95, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
