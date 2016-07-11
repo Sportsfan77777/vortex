@@ -34,6 +34,12 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+import colormaps as cmaps
+plot.register_cmap(name = 'viridis', cmap = cmaps.viridis)
+plot.register_cmap(name = 'inferno', cmap = cmaps.inferno)
+plot.register_cmap(name = 'plasma', cmap = cmaps.plasma)
+plot.register_cmap(name = 'magma', cmap = cmaps.magma)
+
 save_directory = "squareDensityMapSequences"
 
 ### Get FARGO Parameters ###
@@ -104,7 +110,7 @@ except:
     print "Directory Already Exists"
 
 # Plot Parameters
-cmap = "RdYlBu_r"
+cmap = "inferno"
 clim = [0, 2]
 
 fontsize = 14
@@ -177,7 +183,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 
 def finish_plot(frame_range, show = True):
     # Title
-    title = r"$m_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_{taper} = %d$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+    title = r"$m_p = %d$ $M_J$, $\nu_{disk} = 10^{%d}$, $T_{taper} = %d$ $T_p$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
     fig.suptitle(title, y = 0.95, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
