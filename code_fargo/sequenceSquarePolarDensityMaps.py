@@ -154,6 +154,11 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     circle = plot.Circle((0, 0), min(rad), color = "black")
     ax.add_artist(circle)
 
+    # Label star and planet
+    planet_size = (current_mass / (planet_mass / 0.001))
+    plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
+    plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
+
     # Add minor grid lines
     alpha = 0.25
     dashes = [1, 5]
