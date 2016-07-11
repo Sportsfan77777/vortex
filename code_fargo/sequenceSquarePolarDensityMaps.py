@@ -114,7 +114,7 @@ cmap = "inferno"
 clim = [0, 2]
 
 fontsize = 16
-labelsize = 14
+labelsize = 15
 my_dpi = 100
 
 rc['xtick.labelsize'] = labelsize
@@ -182,7 +182,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     cax = divider.append_axes("right", size = "8%", pad = 0.2)
     #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
     cbar = fig.colorbar(result, cax = cax)
-    cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", rotation = 270, labelpad = 25)
+    cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     if frame_i != num_frames:
         fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
@@ -193,7 +193,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 def finish_plot(frame_range, show = True):
     # Title
     title = r"$m_p = %d$ $M_J$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-    fig.suptitle(title, y = 1.0, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    fig.suptitle(title, y = 0.97, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save and Close
     plot.tight_layout()
@@ -206,7 +206,7 @@ def finish_plot(frame_range, show = True):
             frame_str += "-%d" % frame
 
     plot.savefig("%s/densityMapSequence_%s.png" % (save_directory, frame_str), bbox_inches = 'tight', dpi = my_dpi)
-    plot.savefig("%s/densityMapSequence_%s.pdf" % (save_directory, frame_str), bbox_inches = 'tight', format = "pdf")
+    #plot.savefig("%s/densityMapSequence_%s.pdf" % (save_directory, frame_str), bbox_inches = 'tight', format = "pdf")
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
