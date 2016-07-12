@@ -81,9 +81,13 @@ def collect_data_for_case(case_number):
         #peak_densities.append(peak_density)
 
         # Read Trigger Mass
+        factor = 1.0
+        if case > 2:
+            factor = 5.0
+
         trigger_dictionary = pickle.load(open("triggers.p", "rb"))
         trigger_time = trigger_dictionary[0.02]
-        trigger_mass = np.power(np.sin((np.pi / 2.0) * (1.0 * trigger_time / taper)), 2)
+        trigger_mass = factor * np.power(np.sin((np.pi / 2.0) * (1.0 * trigger_time / taper)), 2)
 
         trigger_masses.append(trigger_mass) # Use 0.02 as the trigger mass
 
