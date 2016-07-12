@@ -82,7 +82,7 @@ def collect_data_for_case(case_number):
 
         # Read Trigger Mass
         factor = 1.0
-        if case > 2:
+        if case_number > 2:
             factor = 5.0
 
         trigger_dictionary = pickle.load(open("triggers.p", "rb"))
