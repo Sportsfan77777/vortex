@@ -67,35 +67,48 @@ def collect_data_for_case(case_number):
 
     lifetimes = []
     peak_densities = []
-    for taper in tapers:
+    trigger_masses = []
+    for taper in tapers[1:]:
         # cd taper
         os.chdir(this_base_path % taper)
 
         # Read Lifetime
-        lifetime = pickle.load(open("lifetime.p", "rb"))
-        lifetimes.append(lifetime)
+        #lifetime = pickle.load(open("lifetime.p", "rb"))
+        #lifetimes.append(lifetime)
 
         # Read Peak Density
         #peak_density = pickle.load(open("peak_density.p", "rb"))
         #peak_densities.append(peak_density)
 
+        # Read Trigger Mass
+        trigger_dictionary = pickle.load(open("triggers.p", "rb"))
+        trigger_time = trigger_dictionary[0.02]
+        trigger_mass = np.pow(np.sin(1.0 * trigger_time / taper), 2)
+
+        trigger_masses.append(trigger_mass) # Use 0.02 as the trigger mass
+
         # cd back
         os.chdir(current_directory)
 
     # Write Tapers
-    taper_fn = write_base % "%d_tapers"
-    taper_fn = taper_fn % case_number
-    pickle.dump(tapers, open(taper_fn, "wb"))
+    #taper_fn = write_base % "%d_tapers"
+    #taper_fn = taper_fn % case_number
+    #pickle.dump(tapers, open(taper_fn, "wb"))
 
     # Write Lifetime
-    lifetime_fn = write_base % "%d_lifetimes"
-    lifetime_fn = lifetime_fn % case_number
-    pickle.dump(lifetimes, open(lifetime_fn, "wb"))
+    #lifetime_fn = write_base % "%d_lifetimes"
+    #lifetime_fn = lifetime_fn % case_number
+    #pickle.dump(lifetimes, open(lifetime_fn, "wb"))
 
     # Write Peak Density
     #peak_density_fn = write_base % "%d_densities"
     #peak_density_fn = peak_density_fn % case_number
     #pickle.dump(peak_densities, open(peak_density_fn, "wb"))
+
+    # Write Trigger Mass
+    trigger_fn = write_base % "%d_triggers"
+    trigger_fn = trigger_fn % case_number
+    pickle.dump(triggers, open(trigger_fn, "wb"))
 
 for i in range(4):
     collect_data_for_case(i + 1)
