@@ -83,7 +83,7 @@ def collect_data_for_case(case_number):
         # Read Trigger Mass
         trigger_dictionary = pickle.load(open("triggers.p", "rb"))
         trigger_time = trigger_dictionary[0.02]
-        trigger_mass = np.pow(np.sin(1.0 * trigger_time / taper), 2)
+        trigger_mass = np.power(np.sin(1.0 * trigger_time / taper), 2)
 
         trigger_masses.append(trigger_mass) # Use 0.02 as the trigger mass
 
@@ -108,7 +108,7 @@ def collect_data_for_case(case_number):
     # Write Trigger Mass
     trigger_fn = write_base % "%d_triggers"
     trigger_fn = trigger_fn % case_number
-    pickle.dump(triggers, open(trigger_fn, "wb"))
+    pickle.dump(trigger_masses, open(trigger_fn, "wb"))
 
 for i in range(4):
     collect_data_for_case(i + 1)
