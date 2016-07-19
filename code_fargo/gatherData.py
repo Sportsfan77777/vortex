@@ -46,7 +46,7 @@ def collect_data_for_case(case_number):
         mass = "one_jupiter"
         visc = 7
         dir_name = "taper%d"
-        tapers = [10, 500, 1000, 2000]
+        tapers = [10, 250, 500, 1000, 2000]
     elif case_number == 3:
         # 5 MJ, visc6
         mass = "five_jupiters"
@@ -58,7 +58,7 @@ def collect_data_for_case(case_number):
         mass = "five_jupiters"
         visc = 7
         dir_name = "taper%d_fold3and500"
-        tapers = [10, 1000, 2000, 4000]
+        tapers = [10, 500, 1000, 2000, 4000]
 
     this_base_path = base_path % (mass, visc, dir_name)
     current_directory = os.getcwd() # store for later
@@ -95,9 +95,9 @@ def collect_data_for_case(case_number):
         os.chdir(current_directory)
 
     # Write Tapers
-    #taper_fn = write_base % "%d_tapers"
-    #taper_fn = taper_fn % case_number
-    #pickle.dump(tapers, open(taper_fn, "wb"))
+    taper_fn = write_base % "%d_trigger_tapers"
+    taper_fn = taper_fn % case_number
+    pickle.dump(tapers, open(taper_fn, "wb"))
 
     # Write Lifetime
     #lifetime_fn = write_base % "%d_lifetimes"
