@@ -7,26 +7,27 @@ setupTaperComparison.py
 
 import numpy as np
 from matplotlib import pyplot as plot
+from matplotlib import rcParams as rc
 from matplotlib import ticker as ticker
 
 import pickle
 
 ### Data ###
 # M1, v6
-case1_x = pickle.load(open("case1_tapers.p", "rb")) #[10, 250, 500, 1000]
-case1_y = pickle.load(open("case1_lifetimes.p", "rb")) #[1000, 700, 400, 200]
+case1_x = pickle.load(open("case1_tapers.p", "rb")) #[10, 250, 500]
+case1_y = pickle.load(open("case1_lifetimes.p", "rb")) #[530, 250, 230]
 
 # M1, v7
 case2_x = pickle.load(open("case2_tapers.p", "rb")) #[10, 500, 1000, 2000]
-case2_y = pickle.load(open("case2_lifetimes.p", "rb")) #[7000, 1500, 1000, 600]
+case2_y = pickle.load(open("case2_lifetimes.p", "rb")) #[7600, 2280, 1190, 850]
 
 # M5, v6
 case3_x = pickle.load(open("case3_tapers.p", "rb")) #[10, 500, 1000, 2000]
-case3_y = pickle.load(open("case3_lifetimes.p", "rb")) #[1500, 1200, 500, 300]
+case3_y = pickle.load(open("case3_lifetimes.p", "rb")) #[1380, 1350, 660, 610]
 
 # M5, v7
 case4_x = pickle.load(open("case4_tapers.p", "rb")) #[10, 1000, 2000, 4000]
-case4_y = pickle.load(open("case4_lifetimes.p", "rb")) #[14000, 10000, 8000, 5000]
+case4_y = pickle.load(open("case4_lifetimes.p", "rb")) #[19990, 16730, 14680, 6770]
 
 #### Helper Function ####
 
@@ -58,9 +59,13 @@ def range_brace(x_min, x_max, mid=0.75,
 linewidth = 4
 vertical_linewidth = 2
 brace_linewidth = 2
-fontsize = 16
+labelsize = 15
+fontsize = 17
 markersize = 9
 my_dpi = 100
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 max_value = 15000
 vertical_min_value = 1
@@ -145,16 +150,21 @@ brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 10000)
 plot.plot(brace5_x, 1.23 * text_y5 + brace5_y, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 #### Curves ####
-plot.plot(case4_x, case4_y, marker = "s", markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
-plot.plot(case2_x, case2_y, marker = "*", markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
-plot.plot(case3_x, case3_y, marker = "p", markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
-plot.plot(case1_x, case1_y, marker = "^", markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
+#colors = [1, "orange", "gold", "deepskyblue", "darkblue"]
+#colors = [1, "springgreen", "darkgreen", "deepskyblue", "darkblue"]
+#colors = [1, "gold", "deepskyblue", "goldenrod", "darkblue"]
+colors = [1, "gold", "deepskyblue", "goldenrod", "darkblue"]
+
+plot.plot(case4_x, case4_y, c = colors[4], marker = "s", markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
+plot.plot(case2_x, case2_y, c = colors[2], marker = "*", markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
+plot.plot(case3_x, case3_y, c = colors[3], marker = "p", markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
+plot.plot(case1_x, case1_y, c = colors[1], marker = "^", markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
 
 #ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
 #ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
 
 # Annotate
-plot.xlabel("Taper Time (in planet orbits)", fontsize = fontsize)
+plot.xlabel(r"$T_{growth}$ (in planet orbits)", fontsize = fontsize)
 plot.ylabel("Vortex Lifetime (in planet orbits)", fontsize = fontsize)
 
 legend = plot.legend(loc = "lower right") #, bbox_to_anchor = (legend_x, legend_y))

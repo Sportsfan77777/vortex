@@ -52,9 +52,11 @@ labelsize = 14
 rc["xtick.labelsize"] = labelsize
 rc["ytick.labelsize"] = labelsize
 
+rc["legend.markerscale"] = 0.6 # change this to get dashes to fit in legend
+
 size = 100
 
-colors = ["g", "b", "k", "y"]
+colors = ["gold", "deepskyblue"]
 linestyles = ["-", "-.", "--"]
 dashes = [[10, 8], [4, 4], [10**5, 1]]
 linewidth = 4
@@ -121,17 +123,13 @@ for i, case_y in enumerate(cases_yrs):
             plot.plot(xs, ys, c = colors[i], alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], label = label, zorder = 10)
         else:
             if len(case_y) == 2:
-                k = 2 # Switch for dashes only
-            else:
-                k = j
+                j = 2 # Switch for dashes only
 
-            plot.plot(xs[:cutoff], ys[:cutoff], c = colors[i], alpha = soft_alphas[k], linewidth = linewidth, dashes = dashes[j], zorder = 10)
-            plot.plot(xs[cutoff:], ys[cutoff:], c = colors[i], alpha = hard_alphas[k], linewidth = linewidth + 1, dashes = dashes[j], label = label, zorder = 10)
+            plot.plot(xs[:cutoff], ys[:cutoff], c = colors[i], alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], zorder = 10)
+            plot.plot(xs[cutoff:], ys[cutoff:], c = colors[i], alpha = hard_alphas[j], linewidth = linewidth + 1, dashes = dashes[j], label = label, zorder = 10)
 
             if len(case_y) == 2:
-                k = 1 # Switch for dashes only
-            else:
-                k = j
+                j = 1 # Switch for dashes only
 
         # Mark 10^5 years
         if tapers[i][j] > 10:
@@ -156,7 +154,7 @@ for i, case_y in enumerate(cases_yrs):
     else:
         ax.set_xticklabels([])
     plot.ylabel("Vortex Lifetime (in years)", fontsize = fontsize)
-    plot.title(titles[i], fontsize = fontsize + 1, x = 0.11, y = 0.85, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.title(titles[i], fontsize = fontsize + 1, x = 0.11, y = 0.85, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 10.0))
 
     #handles, labels = ax.get_legend_handles_labels()
     #plot.legend(re_sort(handles), re_sort(labels), loc = "lower right")
@@ -167,10 +165,10 @@ for i, case_y in enumerate(cases_yrs):
     margin = 1
     offset = 0
 
-    accretion_text = r"      $\dot{M} = 10^{-5} M_J \rm{ / yr}$      "
+    accretion_text = r"      $\dot{M} = 10^{-5} M_J \rm{ / yr}$       "
     if i == 1:
         accretion_text += "\n" + r"      $\dot{M} = 2 \times 10^{-6} M_J \rm{ / yr}$"
-        offset = 0.4
+        offset = 0.35
 
     plot.text(xtext, 10**(2.8), accretion_text, fontsize = fontsize - 4, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1, pad = 7.0))
     plot.scatter(xtext + margin, 10**(2.9 + offset), c = colors[i], marker = "s", s = size)

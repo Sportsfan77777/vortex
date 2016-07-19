@@ -14,19 +14,19 @@ import pickle
 
 ### Data ###
 # M1, v6
-case1_x = pickle.load(open("case1_tapers.p", "rb")) #[10, 250, 500, 1000]
+case1_x = 1.0 / np.array(pickle.load(open("case1_trigger_tapers.p", "rb"))) #[10, 250, 500, 1000]
 case1_y = pickle.load(open("case1_triggers.p", "rb")) #[1000, 700, 400, 200]
 
 # M1, v7
-case2_x = pickle.load(open("case2_tapers.p", "rb")) #[10, 500, 1000, 2000]
+case2_x = 1.0 / np.array(pickle.load(open("case2_trigger_tapers.p", "rb"))) #[10, 500, 1000, 2000]
 case2_y = pickle.load(open("case2_triggers.p", "rb")) #[7000, 1500, 1000, 600]
 
 # M5, v6
-case3_x = pickle.load(open("case3_tapers.p", "rb")) #[10, 500, 1000, 2000]
+case3_x = 5.0 / np.array(pickle.load(open("case3_trigger_tapers.p", "rb")))#[10, 500, 1000, 2000]
 case3_y = pickle.load(open("case3_triggers.p", "rb")) #[1500, 1200, 500, 300]
 
 # M5, v7
-case4_x = pickle.load(open("case4_tapers.p", "rb")) #[10, 1000, 2000, 4000]
+case4_x = 5.0 / np.array(pickle.load(open("case4_trigger_tapers.p", "rb")))#[10, 1000, 2000, 4000]
 case4_y = pickle.load(open("case4_triggers.p", "rb")) #[14000, 10000, 8000, 5000]
 
 #### Helper Function ####
@@ -67,7 +67,7 @@ my_dpi = 100
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
-max_value = 0.4
+max_value = 0.375
 vertical_min_value = 10**(-5)
 vertical_max_value = 3 * max_value
 
@@ -82,15 +82,15 @@ figure = plot.figure(figsize = (850 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 ax = figure.add_subplot(1, 1, 1)
 
 # Limits
-log_x = False
+log_x = True
 log_y = False
 
 if log_x:
     plot.xscale("log")
-    plot.xlim(5, 5000)
-    ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
+    plot.xlim(80**(-1), 2500**(-1))
+    #ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
 else:
-    plot.xlim(0, 4100)
+    plot.xlim(-100, 2100)
 
 if log_y:
     plot.yscale("log")
@@ -101,10 +101,10 @@ if log_y:
     y_values = [1.0, 300, 1000, 3000, 10000]
     ax.set_yticks(y_values)
 else:
-    plot.ylim(0.1, max_value)
+    plot.ylim(0.125, max_value)
 
-x_values = [500, 1000, 2000, 3000, 4000]
-ax.set_xticks(x_values)
+#x_values = [250, 500, 1000, 2000]
+#ax.set_xticks(x_values)
 
 ### Vertical Lines ###
 style4 = [5, 5]
@@ -117,52 +117,67 @@ line5_20 = 1118 # M_dot = 10^-5 M_Jup / yr at 20 AU
 line5_10 = 3162 # M_dot = 10^-5 M_Jup / yr at 10 AU
 
 # Lines
-plot.plot([line4_20, line4_20], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style4)
-plot.plot([line4_10, line4_10], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style4)
-plot.plot([line4_5, line4_5], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style4)
+#plot.plot([line4_20, line4_20], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style4)
+#plot.plot([line4_10, line4_10], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style4)
+#plot.plot([line4_5, line4_5], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style4)#
 
-plot.plot([line5_20, line5_20], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style5)
-plot.plot([line5_10, line5_10], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style5)
+#plot.plot([line5_20, line5_20], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style5)
+#plot.plot([line5_10, line5_10], [vertical_min_value, vertical_max_value], linewidth = vertical_linewidth, dashes = style5)
 
 ## Labels ##
 # 10^-4
 text_y4 = max_value + 0.005
-plot.text(line4_20, text_y4, "20", horizontalalignment = 'center')
-plot.text(line4_10, text_y4, "10", horizontalalignment = 'center')
-plot.text(line4_5, text_y4, "5", horizontalalignment = 'center')
+#plot.text(line4_20, text_y4, "20", horizontalalignment = 'center')
+#plot.text(line4_10, text_y4, "10", horizontalalignment = 'center')
+#plot.text(line4_5, text_y4, "5", horizontalalignment = 'center')
 
 midpoint4 = (line4_20 + line4_5) / 2.0
-plot.text(midpoint4, text_y4 + 0.03, r"$\dot{M}$ = $10^{-4}$ $M_J$ / yr" + "\nat 20, 10, and 5 AU", horizontalalignment = 'center')
+#plot.text(midpoint4, text_y4 + 0.03, r"$\dot{M}$ = $10^{-4}$ $M_J$ / yr" + "\nat 20, 10, and 5 AU", horizontalalignment = 'center')
 
 # 10^-5
 text_y5 = max_value + 0.010
-plot.text(line5_20, text_y5, "20", horizontalalignment = 'center')
-plot.text(line5_10, text_y5, "10", horizontalalignment = 'center')
+#plot.text(line5_20, text_y5, "20", horizontalalignment = 'center')
+#plot.text(line5_10, text_y5, "10", horizontalalignment = 'center')
 
 midpoint5 = (line5_20 + line5_10) / 2.0
-plot.text(midpoint5, text_y5 + 0.03, r"$\dot{M}$ = $10^{-5}$ $M_J$ / yr at 20 and 10 AU", horizontalalignment = 'center')
+#plot.text(midpoint5, text_y5 + 0.03, r"$\dot{M}$ = $10^{-5}$ $M_J$ / yr at 20 and 10 AU", horizontalalignment = 'center')
 
 # Braces
 brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 0.015)
-plot.plot(brace4_x, text_y4 + brace4_y + 0.01, color = "black", linewidth = brace_linewidth, clip_on = False)
+#plot.plot(brace4_x, text_y4 + brace4_y + 0.01, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 0.015)
-plot.plot(brace5_x, text_y5 + brace5_y + 0.01, color = "black", linewidth = brace_linewidth, clip_on = False)
+#plot.plot(brace5_x, text_y5 + brace5_y + 0.01, color = "black", linewidth = brace_linewidth, clip_on = False)
 
 #### Curves ####
-plot.plot(case3_x[1:], case3_y, marker = "p", c = 'b', markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
-plot.plot(case1_x[1:], case1_y, marker = "^", c = 'g', markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
-plot.plot(case4_x[1:], case4_y, marker = "s", c = 'y', markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
-plot.plot(case2_x[1:], case2_y, marker = "*", c = 'k', markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
+colors = [1, "orange", "gold", "deepskyblue", "darkblue"]
+
+plot.plot(case3_x[1:], case3_y, marker = "p", c = colors[3], markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
+plot.plot(case1_x[1:], case1_y, marker = "^", c = colors[1], markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
+plot.plot(case4_x[1:], case4_y, marker = "s", c = colors[4], markersize = markersize, linewidth = linewidth, label = case4_label) # M5, v7
+plot.plot(case2_x[1:], case2_y, marker = "*", c = colors[2], markersize = markersize + 3, linewidth = linewidth, label = case2_label) # M1, v7
 
 #ax.xaxis.set_major_formatter(ticker.FormatStrFormatter('%d'))
 #ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
 
 # Annotate
-plot.xlabel(r"$T_{growth}$ (in planet orbits)", fontsize = fontsize)
+plot.xlabel(r"Accretion Rate (in $M_J$ / planet orbit)", fontsize = fontsize)
 plot.ylabel("Trigger Mass (in $M_J$)", fontsize = fontsize)
 
 legend = plot.legend(loc = "upper right") #, bbox_to_anchor = (legend_x, legend_y))
+
+# Twin Axis
+twin_axis_labels = ["100", "200", "500", "1000", "2000"]
+twin_tick_locations = [1.0 / int(x) for x in twin_axis_labels]
+
+print twin_tick_locations
+
+ax2 = ax.twiny()
+ax2.set_xscale("log")
+ax2.set_xlim(80**(-1), 2500**(-1))
+ax2.set_xticks(twin_tick_locations)
+ax2.set_xticklabels(twin_axis_labels)
+ax2.set_xlabel(r"Jupiter-Mass Growth Time (in planet orbits)", fontsize = fontsize, labelpad = 7)
 
 # Save + Close
 plot.savefig("trigger_comparison.png", bbox_inches = "tight")

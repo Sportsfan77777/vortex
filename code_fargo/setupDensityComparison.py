@@ -7,6 +7,7 @@ setupTaperComparison.py
 
 import numpy as np
 from matplotlib import pyplot as plot
+from matplotlib import rcParams as rc
 from matplotlib import ticker as ticker
 
 import pickle
@@ -58,9 +59,13 @@ def range_brace(x_min, x_max, mid=0.75,
 linewidth = 4
 vertical_linewidth = 2
 brace_linewidth = 2
-fontsize = 16
+fontsize = 17
+labelsize = 15
 markersize = 9
 my_dpi = 100
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 max_value = 4
 vertical_min_value = 10**(-5)
@@ -154,7 +159,7 @@ plot.plot(case1_x, case1_y, marker = "^", c = 'g', markersize = markersize, line
 #ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
 
 # Annotate
-plot.xlabel("Taper Time (in planet orbits)", fontsize = fontsize)
+plot.xlabel(r"$T_{growth}$ (in planet orbits)", fontsize = fontsize)
 plot.ylabel("Peak Density", fontsize = fontsize)
 
 legend = plot.legend(loc = "upper right") #, bbox_to_anchor = (legend_x, legend_y))
