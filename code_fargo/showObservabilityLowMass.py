@@ -52,17 +52,17 @@ labelsize = 14
 rc["xtick.labelsize"] = labelsize
 rc["ytick.labelsize"] = labelsize
 
-rc["legend.markerscale"] = 0.6 # change this to get dashes to fit in legend
+#rc["legend.markerscale"] = 0.6 # change this to get dashes to fit in legend
 
 size = 100
 
-colors = ["gold", "deepskyblue"]
+colors = ["orange", "gold"] #["forestgreen", "black"]
 linestyles = ["-", "-.", "--"]
-dashes = [[10, 8], [4, 4], [10**5, 1]]
+dashes = [[7, 7], [4, 4], [10**5, 1]]
 linewidth = 4
 
-alpha_max = 0.35
-soft_alphas = [alpha_max, alpha_max, alpha_max]
+alpha_min = 0.25
+soft_alphas = [alpha_min, alpha_min, alpha_min]
 
 alpha_max = 0.9
 hard_alphas = [alpha_max, alpha_max, alpha_max]
@@ -106,7 +106,7 @@ for i, case_y in enumerate(cases_yrs):
     ax = fig.add_subplot(2, 1, 2 - i)
 
     # Definition #
-    plot.plot(xs, limit * np.ones(len(xs)), c = "r", linewidth = 2, zorder = 1)
+    plot.plot(xs, limit * np.ones(len(xs)), c = "k", linewidth = 3, zorder = 50)
 
     for j, ys in enumerate(case_y):
         label = ""
@@ -120,12 +120,12 @@ for i, case_y in enumerate(cases_yrs):
         cutoff = np.searchsorted(xs, cutoffs[i][j - 1]) # convert cutoff from AU to index
 
         if j == 0:
-            plot.plot(xs, ys, c = colors[i], alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], label = label, zorder = 10)
+            plot.plot(xs, ys, c = "k", alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], label = label, zorder = 10)
         else:
             if len(case_y) == 2:
                 j = 2 # Switch for dashes only
 
-            plot.plot(xs[:cutoff], ys[:cutoff], c = colors[i], alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], zorder = 10)
+            plot.plot(xs[:cutoff], ys[:cutoff], c = "k", alpha = soft_alphas[j], linewidth = linewidth, dashes = dashes[j], zorder = 10)
             plot.plot(xs[cutoff:], ys[cutoff:], c = colors[i], alpha = hard_alphas[j], linewidth = linewidth + 1, dashes = dashes[j], label = label, zorder = 10)
 
             if len(case_y) == 2:
@@ -150,10 +150,10 @@ for i, case_y in enumerate(cases_yrs):
 
     # Annotate
     if i == 0:
-        plot.xlabel("Planet Semimajor Axis (in AU)", fontsize = fontsize)
+        plot.xlabel("Planet Semimajor Axis (AU)", fontsize = fontsize)
     else:
         ax.set_xticklabels([])
-    plot.ylabel("Vortex Lifetime (in years)", fontsize = fontsize)
+    plot.ylabel("Vortex Lifetime (years)", fontsize = fontsize)
     plot.title(titles[i], fontsize = fontsize + 1, x = 0.11, y = 0.85, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 10.0))
 
     #handles, labels = ax.get_legend_handles_labels()
@@ -165,9 +165,9 @@ for i, case_y in enumerate(cases_yrs):
     margin = 1
     offset = 0
 
-    accretion_text = r"      $\dot{M} = 10^{-5} M_J \rm{ / yr}$       "
+    accretion_text = r"      $T_{growth} = 10^{5} \rm{ years}$       "
     if i == 1:
-        accretion_text += "\n" + r"      $\dot{M} = 2 \times 10^{-6} M_J \rm{ / yr}$"
+        accretion_text += "\n" + r"      $T_{growth} = 5 \times 10^{5} \rm{ years}$"
         offset = 0.35
 
     plot.text(xtext, 10**(2.8), accretion_text, fontsize = fontsize - 4, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1, pad = 7.0))
