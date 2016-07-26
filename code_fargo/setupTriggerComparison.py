@@ -151,6 +151,7 @@ brace5_x, brace5_y = range_brace(line5_20, line5_10, height = 0.015)
 
 #### Curves ####
 colors = [1, "orange", "gold", "deepskyblue", "darkblue"]
+#colors = [1, "gold", "deepskyblue", "goldenrod", "darkblue"]
 
 plot.plot(case3_x[1:], case3_y, marker = "p", c = colors[3], markersize = markersize + 1, linewidth = linewidth, label = case3_label) # M5, v6
 plot.plot(case1_x[1:], case1_y, marker = "^", c = colors[1], markersize = markersize, linewidth = linewidth, label = case1_label) # M1, v6
@@ -161,8 +162,8 @@ plot.plot(case2_x[1:], case2_y, marker = "*", c = colors[2], markersize = marker
 #ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
 
 # Annotate
-plot.xlabel(r"Accretion Rate (in $M_J$ / planet orbit)", fontsize = fontsize)
-plot.ylabel("Trigger Mass (in $M_J$)", fontsize = fontsize)
+plot.xlabel(r"Averaged Accretion Rate ($M_J$ / planet orbit)", fontsize = fontsize)
+plot.ylabel("Trigger Mass ($M_J$)", fontsize = fontsize)
 
 legend = plot.legend(loc = "upper right") #, bbox_to_anchor = (legend_x, legend_y))
 
