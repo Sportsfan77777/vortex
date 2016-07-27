@@ -98,6 +98,9 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
         xs2 = np.linspace(0, 180, num_xs)
         ys2 = [dust2(semi_minor(x, aspect2 / 2.0, r_over_dr2)) for x in xs2]
 
+        ff = np.searchsorted(xs1, 45)
+        print i, number, ys1[ff] / ys1[0], ys2[ff] / ys2[0]
+
         # Identify vortex range
         start1 = np.searchsorted(xs1, -extent1 / 2)
         end1 = np.searchsorted(xs1, extent1 / 2)
@@ -125,18 +128,25 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
         plot.xlim(0, x_end)
 
         if i == 0:
-            plot.ylim(0, 7000)
-            levels = np.linspace(0, 6000, 5)
+            ymin = 0
+            ymax = 400
+            yrange = ymax - ymin
+            plot.ylim(ymin, ymax)
+            levels = np.linspace(ymin, ymin + yrange * (4.0 / 5), 5)
             plot.yticks(levels)
         elif i == 1:
-            ymax = 375
-            plot.ylim(0, ymax)
-            levels = np.linspace(0, 300, 5)
+            ymin = 0
+            ymax = 20
+            yrange = ymax - ymin
+            plot.ylim(ymin, ymax)
+            levels = np.linspace(ymin, ymin + yrange * (4.0 / 5), 5)
             plot.yticks(levels)
         else:
-            ymax = 50
-            plot.ylim(0, ymax)
-            levels = np.linspace(0, 40, 5)
+            ymin = 0.0
+            ymax = 2.5
+            yrange = ymax - ymin
+            plot.ylim(ymin, ymax)
+            levels = np.linspace(ymin, ymin + yrange * (4.0 / 5), 5)
             plot.yticks(levels)
 
         if number == 2:
@@ -167,17 +177,17 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
         diff = 5
 
         if i == 0:
-            top = 6000
+            top = yrange * (4.0 / 5.0)
 
             plot.plot([margin - diff, margin - diff], [0, top], c = "k") # Vertical
             plot.plot([margin - diff, x_end], [top, top], c = "k") # Horizontal
 
         elif i == 1:
-            base = 295 #1000
-            spacing = ymax / 5 #1100
+            base = yrange * (295.0 / 375) #1000
+            spacing = yrange / 5 #1100
 
             top = ymax #6500
-            split = 225 #500
+            split = yrange * (225.0 / 375) #500
 
             plot.plot([margin - diff, margin - diff], [0, top], c = "k") # Vertical
 
@@ -190,10 +200,10 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
             plot.plot([margin - diff, x_end], [split, split], c = "k") # Horizontal
 
         elif i == 2:
-            base = 28 #20
-            spacing = ymax / 5 #55
+            base = yrange * (28.0 / 50) #20
+            spacing = yrange / 5 #55
 
-            bottom = 20 #10
+            bottom = yrange * (2.0 / 5.0) #10
 
             plot.plot([margin - diff, margin - diff], [bottom, 300], c = "k") # Vertical
 
@@ -205,7 +215,7 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
             plot.plot([margin - diff, x_end], [bottom, bottom], c = "k") # Horizontal
 
-        plot.xlabel(r"$|\phi - \phi_{center}|$ $\rm{(in}$ $\rm{degrees)}$", fontsize = fontsize)
+        plot.xlabel(r"$|\phi - \phi_{center}|$ $\rm{(degrees)}$", fontsize = fontsize)
         if number == 0 and i == 1:
             plot.ylabel("Normalized Dust Density", fontsize = fontsize, labelpad = 15)
 
@@ -233,14 +243,14 @@ drs = []
 angles = []
 
 # Constant
-scale_height = 0.06
+scale_height = 1.0 #0.06
 
 ### First Case: 1 MJ, v = 10^-7 ###
 ten_radius = 1.7
 ten_dr = 0.3
 ten_angle = 120
 
-ten_scale_height = 0.06 * ten_radius
+ten_scale_height = scale_height * ten_radius
 ten_density = 2.7 / ten_scale_height
 ten_radius_over_dr = ten_radius / ten_dr
 ten_extent = ten_angle * (np.pi / 180)
