@@ -129,21 +129,21 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
         if i == 0:
             ymin = 0
-            ymax = 400
+            ymax = 750
             yrange = ymax - ymin
             plot.ylim(ymin, ymax)
             levels = np.linspace(ymin, ymin + yrange * (4.0 / 5), 5)
             plot.yticks(levels)
         elif i == 1:
             ymin = 0
-            ymax = 20
+            ymax = 40
             yrange = ymax - ymin
             plot.ylim(ymin, ymax)
             levels = np.linspace(ymin, ymin + yrange * (4.0 / 5), 5)
             plot.yticks(levels)
         else:
-            ymin = 0.0
-            ymax = 2.5
+            ymin = 0
+            ymax = 5
             yrange = ymax - ymin
             plot.ylim(ymin, ymax)
             levels = np.linspace(ymin, ymin + yrange * (4.0 / 5), 5)
@@ -217,7 +217,7 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
         plot.xlabel(r"$|\phi - \phi_{center}|$ $\rm{(degrees)}$", fontsize = fontsize)
         if number == 0 and i == 1:
-            plot.ylabel("Normalized Dust Density", fontsize = fontsize, labelpad = 15)
+            plot.ylabel(r"$\rho_{dust}$ / $\rho_{dust,0}$", fontsize = fontsize + 2, labelpad = 15)
 
         if i == 0:
             plot.title(r"$m_p = " + str(mass[number]) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity[number]) + r"}$", fontsize = fontsize + 1, y = 1.05)
@@ -250,7 +250,7 @@ ten_radius = 1.7
 ten_dr = 0.3
 ten_angle = 120
 
-ten_scale_height = scale_height * ten_radius
+ten_scale_height = 1 #scale_height * ten_radius
 ten_density = 2.7 / ten_scale_height
 ten_radius_over_dr = ten_radius / ten_dr
 ten_extent = ten_angle * (np.pi / 180)
@@ -262,7 +262,7 @@ thousand_radius = 1.5
 thousand_dr = 0.25
 thousand_angle = 240
 
-thousand_scale_height = scale_height * thousand_radius
+thousand_scale_height = 1 #scale_height * thousand_radius
 thousand_density = 1.68 / thousand_scale_height
 thousand_radius_over_dr = thousand_radius / thousand_dr
 thousand_extent = thousand_angle * (np.pi / 180)
@@ -284,7 +284,7 @@ ten_radius = 1.8
 ten_dr = 0.36
 ten_angle = 120
 
-ten_scale_height = scale_height * ten_radius
+ten_scale_height = 1 #scale_height * ten_radius
 ten_density = 3.6 / ten_scale_height
 ten_radius_over_dr = ten_radius / ten_dr
 ten_extent = ten_angle * (np.pi / 180)
@@ -296,7 +296,7 @@ four_thousand_radius = 1.7
 four_thousand_dr = 0.24
 four_thousand_angle = 180
 
-four_thousand_scale_height = scale_height * four_thousand_radius
+four_thousand_scale_height = 1 #scale_height * four_thousand_radius
 four_thousand_density = 1.94 / four_thousand_scale_height
 four_thousand_radius_over_dr = four_thousand_radius / four_thousand_dr
 four_thousand_extent = four_thousand_angle * (np.pi / 180)
@@ -318,7 +318,7 @@ ten_radius = 1.7
 ten_dr = 0.3
 ten_angle = 90
 
-ten_scale_height = scale_height * ten_radius
+ten_scale_height = 1 #scale_height * ten_radius
 ten_density = 2.82 / ten_scale_height
 ten_radius_over_dr = ten_radius / ten_dr
 ten_extent = ten_angle * (np.pi / 180)
@@ -331,7 +331,7 @@ thousand_radius = 1.6
 thousand_dr = 0.18
 thousand_angle = 180
 
-thousand_scale_height = scale_height * thousand_radius
+thousand_scale_height = 1 #scale_height * thousand_radius
 thousand_density = 1.84 / thousand_scale_height
 thousand_radius_over_dr = thousand_radius / thousand_dr
 thousand_extent = thousand_angle * (np.pi / 180)
