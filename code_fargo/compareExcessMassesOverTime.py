@@ -79,14 +79,14 @@ plot.title(title, fontsize = fontsize + 2)
 plot.legend(loc = "lower right")
 
 # Axes
-plot.xlim(0.01, 1)
+plot.xlim(0.01, mass)
 #plot.ylim(0.0, 1.0)
 
 plot.xscale("log")
 plot.yscale("log")
 
 # Save + Close
-plot.savefig("excessMasses_withMassAxis.png")
+plot.savefig("excessMasses_m%d_v%d.png" % (mass, abs(viscosity)))
 plot.show()
 
 plot.close()
