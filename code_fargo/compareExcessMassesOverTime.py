@@ -53,7 +53,7 @@ for taper in tapers:
 
     # Change frames to mass
     frame_range[frame_range > taper] = taper
-    frame_range = np.power(np.sin(np.pi / 2.0 * frame_range / taper), 2)
+    frame_range = mass * np.power(np.sin(np.pi / 2.0 * frame_range / taper), 2)
 
     # Curve
     plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
