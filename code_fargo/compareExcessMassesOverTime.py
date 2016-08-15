@@ -46,10 +46,10 @@ max_frame = 0
 
 # Plot Curves
 for taper in tapers:
-    frame_range = pickle.load(open("excess_mass_frames_taper%d.p" % taper, "rb")))
+    frame_range = pickle.load(open("excess_mass_frames_taper%d.p" % taper, "rb"))
     mass_over_time = pickle.load(open("excess_mass_values_taper%d.p" % taper, "rb"))
 
-    plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = "%d" % taper)
+    plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
 
     # Record Max Frame
     if frame_range[-1] > max_frame:
@@ -57,18 +57,18 @@ for taper in tapers:
 
 # Plot Threshold
 threshold = 0.2
-plot.plot([0, max_frame], [threshold, threshold], c = "k")
+plot.plot([0, max_frame], [threshold, threshold], c = "k", linewidth = 2)
 
 # Annotate
 plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
 plot.ylabel("Excess Mass", fontsize = fontsize)
 #plot.title(this_title, fontsize = fontsize)
 
-plot.legend(loc = "upper right")
+plot.legend(loc = "bottom right")
 
 # Axes
-plot.xlim(0, frame_range[-1])
-#plot.ylim(0.0, 1.0)
+plot.xlim(0, max_frame)
+plot.ylim(0.0, 1.0)
 
 plot.yscale("log")
 
