@@ -74,7 +74,7 @@ title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity
 #plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
 plot.xlabel("Planet Mass", fontsize = fontsize)
 plot.ylabel("Excess Mass", fontsize = fontsize)
-plot.title(title, fontsize = fontsize)
+plot.title(title, fontsize = fontsize + 2)
 
 plot.legend(loc = "lower right")
 
