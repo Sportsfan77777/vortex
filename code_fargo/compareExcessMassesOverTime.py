@@ -31,6 +31,8 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+mass = 1
+viscosity = -7
 tapers = [10, 500, 1000, 2000]
 
 ##### PLOTTING #####
@@ -60,22 +62,27 @@ for taper in tapers:
     if frame_range[-1] > max_frame:
         max_frame = frame_range[-1]
 
-# Plot Threshold
+# Plot Thresholds
 threshold = 0.2
-plot.plot([0, max_frame], [threshold, threshold], c = "k", linewidth = 2)
+plot.plot([0.01, max_frame], [threshold, threshold], c = "k", linewidth = 2)
+
+threshold = 0.02
+plot.plot([0.01, max_frame], [threshold, threshold], c = "k", linewidth = 2)
 
 # Annotate
+title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity) + r"}$"
 #plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
 plot.xlabel("Planet Mass", fontsize = fontsize)
 plot.ylabel("Excess Mass", fontsize = fontsize)
-#plot.title(this_title, fontsize = fontsize)
+plot.title(title, fontsize = fontsize)
 
 plot.legend(loc = "lower right")
 
 # Axes
-plot.xlim(0, 1)
+plot.xlim(0.01, 1)
 #plot.ylim(0.0, 1.0)
 
+plot.xscale("log")
 plot.yscale("log")
 
 # Save + Close
