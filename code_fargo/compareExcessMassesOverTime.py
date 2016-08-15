@@ -65,7 +65,8 @@ threshold = 0.2
 plot.plot([0, max_frame], [threshold, threshold], c = "k", linewidth = 2)
 
 # Annotate
-plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+#plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+plot.xlabel("Planet Mass", fontsize = fontsize)
 plot.ylabel("Excess Mass", fontsize = fontsize)
 #plot.title(this_title, fontsize = fontsize)
 
