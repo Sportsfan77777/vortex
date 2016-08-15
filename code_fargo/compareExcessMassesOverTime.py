@@ -64,11 +64,11 @@ plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
 plot.ylabel("Excess Mass", fontsize = fontsize)
 #plot.title(this_title, fontsize = fontsize)
 
-plot.legend(loc = "bottom right")
+plot.legend(loc = "lower right")
 
 # Axes
 plot.xlim(0, max_frame)
-plot.ylim(0.0, 1.0)
+#plot.ylim(0.0, 1.0)
 
 plot.yscale("log")
 
