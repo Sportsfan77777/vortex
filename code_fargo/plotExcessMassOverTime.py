@@ -49,6 +49,8 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
+taper_time = int(float(fargo_par["MassTaper"]))
+
 ### Helper Functions ###
 
 def find_peak(averagedDensity):
@@ -185,6 +187,11 @@ max_peak = np.max(peak_over_time)
 ## Measure Lifetime ##
 
 record_lifetime()
+
+## Pickle to combine later ##
+
+pickle.dump(frame_range, open("excess_mass_frames_taper%d.p" % taper_time, "wb"))
+pickle.dump(mass_over_time, open("excess_mass_values_taper%d.p" % taper_time, "wb"))
 
 ##### PLOTTING #####
 
