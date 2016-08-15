@@ -190,8 +190,8 @@ record_lifetime()
 
 ## Pickle to combine later ##
 
-pickle.dump(frame_range, open("excess_mass_frames_taper%d.p" % taper_time, "wb"))
-pickle.dump(mass_over_time, open("excess_mass_values_taper%d.p" % taper_time, "wb"))
+pickle.dump(np.array(frame_range), open("excess_mass_frames_taper%d.p" % taper_time, "wb"))
+pickle.dump(np.array(mass_over_time), open("excess_mass_values_taper%d.p" % taper_time, "wb"))
 
 ##### PLOTTING #####
 
