@@ -49,6 +49,11 @@ for taper in tapers:
     frame_range = pickle.load(open("excess_mass_frames_taper%d.p" % taper, "rb"))
     mass_over_time = pickle.load(open("excess_mass_values_taper%d.p" % taper, "rb"))
 
+    # Change frames to mass
+    frame_range[frame_range > taper] = taper
+    frame_range = np.power(np.sin(np.pi / 2.0 * frame_range / taper), 2)
+
+    # Curve
     plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
 
     # Record Max Frame
@@ -67,13 +72,13 @@ plot.ylabel("Excess Mass", fontsize = fontsize)
 plot.legend(loc = "lower right")
 
 # Axes
-plot.xlim(0, max_frame)
+plot.xlim(0, 1)
 #plot.ylim(0.0, 1.0)
 
 plot.yscale("log")
 
 # Save + Close
-plot.savefig("excessMasses.png")
+plot.savefig("excessMasses_withMassAxis.png")
 plot.show()
 
 plot.close()
