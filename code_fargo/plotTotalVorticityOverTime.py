@@ -105,7 +105,7 @@ def sum_vorticity(args):
     dr = rad[1] - rad[0] # assumes arithmetic grid
     d_phi = theta[1] - theta[0]
 
-    excess_mass = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_vorticity)
+    total_vorticity = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_vorticity)
     
     # Print Update
     print "%d: %.4f" % (frame, total_vorticity)
@@ -120,7 +120,7 @@ start = 10
 max_frame = util.find_max_frame()
 frame_range = np.array(range(start, max_frame + 1, rate))
 
-
+# Gather Here (with multiprocessing)
 vorticity_over_time = mp_array("d", len(frame_range))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
@@ -128,6 +128,48 @@ pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 p = Pool(10)
 p.map(sum_vorticity, pool_args)
 p.terminate()
+
+## Pickle to combine later ##
+
+pickle.dump(np.array(frame_range), open("total_vorticity_frames_taper%d.p" % taper_time, "wb"))
+pickle.dump(np.array(vorticity_over_time), open("total_vorticity_values_taper%d.p" % taper_time, "wb"))
+
+##### PLOTTING #####
+
+# Plot Parameters
+linewidth = 4
+fontsize = 14
+
+my_dpi = 100
+alpha = 0.5
+
+def make_plot():
+    # Figure
+    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+
+    # Curves
+    plot.plot(frame_range, vorticity_over_time, linewidth = linewidth)
+
+    # Annotate
+    this_title = readTitle()
+    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+    plot.ylabel("Total Vorticity", fontsize = fontsize)
+    plot.title(this_title, fontsize = fontsize)
+
+    #plot.legend(loc = "upper right")
+
+    # Limits
+    plot.xlim(0, frame_range[-1])
+    #plot.ylim(0.0, 1.0)
+
+    # Save + Close
+    plot.savefig("totalVorticity.png")
+    plot.show()
+
+    plot.close()
+
+
+make_plot()
 
 
 
