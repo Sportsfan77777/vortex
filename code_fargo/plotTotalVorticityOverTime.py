@@ -125,9 +125,12 @@ vorticity_over_time = mp_array("d", len(frame_range))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-p = Pool(10)
-p.map(sum_vorticity, pool_args)
-p.terminate()
+for i, frame in enumerate(frame_range):
+   sum_vorticity((i, frame))
+
+#p = Pool(10)
+#p.map(sum_vorticity, pool_args)
+#p.terminate()
 
 ## Pickle to combine later ##
 
