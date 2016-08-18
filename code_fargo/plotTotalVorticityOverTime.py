@@ -25,7 +25,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
-
+from readTitle import readTitle
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
