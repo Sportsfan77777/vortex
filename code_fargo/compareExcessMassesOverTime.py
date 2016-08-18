@@ -81,7 +81,7 @@ plot.ylim(0.0, 1500)
 plot.yscale("log")
 
 # Save + Close
-plot.savefig("excessMassesOverTime_m%d_v%d.png" % (mass, abs(viscosity)))
+plot.savefig("excessMassesOverTime_log_m%d_v%d.png" % (mass, abs(viscosity)))
 plot.show()
 
 plot.close()
