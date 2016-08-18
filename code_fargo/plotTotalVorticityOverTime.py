@@ -80,7 +80,7 @@ def sum_vorticity(args):
     # Mask Non-Vortex Regions
     min_vorticity = -0.65
 
-    vorticity[density < 0.45] = 0 # if density is too low, it's not in the vortex
+    vorticity[density[:-1, :-1] < 0.45] = 0 # if density is too low, it's not in the vortex
     vorticity[vorticity > 0] = 0 # if vorticity is positive, it's not in the vortex
     vorticity[vorticity < min_vorticity] = min_vorticity # if vorticity is too low, it's not in the vortex
 
@@ -97,7 +97,7 @@ def sum_vorticity(args):
     vortex_end_i = np.searchsorted(rad, vortex_end)
 
     vortex_rad = rad[vortex_start_i : vortex_end_i]
-    vortex_vorticity_grid = vortex_vorticity[vortex_start_i : vortex_end_i]
+    vortex_vorticity_grid = vorticity[vortex_start_i : vortex_end_i]
 
     vortex_vorticity = np.average(vortex_vorticity_grid, axis = 1)
 
@@ -125,12 +125,12 @@ vorticity_over_time = mp_array("d", len(frame_range))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-for i, frame in enumerate(frame_range):
-   sum_vorticity((i, frame))
+#for i, frame in enumerate(frame_range):
+#   sum_vorticity((i, frame))
 
-#p = Pool(10)
-#p.map(sum_vorticity, pool_args)
-#p.terminate()
+p = Pool(10)
+p.map(sum_vorticity, pool_args)
+p.terminate()
 
 ## Pickle to combine later ##
 
