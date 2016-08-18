@@ -51,6 +51,10 @@ for taper in tapers:
     frame_range = pickle.load(open("excess_mass_frames_taper%d.p" % taper, "rb"))
     mass_over_time = pickle.load(open("excess_mass_values_taper%d.p" % taper, "rb"))
 
+    # Change frames to mass
+    frame_range[frame_range > taper] = taper
+    frame_range = mass * np.power(np.sin(np.pi / 2.0 * frame_range / taper), 2)
+
     # Curve
     plot.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
 
@@ -67,7 +71,8 @@ plot.plot([0.01, max_frame], [threshold, threshold], c = "k", linewidth = 2)
 
 # Annotate
 title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity) + r"}$"
-plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+#plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
+plot.xlabel("Planet Mass", fontsize = fontsize)
 plot.ylabel("Excess Mass", fontsize = fontsize)
 plot.title(title, fontsize = fontsize + 2)
 
@@ -75,13 +80,13 @@ plot.legend(loc = "lower right")
 
 # Axes
 plot.xlim(0.01, mass)
-plot.ylim(0.0, 1500)
+#plot.ylim(0.0, 1.0)
 
-#plot.xscale("log")
+plot.xscale("log")
 plot.yscale("log")
 
 # Save + Close
-plot.savefig("excessMassesOverTime_m%d_v%d.png" % (mass, abs(viscosity)))
+plot.savefig("excessMassesOverMass_m%d_v%d.png" % (mass, abs(viscosity)))
 plot.show()
 
 plot.close()
