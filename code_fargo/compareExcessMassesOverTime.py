@@ -74,8 +74,8 @@ plot.title(title, fontsize = fontsize + 2)
 plot.legend(loc = "lower right")
 
 # Axes
-plot.xlim(0.01, mass)
-plot.ylim(0.0, 1500)
+plot.xlim(0.0, 1500)
+#plot.ylim(0, 2)
 
 #plot.xscale("log")
 plot.yscale("log")
