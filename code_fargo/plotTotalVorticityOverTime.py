@@ -67,8 +67,8 @@ def sum_vorticity(args):
 
     # Get Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
-    vrad = np.array(fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta))
-    vtheta = np.array(fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta))
+    vrad = np.array(fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta))
+    vtheta = np.array(fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
     # Get Background Data
     vtheta_keplerian = np.array(fromfile("gasvtheta0.dat").reshape(num_rad, num_theta))
@@ -106,6 +106,8 @@ def sum_vorticity(args):
     d_phi = theta[1] - theta[0]
 
     total_vorticity = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_vorticity)
+
+    ##### Instead: take max vorticity (90th percentile???) #####
     
     # Print Update
     print "%d: %.4f" % (frame, total_vorticity)
