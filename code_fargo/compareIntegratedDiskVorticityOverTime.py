@@ -48,8 +48,8 @@ max_frame = 0
 
 # Plot Curves
 for taper in tapers:
-    frame_range = pickle.load(open("integrated_disk_frames_taper%d.p" % taper, "rb"))
-    vorticity_over_time = pickle.load(open("integrated_disk_values_taper%d.p" % taper, "rb"))
+    frame_range = pickle.load(open("integrated_disk_vorticity_frames_taper%d.p" % taper, "rb"))
+    vorticity_over_time = pickle.load(open("integrated_disk_vorticity_values_taper%d.p" % taper, "rb"))
 
     # make positive for log plot
     vorticity_over_time -= vorticity_over_time[0] # zero out start
