@@ -71,10 +71,10 @@ def sum_vorticity(args):
     vtheta = np.array(fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta))
 
     # Get Background Data
-    #vtheta_keplerian = np.array(fromfile("gasvtheta0.dat").reshape(num_rad, num_theta))
+    vtheta_keplerian = np.array(fromfile("gasvtheta0.dat").reshape(num_rad, num_theta))
 
     # Subtract off Keplerian velocity (and rotate back into non-rotating frame???)
-    #vtheta -= (vtheta_keplerian)
+    vtheta -= (vtheta_keplerian)
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = 0)
 
     # Add up vorticity
