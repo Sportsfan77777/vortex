@@ -74,6 +74,7 @@ plot.legend(loc = "lower right")
 plot.xlim(10, max_frame)
 #plot.ylim(0.0, 1.0)
 
+plot.xscale("log")
 plot.yscale("log")
 
 # Save + Close
