@@ -77,7 +77,7 @@ def sum_vorticity(args):
     vtheta -= (vtheta_keplerian)
     vorticity = util.velocity_curl(vrad, vtheta, rad, theta, frame = 0)
 
-    vorticity = np.abs(vorticity) # should be all negative
+    #vorticity = np.abs(vorticity) # should be all negative
 
     # Add up vorticity
     dr = rad[1] - rad[0] # assumes arithmetic grid
