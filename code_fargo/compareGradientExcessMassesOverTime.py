@@ -55,12 +55,12 @@ for taper in tapers:
     mass_over_time = pickle.load(open("excess_mass_values_taper%d.p" % taper, "rb"))
 
     # Log, Smooth, Take Derivative (to get growth rate)
-    kernel_size = 4
+    kernel_size = 1
 
     log_mass_over_time = np.log(mass_over_time) / np.log(10)
     smoothed_log_mass_over_time = smooth(log_mass_over_time, kernel_size)
 
-    gradient_over_time = np.diff(smoothed_log_mass_over_time)
+    gradient_over_time = np.diff(smoothed_log_mass_over_time) / np.diff(frame_range)
 
     # Curve
     plot.plot(frame_range[:-1], gradient_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
@@ -75,7 +75,7 @@ plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
 plot.ylabel("Growth Rate", fontsize = fontsize)
 plot.title(title, fontsize = fontsize + 2)
 
-plot.legend(loc = "lower right")
+plot.legend(loc = "upper right")
 
 # Axes
 plot.xlim(0.0, 1500)
@@ -85,7 +85,7 @@ plot.xlim(0.0, 1500)
 #plot.yscale("log")
 
 # Save + Close
-plot.savefig("gradientExcessMassesOverTime_log_m%d_v%d.png" % (mass, abs(viscosity)))
+plot.savefig("gradientExcessMassesOverTime_kernel%d_m%d_v%d.png" % (kernel_size, mass, abs(viscosity)))
 plot.show()
 
 plot.close()
