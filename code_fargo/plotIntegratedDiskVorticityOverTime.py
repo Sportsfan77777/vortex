@@ -82,7 +82,7 @@ def sum_vorticity(args):
     d_phi = theta[1] - theta[0]
 
     radial_vorticity = np.average(vorticity, axis = 1)
-    total_vorticity = np.sum((dr * d_phi) * vortex_rad[:, None] * radial_vorticity)
+    total_vorticity = np.sum((dr * d_phi) * rad[:-1, None] * radial_vorticity)
     
     # Print Update
     print "%d: %.4f" % (frame, total_vorticity)
