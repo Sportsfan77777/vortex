@@ -54,8 +54,8 @@ tapers[case] = [2, 200, 400, 800]
 extents[case] = [120, 120, 180, 180]
 
 # Other Cases #
-case_offset = 1.1
-taper_offset = 0.95
+case_offset = 1.08
+taper_offset = 0.96
 
 # M = 1.41, v = 10^-6
 case = cases[4]
@@ -69,8 +69,8 @@ extents[case] = [120, 240, 240]
 
 # M = 3.16, v = 10^-6
 case = cases[6]
-tapers[case] = np.array([150, 250])
-extents[case] = [180, 240]
+tapers[case] = np.array([100, 150, 250])
+extents[case] = [120, 180, 240]
 
 # M = 3.16, v = 4 * 10^-7
 case = cases[7]
@@ -139,6 +139,9 @@ def fit(x):
 
 
 #### PLOTTING ####
+fig = plot.figure()
+ax = fig.add_subplot(1, 1, 1)
+
 fontsize = 16
 
 const = 90
@@ -187,9 +190,24 @@ for (xi, yi) in zip(elongated_x, elongated_y):
 
 f.close()
 
+# Legend
+legend_text = ""
+legend_text += "        " + r"$\phi_{min}$ $>$ $180^{\circ}$" + "\n"
+legend_text += "        " + r"$\phi_{min}$ $\approx$ $180^{\circ}$" + "\n"
+legend_text += "        " + r"$\phi_{min}$ $<$ $180^{\circ}$"
+plot.text(0.65, 1300, legend_text, fontsize = fontsize - 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1, pad = 7.0))
+
+xtext = 0.8
+ytext = 1355
+legend_size = 75
+color_sym = "darkblue"
+plot.scatter(xtext, ytext * 10**(0.2), marker = "x", c = color_sym, s = legend_size)
+plot.scatter(xtext, ytext * 10**(0.1), marker = "_", c = color_sym, s = legend_size)
+plot.scatter(xtext, ytext, marker = "o", c = color_sym, s = legend_size)
+
 # Annotate
-plot.xlabel(r"$q^2 Re$ $\times$ $[10^{6}]$", fontsize = fontsize)
-plot.ylabel(r"$T_{growth}$ to Jupiter-size", fontsize = fontsize)
+plot.xlabel(r"$q^2 Re$ / $[3 \times 10^{-4}]$", fontsize = fontsize)
+plot.ylabel("Jupiter-Mass Growth Time (in planet orbits)", fontsize = fontsize)
 plot.title("Azimuthal Extents", fontsize = fontsize + 2)
 
 # Axes
@@ -199,8 +217,23 @@ plot.ylim(30, 3000)
 plot.xscale("log")
 plot.yscale("log")
 
+axis_labels = ["50", "100", "200", "500", "1000", "2000"]
+tick_locations = [int(x) for x in axis_labels]
+
+ax.set_yticks(tick_locations)
+ax.set_yticklabels(axis_labels)
+
+# 2nd Axis
+ax2 = ax.twinx()
+ax2.set_yscale("log")
+ax2.set_ylim(30**(-1), 3000**(-1))
+#ax2.set_yticks()
+#ax2.set_yticklabels(twin_axis_labels)
+ax2.set_ylabel(r"$<\dot{q}>$ $\times$ $T_p$", fontsize = fontsize)
+
 # Save, Show, and Close
 plot.savefig("scattered_extents.png", bbox_inches = "tight")
+plot.savefig("scattered_extents.pdf", bbox_inches = "tight", format = "pdf")
 plot.show()
 plot.cla()
 
