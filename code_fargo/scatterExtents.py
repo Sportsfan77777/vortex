@@ -142,7 +142,7 @@ def fit(x):
 fig = plot.figure()
 ax = fig.add_subplot(1, 1, 1)
 
-fontsize = 16
+fontsize = 18
 
 const = 90
 power = 0.25
@@ -176,7 +176,7 @@ for c, case in enumerate(cases):
 			case_plot = case_offset * case
 			taper_plot = taper_offset * taper
 
-		plot.scatter([case_plot], [taper_plot], marker = extent_type, c = color, s = 100)
+		plot.scatter([case_plot], [taper_plot], marker = extent_type, c = color, s = 125)
 
 #### Make Support Vector Machine ####
 
@@ -195,19 +195,19 @@ legend_text = ""
 legend_text += "        " + r"$\phi_{min}$ $>$ $180^{\circ}$" + "\n"
 legend_text += "        " + r"$\phi_{min}$ $\approx$ $180^{\circ}$" + "\n"
 legend_text += "        " + r"$\phi_{min}$ $<$ $180^{\circ}$"
-plot.text(0.65, 1300, legend_text, fontsize = fontsize - 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1, pad = 7.0))
+plot.text(0.65, 1300, legend_text, fontsize = fontsize - 4, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1, pad = 7.0))
 
-xtext = 0.8
+xtext = 0.78
 ytext = 1355
-legend_size = 75
+legend_size = 90
 color_sym = "darkblue"
 plot.scatter(xtext, ytext * 10**(0.2), marker = "x", c = color_sym, s = legend_size)
 plot.scatter(xtext, ytext * 10**(0.1), marker = "_", c = color_sym, s = legend_size)
 plot.scatter(xtext, ytext, marker = "o", c = color_sym, s = legend_size)
 
 # Annotate
-plot.xlabel(r"$q^2 Re$ / $[3 \times 10^{-4}]$", fontsize = fontsize)
-plot.ylabel("Jupiter-Mass Growth Time (in planet orbits)", fontsize = fontsize)
+plot.xlabel(r"$q^2 Re$ / $[3 \times 10^{-4}]$", fontsize = fontsize + 2)
+plot.ylabel("Jupiter-Mass Growth Time (planet orbits)", fontsize = fontsize)
 plot.title("Azimuthal Extents", fontsize = fontsize + 2)
 
 # Axes
@@ -229,7 +229,7 @@ ax2.set_yscale("log")
 ax2.set_ylim(30**(-1), 3000**(-1))
 #ax2.set_yticks()
 #ax2.set_yticklabels(twin_axis_labels)
-ax2.set_ylabel(r"$<\dot{q}>$ $\times$ $T_p$", fontsize = fontsize)
+ax2.set_ylabel(r"$<\dot{q}>$ $\times$ $T_p$", rotation = 270, labelpad = 10, fontsize = fontsize + 2)
 
 # Save, Show, and Close
 plot.savefig("scattered_extents.png", bbox_inches = "tight")
