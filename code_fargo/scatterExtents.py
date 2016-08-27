@@ -29,24 +29,24 @@ from pylab import rcParams # replace with rc ???
 from pylab import fromfile
 
 # Dictionaries
-cases = [1, 10, 25, 250, 4.01, 10.01, 25.01, 75.01]
+cases = [1, 10, 25, 250, 2.01, 4.01, 10.01, 25.01, 75.01]
 tapers = {}
 extents = {}
 
 # M = 1, v = 10^-6
 case = cases[0]
-tapers[case] = [10, 50, 100, 250, 500]
-extents[case] = [180, 180, 180, 240, 240]
+tapers[case] = [10, 50, 100, 150, 250, 500]
+extents[case] = [180, 180, 180, 240, 240, 240]
 
 # M = 1, v = 10^-7
 case = cases[1]
-tapers[case] = [10, 100, 250, 500, 1000, 2000]
-extents[case] = [120, 120, 240, 240, 240, 240]
+tapers[case] = [10, 100, 150, 250, 500, 1000, 2000]
+extents[case] = [120, 120, 120, 240, 240, 240, 240]
 
 # M = 5, v = 10^-6
 case = cases[2]
-tapers[case] = [2, 100, 200]
-extents[case] = [90, 120, 180]
+tapers[case] = [2, 100, 200, 400]
+extents[case] = [90, 120, 180, 240]
 
 # M = 5, v = 10^-7
 case = cases[3]
@@ -55,25 +55,30 @@ extents[case] = [120, 120, 180, 180]
 
 # Other Cases #
 case_offset = 1.1
-taper_offset = 0.92
+taper_offset = 0.95
+
+# M = 1.41, v = 10^-6
+case = cases[4]
+tapers[case] = np.array([100, 150])
+extents[case] = [120, 240]
 
 # M = 2, v = 10^-6
-case = cases[4]
-tapers[case] = np.array([100, 250])
-extents[case] = [120, 250]
+case = cases[5]
+tapers[case] = np.array([100, 150, 250])
+extents[case] = [120, 240, 240]
 
 # M = 3.16, v = 10^-6
-case = cases[5]
-tapers[case] = np.array([250])
-extents[case] = [240]
+case = cases[6]
+tapers[case] = np.array([150, 250])
+extents[case] = [180, 240]
 
 # M = 3.16, v = 4 * 10^-7
-case = cases[6]
+case = cases[7]
 tapers[case] = np.array([100, 200])
 extents[case] = [120, 180]
 
 # M = 3.16, v = 1.33 * 10^-7
-case = cases[7]
+case = cases[8]
 tapers[case] = np.array([200])
 extents[case] = [120]
 
@@ -189,7 +194,7 @@ plot.title("Azimuthal Extents", fontsize = fontsize + 2)
 
 # Axes
 plot.xlim(0.5, 400)
-plot.ylim(1, 3000)
+plot.ylim(30, 3000)
 
 plot.xscale("log")
 plot.yscale("log")
