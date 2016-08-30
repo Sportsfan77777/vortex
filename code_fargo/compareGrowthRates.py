@@ -39,6 +39,14 @@ tapers = [10, 500, 1000, 2000]
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
 ##### PLOTTING #####
+# Colors
+colors = {}
+colors[10] = "b"
+colors[250] = "orange"
+colors[500] = "gold"
+colors[1000] = "green"
+colors[2000] = "firebrick"
+colors[4000] = "chocolate"
 
 # Plot Parameters
 linewidth = 4
@@ -80,9 +88,9 @@ for taper in tapers:
     shifted_frames = np.array(frame_range) - frame_range[max_index]
 
     # Curves
-    ax1.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper, zorder = 5)
+    ax1.plot(frame_range, mass_over_time, c = colors[taper], linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper, zorder = 5)
     ax1.scatter([frame_range[max_index + 1]], [mass_over_time[max_index + 1]], c = "k", marker = "s", s = 100, zorder = 50)
-    ax2.plot(shifted_frames[:-1], growth_rates, linewidth = linewidth)
+    ax2.plot(shifted_frames[:-1], growth_rates, c = colors[taper], linewidth = linewidth)
 
     # Record Max Frame
     if frame_range[-1] > max_frame:
