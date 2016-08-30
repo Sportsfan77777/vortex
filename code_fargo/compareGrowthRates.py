@@ -86,20 +86,20 @@ for taper in tapers:
         max_frame = frame_range[-1]
 
 # Reference Line
-sq = 75
+sq = 60
 ax2.plot([-sq, sq], [0, 0], c = "k", linewidth = 2)
 
 # Annotate
 title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity) + r"}$"
 ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
-ax1.set_ylabel(r"$M_{excess}", fontsize = fontsize)
+ax1.set_ylabel(r"$M_{excess}$", fontsize = fontsize)
 ax1.set_title(title, y = 1.01, fontsize = fontsize + 2)
 
 ax2.set_xlabel(r"$t - t_{max-growth}$", fontsize = fontsize)
-ax2.set_ylabel(r"$dM_{excess}/dt", fontsize = fontsize, labelpad = -12)
-ax2.set_title("Growth Rates", y = 1.01, fontsize = fontsize + 2)
+ax2.set_ylabel(r"$dM_{excess}/dt$", fontsize = fontsize, labelpad = -10)
+#ax2.set_title("Growth Rates", y = 1.01, fontsize = fontsize + 2)
 
-ax1.legend(loc = "upper right", bbox_to_anchor = (2.05, 0.98))
+ax1.legend(loc = "lower right")
 
 # Axes
 ax1.set_xlim(0.0, 1500)
