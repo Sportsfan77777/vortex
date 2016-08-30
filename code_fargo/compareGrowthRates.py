@@ -56,6 +56,8 @@ ax1 = plot.subplot(gs[0])
 ax2 = plot.subplot(gs[1])
 
 # Plot Curves
+sq = 60 # Range on growth rate panel
+
 for taper in tapers:
     frame_range = pickle.load(open("excess_mass_frames_taper%d.p" % taper, "rb"))
     mass_over_time = pickle.load(open("excess_mass_values_taper%d.p" % taper, "rb"))
@@ -70,7 +72,7 @@ for taper in tapers:
 
     # Center growth rates on peak
     if taper == 10:
-        max_index = np.searchsorted(frame_range, 75)
+        max_index = np.searchsorted(frame_range, sq)
     else:
         max_index = np.argmax(growth_rates)
     #max_index = np.argmax(growth_rates)
@@ -85,8 +87,8 @@ for taper in tapers:
     if frame_range[-1] > max_frame:
         max_frame = frame_range[-1]
 
-# Reference Line
-sq = 60
+# Reference Lines
+ax1.plot([0, 10**(4)], [0.2, 0.2], c = "k", linewidth = 2)
 ax2.plot([-sq, sq], [0, 0], c = "k", linewidth = 2)
 
 # Annotate
