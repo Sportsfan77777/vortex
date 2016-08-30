@@ -65,7 +65,7 @@ for taper in tapers:
     # Log, Smooth, Take Derivative (to get growth rate)
     kernel_size = 1
 
-    log_mass_over_time = np.log(mass_over_time) / np.log(10)
+    log_mass_over_time = np.log(mass_over_time)
     smoothed_log_mass_over_time = smooth(log_mass_over_time, kernel_size)
 
     growth_rates = np.diff(smoothed_log_mass_over_time) / np.diff(frame_range)
@@ -81,6 +81,7 @@ for taper in tapers:
 
     # Curves
     ax1.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
+    ax1.scatter([frame_range[max_index]], [mass_over_time[max_index]], c = "k", marker = "s", markersize = 100)
     ax2.plot(shifted_frames[:-1], growth_rates, linewidth = linewidth)
 
     # Record Max Frame
@@ -98,7 +99,7 @@ ax1.set_ylabel(r"$M_{excess}$", fontsize = fontsize)
 ax1.set_title(title, y = 1.01, fontsize = fontsize + 2)
 
 ax2.set_xlabel(r"$t - t_{max-growth}$", fontsize = fontsize)
-ax2.set_ylabel(r"$dM_{excess}/dt$", fontsize = fontsize, labelpad = -8)
+ax2.set_ylabel(r"$d\log M_{excess}/dt$", fontsize = fontsize, labelpad = -8)
 ax2.set_title("Growth Rates", fontsize = fontsize)
 
 ax1.legend(loc = "lower right")
@@ -109,7 +110,7 @@ ax1.set_ylim(10**(-5), 4.0)
 ax1.set_yscale("log")
 
 ax2.set_xlim(-sq, sq)
-ax2.set_ylim(-0.02, 0.10)
+ax2.set_ylim(-0.05, 0.30)
 
 # For taper = 10 case only (if necessary)
 #ax3 = ax2.twiny()
