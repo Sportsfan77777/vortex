@@ -71,11 +71,11 @@ for taper in tapers:
     growth_rates = np.diff(smoothed_log_mass_over_time) / np.diff(frame_range)
 
     # Center growth rates on peak
-    if taper == 10:
-        max_index = np.searchsorted(frame_range, sq)
-    else:
-        max_index = np.argmax(growth_rates)
-    #max_index = np.argmax(growth_rates)
+    #if taper == 10:
+    #    max_index = np.searchsorted(frame_range, sq)
+    #else:
+    #    max_index = np.argmax(growth_rates)
+    max_index = np.argmax(growth_rates)
 
     shifted_frames = np.array(frame_range) - frame_range[max_index]
 
@@ -98,8 +98,8 @@ ax1.set_ylabel(r"$M_{excess}$", fontsize = fontsize)
 ax1.set_title(title, y = 1.01, fontsize = fontsize + 2)
 
 ax2.set_xlabel(r"$t - t_{max-growth}$", fontsize = fontsize)
-ax2.set_ylabel(r"$dM_{excess}/dt$", fontsize = fontsize, labelpad = -10)
-#ax2.set_title("Growth Rates", y = 1.01, fontsize = fontsize + 2)
+ax2.set_ylabel(r"$dM_{excess}/dt$", fontsize = fontsize, labelpad = -8)
+ax2.set_title("Growth Rates", fontsize = fontsize)
 
 ax1.legend(loc = "lower right")
 
@@ -111,8 +111,9 @@ ax1.set_yscale("log")
 ax2.set_xlim(-sq, sq)
 ax2.set_ylim(-0.02, 0.10)
 
-ax3 = ax2.twiny()
-ax3.set_xlim(0, 2 * sq)
+# For taper = 10 case only (if necessary)
+#ax3 = ax2.twiny()
+#ax3.set_xlim(0, 2 * sq)
 
 # Save + Close
 plot.savefig("growthRates_m%d_v%d.png" % (mass, abs(viscosity)), bbox_inches = "tight")
