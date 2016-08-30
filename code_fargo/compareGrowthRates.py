@@ -21,7 +21,7 @@ import matplotlib
 #matplotlib.use('Agg')
 from matplotlib import rc
 from matplotlib import pyplot as plot
-from matplotlib import gridspec as gs
+from matplotlib import gridspec
 
 from itertools import groupby
 
@@ -42,7 +42,7 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # sm
 
 # Plot Parameters
 linewidth = 4
-fontsize = 14
+fontsize = 17
 
 my_dpi = 100
 alpha = 0.5
@@ -50,12 +50,15 @@ alpha = 0.5
 max_frame = 0
 
 # Set up figures
-fig = plot.figure(figsize = (10, 5))
+fig = plot.figure(figsize = (12, 8))
 gs = gridspec.GridSpec(1, 2, width_ratios = [2, 1])
 ax1 = plot.subplot(gs[0])
 ax2 = plot.subplot(gs[1])
 
 # Plot Curves
+sq = 75
+ax2.plot([-sq, sq])
+
 for taper in tapers:
     frame_range = pickle.load(open("excess_mass_frames_taper%d.p" % taper, "rb"))
     mass_over_time = pickle.load(open("excess_mass_values_taper%d.p" % taper, "rb"))
@@ -69,7 +72,13 @@ for taper in tapers:
     growth_rates = np.diff(smoothed_log_mass_over_time) / np.diff(frame_range)
 
     # Center growth rates on peak
-    shifted_frames = np.array(frame_range) - frame_range[np.argmax(growth_rates)]
+    #if taper == 10:
+    #    max_index = 75
+    #else:
+    #    max_index = np.argmax(growth_rates)
+    max_index = np.argmax(growth_rates)
+
+    shifted_frames = np.array(frame_range) - frame_range[max_index]
 
     # Curves
     ax1.plot(frame_range, mass_over_time, linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper)
@@ -85,20 +94,17 @@ ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
 ax1.set_ylabel("Excess Mass", fontsize = fontsize)
 ax1.set_title(title, fontsize = fontsize + 2)
 
-ax2.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
+ax2.set_xlabel(r"$t - t_{max-growth}$", fontsize = fontsize)
 ax2.set_ylabel("Growth Rate", fontsize = fontsize)
 
-ax1.legend(loc = "upper right")
+ax2.legend(loc = "upper right", bbox_to_anchor = (1.2, 0.95))
 
 # Axes
 ax1.set_xlim(0.0, 1500)
-#ax1.ylim(0, 2)
-
-sq = 75
 ax2.set_xlim(-sq, sq)
 
 # Save + Close
-plot.savefig("growthRates_m%d_v%d.png" % (kernel_size, mass, abs(viscosity)))
+plot.savefig("growthRates_m%d_v%d.png" % (mass, abs(viscosity)))
 plot.show()
 
 plot.close()
