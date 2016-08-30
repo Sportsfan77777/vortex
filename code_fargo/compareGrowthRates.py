@@ -41,12 +41,12 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # sm
 ##### PLOTTING #####
 # Colors
 colors = {}
-colors[10] = "b"
+colors[10] = "firebrick"
 colors[250] = "orange"
 colors[500] = "gold"
-colors[1000] = "green"
-colors[2000] = "firebrick"
-colors[4000] = "chocolate"
+colors[1000] = "forestgreen"
+colors[2000] = "deepskyblue"
+colors[4000] = "mediumslateblue"
 
 # Plot Parameters
 linewidth = 4
