@@ -87,7 +87,7 @@ for taper in tapers:
 
 # Reference Line
 sq = 75
-ax2.plot([-sq, sq], [0, 0] c = "k", linewidth = 2)
+ax2.plot([-sq, sq], [0, 0], c = "k", linewidth = 2)
 
 # Annotate
 title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity) + r"}$"
