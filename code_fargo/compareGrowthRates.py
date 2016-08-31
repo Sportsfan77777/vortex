@@ -51,7 +51,7 @@ colors[250] = viridis(0) #"firebrick"
 colors[500] = viridis(0.25) #"gold"
 colors[1000] = viridis(0.5) #"forestgreen"
 colors[2000] = viridis(0.75) #"cornflowerblue"
-colors[4000] = viridis(1) #"darkorchid"
+colors[4000] = viridis(0.99) #"darkorchid"
 
 # Plot Parameters
 linewidth = 4
@@ -88,7 +88,10 @@ for taper in tapers:
     #    max_index = np.searchsorted(frame_range, sq)
     #else:
     #    max_index = np.argmax(growth_rates)
-    max_index = np.argmax(growth_rates)
+    test_growth_rates = growth_rates[:-1]
+    if taper == 5000:
+        test_growth_rates[:40] = 0
+    max_index = np.argmax(test_growth_rates)
 
     shifted_frames = np.array(frame_range) - frame_range[max_index]
 
