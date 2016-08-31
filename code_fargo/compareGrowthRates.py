@@ -31,6 +31,9 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+import colormaps as cmaps
+plot.register_cmap(name = 'viridis', cmap = cmaps.viridis)
+
 mass = 1
 viscosity = -7
 tapers = [10, 500, 1000, 2000]
@@ -40,13 +43,15 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # sm
 
 ##### PLOTTING #####
 # Colors
+viridis = matplotlib.cm.get_cmap("viridis")
+
 colors = {}
 colors[10] = "grey"
-colors[250] = "firebrick"
-colors[500] = "gold"
-colors[1000] = "forestgreen"
-colors[2000] = "cornflowerblue"
-colors[4000] = "darkorchid"
+colors[250] = viridis(0) #"firebrick"
+colors[500] = viridis(0.2) #"gold"
+colors[1000] = viridis(0.4) #"forestgreen"
+colors[2000] = viridis(0.6) #"cornflowerblue"
+colors[4000] = viridis(0.8) #"darkorchid"
 
 # Plot Parameters
 linewidth = 4
