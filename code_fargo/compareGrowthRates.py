@@ -48,10 +48,10 @@ viridis = matplotlib.cm.get_cmap("viridis")
 colors = {}
 colors[10] = "grey"
 colors[250] = viridis(0) #"firebrick"
-colors[500] = viridis(0.2) #"gold"
-colors[1000] = viridis(0.4) #"forestgreen"
-colors[2000] = viridis(0.6) #"cornflowerblue"
-colors[4000] = viridis(0.8) #"darkorchid"
+colors[500] = viridis(0.25) #"gold"
+colors[1000] = viridis(0.5) #"forestgreen"
+colors[2000] = viridis(0.75) #"cornflowerblue"
+colors[4000] = viridis(1) #"darkorchid"
 
 # Plot Parameters
 linewidth = 4
