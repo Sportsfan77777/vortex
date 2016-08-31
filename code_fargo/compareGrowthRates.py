@@ -63,7 +63,7 @@ alpha = 0.5
 max_frame = 0
 
 # Set up figures
-fig = plot.figure(figsize = (12, 6))
+fig = plot.figure(figsize = (12, 4))
 gs = gridspec.GridSpec(1, 2, width_ratios = [2, 1])
 ax1 = plot.subplot(gs[0])
 ax2 = plot.subplot(gs[1])
