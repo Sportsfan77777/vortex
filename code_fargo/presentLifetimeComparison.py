@@ -74,10 +74,10 @@ vertical_min_value = 1
 vertical_max_value = 3 * max_value
 
 ### Labels ###
-case1_label = r"$1$ $M_J$, $\nu = 10^{-6}$"
-case2_label = r"$1$ $M_J$, $\nu = 10^{-7}$"
-case3_label = r"$5$ $M_J$, $\nu = 10^{-6}$"
-case4_label = r"$5$ $M_J$, $\nu = 10^{-7}$"
+case1_label = r"$1$ $M_J$, $\alpha_{visc} \approx 10^{-4}$"
+case2_label = r"$1$ $M_J$, $\alpha_{visc} \approx 10^{-5}$"
+case3_label = r"$5$ $M_J$, $\alpha_{visc} \approx 10^{-4}$"
+case4_label = r"$5$ $M_J$, $\alpha_{visc} \approx 10^{-5}$"
 
 ### Setup Figure ###
 figure = plot.figure(figsize = (850 / my_dpi, 600 / my_dpi), dpi = my_dpi)
