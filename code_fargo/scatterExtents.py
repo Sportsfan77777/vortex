@@ -271,7 +271,7 @@ log_brace2_x = np.logspace(np.log10(start), np.log10(end), len(brace2_x))
 midpoint = np.median(log_brace2_x)
 
 plot.plot(log_brace2_x, top_brace_red - brace2_y, color = "r", linewidth = 2)
-plot.text(midpoint, red_text_y, r"$m_p = 3.16$ $M_J$", color = "r", horizontalalignment = 'center', fontsize = fontsize - 2)
+plot.text(midpoint, red_text_y, r"$M_p = 3.16$ $M_J$", color = "r", horizontalalignment = 'center', fontsize = fontsize - 2)
 
 # (3)
 
@@ -283,7 +283,7 @@ log_brace3_x = np.logspace(np.log10(start), np.log10(end), len(brace2_x))
 midpoint = np.median(log_brace3_x)
 
 plot.plot(log_brace3_x, bottom_brace_blue + brace3_y, color = "b", linewidth = 2)
-plot.text(midpoint, blue_text_y, r"$m_p = 1$ $M_J$", color = "b", horizontalalignment = 'center', fontsize = fontsize - 2)
+plot.text(midpoint, blue_text_y, r"$M_p = 1$ $M_J$", color = "b", horizontalalignment = 'center', fontsize = fontsize - 2)
 
 # (4)
 
@@ -295,7 +295,7 @@ log_brace4_x = np.logspace(np.log10(start), np.log10(end), len(brace2_x))
 midpoint = np.median(log_brace4_x)
 
 plot.plot(log_brace4_x, bottom_brace_blue + 500 + brace4_y, color = "b", linewidth = 2)
-plot.text(midpoint, blue_text_y + 800, r"$m_p = 5$ $M_J$", color = "b", horizontalalignment = 'center', fontsize = fontsize - 2)
+plot.text(midpoint, blue_text_y + 800, r"$M_p = 5$ $M_J$", color = "b", horizontalalignment = 'center', fontsize = fontsize - 2)
 
 
 # Axes

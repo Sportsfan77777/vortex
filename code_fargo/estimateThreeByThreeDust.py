@@ -191,11 +191,11 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
             plot.plot([margin - diff, margin - diff], [0, top], c = "k") # Vertical
 
-            plot.text(margin, base + 4 * spacing, r"$T_{growth} = $" + "%d" % 10)
+            plot.text(margin, base + 4 * spacing, r"$T_\mathrm{growth} = $" + "%d" % 10)
             plot.text(margin, base + 3 * spacing, r"$\chi = $ " + "%.1f" % aspect1)
             plot.text(margin, base + 2 * spacing, r"$r = $" + "%.1f" % (r1))
             plot.text(margin, base + 1 * spacing, r"$dr = $" + "%.02f" % (dr1))
-            plot.text(margin, base + 0 * spacing, r"$\rho_{peak} = $" + "%.1f" % density1)
+            plot.text(margin, base + 0 * spacing, r"$\rho_\mathrm{peak} = $" + "%.1f" % density1)
 
             plot.plot([margin - diff, x_end], [split, split], c = "k") # Horizontal
 
@@ -207,20 +207,20 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
             plot.plot([margin - diff, margin - diff], [bottom, 300], c = "k") # Vertical
 
-            plot.text(margin, base + 4 * spacing, r"$T_{growth} = $" + "%d" % growth[number])
+            plot.text(margin, base + 4 * spacing, r"$T_\mathrm{growth} = $" + "%d" % growth[number])
             plot.text(margin, base + 3 * spacing, r"$\chi = $ " + "%.1f" % aspect2)
             plot.text(margin, base + 2 * spacing, r"$r = $" + "%.1f" % (r2))
             plot.text(margin, base + 1 * spacing, r"$dr = $" + "%.02f" % (dr2))
-            plot.text(margin, base + 0 * spacing, r"$\rho_{peak} = $" + "%.1f" % density2)
+            plot.text(margin, base + 0 * spacing, r"$\rho_\mathrm{peak} = $" + "%.1f" % density2)
 
             plot.plot([margin - diff, x_end], [bottom, bottom], c = "k") # Horizontal
 
-        plot.xlabel(r"$|\phi - \phi_{center}|$ $\rm{(degrees)}$", fontsize = fontsize)
+        plot.xlabel(r"$|\phi - \phi_\mathrm{center}|$ $\rm{(degrees)}$", fontsize = fontsize)
         if number == 0 and i == 1:
-            plot.ylabel(r"$\rho_{dust}$ / $\rho_{dust,0}$", fontsize = fontsize + 2, labelpad = 15)
+            plot.ylabel(r"$\rho_\mathrm{dust}$ / $\rho_\mathrm{dust,0}$", fontsize = fontsize + 2, labelpad = 15)
 
         if i == 0:
-            plot.title(r"$m_p = " + str(mass[number]) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity[number]) + r"}$", fontsize = fontsize + 1, y = 1.05)
+            plot.title(r"$M_p = " + str(mass[number]) + r" $ $M_J$, $\nu = 10^{" + str(viscosity[number]) + r"}$", fontsize = fontsize + 1, y = 1.05)
 
         if number == 2:
             plot.legend(loc = "upper right", bbox_to_anchor = [1.35, 1])
