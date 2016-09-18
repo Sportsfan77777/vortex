@@ -151,7 +151,7 @@ plot.text(line5_15, text_y5, "15", horizontalalignment = 'center')
 plot.text(line5_10, text_y5, "10", horizontalalignment = 'center')
 
 midpoint5 = (line5_50 + line5_10) / 2.0
-plot.text(midpoint5, text_y5 + 0.3, r" Distances (AU) at which  $T_{growth}$ = $10^5$years", horizontalalignment = 'center')
+plot.text(midpoint5, text_y5 + 0.3, r" Distances (AU) at which  $T_\mathrm{growth}$ = $10^5$years", horizontalalignment = 'center')
 
 # Braces
 #brace4_x, brace4_y = range_brace(line4_20, line4_5, height = 0.15)
@@ -172,8 +172,8 @@ plot.plot(case1_x, case1_y, marker = "^", c = colors[1], markersize = markersize
 #ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
 
 # Annotate
-plot.xlabel(r"$T_{growth}$ (planet orbits)", fontsize = fontsize)
-plot.ylabel(r"$\Sigma_{peak}$ / $\Sigma_0$", fontsize = fontsize + 2)
+plot.xlabel(r"$T_\mathrm{growth}$ (planet orbits)", fontsize = fontsize)
+plot.ylabel(r"$\Sigma_\mathrm{peak}$ / $\Sigma_0$", fontsize = fontsize + 2)
 
 legend = plot.legend(loc = "upper right") #, bbox_to_anchor = (legend_x, legend_y))
 

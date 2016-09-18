@@ -74,8 +74,8 @@ extents[case] = [120, 180, 240]
 
 # M = 3.16, v = 4 * 10^-7
 case = cases[7]
-tapers[case] = np.array([100, 200])
-extents[case] = [120, 180]
+tapers[case] = np.array([100, 200, 400])
+extents[case] = [120, 180, 180]
 
 # M = 3.16, v = 1.33 * 10^-7
 case = cases[8]
@@ -88,6 +88,38 @@ concentrated_y = []
 
 elongated_x = []
 elongated_y = []
+
+## Helper Functions ##
+
+def convert_to_log(arr):
+	range_arr = (arr - arr[0]) / (arr[0] + arr[-1])
+	print range_arr
+	new_range = arr[0] * np.exp(range_arr * (np.log(arr[0]) + np.log(arr[-1])))
+	print new_range
+	return new_range
+
+def range_brace(x_min, x_max, mid=0.75, 
+                beta1=50.0, beta2=100.0, height=1, 
+                initial_divisions=11, resolution_factor=1.5):
+    # Source: http://stackoverflow.com/questions/1289681/drawing-braces-with-pyx
+    # determine x0 adaptively values using second derivitive
+    # could be replaced with less snazzy:
+    #   x0 = np.arange(0, 0.5, .001)
+    x0 = np.array(())
+    tmpx = np.linspace(0, 0.5, initial_divisions)
+    tmp = beta1**2 * (np.exp(beta1*tmpx)) * (1-np.exp(beta1*tmpx)) / np.power((1+np.exp(beta1*tmpx)),3)
+    tmp += beta2**2 * (np.exp(beta2*(tmpx-0.5))) * (1-np.exp(beta2*(tmpx-0.5))) / np.power((1+np.exp(beta2*(tmpx-0.5))),3)
+    for i in range(0, len(tmpx)-1):
+        t = int(np.ceil(resolution_factor*max(np.abs(tmp[i:i+2]))/float(initial_divisions)))
+        x0 = np.append(x0, np.linspace(tmpx[i],tmpx[i+1],t))
+    x0 = np.sort(np.unique(x0)) # sort and remove dups
+    # half brace using sum of two logistic functions
+    y0 = mid*2*((1/(1.+np.exp(-1*beta1*x0)))-0.5)
+    y0 += (1-mid)*2*(1/(1.+np.exp(-1*beta2*(x0-0.5))))
+    # concat and scale x
+    x = np.concatenate((x0, 1-x0[::-1])) * float((x_max-x_min)) + x_min
+    y = np.concatenate((y0, y0[::-1])) * float(height)
+    return (x,y)
 
 ### Read in model (assume it exists already)
 f = open("model.dat", "r")
@@ -137,8 +169,8 @@ def fit(x):
 
 	return y
 
-
 #### PLOTTING ####
+
 fig = plot.figure()
 ax = fig.add_subplot(1, 1, 1)
 
@@ -192,9 +224,9 @@ f.close()
 
 # Legend
 legend_text = ""
-legend_text += "        " + r"$\phi_{min}$ $>$ $180^{\circ}$" + "\n"
-legend_text += "        " + r"$\phi_{min}$ $\approx$ $180^{\circ}$" + "\n"
-legend_text += "        " + r"$\phi_{min}$ $<$ $180^{\circ}$"
+legend_text += "        " + r"$\left[\Delta \phi\right]_\mathrm{min}$ $>$ $180^{\circ}$" + "\n"
+legend_text += "        " + r"$\left[\Delta \phi\right]_\mathrm{min}$ $\approx$ $180^{\circ}$" + "\n"
+legend_text += "        " + r"$\left[\Delta \phi\right]_\mathrm{min}$ $<$ $180^{\circ}$"
 plot.text(0.65, 1300, legend_text, fontsize = fontsize - 4, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1, pad = 7.0))
 
 xtext = 0.78
@@ -209,6 +241,62 @@ plot.scatter(xtext, ytext, marker = "o", c = color_sym, s = legend_size)
 plot.xlabel(r"$q^2 Re$ / $[3 \times 10^{-4}]$", fontsize = fontsize + 2)
 plot.ylabel("Jupiter-Mass Growth Time (planet orbits)", fontsize = fontsize)
 plot.title("Azimuthal Extents", fontsize = fontsize + 2)
+
+### Add Braces to Mark Red Points ###
+top_brace_red = 70
+bottom_brace_blue = 580
+
+red_text_y = 38
+blue_text_y = 850
+
+# (1)
+
+start = case_offset * cases[4]
+end = case_offset * cases[6] * 0.97
+
+brace1_x, brace1_y = range_brace(start, end, height = 20)
+log_brace1_x = np.logspace(np.log10(start), np.log10(end), len(brace1_x))
+midpoint = np.median(log_brace1_x)
+
+plot.plot(log_brace1_x, top_brace_red - brace1_y, color = "r", linewidth = 2)
+plot.text(midpoint, red_text_y, r"$\nu = 10^{-6}$", color = "r", horizontalalignment = 'center', fontsize = fontsize - 2)
+
+# (2)
+
+start = case_offset * cases[-3] * 1.03
+end = case_offset * cases[-1]
+
+brace2_x, brace2_y = range_brace(start, end, height = 20)
+log_brace2_x = np.logspace(np.log10(start), np.log10(end), len(brace2_x))
+midpoint = np.median(log_brace2_x)
+
+plot.plot(log_brace2_x, top_brace_red - brace2_y, color = "r", linewidth = 2)
+plot.text(midpoint, red_text_y, r"$m_p = 3.16$ $M_J$", color = "r", horizontalalignment = 'center', fontsize = fontsize - 2)
+
+# (3)
+
+start = case_offset * cases[0] * 1.1
+end = case_offset * cases[1] * 0.8
+
+brace3_x, brace3_y = range_brace(start, end, height = 150)
+log_brace3_x = np.logspace(np.log10(start), np.log10(end), len(brace2_x))
+midpoint = np.median(log_brace3_x)
+
+plot.plot(log_brace3_x, bottom_brace_blue + brace3_y, color = "b", linewidth = 2)
+plot.text(midpoint, blue_text_y, r"$m_p = 1$ $M_J$", color = "b", horizontalalignment = 'center', fontsize = fontsize - 2)
+
+# (4)
+
+start = case_offset * cases[2]
+end = case_offset * cases[3] * 0.85
+
+brace4_x, brace4_y = range_brace(start, end, height = 400)
+log_brace4_x = np.logspace(np.log10(start), np.log10(end), len(brace2_x))
+midpoint = np.median(log_brace4_x)
+
+plot.plot(log_brace4_x, bottom_brace_blue + 500 + brace4_y, color = "b", linewidth = 2)
+plot.text(midpoint, blue_text_y + 800, r"$m_p = 5$ $M_J$", color = "b", horizontalalignment = 'center', fontsize = fontsize - 2)
+
 
 # Axes
 plot.xlim(0.5, 400)
