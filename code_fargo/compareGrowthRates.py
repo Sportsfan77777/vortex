@@ -111,7 +111,7 @@ ax1.plot([0, 10**(4)], [0.2, 0.2], c = "k", linewidth = 2)
 ax2.plot([-sq, sq], [0, 0], c = "k", linewidth = 2)
 
 # Annotate
-title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu = 10^{" + str(viscosity) + r"}$"
+title = r"$M_p = " + str(mass) + r" $ $M_J$, $\nu = 10^{" + str(viscosity) + r"}$"
 ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
 ax1.set_ylabel(r"$M_\mathrm{excess}$", fontsize = fontsize)
 ax1.set_title(title, y = 1.01, fontsize = fontsize + 2)
