@@ -89,8 +89,8 @@ for taper in tapers:
     #else:
     #    max_index = np.argmax(growth_rates)
     test_growth_rates = growth_rates[:-1]
-    if mass == 1 and viscosity == -7 and taper == 2000:
-        test_growth_rates[:50] = 0
+    if mass == 1 and viscosity == -7 and taper == 1000:
+        test_growth_rates[:40] = 0
     if mass == 5 and viscosity == -7 and taper == 4000:
         test_growth_rates[:50] = 0
     max_index = np.argmax(test_growth_rates)
