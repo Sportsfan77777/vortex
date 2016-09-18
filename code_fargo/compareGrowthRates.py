@@ -89,14 +89,16 @@ for taper in tapers:
     #else:
     #    max_index = np.argmax(growth_rates)
     test_growth_rates = growth_rates[:-1]
-    if taper == 5000:
-        test_growth_rates[:40] = 0
+    if mass = 1 and viscosity = -7 and taper == 2000:
+        test_growth_rates[:50] = 0
+    if mass = 5 and viscosity = -7 and taper == 4000:
+        test_growth_rates[:50] = 0
     max_index = np.argmax(test_growth_rates)
 
     shifted_frames = np.array(frame_range) - frame_range[max_index]
 
     # Curves
-    ax1.plot(frame_range, mass_over_time, c = colors[taper], linewidth = linewidth, label = r"$T_{growth}=$" + "%d" % taper, zorder = 5)
+    ax1.plot(frame_range, mass_over_time, c = colors[taper], linewidth = linewidth, label = r"$T_\mathrm{growth}=$" + "%d" % taper, zorder = 5)
     ax1.scatter([frame_range[max_index + 1]], [mass_over_time[max_index + 1]], c = "k", marker = "s", s = 100, zorder = 50)
     ax2.plot(shifted_frames[:-1], growth_rates, c = colors[taper], linewidth = linewidth)
 
@@ -109,13 +111,13 @@ ax1.plot([0, 10**(4)], [0.2, 0.2], c = "k", linewidth = 2)
 ax2.plot([-sq, sq], [0, 0], c = "k", linewidth = 2)
 
 # Annotate
-title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity) + r"}$"
+title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu = 10^{" + str(viscosity) + r"}$"
 ax1.set_xlabel("Number of Planet Orbits", fontsize = fontsize)
-ax1.set_ylabel(r"$M_{excess}$", fontsize = fontsize)
+ax1.set_ylabel(r"$M_\mathrm{excess}$", fontsize = fontsize)
 ax1.set_title(title, y = 1.01, fontsize = fontsize + 2)
 
-ax2.set_xlabel(r"$t - t_{max-growth}$", fontsize = fontsize)
-ax2.set_ylabel(r"$d\log M_{excess}/dt$", fontsize = fontsize, labelpad = -6)
+ax2.set_xlabel(r"$t - t_\mathrm{max-growth}$", fontsize = fontsize)
+ax2.set_ylabel(r"$d\log M_\mathrm{excess}/dt$", fontsize = fontsize, labelpad = -6)
 ax2.set_title("Growth Rates", fontsize = fontsize)
 
 ax1.legend(loc = "lower right")
