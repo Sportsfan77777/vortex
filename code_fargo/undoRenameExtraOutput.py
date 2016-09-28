@@ -15,19 +15,20 @@ import pickle
 import util
 
 # All File Prefixes
-prefixes = ['gasdens', 'gasvrad', 'gasvtheta']
-new_prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta']
+prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta']
+new_prefixes = ['gasdens', 'gasvrad', 'gasvtheta']
 
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
-    prefixes2D1D = [prefix + "1D" for prefix in prefixes]
-    prefixes2D1D_extra = ["gasdens.ascii_rad.", "gasvrad.ascii_rad.", "gasvtheta.ascii_rad.", \
+    new_prefixes2D1D_extra = ["gasdens.ascii_rad.", "gasvrad.ascii_rad.", "gasvtheta.ascii_rad.", \
                           "gaslabel", "gaslabel1D", "gaslabel.ascii_rad."]
+
+    prefixes2D1D = [prefix + "1D" for prefix in prefixes]
+    prefixes2D1D_extra = ["rm_" + extra_prefix for extra_prefix in new_prefixes2D1D_extra]
     prefixes2D1D += prefixes2D1D_extra
     prefixes += prefixes2D1D
 
     new_prefixes2D1D = [new_prefix + "1D" for new_prefix in new_prefixes]
-    new_prefixes2D1D_extra = ["rm_" + extra_prefix for extra_prefix in prefixes2D1D_extra]
     new_prefixes2D1D += new_prefixes2D1D_extra
     new_prefixes += new_prefixes2D1D
 
@@ -38,17 +39,7 @@ num_frames = max_frame + 1
 ############# ############# ############# #############
 
 # Set up range(s)
-start = 1000
-end = max_frame - 100
-
-full_range = np.arange(start, end)
-
-save_rate = 5
-sub_range = np.arange(start, end, save_rate)
-sub_range_two = np.arange(start - 1, end - 1, save_rate)
-
-target_range = np.array([x for x in full_range if x not in sub_range and x not in sub_range_two])
-pickle.dump(target_range, open("target_range.p", "wb"))
+target_range = pickle.load(open("target_range.p", "rb"))
 
 for prefix, new_prefix in zip(prefixes, new_prefixes):
     for frame in target_range:
