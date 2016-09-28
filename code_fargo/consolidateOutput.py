@@ -10,6 +10,7 @@ import os
 import shutil
 import subprocess
 import glob
+import pickle
 
 import util
 
@@ -36,16 +37,17 @@ num_frames = max_frame + 1
 
 ############# ############# ############# #############
 
-rate = 5
+# Set up range(s)
+target_range = pickle.load(open("target_range.p", "rb"))
 
 for new_prefix in new_prefixes:
-    for i in range(num_frames):
-        if (i % rate) == 0:
-            # File should be kept
-            pass
-        else:
-            # Delete File
-            old = "%s%d.dat" % (new_prefix, i) # Note only re-named files can be deleted
-        
+    for frame in target_range:
+        # Delete File
+        old = "%s%d.dat" % (new_prefix, i) # Note only re-named files can be deleted
+
+        if os.path.exists(old):
             os.remove(old)
             #print old
+
+# Delete file specifying target files
+os.remove("target_range.p")

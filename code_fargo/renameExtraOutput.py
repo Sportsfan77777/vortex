@@ -36,18 +36,26 @@ num_frames = max_frame + 1
 
 ############# ############# ############# #############
 
-rate = 5
+# Set up range(s)
+start = 1000
+end = max_frame - 100
+
+full_range = np.arange(start, end)
+
+save_rate = 5
+sub_range = np.arange(start, end, save_rate)
+sub_range_two = np.arange(start - 1, end - 1, save_rate)
+
+target_range = np.array([x for x in full_range if x not in sub_range and x not in sub_range_two])
+pickle.dump(target_range, open("target_range.p", "wb"))
 
 for prefix, new_prefix in zip(prefixes, new_prefixes):
-    for i in range(num_frames):
-        if (i % rate) == 0:
-            # File should be kept
-            pass
-        else:
-            # Rename file
-            old = "%s%d.dat" % (prefix, i)
-            new = "%s%d.dat" %(new_prefix, i)
+    for frame in target_range:
+        # Rename file
+        old = "%s%d.dat" % (prefix, frame)
+        new = "%s%d.dat" %(new_prefix, frame)
 
+        if os.path.exists(old):
             shutil.move(old, new)
             #print old, new
 
