@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import glob
 import pickle
+import numpy as np
 
 import util
 
