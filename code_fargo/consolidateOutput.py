@@ -44,7 +44,7 @@ target_range = pickle.load(open("target_range.p", "rb"))
 for new_prefix in new_prefixes:
     for frame in target_range:
         # Delete File
-        old = "%s%d.dat" % (new_prefix, i) # Note only re-named files can be deleted
+        old = "%s%d.dat" % (new_prefix, frame) # Note only re-named files can be deleted
 
         if os.path.exists(old):
             os.remove(old)
