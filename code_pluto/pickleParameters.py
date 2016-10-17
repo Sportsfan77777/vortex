@@ -30,19 +30,6 @@ def store(line):
         # Store
         par[name] = entry
 
-def store_planet_mass(line):
-    """ stores only the planet's mass """
-    line_sp = line.split()
-
-    if len(line_sp) < 1:
-        # Empty
-        pass
-    else:
-        # Parse
-        planet_name = line_sp[0]
-        if planet_name == "Jupiter":
-            par["PlanetMass"] = line_sp[2]
-
 # Read file line by line
 with open(par_file, "r") as f:
     for line in f:
