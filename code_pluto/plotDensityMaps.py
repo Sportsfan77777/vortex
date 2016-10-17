@@ -26,8 +26,8 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
-import util
-from readTitle import readTitle
+#import util
+#from readTitle import readTitle
 
 save_directory = "gasDensityMaps"
 
@@ -44,7 +44,7 @@ pluto_par = pickle.load(open(param_fn, "rb"))
 num_rad = int((pluto_par["X1-grid"])[2])
 num_theta = int((pluto_par["X2-grid"])[2])
 
-rad = np.linspace(int((pluto_par["X1-grid"])[1]), int((pluto_par["X1-grid"])[4]), num_rad)
+rad = np.linspace(float((pluto_par["X1-grid"])[1]), float((pluto_par["X1-grid"])[4]), num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 #surface_density_zero = float(fargo_par["Sigma0"])
@@ -104,10 +104,10 @@ def make_plot(frame, show = False):
         #result.set_clim(clim[0], clim[1])
 
         # Annotate
-        this_title = readTitle()
+        #this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title("Gas Density Map at Orbit %d" % (orbit), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
