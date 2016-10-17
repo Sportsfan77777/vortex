@@ -102,7 +102,7 @@ def make_plot(frame, show = False):
         ### Plot ###
         result = ax.pcolormesh(x, theta, normalized_density, cmap = cmap)
         fig.colorbar(result)
-        #result.set_clim(clim[0], clim[1])
+        result.set_clim(clim[0], clim[1])
 
         # Annotate
         #this_title = readTitle()
