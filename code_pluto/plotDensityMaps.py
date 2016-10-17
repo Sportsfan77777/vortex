@@ -96,11 +96,11 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
-        density = (fromfile("rho.%04d.dbl" % i).reshape(num_rad, num_theta))
+        density = (fromfile("rho.%04d.dbl" % i).reshape(num_theta, num_rad))
         normalized_density = density #/ surface_density_zero
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, theta, normalized_density, cmap = cmap)
         fig.colorbar(result)
         #result.set_clim(clim[0], clim[1])
 
