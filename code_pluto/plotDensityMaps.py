@@ -70,8 +70,9 @@ def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     def choose_axis(i, axis):
         # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
+        #time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+        #orbit = int(round(time / (2 * np.pi), 0)) * i
+        orbit = i
 
         # Set up figure
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
@@ -91,7 +92,7 @@ def make_plot(frame, show = False):
         else:
             x = rad
             prefix = ""
-            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
+            plot.xlim(rad[0], rad[-1])
             xlabel = "Radius"
 
         # Data
