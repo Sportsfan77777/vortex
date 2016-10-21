@@ -11,7 +11,7 @@ import shutil
 import sys
 
 # Pluto Code Directory
-pluto_code = os.environ['PLUTO_DIR']
+pluto_code = os.environ['PLUTO_CODE']
 
 # Read Arguments
 name = sys.argv[1]
