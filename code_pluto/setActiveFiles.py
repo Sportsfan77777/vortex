@@ -26,12 +26,12 @@ move_eos = "e" in binary_options
 current_directory = os.getcwd()
 split = current_directory.split("/")
 if split[-1] == "code_pluto":
-    pass
+    print "You are in the code directory. Do not use in this directory."
 else:
     # Move Files
     if move_init:
-        shutil.move("init_%s.c" % name, "init.c")
+        shutil.copy("init_%s.c" % name, "init.c")
     if move_definitions:
-        shutil.move("definitions_%s.h" % name, "definitions.h")
+        shutil.copy("definitions_%s.h" % name, "definitions.h")
     if move_eos:
-        shutil.move("eos_%s.c" % name, "eos.c")
+        shutil.copy("eos_%s.c" % name, "eos.c")
