@@ -128,7 +128,7 @@ ax1.set_ylim(10**(-5), 4.0)
 ax1.set_yscale("log")
 
 ax2.set_xlim(-sq, sq)
-ax2.set_ylim(-0.01, 0.06)
+ax2.set_ylim(-0.01, 0.05)
 
 # For taper = 10 case only (if necessary)
 #ax3 = ax2.twiny()
