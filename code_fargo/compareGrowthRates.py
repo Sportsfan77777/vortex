@@ -81,7 +81,7 @@ for taper in tapers:
     log_mass_over_time = np.log(mass_over_time)
     smoothed_log_mass_over_time = smooth(log_mass_over_time, kernel_size)
 
-    growth_rates = np.diff(smoothed_log_mass_over_time) / np.diff(frame_range)
+    growth_rates = np.diff(smoothed_log_mass_over_time) / (2 * np.pi * np.diff(frame_range))
 
     # Center growth rates on peak
     #if taper == 10:
