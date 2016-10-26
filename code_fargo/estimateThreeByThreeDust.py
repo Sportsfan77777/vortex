@@ -60,6 +60,9 @@ mass = [1, 5, 5]
 viscosity = [-7, -7, -6]
 
 sizes = [r"$\rm{cm}$", r"$\rm{mm}$", r"$\rm{\mu m}$"]
+colors = ["maroon", "darkslateblue"]
+colors = ["darkslateblue", "darkslategray"]
+colors = ["blue", "saddlebrown"]
 
 # Parameters
 linewidths = [4, 5, 4]
@@ -120,8 +123,8 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
         #plot.plot(xs1, ys1, c = "b", alpha = alpha, linewidth = linewidths[i], dashes = dashes[i])
         #plot.plot(xs2, ys2, c = "g", alpha = alpha, linewidth = linewidths[i], dashes = dashes[i])
 
-        plot.plot(xs1[start1 : end1], ys1[start1 : end1], c = "b", linewidth = linewidths[i], dashes = dashes[i], label = label1, zorder = 5)
-        plot.plot(xs2[start2 : end2], ys2[start2 : end2], c = "g", linewidth = linewidths[i], dashes = dashes[i], label = label2, zorder = 1)
+        plot.plot(xs1[start1 : end1], ys1[start1 : end1], c = colors[0], linewidth = linewidths[i], dashes = dashes[i], label = label1, zorder = 5)
+        plot.plot(xs2[start2 : end2], ys2[start2 : end2], c = colors[1], linewidth = linewidths[i], dashes = dashes[i], label = label2, zorder = 1)
 
         # Axes
         x_end = 190
@@ -191,11 +194,11 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
             plot.plot([margin - diff, margin - diff], [0, top], c = "k") # Vertical
 
-            plot.text(margin, base + 4 * spacing, r"$T_\mathrm{growth} = $" + "%d" % 10)
-            plot.text(margin, base + 3 * spacing, r"$\chi = $ " + "%.1f" % aspect1)
-            plot.text(margin, base + 2 * spacing, r"$r = $" + "%.1f" % (r1))
-            plot.text(margin, base + 1 * spacing, r"$dr = $" + "%.02f" % (dr1))
-            plot.text(margin, base + 0 * spacing, r"$\rho_\mathrm{peak} = $" + "%.1f" % density1)
+            plot.text(margin, base + 4 * spacing, r"$T_\mathrm{growth} = $" + "%d" % 10, color = colors[0])
+            plot.text(margin, base + 3 * spacing, r"$\chi = $ " + "%.1f" % aspect1, color = colors[0])
+            plot.text(margin, base + 2 * spacing, r"$r = $" + "%.1f" % (r1), color = colors[0])
+            plot.text(margin, base + 1 * spacing, r"$dr = $" + "%.02f" % (dr1), color = colors[0])
+            plot.text(margin, base + 0 * spacing, r"$\rho_\mathrm{peak} = $" + "%.1f" % density1, color = colors[0])
 
             plot.plot([margin - diff, x_end], [split, split], c = "k") # Horizontal
 
@@ -207,11 +210,11 @@ def add_to_plot(number, aspect_ratios, densities, r_ratios, rs, drs, angles):
 
             plot.plot([margin - diff, margin - diff], [bottom, 300], c = "k") # Vertical
 
-            plot.text(margin, base + 4 * spacing, r"$T_\mathrm{growth} = $" + "%d" % growth[number])
-            plot.text(margin, base + 3 * spacing, r"$\chi = $ " + "%.1f" % aspect2)
-            plot.text(margin, base + 2 * spacing, r"$r = $" + "%.1f" % (r2))
-            plot.text(margin, base + 1 * spacing, r"$dr = $" + "%.02f" % (dr2))
-            plot.text(margin, base + 0 * spacing, r"$\rho_\mathrm{peak} = $" + "%.1f" % density2)
+            plot.text(margin, base + 4 * spacing, r"$T_\mathrm{growth} = $" + "%d" % growth[number], color = colors[1])
+            plot.text(margin, base + 3 * spacing, r"$\chi = $ " + "%.1f" % aspect2, color = colors[1])
+            plot.text(margin, base + 2 * spacing, r"$r = $" + "%.1f" % (r2), color = colors[1])
+            plot.text(margin, base + 1 * spacing, r"$dr = $" + "%.02f" % (dr2), color = colors[1])
+            plot.text(margin, base + 0 * spacing, r"$\rho_\mathrm{peak} = $" + "%.1f" % density2, color = colors[1])
 
             plot.plot([margin - diff, x_end], [bottom, bottom], c = "k") # Horizontal
 
