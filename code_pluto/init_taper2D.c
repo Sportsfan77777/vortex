@@ -86,7 +86,7 @@ void Init (double *us, double x1, double x2, double x3)
 
   #if ROTATING_FRAME == YES
    //g_OmegaZ  = sqrt(1.0 + g_inputParam[Mplanet]/g_inputParam[Mstar]*CONST_Mearth/CONST_Msun); // not necessary since planet is tapered anyway
-   g_OmegaZ *= 2.0*CONST_PI;
+   g_OmegaZ = 2.0*CONST_PI;
   #endif
   
   #if GEOMETRY == POLAR
