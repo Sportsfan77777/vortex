@@ -66,3 +66,5 @@ extern	real	FEELTIME;
 extern	real	FEELTIMEE;
 extern	int	SFTA;
 extern	real	DENSITYFLOOR;
+extern	real	INNERFOLDNUMBER;
+extern	real	OUTERFOLDNUMBER;
