@@ -239,7 +239,7 @@ real dt;
 	ramp = ramp*ramp;
 	tau = 2.0*M_PI*pow(RMAX,1.5);
       }
-      if (Rmed[i] < 0.5) {
+      if (Rmed[i] < R_inf) {
 	ramp = (Rmed[i]-R_inf)/(R_inf-RMIN);
 	ramp = ramp*ramp;
 	tau = 2.0*M_PI*pow(RMIN, 1.5);
