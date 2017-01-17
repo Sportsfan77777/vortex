@@ -112,7 +112,7 @@ real dt;
   NbPlanets = sys->nb;
   for (k = 0; k < NbPlanets; k++) {
     if (sys->FeelDisk[k] == YES && PhysicalTime>FEELTIME) {
-      m=sys->mass[k];
+      m=sys->mass[k]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
       x=sys->x[k];
       y=sys->y[k];
       r=sqrt(x*x+y*y);
@@ -156,7 +156,7 @@ real dt;
     q0[i+n] = sys->y[i];
     q0[i+2*n] = sys->vx[i];
     q0[i+3*n] = sys->vy[i];
-    PlanetMasses[i] = sys->mass[i];
+    PlanetMasses[i] = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
   }
   feelothers = sys->FeelOthers;
   RungeKunta (q0, dt, PlanetMasses, q1, n, feelothers);
