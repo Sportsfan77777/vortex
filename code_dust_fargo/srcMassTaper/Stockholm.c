@@ -11,7 +11,7 @@ conditions.
 
 #include "fargo.h"
 
-extern boolean OpenInner, NonReflecting;
+extern boolean OpenInner, NonReflecting, Evanescent;
 extern Pair DiskOnPrimaryAcceleration;
 
 Force ComputeForceStockholm (Rho, x, y, rsmoothing, mass)
@@ -59,22 +59,22 @@ real x, y, rsmoothing, mass;
       InvDist3 = 1.0/dist2/distance;
       if (Rmed[i] < a) {
 #pragma omp atomic
-	fxhi += G*cellmass*dx*InvDist3*inside_hill;
+  fxhi += G*cellmass*dx*InvDist3*inside_hill;
 #pragma omp atomic
-	fyhi += G*cellmass*dy*InvDist3*inside_hill;
+  fyhi += G*cellmass*dy*InvDist3*inside_hill;
 #pragma omp atomic
-	fxi+= G*cellmass*dx*InvDist3*outside_hill;
+  fxi+= G*cellmass*dx*InvDist3*outside_hill;
 #pragma omp atomic
-	fyi+= G*cellmass*dy*InvDist3*outside_hill;
+  fyi+= G*cellmass*dy*InvDist3*outside_hill;
       } else {
 #pragma omp atomic
-	fxho += G*cellmass*dx*InvDist3*inside_hill;
+  fxho += G*cellmass*dx*InvDist3*inside_hill;
 #pragma omp atomic
-	fyho += G*cellmass*dy*InvDist3*inside_hill;
+  fyho += G*cellmass*dy*InvDist3*inside_hill;
 #pragma omp atomic
-	fxo+= G*cellmass*dx*InvDist3*outside_hill;
+  fxo+= G*cellmass*dx*InvDist3*outside_hill;
 #pragma omp atomic
-	fyo+= G*cellmass*dy*InvDist3*outside_hill;
+  fyo+= G*cellmass*dy*InvDist3*outside_hill;
       }
     }
   }
@@ -195,7 +195,7 @@ void UpdateLogStockholm (psys, Rho, time)
       frac = iplanet-floor(iplanet);
       ii = (int)iplanet;
       cs = GLOBAL_SOUNDSPEED[ii]*(1.0-frac)+\
-	GLOBAL_SOUNDSPEED[ii+1]*frac;
+  GLOBAL_SOUNDSPEED[ii+1]*frac;
       smoothing = cs * r * sqrt(r) * THICKNESSSMOOTHING;
     }
     fc = ComputeForceStockholm (Rho, x, y, smoothing, m);
@@ -204,62 +204,65 @@ void UpdateLogStockholm (psys, Rho, time)
       sprintf (filename, "%storque%d.dat", OUTPUTDIR, i);
       out = fopenp (filename, "a");
       fprintf (out, "%.18g\t%.18g\t%.18g\t%.18g\t%.18g\t%.18g\t%.18g\n", time,\
-	       massinout.x, massinout.y,\
-	       x*fc.fy_inner-y*fc.fx_inner,\
-	       x*fc.fy_outer-y*fc.fx_outer,\
-	       x*fc.fy_ex_inner-y*fc.fx_ex_inner,\
-	       x*fc.fy_ex_outer-y*fc.fx_ex_outer);
+         massinout.x, massinout.y,\
+         x*fc.fy_inner-y*fc.fx_inner,\
+         x*fc.fy_outer-y*fc.fx_outer,\
+         x*fc.fy_ex_inner-y*fc.fx_ex_inner,\
+         x*fc.fy_ex_outer-y*fc.fx_ex_outer);
       fclose (out);
     }
   }
 }
 
-void StockholmBoundary (Vrad, Vtheta, Rho, dt)
+void StockholmBoundary (Vrad, Vtheta, Rho, dt, gas)
 PolarGrid *Vrad, *Vtheta, *Rho;
 real dt;
+int gas;
 {
-  int i, j, l, ns, nr;
-  real *dens, *vtheta, *vrad;
-  real dens0, omega0, vrad0, vtheta0, lambda, rad;
-  real tau=0., ramp;
-  real R_inf, R_sup;
-  ns = Rho->Nsec;
-  nr = Rho->Nrad;
-  dens = Rho->Field;
-  vrad   = Vrad->Field;
-  vtheta   = Vtheta->Field;
-  R_inf = RMIN*1.25;
-  R_sup = RMAX*.84;
-  for (i = Zero_or_active; i < Max_or_active; i++) {
-    for (j = 0; j < ns; j++) {
-      l = j+i*ns;
-      ramp = 0.0;
-      if (Rmed[i] > R_sup) {
-	ramp = (Rmed[i]-R_sup)/(RMAX-R_sup);
-	ramp = ramp*ramp;
-	tau = 2.0*M_PI*pow(RMAX,1.5);
-      }
-      if (Rmed[i] < R_inf) {
-	ramp = (Rmed[i]-R_inf)/(R_inf-RMIN);
-	ramp = ramp*ramp;
-	tau = 2.0*M_PI*pow(RMIN, 1.5);
-      }
-      if (ramp > 1e-15) {
-	tau /= 3.0; 		/* Called three times per timestep  */
-	rad = Rmed[i];
-	dens0 = SigmaMed[i];
-	vrad0 = -3.0*VISCOSITY/rad*(-SIGMASLOPE+.5);
-	omega0 = sqrt(G/(rad*rad*rad));
-	vtheta0 = omega0 * rad;
-	vtheta0 *= sqrt(1.0-pow(ASPECTRATIO,2.0)*\
-	     pow(rad,2.0*FLARINGINDEX)*\
-	     (1.+SIGMASLOPE-2.0*FLARINGINDEX));
-	vtheta0 -= OmegaFrame * rad;
-	lambda = ramp/tau*dt;
-	dens[l] = (dens[l]+lambda*dens0)/(1.+lambda);
-	vrad[l] = (vrad[l]+lambda*vrad0)/(1.+lambda);
-	vtheta[l] = (vtheta[l]+lambda*vtheta0)/(1.+lambda);
-      }
+    int i, j, l, ns, nr;
+    real *dens, *vtheta, *vrad;
+    real dens0, omega0, vrad0, vtheta0, lambda, rad;
+    real tau=0., ramp;
+    real R_inf, R_sup;
+    ns = Rho->Nsec;
+    nr = Rho->Nrad;
+    dens = Rho->Field;
+    vrad   = Vrad->Field;
+    vtheta   = Vtheta->Field;
+    R_inf = RMIN*1.25;
+    R_sup = RMAX*.84; // ### was 0.84 originally!!! ###
+    for (i = Zero_or_active; i < Max_or_active; i++) {
+        for (j = 0; j < ns; j++) {
+            l = j+i*ns;
+            ramp = 0.0;
+            if (Rmed[i] > R_sup) {
+                ramp = (Rmed[i]-R_sup)/(RMAX-R_sup);
+                ramp = ramp*ramp; // parabola
+                tau = 2.0*M_PI*pow(RMAX, 1.5) / OUTERFOLDNUMBER; // at outer boundary
+            }
+            if (Rmed[i] < R_inf) {
+                ramp = (Rmed[i]-R_inf)/(R_inf-RMIN);
+                ramp = ramp*ramp; // parabola
+                tau = 2.0*M_PI*pow(RMIN, 1.5) / INNERFOLDNUMBER; // at inner boundary
+            }
+            if (ramp > 1e-15) {
+                //tau /= FOLDNUMBER; /* Called three times per timestep ---- CHANGED to PARAMETER */
+                rad = Rmed[i];
+                dens0 = SigmaMed[i];
+                vrad0 = -3.0*VISCOSITY/rad*(-SIGMASLOPE+.5);
+                omega0 = sqrt(G/(rad*rad*rad));
+                vtheta0 = omega0 * rad;
+                if (gas) {
+                     vtheta0 *= sqrt(1.0-pow(ASPECTRATIO,2.0)*\
+                     pow(rad,2.0*FLARINGINDEX)*\
+                     (1.+SIGMASLOPE-2.0*FLARINGINDEX));
+                }
+                vtheta0 -= OmegaFrame * rad;
+                lambda = ramp/tau*dt;
+                dens[l] = (dens[l]+lambda*dens0)/(1.+lambda);
+                vrad[l] = (vrad[l]+lambda*vrad0)/(1.+lambda);
+                vtheta[l] = (vtheta[l]+lambda*vtheta0)/(1.+lambda);
+            }
+        }
     }
-  }
 }
