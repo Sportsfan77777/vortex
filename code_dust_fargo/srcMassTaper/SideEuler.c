@@ -323,9 +323,8 @@ void ApplyOuterSourceMass (Rho, Vrad)
 void ApplyBoundaryCondition (Vrad, Vtheta, Rho, DVrad, DVtheta, DRho,dt)
 PolarGrid *Vrad, *Vtheta, *Rho, *DVrad, *DVtheta, *DRho;
 real dt;
-int gas, dust;
 {
-
+  int gas, dust;
 
   if (Stockholm == YES) {
     StockholmBoundary (Vrad, Vtheta, Rho, dt, 1);

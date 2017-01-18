@@ -6,10 +6,17 @@
 # for pentium 3 or higher (otherwise edit accordingly)
 # FARGO_ARCH must be set to LINUX
 CC_LINUX  = gcc
-OPT_LINUX = -O4 -Wall -ffast-math -Wno-unknown-pragmas
+OPT_LINUX = -O4 -march=pentium -Wall -ffast-math -Wno-unknown-pragmas
 OPTSEQ_LINUX = 
 PARAOPT_LINUX =
 PARACC_LINUX = mpicc
+
+#PEYTON computers
+CC_PEYTON  = gcc
+OPT_PEYTON = -O3 -Wall
+OPTSEQ_PEYTON =
+PARAOPT_PEYTON =
+PARACC_PEYTON = /usr/peyton/openmpi-1.2.8/bin/mpicc
 
 # AMD Opteron platform
 # FARGO_ARCH must be set to OPTERON
@@ -25,9 +32,9 @@ PARACC_OPTERON = mpicc
 # (sequential only, MPI identical to generic IA32)
 CC_INTEL  = icc
 OPT_INTEL = 
-OPTSEQ_INTEL = -O3  -ipo -unroll -w2 -Wall -wd1418,310,266,810,1419,981,161 
-PARAOPT_INTEL =  -Wall -g
-PARACC_INTEL = mpicc 
+OPTSEQ_INTEL = -O3 -tpp7 -ipo -unroll -w2 -Wall -wd1418,310,266,810,1419,981,161 
+PARAOPT_INTEL = -O4 -march=pentium3 -Wall -ffast-math
+PARACC_INTEL = mpicc
 
 # Macintosh MAC OS X platform **POWERPC ONLY** (with gcc)
 # FARGO_ARCH must be set to MACOSX
@@ -40,10 +47,7 @@ PARACC_MACOSX = mpicc
 # Macintosh MAC OS X platform **Mac Intel  ONLY** (with gcc)
 # FARGO_ARCH must be set to MacIntel
 CC_MacIntel = gcc
-#Below : OpenMP support; experimental feature: code not recently tested
-#with OpenMP parallelization. Uncomment this line at your own risk.
-#OPT_MacIntel = -O3 -Wall -arch i386 -fast -ftree-vectorize -fopenmp
-OPT_MacIntel = -O3 -Wall -arch i386 -fast -Wno-unknown-pragmas
+OPT_MacIntel = -O3 -Wall -arch i386 -fast -ftree-vectorize -Wno-unknown-pragmas
 OPTSEQ_MacIntel = 
 PARAOPT_MacIntel =
 PARACC_MacIntel = mpicc
@@ -51,11 +55,11 @@ PARACC_MacIntel = mpicc
 # Generic options valid for any platfom
 # which has 'cc' in the path
 # These are used if you leave FARGO_ARCH undefined
-CC_  = mpiicc
-OPT_ = -O3 -xHost
+CC_  = cc
+OPT_ = -O
 OPTSEQ_ = 
 PARAOPT_ =
-PARACC_ = mpiicc
+PARACC_ = mpicc
 
 # Setup for Compaq HP/SC (Digital EV68)
 # with no OpenMP support
@@ -78,7 +82,7 @@ PARACC_EVMP = cc
 # Generic Sparc (v7) SunStation platform w/ gcc
 # FARGO_ARCH must be set to SPARC
 CC_SPARC  = gcc
-OPT_SPARC = -O3 -Wall
+OPT_SPARC = -O3
 OPTSEQ_SPARC = 
 PARAOPT_SPARC =
 PARACC_SPARC = mpicc
@@ -103,9 +107,6 @@ OPT         = $(OPT_$(FARGO_ARCH))
 OPTSEQ      = $(OPTSEQ_$(FARGO_ARCH))
 PARAOPT     = $(PARAOPT_$(FARGO_ARCH)) -D_PARALLEL
 PARACOMP    = $(PARACC_$(FARGO_ARCH))
-#Uncomment the following line for OpenMP support (with gcc) and comment the
-#subsequent line
-#LIBS        = -lm -lgomp
 LIBS        = -lm
 PARALIBS    = -lmpi
 AUTOINCL    = param.h param_noex.h global_ex.h
