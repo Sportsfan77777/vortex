@@ -43,7 +43,7 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 num_rad = np.loadtxt("dims.dat")[-2]
 num_theta = np.loadtxt("dims.dat")[-1]
 
-rad = np.loadtxt("used_rad.dat")[:-1]
+rad = np.loadtxt("used_rad.dat")[:-1, 0]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])

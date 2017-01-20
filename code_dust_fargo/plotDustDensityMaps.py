@@ -34,12 +34,13 @@ save_directory = "dustDensityMaps"
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 pickled = util.pickle_parameters()
+param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
 num_rad = np.loadtxt("dims.dat")[-2]
 num_theta = np.loadtxt("dims.dat")[-1]
 
-rad = np.loadtxt("used_rad.dat")[:-1]
+rad = np.loadtxt("used_rad.dat")[:-1, 1]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
