@@ -248,11 +248,19 @@ int gas;
             if (ramp > 1e-15) {
                 //tau /= FOLDNUMBER; /* Called three times per timestep ---- CHANGED to PARAMETER */
                 rad = Rmed[i];
-                dens0 = SigmaMed[i];
+                if (gas) {
+                     // Gas
+                     dens0 = SigmaMed[i];
+                }
+                else {
+                     // Dust
+                     dens0 = DSigmaMed[i];
+                }
                 vrad0 = -3.0*VISCOSITY/rad*(-SIGMASLOPE+.5);
                 omega0 = sqrt(G/(rad*rad*rad));
                 vtheta0 = omega0 * rad;
                 if (gas) {
+                     // Gas
                      vtheta0 *= sqrt(1.0-pow(ASPECTRATIO,2.0)*\
                      pow(rad,2.0*FLARINGINDEX)*\
                      (1.+SIGMASLOPE-2.0*FLARINGINDEX));
