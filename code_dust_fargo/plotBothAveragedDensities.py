@@ -102,7 +102,7 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Azimuthally-Averaged\n Gas Density", fontsize = fontsize)
-        plot.title(r"$t = %d$ $\rm{orbits}$" + "\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title(r"$t = %d$ $\rm{orbits}$" % (orbit) + "\n%s" % (this_title), fontsize = fontsize + 1)
 
         ### Dust Density ###
         # Select Plot
@@ -133,7 +133,7 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Azimuthally-Averaged\n Dust Density", fontsize = fontsize)
-        plot.title(r"$t = %d$ $\rm{orbits}$" + "\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title(r"$t = %d$ $\rm{orbits}$" % (orbit) + "\n%s" % (this_title), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%sboth_avg_density_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
