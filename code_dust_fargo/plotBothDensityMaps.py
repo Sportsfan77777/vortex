@@ -1,10 +1,10 @@
 """
 plot 2-D density maps
 
-python plotDensityMaps.py
-python plotDensityMaps.py frame_number
-python plotDensityMaps.py -1 <<<===== Plots a sample
-python plotDensityMaps.py -m
+python plotBothDensityMaps.py
+python plotBothDensityMaps.py frame_number
+python plotBothDensityMaps.py -1 <<<===== Plots a sample
+python plotBothDensityMaps.py -m
 """
 
 import sys
@@ -29,7 +29,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "gasDensityMaps"
+save_directory = "bothDensityMaps"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -56,7 +56,8 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+gas_clim = [0, 2]
+dust_clim = [0, 0.04]
 
 fontsize = 14
 my_dpi = 100
@@ -70,8 +71,11 @@ def make_plot(frame, show = False):
         orbit = int(round(time / (2 * np.pi), 0)) * i
 
         # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+        fig = plot.figure(figsize = (1400 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+        
+        ### Gas Density ###
+        # Select Plot
+        plot.subplot(1, 2, 1)
 
         # Axis
         angles = np.linspace(0, 2 * np.pi, 7)
@@ -97,7 +101,7 @@ def make_plot(frame, show = False):
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
         fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+        result.set_clim(gas_clim[0], gas_clim[1])
 
         # Annotate
         this_title = readTitle()
@@ -105,8 +109,26 @@ def make_plot(frame, show = False):
         plot.ylabel(r"$\phi$", fontsize = fontsize)
         plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
+        ### Dust Density ###
+        plot.subplot(1, 2, 2)
+
+        # Data
+        dust_density = (fromfile("gasddens%d.dat" % i).reshape(num_rad, num_theta))
+        normalized_dust_density = dust_density / surface_density_zero
+
+        ### Plot ###
+        result = ax.pcolormesh(x, theta, np.transpose(normalized_dust_density), cmap = cmap)
+        fig.colorbar(result)
+        result.set_clim(dust_clim[0], dust_clim[1])
+
+        # Annotate
+        this_title = readTitle()
+        plot.xlabel(xlabel, fontsize = fontsize)
+        plot.ylabel(r"$\phi$", fontsize = fontsize)
+        plot.title("Dust Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+
         # Save and Close
-        plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%sbothDensityMaps_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
@@ -140,9 +162,9 @@ else:
 
     #### ADD TRY + CATCH BLOCK HERE!!!!! ####
 
-    p = Pool() # default number of processes is multiprocessing.cpu_count()
-    p.map(make_plot, range(num_frames))
-    p.terminate()
+    #p = Pool() # default number of processes is multiprocessing.cpu_count()
+    #p.map(make_plot, range(num_frames))
+    #p.terminate()
 
     #### Make Movies ####
     #make_movies()
