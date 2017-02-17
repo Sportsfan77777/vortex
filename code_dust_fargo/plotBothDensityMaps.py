@@ -57,7 +57,7 @@ except:
 # Plot Parameters
 cmap = "RdYlBu_r"
 gas_clim = [0, 2]
-dust_clim = [0, 0.04]
+dust_clim = [0, 0.02]
 
 fontsize = 14
 my_dpi = 100
@@ -109,8 +109,25 @@ def make_plot(frame, show = False):
         plot.ylabel(r"$\phi$", fontsize = fontsize)
         plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
-        ### Dust Density ###
+        ##### Dust Density #####
         plot.subplot(1, 2, 2)
+
+        # Axis
+        angles = np.linspace(0, 2 * np.pi, 7)
+        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+
+        plot.ylim(0, 2 * np.pi)
+        plot.yticks(angles, degree_angles)
+        if axis == "zoom":
+            x = (rad - 1) / scale_height
+            prefix = "zoom_"
+            plot.xlim(0, 40) # to match the ApJL paper
+            xlabel = r"($r - r_p$) $/$ $h$"
+        else:
+            x = rad
+            prefix = ""
+            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
+            xlabel = "Radius"
 
         # Data
         dust_density = (fromfile("gasddens%d.dat" % i).reshape(num_rad, num_theta))
