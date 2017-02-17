@@ -82,12 +82,13 @@ def make_plot(frame, show = False):
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(0, 1.2)
+            plot.ylim(0, 1.5)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
             plot.xlim(0, x[-1])
+            plot.ylim(0, 5)
             xlabel = "Radius"
             
         # Data
@@ -112,12 +113,13 @@ def make_plot(frame, show = False):
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(0, 40) # to match the ApJL paper
-            plot.ylim(0, 1.2)
+            plot.ylim(0, 0.015)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
             prefix = ""
             plot.xlim(0, x[-1])
+            plot.ylim(0, 0.05)
             xlabel = "Radius"
             
         # Data
