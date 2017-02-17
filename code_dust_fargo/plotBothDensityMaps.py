@@ -99,7 +99,7 @@ def make_plot(frame, show = False):
         normalized_density = density / surface_density_zero
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+        result = plot.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(gas_clim[0], gas_clim[1])
 
@@ -117,7 +117,7 @@ def make_plot(frame, show = False):
         normalized_dust_density = dust_density / surface_density_zero
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_dust_density), cmap = cmap)
+        result = plot.pcolormesh(x, theta, np.transpose(normalized_dust_density), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(dust_clim[0], dust_clim[1])
 
