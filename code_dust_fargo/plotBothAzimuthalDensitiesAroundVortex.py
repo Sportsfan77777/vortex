@@ -114,7 +114,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, dust_azimuthal_profile
     orbit = int(round(time / (2 * np.pi), 0)) * frame
 
     # Set up figure
-    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig = plot.figure(figsize = (1400 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Gas Density ###
     # Select Plot
