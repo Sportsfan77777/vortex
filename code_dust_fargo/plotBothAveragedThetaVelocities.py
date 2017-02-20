@@ -71,7 +71,7 @@ def make_plot(frame, show = False):
         orbit = int(round(time / (2 * np.pi), 0)) * i
 
         # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+        fig = plot.figure(figsize = (1400 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
         #### Gas and Dust ####
         plot.subplot(1, 2, 1)
