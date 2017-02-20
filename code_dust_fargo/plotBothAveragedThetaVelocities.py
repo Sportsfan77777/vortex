@@ -93,7 +93,7 @@ def make_plot(frame, show = False):
         averaged_vtheta = np.average(vtheta, axis = 1)
 
         vtheta_dust = (fromfile("gasdvtheta%d.dat" % i).reshape(num_rad, num_theta))
-        averaged_vtheta_dust = np.average(vtheta, axis = 1)
+        averaged_vtheta_dust = np.average(vtheta_dust, axis = 1)
 
         ### Plot ###
         plot.plot(x, averaged_vtheta, linewidth = linewidth)
