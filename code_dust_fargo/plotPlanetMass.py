@@ -41,8 +41,8 @@ rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 
 data = np.loadtxt(planet_fn)
 select = range(0, len(data[:,-1]), rate)
-xs = (data[:,-2])[select] / (2 * np.pi) # Convert to num_orbits
-masses = (data[:,5])[select] # Planet Mass
+xs = (data[:, -4])[select] / (2 * np.pi) # Convert to num_orbits
+masses = (data[:, 5])[select] # Planet Mass
 
 # Plot Parameters
 fontsize = 14
@@ -56,7 +56,7 @@ def make_plot():
     # Annotate
     this_title = readTitle()
     plot.title("%s" % this_title, fontsize = fontsize + 2)
-    plot.xlabel("Timestep", fontsize = fontsize)
+    plot.xlabel("Orbit", fontsize = fontsize)
     plot.ylabel("Planet Mass / Initial Mass", fontsize = fontsize)
 
     # Limits
