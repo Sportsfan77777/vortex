@@ -94,7 +94,7 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Mean and Median\n Stopping Times", fontsize = fontsize)
-        plot.title(r"$t = %d$ $\rm{orbits}$:" % (orbit) + "\n%s" % (this_title), fontsize = fontsize + 1)
+        plot.title("\n%s" % (this_title) + r"$t = %d$ $\rm{orbits}:$" % (orbit), fontsize = fontsize + 1)
 
         # Save and Close
         plot.savefig("%s/%savg_stopping_times_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
