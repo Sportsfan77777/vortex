@@ -31,7 +31,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "bothAveragedDensities"
+save_directory = "averagedDensity"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -100,7 +100,7 @@ def make_plot(frame, show = False):
         plot.title(r"$t = %d$ $\rm{orbits}: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sboth_avg_density_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%savg_density_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
