@@ -20,6 +20,7 @@ import pickle
 from multiprocessing import Pool
 
 import math
+import random
 import numpy as np
 
 import matplotlib
@@ -53,7 +54,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ## Use These Frames ##
 rate = 5
 start = 0
-max_frame = 2000 #util.find_max_frame()
+max_frame = 850 #util.find_max_frame()
 frame_range = np.array(range(start, max_frame + 1, rate))
 num_frames = len(frame_range)
 
