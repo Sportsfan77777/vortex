@@ -6,7 +6,10 @@ not to be called
 """
 
 import os
+import subprocess
 import glob
+import time
+import pickle
 
 import numpy as np
 
@@ -14,6 +17,18 @@ import utilTorque
 import utilVorticity
 
 #### Miscellaneous ####
+
+def pickle_parameters():
+    param_fn = "params.p"
+    if not os.path.exists(param_fn):
+        command = "python pickleParameters.py"
+        split_command = command.split()
+        subprocess.Popen(split_command)
+    else:
+        return False
+    # Give it time to execute
+    time.sleep(1) # one sec
+    return True
 
 def find_max_frame():
     # glob the right set of files
