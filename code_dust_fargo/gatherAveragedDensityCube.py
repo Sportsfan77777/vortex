@@ -1,9 +1,10 @@
 """
 save pickle file of dictionary containing
 (1) cube: cube of azimuthally averaged density over time
-(2) scale_height: scale height
+(2) frame_range: frame range used in cube
 (3) rad: used_radii
-(4) id: identifier dictionary --- just fargo_par
+(4) scale_height: scale height
+(5) id: identifier dictionary --- just fargo_par
 
 Usage:
 python gatherAveragedDensityCube.py
@@ -54,7 +55,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ## Use These Frames ##
 rate = 5
 start = 0
-max_frame = 850 #util.find_max_frame()
+max_frame = 2000 #util.find_max_frame()
 frame_range = np.array(range(start, max_frame + 1, rate))
 num_frames = len(frame_range)
 
@@ -68,8 +69,9 @@ for i, frame in enumerate(frame_range):
 ## Save Pickle File ##
 storage = {}
 storage['cube'] = averagedDensityCube
-storage['scale_height'] = scale_height
+storage['frame_range'] = frame_range
 storage['rad'] = rad
+storage['scale_height'] = scale_height
 storage['id'] = fargo_par
 
 random_id = random.randint(0, 9999)
