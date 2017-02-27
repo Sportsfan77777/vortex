@@ -94,11 +94,10 @@ def make_plot(i, frame, show = False):
             
         # Data
         for cube in cubes:
-            averagedDensity = cubes[i]
+            averagedDensity = cube[i]
             plot.plot(x, averagedDensity, linewidth = linewidth)        
 
         # Annotate
-        this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Azimuthally-Averaged\n Normalized Density", fontsize = fontsize)
         plot.title(r"$t = %d$ $\rm{orbits}" % (orbit), fontsize = fontsize + 1)
