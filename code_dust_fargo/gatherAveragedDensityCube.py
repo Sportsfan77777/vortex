@@ -68,7 +68,7 @@ for i, frame in enumerate(frame_range):
 storage = {}
 storage['cube'] = averagedDensityCube
 storage['scale_height'] = scale_height
-storage['rad'] = used_rad
+storage['rad'] = rad
 storage['id'] = fargo_par
 
 random_id = random.randint(0, 9999)
