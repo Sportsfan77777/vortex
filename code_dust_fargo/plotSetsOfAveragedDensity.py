@@ -34,7 +34,8 @@ from readTitle import readTitle
 save_directory = "averagedDensity"
 
 name = "averagedDensities%d.p"
-ids = ["5524", "6420"]
+ids = [5524, 6420]
+labels = ["gas", "both"]
 
 ### Load Pickle Files ###
 
@@ -95,12 +96,14 @@ def make_plot(i, frame, show = False):
         # Data
         for cube in cubes:
             averagedDensity = cube[i]
-            plot.plot(x, averagedDensity, linewidth = linewidth)        
+            plot.plot(x, averagedDensity, linewidth = linewidth, label = labels[i])        
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel("Azimuthally-Averaged\n Normalized Density", fontsize = fontsize)
-        plot.title(r"$t = %d$ $\rm{orbits}" % (orbit), fontsize = fontsize + 1)
+        plot.title(r"$t = %d$ $\rm{orbits}$" % (orbit), fontsize = fontsize + 1)
+
+        plot.legend(loc = "upper right")
 
         # Save and Close
         plot.savefig("%s/%savg_density_%04d.png" % (save_directory, prefix, frame), bbox_inches = 'tight', dpi = my_dpi)
