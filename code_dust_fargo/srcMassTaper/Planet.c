@@ -42,7 +42,7 @@ PlanetarySystem *sys;
     if (sys->acc[k] > 1e-10 && PhysicalTime>ACCTIME) {
       dMplanet = dPxPlanet = dPyPlanet = dDMplanet = 0.0;
 				/* Hereafter : initialization of W. Kley's parameters */
-  m=1.0+sys->mass[k];		/*scatter away*/
+  m=1.0+sys->mass[k]*MassTaper;		/*scatter away */     //*** ##### MASS TAPER EDIT HERE ##### ***//
   x=sys->x[k];
   y=sys->y[k];
   vx=sys->vx[k];
