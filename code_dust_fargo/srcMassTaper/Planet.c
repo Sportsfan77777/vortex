@@ -57,7 +57,7 @@ PlanetarySystem *sys;
     fprintf(stdout,"Scatter away %g",a);
     facc = 0.;
   }else{
-      facc = dt*(sys->acc[k])*sqrt(m/pow(a,3.));
+      facc = dt*(sys->acc[k]);//*sqrt(m/pow(a,3.)); /* This is different?????? */
   }
 
       facc1 = 1.0/3.0*facc;
