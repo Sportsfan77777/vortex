@@ -53,7 +53,8 @@ PlanetarySystem *sys;
   Ay = y*vx*vx-x*vx*vy-G*m*y/d;
   e = sqrt(Ax*Ax+Ay*Ay)/G/m;
   a = h*h/G/m/(1-e*e);
-  if(a<=0.){
+  if(1 > 2){
+    /* The original argument was 'a<=0.' Let's just set it to false */
     fprintf(stdout,"Scatter away %g",a);
     facc = 0.;
   }else{
