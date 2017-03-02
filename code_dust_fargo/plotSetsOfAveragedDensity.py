@@ -35,7 +35,7 @@ save_directory = "averagedDensity"
 
 name = "averagedDensities%d.p"
 ids = [5524, 6420]
-labels = ["gas", "both"]
+labels = ["both", "gas"]
 
 ### Load Pickle Files ###
 
@@ -94,9 +94,9 @@ def make_plot(i, frame, show = False):
         ### Plot ###
             
         # Data
-        for cube in cubes:
+        for c, cube in enumerate(cubes):
             averagedDensity = cube[i]
-            plot.plot(x, averagedDensity, linewidth = linewidth, label = labels[i])        
+            plot.plot(x, averagedDensity, linewidth = linewidth, label = labels[c])        
 
         # Annotate
         plot.xlabel(xlabel, fontsize = fontsize)
