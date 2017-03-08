@@ -217,6 +217,9 @@ char *filename;
   if ((*TAPERPROFILE == 's') || (*TAPERPROFILE == 'S')) SinSquaredTaper = YES;
   else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
   else {}
+
+  // #### NEW VORTEX DIFFUSION VARIABLES #### //
+  if ((*VORTEXDIFFUSION == 'Y') || (*VORTEXDIFFUSION == 'y')) VortexDiffusion = YES;
 }
 
 void PrintUsage (execname)

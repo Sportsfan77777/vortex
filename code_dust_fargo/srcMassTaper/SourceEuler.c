@@ -25,7 +25,7 @@ static int AlreadyCrashed = 0;
 static long GasTimeStepsCFL;
 
 extern int TimeStep;
-extern boolean FastTransport, IsDisk;
+extern boolean FastTransport, IsDisk, VortexDiffusion;
 Pair DiskOnPrimaryAcceleration;
 
 
@@ -410,6 +410,15 @@ real dt;
     invdtheta = 1.0/dtheta;
     viscosityp = FViscosity (Rsup[i]);
     viscosity = FViscosity (Rmed[i]);
+    /* Adding Separate Vortex Diffusion */
+    if (VortexDiffusion == YES) {
+      if (Rmed[i] > VORTEXDIFFIN && Rmed[i] < VORTEXDIFFOUT) {
+        viscosityp = VORTEXDIFFUSIONCOEFFICIENT;
+        viscosity = VORTEXDIFFUSIONCOEFFICIENT;
+      }
+    }
+    /* End of Separate Vortex Diffusion */  
+      
     for (j = 0; j < ns; j++){
       l = j+i*ns;
       lip = l+ns;
@@ -816,6 +825,7 @@ void AddMass(Rho,Vrad,Vtheta,dt)
     for (j = 0; j < ns; j++){
       l = j+i*ns;
         if(Rmed[i]>RIN&&Rmed[i]<ROUT){
+          // Adds Dust!
           addma = 2.e-6*6.3e25/MUNIT*TUNIT*0.25/(pow(ROUT,0.25)-pow(RIN,0.25))/2./PI*pow(Rmed[i],-1.75);
           rho[l] += addma*dt;
         }
