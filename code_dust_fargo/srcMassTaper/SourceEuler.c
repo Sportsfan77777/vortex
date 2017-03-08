@@ -391,6 +391,7 @@ real dt;
 {
   int i, j, l, lim, lip, ljm, ljp, nr, ns;
   real *drho, *rho, *dvrad, *dvtheta, *fdiffrp, *fdifftp, *diag3;
+  real dust_overdensity;
   real dtheta, invdtheta;
   real viscosityp, viscosity;
   real frp, frm, ftp, ftm;
@@ -408,22 +409,31 @@ real dt;
   for (i = 0; i < nr-1; i++){
     dtheta = 2.0*PI/(real)ns;
     invdtheta = 1.0/dtheta;
-    viscosityp = FViscosity (Rsup[i]);
-    viscosity = FViscosity (Rmed[i]);
-    /* Adding Separate Vortex Diffusion */
-    if (VortexDiffusion == YES) {
-      if (Rmed[i] > VORTEXDIFFIN && Rmed[i] < VORTEXDIFFOUT) {
-        viscosityp = VORTEXDIFFUSIONCOEFFICIENT;
-        viscosity = VORTEXDIFFUSIONCOEFFICIENT;
-      }
-    }
-    /* End of Separate Vortex Diffusion */  
-      
+    //viscosityp = FViscosity (Rsup[i]);
+    //viscosity = FViscosity (Rmed[i]);
+
     for (j = 0; j < ns; j++){
       l = j+i*ns;
       lip = l+ns;
       ljp = l+1;
       if (j == ns-1) ljp = i*ns;
+      /* Adding Separate Vortex Diffusion */
+      if (VortexDiffusion == YES) {
+        if (Rmed[i] > VORTEXDIFFIN && Rmed[i] < VORTEXDIFFOUT) {
+          dust_overdensity = drho[l] / DSigmaMed[i] 
+          // check if 'current divided by initial' overdensity exceeds threshold
+          if (dust_overdensity > VORTEXDIFFUSIONTHRESHOLD) {
+            viscosityp = VORTEXDIFFUSIONCOEFFICIENT;
+            viscosity = VORTEXDIFFUSIONCOEFFICIENT;  
+          }
+          else {
+            viscosityp = FViscosity (Rsup[i]);
+            viscosity = FViscosity (Rmed[i]);
+          }
+        }
+      }
+      /* End of Separate Vortex Diffusion */  
+
       fdiffrp[l]=-viscosityp*(rho[lip]+rho[l])/2.*(drho[lip]/rho[lip]-drho[l]/rho[l])*InvDiffRmed[i+1];
       fdifftp[l]=-viscosity*(rho[ljp]+rho[l])/2.*(drho[ljp]/rho[ljp]-drho[l]/rho[l])*invdtheta/Rmed[i];
       diag3[l]=-viscosityp*(log(drho[lip]/rho[lip])-log(drho[l]/rho[l]))/(log(Rmed[i+1])-log(Rmed[i]))/Rsup[i];
