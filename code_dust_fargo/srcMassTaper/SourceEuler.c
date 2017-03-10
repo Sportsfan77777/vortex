@@ -270,7 +270,7 @@ PlanetarySystem *sys;
       if(SFTA) SFTAvelocity(Rho,Vrad,Vtheta, DRho, DVrad, DVtheta);
       Transportd (DRho, Rho, DVrad, DVtheta, Label, dt);
       if(DustDiff == YES) Diffd(DRho, Rho, DVrad, DVtheta,dt);
-      ApplyBoundaryCondition (Vrad, Vtheta, Rho, DVrad, DVtheta, DRho, dt);
+      ApplyDustBoundaryCondition (Vrad, Vtheta, Rho, DVrad, DVtheta, DRho, dt);
       SFTAtest(Rho,Vrad,Vtheta, DRho, DVrad, DVtheta);
     }
     PhysicalTime += dt;

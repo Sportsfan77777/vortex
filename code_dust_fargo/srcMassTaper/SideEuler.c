@@ -346,6 +346,32 @@ real dt;
  
 }
 
+void ApplyDustBoundaryCondition (Vrad, Vtheta, Rho, DVrad, DVtheta, DRho,dt)
+PolarGrid *Vrad, *Vtheta, *Rho, *DVrad, *DVtheta, *DRho;
+real dt;
+{
+  int gas, dust;
+
+  if (Stockholm == YES) {
+    StockholmBoundary (Vrad, Vtheta, Rho, dt, 1);
+    return;
+  }
+
+  if (OpenInner == YES) {
+    //OpenBoundary (Vrad, Rho);
+    OpenBoundaryd (DVrad, Rho, DRho);
+  }
+  if (NonReflecting == YES) NonReflectingBoundary (Vrad, Rho);
+  if (Evanescent == YES) {
+    gas = 1; dust = 0;
+    //StockholmBoundary (Vrad, Vtheta, Rho, dt, gas);
+    StockholmBoundary (DVrad, DVtheta, DRho, dt, dust); // Only apply dust bc --- used after dust diffusion (Diffd)
+    //OpenBoundaryd (DVrad, Rho, DRho);
+  }
+  if (OuterSourceMass == YES) ApplyOuterSourceMass (Rho, Vrad);
+ 
+}
+
 void CorrectVtheta (vtheta, domega)
 PolarGrid *vtheta;
 real domega;
