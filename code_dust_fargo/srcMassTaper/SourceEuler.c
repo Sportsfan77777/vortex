@@ -428,8 +428,8 @@ real dt;
           }
           else if (dust_overdensity > VORTEXDIFFUSIONLOWERTHRESHOLD) {
             // Ramp: e^(log(10^4) (sin((pi / 2)(x-1.5) / 0.5))^2) 
-            viscosityp = FViscosity (Rsup[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rsup[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2))
-            viscosity = FViscosity (Rmed[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2))
+            viscosityp = FViscosity (Rsup[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rsup[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
+            viscosity = FViscosity (Rmed[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
           }
           else {
             viscosityp = FViscosity (Rsup[i]);
