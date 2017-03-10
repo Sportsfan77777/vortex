@@ -767,7 +767,7 @@ real deltaT;
 
       dtg = CFLSECURITY/sqrt(invdt1*invdt1+invdt2*invdt2+invdt3*invdt3+invdt4*invdt4);
       dtd = CFLSECURITY/sqrt(invdt7*invdt7+invdt5*invdt5+invdt6*invdt6+invdt8*invdt8+invdt9*invdt9);
-      dt=min2(dtg,dtd);
+      dt=dtg // min2(dtg,dtd); ### Change to Gas CFL!!!! (This is wrong.)
       dt=max2(dt,1.e-10);
       if (dt < newdt) {
 	newdt = dt;
