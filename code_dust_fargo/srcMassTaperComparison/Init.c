@@ -64,11 +64,12 @@ PolarGrid *array;
   }
 }
 
-void Initialization (gas_density, gas_v_rad, gas_v_theta, gas_label)
+void Initialization (gas_density, gas_v_rad, gas_v_theta, gas_label, dust_density, dust_v_rad, dust_v_theta)
 PolarGrid *gas_density, *gas_v_rad, *gas_v_theta, *gas_label;
+PolarGrid *dust_density, *dust_v_rad, *dust_v_theta;
 {
   ReadPrevDim ();
-  InitEuler (gas_density, gas_v_rad, gas_v_theta);
+  InitEuler (gas_density, gas_v_rad, gas_v_theta, dust_density, dust_v_rad, dust_v_theta);
   InitLabel (gas_label);
   if (Restart == YES) {
     CheckRebin (NbRestart);
@@ -81,6 +82,11 @@ PolarGrid *gas_density, *gas_v_rad, *gas_v_theta, *gas_label;
     ReadfromFile (gas_v_rad, "gasvrad", NbRestart);
     ReadfromFile (gas_v_theta, "gasvtheta", NbRestart);
     ReadfromFile (gas_label, "gaslabel", NbRestart);
+    /* New Dust Part */
+    ReadfromFile (dust_density, "gasddens", NbRestart);
+    ReadfromFile (dust_v_rad, "gasdvrad", NbRestart);
+    ReadfromFile (dust_v_theta, "gasdvtheta", NbRestart);
+    /* End of New Dust Part */
     if (StoreSigma) RefillSigma (gas_density);
     fprintf (stderr, "done\n");
     fflush (stderr);

@@ -10,7 +10,7 @@ seek information about the planets at a restart.
 #include "fargo.h"
 
 static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
-extern real     LostMass, OmegaFrame;
+extern real     LostMass, LostMassd, OmegaFrame, AccRate, AccRated;
 extern boolean  Write_Density, Write_Velocity, IsDisk;
 
 void EmptyPlanetSystemFile (sys)
@@ -39,8 +39,8 @@ int n;
   fflush (stdout);
   sprintf (name, "%splanet%d.dat", OUTPUTDIR, n);
   output = fopenp (name, "a");
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
-	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
+	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame,AccRate, AccRated);
   fclose (output);
   printf ("done\n");
   fflush (stdout);
@@ -57,9 +57,7 @@ int t;
     Yplanet = sys->y[i];
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
-    MplanetVirtual = sys->mass[i]*MassTaper; //*** ###### MASS TAPER EDIT HERE ###### ***//
-    //printf ("Output1");
-    //fflush (stdout);
+    MplanetVirtual = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
     WritePlanetFile (t, i);
   }
 }
@@ -74,8 +72,8 @@ int n;
   if (!CPU_Master) return;
   sprintf (name, "%sbigplanet%d.dat", OUTPUTDIR, n);
   output = fopenp (name, "a");
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
-	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
+	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame, AccRate, AccRated);
   fclose (output);
 }
 
@@ -91,8 +89,6 @@ int t;
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
     MplanetVirtual = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
-    //printf ("Output2");
-    //fflush (stdout);
     WriteBigPlanetFile (t, i);
   }
 }
@@ -179,6 +175,7 @@ int 	         number;
   if (CPU_Rank < CPU_Number-1) {
     Nr -=CPUOVERLAP;
   }
+
   fwrite (ptr, sizeof(real), Nr*Ns,dump);
   fclose(dump);
   fprintf(stdout, "%d/", CPU_Rank);  
@@ -220,4 +217,30 @@ PolarGrid   *dens, *gasvr, *gasvt, *label;
   }
 }
 
+void SendOutputd (index, dens, gasvr, gasvt, label)
+int          index;
+PolarGrid   *dens, *gasvr, *gasvt, *label;
+{
+  int local_index;
+  if (CPU_Master)
+    printf ("\n*** OUTPUT %d ***\n", index);
+  local_index = index;
+  if (IsDisk == YES) {
+    if (Write_Density == NO) local_index = 0;
+    WriteDiskPolar (dens, local_index);
+    local_index = index;
+    if (Write_Velocity == NO) local_index = 0;
+    WriteDiskPolar (gasvr, local_index);
+    WriteDiskPolar (gasvt, local_index);
+
+    WriteDiskPolar (TStop, local_index);
+    WriteDiskPolar (Diag1, local_index);
+    WriteDiskPolar (Diag2, local_index);
+    WriteDiskPolar (Diag3, local_index);
+    if (AdvecteLabel == YES)
+      WriteDiskPolar (label, index);
+    MPI_Barrier (MPI_COMM_WORLD);
+    if (Merge && (CPU_Number > 1)) merged (local_index);
+  }
+}
  

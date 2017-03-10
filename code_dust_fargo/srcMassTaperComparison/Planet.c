@@ -10,18 +10,18 @@ designed by W. Kley.
 
 extern boolean FakeAccretion;
 
-void AccreteOntoPlanets (Rho, Vrad, Vtheta, dt, sys)
+void AccreteOntoPlanets (Rho, Vrad, Vtheta, DRho, DVrad, DVtheta,dt, sys)
 real dt;
-PolarGrid *Rho, *Vrad, *Vtheta;
+PolarGrid *Rho, *Vrad, *Vtheta, *DRho, *DVrad, *DVtheta;
 PlanetarySystem *sys;
 {
-  real RRoche, Rplanet, distance, dx, dy, deltaM, angle, temp;
+  real RRoche, Rplanet, distance, dx, dy, deltaM, deltaDM, angle, temp,x,y,vx,vy,h,d,Ax,Ay,e,a,m;
   int i_min,i_max, j_min, j_max, i, j, l, jf, ns, nr, lip, ljp, k;
   real Xplanet, Yplanet, Mplanet, VXplanet, VYplanet;
   real facc, facc1, facc2, frac1, frac2; /* We adopt the same notations as W. Kley */
-  real *dens, *abs, *ord, *vrad, *vtheta;
+  real *dens, *abs, *ord, *vrad, *vtheta, *ddens, *dvrad, *dvtheta;
   real PxPlanet, PyPlanet, vrcell, vtcell, vxcell, vycell, xc, yc;
-  real dPxPlanet, dPyPlanet, dMplanet;
+  real dPxPlanet, dPyPlanet, dMplanet, dDMplanet;
   nr     = Rho->Nrad;
   ns     = Rho->Nsec;
   dens   = Rho->Field;
@@ -29,11 +29,38 @@ PlanetarySystem *sys;
   ord    = CellOrdinate->Field;
   vrad   = Vrad->Field;
   vtheta = Vtheta->Field;
+  ddens   = DRho->Field;
+  dvrad   = DVrad->Field;
+  dvtheta = DVtheta->Field;
   for (k=0; k < sys->nb; k++) {
-    if (sys->acc[k] > 1e-10) {
-      dMplanet = dPxPlanet = dPyPlanet = 0.0;
+    if (PhysicalTime<MASSTIME)
+      sys->mass[k]=sys->massp[k]*PhysicalTime/MASSTIME;
+    else
+      sys->mass[k]=sys->massp[k];
+  }
+  for (k=0; k < sys->nb; k++) {
+    if (sys->acc[k] > 1e-10 && PhysicalTime>ACCTIME) {
+      dMplanet = dPxPlanet = dPyPlanet = dDMplanet = 0.0;
 				/* Hereafter : initialization of W. Kley's parameters */
-      facc = dt*(sys->acc[k]);
+  m=1.0+sys->mass[k]*MassTaper;		/*scatter away */     //*** ##### MASS TAPER EDIT HERE ##### ***//
+  x=sys->x[k];
+  y=sys->y[k];
+  vx=sys->vx[k];
+  vy=sys->vy[k];
+  h = x*vy-y*vx;
+  d = sqrt(x*x+y*y);
+  Ax = x*vy*vy-y*vx*vy-G*m*x/d;
+  Ay = y*vx*vx-x*vx*vy-G*m*y/d;
+  e = sqrt(Ax*Ax+Ay*Ay)/G/m;
+  a = h*h/G/m/(1-e*e);
+  if(1 > 2){
+    /* The original argument was 'a<=0.' Let's just set it to false */
+    fprintf(stdout,"Scatter away %g",a);
+    facc = 0.;
+  }else{
+      facc = dt*(sys->acc[k]);//*sqrt(m/pow(a,3.)); /* This is different?????? */
+  }
+
       facc1 = 1.0/3.0*facc;
       facc2 = 2.0/3.0*facc;
       frac1 = 0.75;
@@ -44,8 +71,6 @@ PlanetarySystem *sys;
       VXplanet = sys->vx[k];
       VYplanet = sys->vy[k];
       Mplanet = sys->mass[k]*MassTaper + 0.000001; //*** ##### MASS TAPER EDIT HERE ##### ***//
-      //printf ("Planet1");
-      //fflush (stdout);
       Rplanet = sqrt(Xplanet*Xplanet+Yplanet*Yplanet);
       RRoche = pow((1.0/3.0*Mplanet),(1.0/3.0))*Rplanet; /* Central mass is 1.0 */
       i_min=0;
@@ -78,9 +103,17 @@ PlanetarySystem *sys;
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
 	  if (distance < frac1*RRoche) {
 	    deltaM = facc1*dens[l]*Surf[i];
-	    if (i < Zero_or_active) deltaM = 0.0;
-	    if (i >= Max_or_active) deltaM = 0.0;
+            deltaDM = facc1*ddens[l]*Surf[i];
+	    if (i < Zero_or_active) {
+		deltaM = 0.0;
+		deltaDM = 0.0;
+	    }
+	    if (i >= Max_or_active) {
+		deltaM = 0.0;
+		deltaDM = 0.0;
+	    }
 	    dens[l] *= (1.0 - facc1);
+	    ddens[l] *=  (1.0 - facc1);
 #pragma omp atomic
 	    dPxPlanet    += deltaM*vxcell;
 #pragma omp atomic
@@ -90,9 +123,17 @@ PlanetarySystem *sys;
 	  }
 	  if (distance < frac2*RRoche) {
 	    deltaM = facc2*dens[l]*Surf[i];
-	    if (i < Zero_or_active) deltaM = 0.0;
-	    if (i >= Max_or_active) deltaM = 0.0;
+	    deltaDM = facc2*ddens[l]*Surf[i];
+	    if (i < Zero_or_active) {
+		deltaM = 0.0;
+	        deltaDM = 0.0;
+	    }
+	    if (i >= Max_or_active) {
+		deltaM = 0.0;
+		deltaDM = 0.0;
+	    }
 	    dens[l] *= (1.0 - facc2);
+	    ddens[l] *= (1.0 - facc2);
 #pragma omp atomic
 	    dPxPlanet    += deltaM*vxcell;
 #pragma omp atomic
@@ -111,15 +152,14 @@ PlanetarySystem *sys;
       PxPlanet += dPxPlanet;
       PyPlanet += dPyPlanet;
       Mplanet  += dMplanet;
-      //printf ("mpi reduce\n");
-      //fflush (stdout);
+
       if (FakeAccretion == YES) {
           // pass (get rid of disk material, but don't let it affect planet)
       }
       else {
           if (sys->FeelDisk[k] == YES) {
-    	        sys->vx[k] = PxPlanet/Mplanet;
-    	        sys->vy[k] = PyPlanet/Mplanet;
+              sys->vx[k] = PxPlanet/Mplanet;
+              sys->vy[k] = PyPlanet/Mplanet;
           }
           sys->mass[k] = Mplanet;
           //printf ("done accreting\n");

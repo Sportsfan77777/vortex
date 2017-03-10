@@ -11,7 +11,7 @@ boolean         Restart = NO, OpenInner = NO;
 int             begin_i = 0, NbRestart = 0;
 static int      InnerOutputCounter=0, StillWriteOneOutput;
 
-extern real     LostMass;
+extern real     LostMass,LostMassd,AccRate,AccRated;
 extern boolean  Corotating;
 real            ScalingFactor = 1.0;
 
@@ -21,6 +21,7 @@ int argc;
 char *argv[];
 {
   PolarGrid   *gas_density, *gas_v_rad, *gas_v_theta, *gas_label;
+  PolarGrid   *dust_density, *dust_v_rad, *dust_v_theta;
   int          i;
   boolean      disable = NO, TimeInfo = NO, Profiling = NO;
   boolean      TimeToWrite, verbose = NO;
@@ -119,10 +120,13 @@ char *argv[];
   gas_v_rad          = CreatePolarGrid(NRAD, NSEC, "vrad");
   gas_v_theta        = CreatePolarGrid(NRAD, NSEC, "vtheta");
   gas_label          = CreatePolarGrid(NRAD, NSEC, "label");
+  dust_density        = CreatePolarGrid(NRAD, NSEC, "ddens"); /* create dust density/vrad/vtheta array */
+  dust_v_rad          = CreatePolarGrid(NRAD, NSEC, "dvrad");
+  dust_v_theta        = CreatePolarGrid(NRAD, NSEC, "dvtheta");
   masterprint ("done.\n");
   OmegaFrame = OMEGAFRAME;
   if (Corotating == YES) OmegaFrame = GetPsysInfo (sys, FREQUENCY);
-  Initialization (gas_density, gas_v_rad, gas_v_theta, gas_label);
+  Initialization (gas_density, gas_v_rad, gas_v_theta, gas_label, dust_density, dust_v_rad, dust_v_theta); /* initialize dust density/vrad/vtheta too */
   InitComputeAccel ();
   if (Restart == YES) {
     begin_i         = NbRestart * NINTERM;
@@ -135,9 +139,10 @@ char *argv[];
   }
   PhysicalTimeInitial = PhysicalTime;
   MultiplyPolarGridbyConstant (gas_density, ScalingFactor);
+  MultiplyPolarGridbyConstant (dust_density, ScalingFactor); /* Polar grid dust scaling, used with -f options during start/restart */
   for (i = begin_i; i <= NTOT; i++) {
     InnerOutputCounter++;
-    if (InnerOutputCounter == 1) {
+    if (InnerOutputCounter == 1) {     /* diagnostics are not written for dust */
       InnerOutputCounter = 0;
       WriteBigPlanetSystemFile (sys, TimeStep);
       UpdateLog (sys, gas_density, PhysicalTime);
@@ -147,6 +152,7 @@ char *argv[];
     if (NINTERM * (TimeStep = (i / NINTERM)) == i)	/* Outputs are done here */ {
       TimeToWrite = YES;
       SendOutput (TimeStep, gas_density, gas_v_rad, gas_v_theta, gas_label);
+      SendOutputd (TimeStep, dust_density, dust_v_rad, dust_v_theta, gas_label); /* dump dust density/vrad/vtheta */
       WritePlanetSystemFile (sys, TimeStep);
       if ((OnlyInit) || ((GotoNextOutput) && (!StillWriteOneOutput))) {
 	MPI_Finalize();
@@ -165,10 +171,10 @@ char *argv[];
 				/* Hydrodynamical Part */
 				/***********************/
     InitSpecificTime (Profiling, &t_Hydro, "Eulerian Hydro algorithms");
-    AlgoGas (gas_density, gas_v_rad, gas_v_theta, gas_label, sys);
+    AlgoGas (gas_density, gas_v_rad, gas_v_theta, dust_density, dust_v_rad, dust_v_theta, gas_label, sys);
     GiveSpecificTime (Profiling, t_Hydro);
     SolveOrbits (sys);
-    if (MonitorIntegral == YES) {
+    if (MonitorIntegral == YES) { /*Monitoring is not written for dust*/
       masterprint ("Gas Momentum   : %.18g\n", GasMomentum (gas_density, gas_v_theta));
       masterprint ("Gas total Mass : %.18g\n", GasTotalMass (gas_density));
     }

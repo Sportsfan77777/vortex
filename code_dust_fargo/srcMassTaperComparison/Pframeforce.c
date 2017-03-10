@@ -22,6 +22,7 @@ extern Pair DiskOnPrimaryAcceleration;
 static Pair IndirectTerm;
 static real q0[MAX1D], q1[MAX1D], PlanetMasses[MAX1D];
 static real vt_int[MAX1D], vt_cent[MAX1D];
+static real dvt_int[MAX1D], dvt_cent[MAX1D];
 
 void ComputeIndirectTerm () {
   IndirectTerm.x = -DiskOnPrimaryAcceleration.x;
@@ -98,6 +99,8 @@ PlanetarySystem *sys;
   }
 } 
 
+/* planet move due to the force from the disk */
+
 void AdvanceSystemFromDisk (Rho, sys, dt)
 PlanetarySystem *sys;
 PolarGrid *Rho;
@@ -105,13 +108,11 @@ real dt;
 {
   int NbPlanets, k, ii;
   Pair gamma;
-  real x,y,r,m, iplanet, frac, cs, smoothing;
+  real x,y,r,m, iplanet, frac, cs, smoothing, fa;
   NbPlanets = sys->nb;
   for (k = 0; k < NbPlanets; k++) {
-    if (sys->FeelDisk[k] == YES) {
-      m=sys->mass[k]*MassTaper; /*** ##### MASS TAPER EDIT HERE #### ***/
-      //printf ("Pframe1");
-      //fflush (stdout);
+    if (sys->FeelDisk[k] == YES && PhysicalTime>FEELTIME) {
+      m=sys->mass[k]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
       x=sys->x[k];
       y=sys->y[k];
       r=sqrt(x*x+y*y);
@@ -126,10 +127,18 @@ real dt;
 	smoothing = cs * r * sqrt(r) * THICKNESSSMOOTHING;
       }
       gamma = ComputeAccel (Rho, x, y, smoothing, m);
-      sys->vx[k] += dt * gamma.x;
-      sys->vy[k] += dt * gamma.y;
-      sys->vx[k] += dt * IndirectTerm.x;
-      sys->vy[k] += dt * IndirectTerm.y;
+      if (PhysicalTime < FEELTIMEE && PhysicalTime > FEELTIME){
+        fa=(PhysicalTime-FEELTIME)/(FEELTIMEE-FEELTIME);
+        sys->vx[k] += dt * gamma.x*fa;
+        sys->vy[k] += dt * gamma.y*fa;
+        sys->vx[k] += dt * IndirectTerm.x*fa;
+        sys->vy[k] += dt * IndirectTerm.y*fa;
+      }else{
+        sys->vx[k] += dt * gamma.x;
+        sys->vy[k] += dt * gamma.y;
+        sys->vx[k] += dt * IndirectTerm.x;
+        sys->vy[k] += dt * IndirectTerm.y;
+      }
     }
   }
 }
@@ -147,9 +156,7 @@ real dt;
     q0[i+n] = sys->y[i];
     q0[i+2*n] = sys->vx[i];
     q0[i+3*n] = sys->vy[i];
-    PlanetMasses[i] = sys->mass[i]*MassTaper; /*** ##### MASS TAPER EDIT HERE  ##### ***/
-    //printf ("Pframe2");
-    //fflush (stdout);
+    PlanetMasses[i] = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
   }
   feelothers = sys->FeelOthers;
   RungeKunta (q0, dt, PlanetMasses, q1, n, feelothers);
@@ -211,20 +218,25 @@ real ConstructSequence (u, v, n)
   return lapl;
 }
 
+/*Initialize dust properties too */
+
 void
-InitGas (Rho, Vr, Vt)
-PolarGrid *Rho, *Vr, *Vt;
+InitGas (Rho, Vr, Vt, DRho, DVr, DVt)
+PolarGrid *Rho, *Vr, *Vt, *DRho, *DVr, *DVt;
 {
   int i, j, l, nr, ns;
-  real *dens, *vr, *vt;
+  real *dens, *vr, *vt, *ddens, *dvr, *dvt;
   float temporary;
   FILE *CS;
   char csfile[512];
   real  r, rg, omega, ri;
-  real viscosity, t1, t2, r1, r2;
+  real viscosity, Dviscosity, t1, t2, r1, r2, dt1, dt2, dr1, dr2;
   dens= Rho->Field;
   vr  = Vr->Field;
   vt  = Vt->Field;
+  ddens= DRho->Field;
+  dvr = DVr->Field;
+  dvt = DVt->Field;
   nr  = Rho->Nrad;
   ns  = Rho->Nsec;
   sprintf (csfile, "%s%s", OUTPUTDIR, "soundspeed.dat");
@@ -232,9 +244,11 @@ PolarGrid *Rho, *Vr, *Vt;
   if (CS == NULL) {
     for (i = 0; i < nr; i++) {
       SOUNDSPEED[i] = AspectRatio(Rmed[i]) * sqrt(G*1.0/Rmed[i]) * pow(Rmed[i], FLARINGINDEX);
+      DSOUNDSPEED[i] = DAspectRatio(Rmed[i]) * sqrt(G*1.0/Rmed[i]) * pow(Rmed[i], DFLARINGINDEX);
     }
     for (i = 0; i < GLOBALNRAD; i++) {
       GLOBAL_SOUNDSPEED[i] = AspectRatio(GlobalRmed[i]) * sqrt(G*1.0/GlobalRmed[i]) * pow(GlobalRmed[i], FLARINGINDEX);
+      DGLOBAL_SOUNDSPEED[i] = DAspectRatio(GlobalRmed[i]) * sqrt(G*1.0/GlobalRmed[i]) * pow(GlobalRmed[i], DFLARINGINDEX);
     }
   } else {
     masterprint ("Reading soundspeed.dat file\n");
@@ -251,7 +265,12 @@ PolarGrid *Rho, *Vr, *Vt;
 	       GLOBAL_SOUNDSPEED[i-1]*GLOBAL_SOUNDSPEED[i-1]*Sigma(GlobalRmed[i-1]))/\
       (.5*(Sigma(GlobalRmed[i])+Sigma(GlobalRmed[i-1])))/(GlobalRmed[i]-GlobalRmed[i-1])+\
       G*(1.0/GlobalRmed[i-1]-1.0/GlobalRmed[i])/(GlobalRmed[i]-GlobalRmed[i-1]);
+    dvt_int[i]=(DGLOBAL_SOUNDSPEED[i]*DGLOBAL_SOUNDSPEED[i]*DSigma(GlobalRmed[i])-\
+               DGLOBAL_SOUNDSPEED[i-1]*DGLOBAL_SOUNDSPEED[i-1]*DSigma(GlobalRmed[i-1]))/\
+      (.5*(DSigma(GlobalRmed[i])+DSigma(GlobalRmed[i-1])))/(GlobalRmed[i]-GlobalRmed[i-1])+\
+      G*(1.0/GlobalRmed[i-1]-1.0/GlobalRmed[i])/(GlobalRmed[i]-GlobalRmed[i-1]);
     vt_int[i] = sqrt(vt_int[i]*Radii[i])-Radii[i]*OmegaFrame;
+    dvt_int[i] = sqrt(dvt_int[i]*Radii[i])-Radii[i]*OmegaFrame;
   }
   t1 = vt_cent[0] = vt_int[1]+.75*(vt_int[1]-vt_int[2]);
   r1 = ConstructSequence (vt_cent, vt_int, GLOBALNRAD);
@@ -262,6 +281,16 @@ PolarGrid *Rho, *Vr, *Vt;
   vt_cent[0] = t1;
   ConstructSequence (vt_cent, vt_int, GLOBALNRAD);
   vt_cent[GLOBALNRAD]=vt_cent[GLOBALNRAD-1];
+
+  dt1 = dvt_cent[0] = dvt_int[1]+.75*(dvt_int[1]-dvt_int[2]);
+  dr1 = ConstructSequence (dvt_cent, dvt_int, GLOBALNRAD);
+  dvt_cent[0] += .25*(dvt_int[1]-dvt_int[2]);
+  dt2 = dvt_cent[0];
+  dr2 = ConstructSequence (dvt_cent, dvt_int, GLOBALNRAD);
+  dt1 = dt1-dr1/(dr2-dr1)*(dt2-dt1);
+  dvt_cent[0] = dt1;
+  ConstructSequence (dvt_cent, dvt_int, GLOBALNRAD);
+  dvt_cent[GLOBALNRAD]=dvt_cent[GLOBALNRAD-1];
   for (i = 0; i <= nr; i++) {
     if (i == nr) {
       r = Rmed[nr-1];
@@ -272,6 +301,7 @@ PolarGrid *Rho, *Vr, *Vt;
       ri= Rinf[i];
     }
     viscosity = FViscosity (r);
+    Dviscosity = DFViscosity (r);
     for (j = 0; j < ns; j++) {
       l = j+i*ns;
       rg = r;
@@ -281,21 +311,37 @@ PolarGrid *Rho, *Vr, *Vt;
 	     pow(r,2.0*FLARINGINDEX)*\
 	     (1.+SIGMASLOPE-2.0*FLARINGINDEX));
       vt[l] -= OmegaFrame*r;
-      if (CentrifugalBalance)
+      dvt[l]= omega*r*\
+        sqrt(1.0-pow(DASPECTRATIO,2.0)*\
+             pow(r,2.0*DFLARINGINDEX)*\
+             (1.+SIGMASLOPE-2.0*DFLARINGINDEX));
+      dvt[l] -= OmegaFrame*r;
+      if (CentrifugalBalance){
 	vt[l] = vt_cent[i+IMIN];
-      if (i == nr) 
+	dvt[l]= dvt_cent[i+IMIN];
+      }
+      if (i == nr) {
 	vr[l] = 0.0;
-      else {
-	vr[l] = IMPOSEDDISKDRIFT*SIGMA0/SigmaInf[i]/ri;
+	dvr[l]= 0.0;
+      }else {
+	vr[l] = IMPOSEDDISKDRIFT*SIGMA0/SigmaInf[i]/ri; /*dust can not be imposed drift*/
 	if (ViscosityAlpha) {
 	  vr[l] -= 3.0*viscosity/r*(-SIGMASLOPE+2.0*FLARINGINDEX+1.0);
 	} else {
 	  vr[l] -= 3.0*viscosity/r*(-SIGMASLOPE+.5);
 	}
+	if (DViscosityAlpha) {
+	  dvr[l] -= 3.0*Dviscosity/r*(-SIGMASLOPE+2.0*DFLARINGINDEX+1.0);
+        } else {
+          dvr[l] -= 3.0*Dviscosity/r*(-SIGMASLOPE+.5);
+	}
       }
       dens[l] = SigmaMed[i];
+      ddens[l] = DSigmaMed[i];
     }
   }
-  for (j = 0; j < ns; j++)
+  for (j = 0; j < ns; j++){
     vr[j] = vr[j+ns*nr] = 0.0;
+    dvr[j] = dvr[j+ns*nr] = 0.0;
+  }
 }

@@ -27,6 +27,7 @@ boolean         Write_Density = YES, Write_Velocity = YES, Indirect_Term = YES;
 boolean         FakeAccretion = NO;
 boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 boolean         Evanescent = NO;
+boolean         VortexDiffusion = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -147,6 +148,9 @@ char *filename;
   if ((*ADVLABEL == 'y') || (*ADVLABEL == 'Y')) AdvecteLabel = YES;
   if ((*OUTERSOURCEMASS == 'y') || (*OUTERSOURCEMASS == 'Y')) OuterSourceMass = YES;
   if ((*TRANSPORT == 's') || (*TRANSPORT == 'S')) FastTransport = NO;
+  if ((*DUSTDIFF == 'y') || (*DUSTDIFF=='Y')) DustDiff = YES;
+  if ((*GASDCOUPLE == 'y') || (*GASDCOUPLE=='Y')) GasDcouple = YES;
+  if ((*DUSTIMPLICIT == 'y') || (*DUSTIMPLICIT=='Y')) DustImp = YES;
   if ((*OPENINNERBOUNDARY == 'O') || (*OPENINNERBOUNDARY == 'o')) OpenInner = YES;
   if ((*OPENINNERBOUNDARY == 'N') || (*OPENINNERBOUNDARY == 'n')) NonReflecting = YES;
   if ((*OPENINNERBOUNDARY == 'E') || (*OPENINNERBOUNDARY == 'e')) Evanescent = YES; /// #### ADDED EVANESCENT ####
@@ -168,9 +172,20 @@ char *filename;
     mastererr ("one of these variables and run again.\n");
     prs_exit (1);
   }
+  if ((DALPHAVISCOSITY != 0.0) && (DVISCOSITY != 0.0)) {
+    mastererr ("You cannot use at the same time\n");
+    mastererr ("DVISCOSITY and DALPHAVISCOSITY.\n");
+    mastererr ("Edit the parameter file so as to remove\n");
+    mastererr ("one of these variables and run again.\n");
+    prs_exit (1);
+  }
   if (ALPHAVISCOSITY != 0.0) {
     ViscosityAlpha = YES;
     masterprint ("Viscosity is of alpha type\n");
+  }
+  if (DALPHAVISCOSITY != 0.0) {
+    DViscosityAlpha = YES;
+    masterprint ("DViscosity is of alpha type\n");
   }
   if ((THICKNESSSMOOTHING != 0.0) && (ROCHESMOOTHING != 0.0)) {
     mastererr ("You cannot use at the same time\n");
@@ -203,6 +218,9 @@ char *filename;
   if ((*TAPERPROFILE == 's') || (*TAPERPROFILE == 'S')) SinSquaredTaper = YES;
   else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
   else {}
+
+  // #### NEW VORTEX DIFFUSION VARIABLES #### //
+  if ((*VORTEXDIFFUSION == 'Y') || (*VORTEXDIFFUSION == 'y')) VortexDiffusion = YES;
 }
 
 void PrintUsage (execname)

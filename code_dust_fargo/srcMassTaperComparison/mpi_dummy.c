@@ -80,6 +80,9 @@ void MPI_Allreduce (void *ptr, void *ptr2, int count, int type, int foo3, int fo
     case MPI_INT:
       *(((int *)ptr2)+i) = (int)(*(((int *)ptr)+i));
       break;
+    case MPI_LONG:
+      *(((long *)ptr2)+i) = (long)(*(((long *)ptr)+i));
+      break;
     }
   }
 }

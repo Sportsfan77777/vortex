@@ -16,7 +16,7 @@ which is taken into account by the calling function.
 
 #include "fargo.h"
 
-static PolarGrid *DivergenceVelocity, *DRR, *DRP, *DPP, *TAURR, *TAUPP, *TAURP;
+static PolarGrid *DivergenceVelocity, *DRR, *DRP, *DPP, *TAURR, *TAUPP, *TAURP, *DDivergenceVelocity, *DDRR, *DDRP, *DDPP, *DTAURR, *DTAUPP, *DTAURP;
 
 real FViscosity (rad)
      real rad;
@@ -40,7 +40,31 @@ real FViscosity (rad)
   }
   return viscosity;
 }
-  
+ 
+real DFViscosity (rad)
+     real rad;
+{
+  real dviscosity, rmin, rmax, scale;
+  int i=0;
+  dviscosity = DVISCOSITY;
+  if (DViscosityAlpha) {
+    while (GlobalRmed[i] < rad) i++;
+    dviscosity = DALPHAVISCOSITY*DGLOBAL_SOUNDSPEED[i]*\
+      DGLOBAL_SOUNDSPEED[i]*pow(rad, 1.5);
+  }
+  rmin = CAVITYRADIUS-CAVITYWIDTH*DASPECTRATIO;
+  rmax = CAVITYRADIUS+CAVITYWIDTH*DASPECTRATIO;
+  scale = 1.0+(PhysicalTime-PhysicalTimeInitial)*LAMBDADOUBLING;
+  rmin *= scale;
+  rmax *= scale;
+  if (rad < rmin) dviscosity *= CAVITYRATIO;
+  if ((rad >= rmin) && (rad <= rmax)) {
+    dviscosity *= exp((rmax-rad)/(rmax-rmin)*log(CAVITYRATIO));
+  }
+  return dviscosity;
+}
+
+ 
 real AspectRatio (rad)
      real rad;
 {
@@ -57,6 +81,24 @@ real AspectRatio (rad)
   }
   return aspectratio;
 }
+
+real DAspectRatio (rad) /*dust aspect ratio all other parameters are the same as gas only DASPECRATIO is different*/
+     real rad;
+{
+  real aspectratio, rmin, rmax, scale;
+  aspectratio = DASPECTRATIO;
+  rmin = TRANSITIONRADIUS-TRANSITIONWIDTH*DASPECTRATIO;
+  rmax = TRANSITIONRADIUS+TRANSITIONWIDTH*DASPECTRATIO;
+  scale = 1.0+(PhysicalTime-PhysicalTimeInitial)*LAMBDADOUBLING;
+  rmin *= scale;
+  rmax *= scale;
+  if (rad < rmin) aspectratio *= TRANSITIONRATIO;
+  if ((rad >= rmin) && (rad <= rmax)) {
+    aspectratio *= exp((rmax-rad)/(rmax-rmin)*log(TRANSITIONRATIO));
+  }
+  return aspectratio;
+}
+
   
 void InitViscosity ()
 {
@@ -67,18 +109,26 @@ void InitViscosity ()
   TAURR              = CreatePolarGrid(NRAD, NSEC, "TAUrr");
   TAURP              = CreatePolarGrid(NRAD, NSEC, "TAUrp");
   TAUPP              = CreatePolarGrid(NRAD, NSEC, "TAUpp");
+  DDivergenceVelocity = CreatePolarGrid(NRAD, NSEC, "DDivV");
+  DDRR                = CreatePolarGrid(NRAD, NSEC, "DDrr");
+  DDRP                = CreatePolarGrid(NRAD, NSEC, "DDrp");
+  DDPP                = CreatePolarGrid(NRAD, NSEC, "DDpp");
+  DTAURR              = CreatePolarGrid(NRAD, NSEC, "DTAUrr");
+  DTAURP              = CreatePolarGrid(NRAD, NSEC, "DTAUrp");
+  DTAUPP              = CreatePolarGrid(NRAD, NSEC, "DTAUpp");
+
 }
 
-void ViscousTerms (RadialVelocity, AzimuthalVelocity, Rho, DeltaT)
-PolarGrid *RadialVelocity, *AzimuthalVelocity, *Rho;
+void ViscousTerms (RadialVelocity, AzimuthalVelocity, Rho, DRadialVelocity, DAzimuthalVelocity, DRho, DeltaT)
+PolarGrid *RadialVelocity, *AzimuthalVelocity, *Rho, *DRadialVelocity, *DAzimuthalVelocity, *DRho;
 real DeltaT;
 {
   int i,j,l,nr,ns,lip,ljp,ljm,lim,ljmim;
-  real *rho, *vr, *vt;
-  real *Drr, *Drp, *Dpp, *divergence;
-  real *Trr, *Trp, *Tpp;
-  real dphi, VKepIn, VKepOut, onethird, invdphi;
-  real viscosity;
+  real *rho, *vr, *vt, *drho, *dvr, *dvt;
+  real *Drr, *Drp, *Dpp, *divergence, *dDrr, *dDrp, *dDpp, *ddivergence;
+  real *Trr, *Trp, *Tpp, *dTrr, *dTrp, *dTpp;
+  real dphi, VKepIn, VKepOut, DVKepIn, DVKepOut, onethird, invdphi;
+  real viscosity,dviscosity;
   nr  = Rho->Nrad;
   ns  = Rho->Nsec;
   rho = Rho->Field;
@@ -94,6 +144,19 @@ real DeltaT;
   dphi = 2.0*M_PI/(real)ns;
   invdphi = 1.0/dphi;
   onethird = 1.0/3.0;
+
+/*dust initialize*/
+  drho = DRho->Field;
+  dvr  = DRadialVelocity->Field;
+  dvt = DAzimuthalVelocity->Field;
+  ddivergence = DDivergenceVelocity->Field;
+  dDrr = DDRR->Field;
+  dDrp = DDRP->Field;
+  dDpp = DDPP->Field;
+  dTrr = DTAURR->Field;
+  dTrp = DTAURP->Field;
+  dTpp = DTAUPP->Field;
+
 #pragma omp parallel private(l,lip,ljp,j,ljm,lim)
   {
 #pragma omp for nowait
@@ -107,6 +170,10 @@ real DeltaT;
 	Dpp[l] = (vt[ljp]-vt[l])*invdphi*InvRmed[i]+0.5*(vr[lip]+vr[l])*InvRmed[i];
 	divergence[l]  = (vr[lip]*Rsup[i]-vr[l]*Rinf[i])*InvDiffRsup[i]*InvRmed[i];
 	divergence[l] += (vt[ljp]-vt[l])*invdphi*InvRmed[i];
+	dDrr[l] = (dvr[lip]-dvr[l])*InvDiffRsup[i];
+        dDpp[l] = (dvt[ljp]-dvt[l])*invdphi*InvRmed[i]+0.5*(dvr[lip]+dvr[l])*InvRmed[i];
+        ddivergence[l]  = (dvr[lip]*Rsup[i]-dvr[l]*Rinf[i])*InvDiffRsup[i]*InvRmed[i];
+        ddivergence[l] += (dvt[ljp]-dvt[l])*invdphi*InvRmed[i];
       }
     }
 #pragma omp for
@@ -121,6 +188,8 @@ real DeltaT;
 	lim = l-ns;
 	Drp[l] = 0.5*(Rinf[i]*(vt[l]*InvRmed[i]-vt[lim]*InvRmed[i-1])*InvDiffRmed[i]+\
 		      (vr[l]-vr[ljm])*invdphi*InvRinf[i]);
+	dDrp[l] = 0.5*(Rinf[i]*(dvt[l]*InvRmed[i]-dvt[lim]*InvRmed[i-1])*InvDiffRmed[i]+\
+                      (dvr[l]-dvr[ljm])*invdphi*InvRinf[i]);
       }
     }
   }
@@ -129,15 +198,19 @@ real DeltaT;
 #pragma omp for nowait
     for (i = 0; i < nr; i++) {	/* TAUrr and TAUpp computation */
       viscosity = FViscosity (Rmed[i]);
+      dviscosity = DFViscosity (Rmed[i]);
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
 	Trr[l] = 2.0*rho[l]*viscosity*(Drr[l]-onethird*divergence[l]);
 	Tpp[l] = 2.0*rho[l]*viscosity*(Dpp[l]-onethird*divergence[l]);
+	dTrr[l] = 2.0*drho[l]*dviscosity*(dDrr[l]-onethird*ddivergence[l]);
+        dTpp[l] = 2.0*drho[l]*dviscosity*(dDpp[l]-onethird*ddivergence[l]);
       }
     }
 #pragma omp for
     for (i = 1; i < nr; i++) {	/* TAUrp computation */
-      viscosity = FViscosity (Rinf[i]);
+      viscosity = FViscosity (Rmed[i]);
+      dviscosity = DFViscosity (Rmed[i]);
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
 	lim = l-ns;
@@ -145,6 +218,7 @@ real DeltaT;
 	if (j == 0) ljm = i*ns+ns-1;
 	ljmim=ljm-ns;
 	Trp[l] = 2.0*0.25*(rho[l]+rho[lim]+rho[ljm]+rho[ljmim])*viscosity*Drp[l];
+	dTrp[l] = 2.0*0.25*(drho[l]+drho[lim]+drho[ljm]+drho[ljmim])*dviscosity*dDrp[l];
       }
     }
   }
@@ -165,6 +239,9 @@ real DeltaT;
 	vt[l] += DeltaT*InvRmed[i]*((Rsup[i]*Trp[lip]-Rinf[i]*Trp[l])*InvDiffRsup[i]+\
 				    (Tpp[l]-Tpp[ljm])*invdphi+\
 				    0.5*(Trp[l]+Trp[lip]))/(0.5*(rho[l]+rho[ljm]));
+	dvt[l] += DeltaT*InvRmed[i]*((Rsup[i]*dTrp[lip]-Rinf[i]*dTrp[l])*InvDiffRsup[i]+\
+                                    (dTpp[l]-dTpp[ljm])*invdphi+\
+                                    0.5*(dTrp[l]+dTrp[lip]))/(0.5*(drho[l]+drho[ljm]));
       }
     }
 #pragma omp for nowait
@@ -178,6 +255,9 @@ real DeltaT;
 	vr[l] += DeltaT*InvRinf[i]*((Rmed[i]*Trr[l]-Rmed[i-1]*Trr[lim])*InvDiffRmed[i]+\
 				    (Trp[ljp]-Trp[l])*invdphi-\
 				    0.5*(Tpp[l]+Tpp[lim]))/(0.5*(rho[l]+rho[lim]));
+	dvr[l] += DeltaT*InvRinf[i]*((Rmed[i]*dTrr[l]-Rmed[i-1]*dTrr[lim])*InvDiffRmed[i]+\
+                                    (dTrp[ljp]-dTrp[l])*invdphi-\
+                                    0.5*(dTpp[l]+dTpp[lim]))/(0.5*(drho[l]+drho[lim]));
       }
     }
 				/* Now we impose the velocity at the boundaries */
@@ -191,11 +271,22 @@ real DeltaT;
 	sqrt(1.0-pow(AspectRatio(Rmed[nr-1]),2.0)*	\
 	     pow(Rmed[nr-1],2.0*FLARINGINDEX)*\
 	     (1.+SIGMASLOPE-2.0*FLARINGINDEX));
+      DVKepIn  = sqrt(G*1.0/Rmed[0])*\
+        sqrt(1.0-pow(DAspectRatio(Rmed[0]),2.0)* \
+             pow(Rmed[0],2.0*DFLARINGINDEX)*\
+             (1.+SIGMASLOPE-2.0*DFLARINGINDEX));
+      DVKepOut = sqrt(G*1.0/Rmed[nr-1])*\
+        sqrt(1.0-pow(DAspectRatio(Rmed[nr-1]),2.0)*      \
+             pow(Rmed[nr-1],2.0*DFLARINGINDEX)*\
+             (1.+SIGMASLOPE-2.0*DFLARINGINDEX));
+
       i = 0;
       if (CPU_Rank == 0) {
 	for (j = 0; j < ns; j++) {
 	  l = j+i*ns;
 	  vt[l] = VKepIn-Rmed[0]*OmegaFrame;
+//	  vt[l] = vt[l+ns]+(Rmed[1]-Rmed[0])*OmegaFrame;
+	  dvt[l] = DVKepIn-Rmed[0]*OmegaFrame;
 	}
       }
       i = nr-1;
@@ -203,6 +294,8 @@ real DeltaT;
 	for (j = 0; j < ns; j++) {
 	  l = j+i*ns;
 	  vt[l] = VKepOut-Rmed[nr-1]*OmegaFrame;
+//	  vt[l]=vt[l-ns]+(Rmed[nr-2]-Rmed[nr-1])*OmegaFrame;
+	  dvt[l] = DVKepOut-Rmed[nr-1]*OmegaFrame;
 	} 
       }
     }

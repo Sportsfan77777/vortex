@@ -214,9 +214,10 @@ void UpdateLogStockholm (psys, Rho, time)
   }
 }
 
-void StockholmBoundary (Vrad, Vtheta, Rho, dt)
+void StockholmBoundary (Vrad, Vtheta, Rho, dt, gas)
 PolarGrid *Vrad, *Vtheta, *Rho;
 real dt;
+int gas;
 {
     int i, j, l, ns, nr;
     real *dens, *vtheta, *vrad;
@@ -230,7 +231,7 @@ real dt;
     vtheta   = Vtheta->Field;
     R_inf = RMIN*1.25;
     R_sup = RMAX*.84; // ### was 0.84 originally!!! ###
-    for (i = 0; i < nr; i++) {
+    for (i = Zero_or_active; i < Max_or_active; i++) {
         for (j = 0; j < ns; j++) {
             l = j+i*ns;
             ramp = 0.0;
@@ -247,13 +248,23 @@ real dt;
             if (ramp > 1e-15) {
                 //tau /= FOLDNUMBER; /* Called three times per timestep ---- CHANGED to PARAMETER */
                 rad = Rmed[i];
-                dens0 = SigmaMed[i];
+                if (gas) {
+                     // Gas
+                     dens0 = SigmaMed[i];
+                }
+                else {
+                     // Dust
+                     dens0 = DSigmaMed[i];
+                }
                 vrad0 = -3.0*VISCOSITY/rad*(-SIGMASLOPE+.5);
                 omega0 = sqrt(G/(rad*rad*rad));
                 vtheta0 = omega0 * rad;
-                vtheta0 *= sqrt(1.0-pow(ASPECTRATIO,2.0)*\
+                if (gas) {
+                     // Gas
+                     vtheta0 *= sqrt(1.0-pow(ASPECTRATIO,2.0)*\
                      pow(rad,2.0*FLARINGINDEX)*\
                      (1.+SIGMASLOPE-2.0*FLARINGINDEX));
+                }
                 vtheta0 -= OmegaFrame * rad;
                 lambda = ramp/tau*dt;
                 dens[l] = (dens[l]+lambda*dens0)/(1.+lambda);

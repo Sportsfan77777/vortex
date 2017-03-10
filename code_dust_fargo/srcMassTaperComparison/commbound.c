@@ -21,8 +21,8 @@ static int allocated_com = 0;
 static int size_com;
 
 void AllocateComm () {
-  size_com = 3;
-  if (AdvecteLabel == YES) size_com = 4;
+  size_com = 6;
+  if (AdvecteLabel == YES) size_com = 7;
   size_com *= NSEC * CPUOVERLAP;
   SendInnerBoundary = malloc (size_com * sizeof(real));
   SendOuterBoundary = malloc (size_com * sizeof(real));
@@ -38,8 +38,8 @@ void AllocateComm () {
   allocated_com = 1;
 }
 
-void CommunicateBoundaries (Density, Vrad, Vtheta, Label)
-     PolarGrid *Density, *Vrad, *Vtheta, *Label;
+void CommunicateBoundaries (Density, Vrad, Vtheta, DDensity, DVrad, DVtheta, Label)
+     PolarGrid *Density, *Vrad, *Vtheta, *DDensity, *DVrad, *DVtheta, *Label;
 {
   MPI_Request req1, req2, req3, req4;
   int l, prev, next, oo, o, nr;
@@ -53,12 +53,20 @@ void CommunicateBoundaries (Density, Vrad, Vtheta, Label)
   memcpy (SendInnerBoundary, Density->Field+l, l*sizeof(real));
   memcpy (SendInnerBoundary+l, Vrad->Field+l, l*sizeof(real));
   memcpy (SendInnerBoundary+2*l, Vtheta->Field+l, l*sizeof(real));
+  memcpy (SendInnerBoundary+3*l, DDensity->Field+l, l*sizeof(real));
+  memcpy (SendInnerBoundary+4*l, DVrad->Field+l, l*sizeof(real));
+  memcpy (SendInnerBoundary+5*l, DVtheta->Field+l, l*sizeof(real));
+
   memcpy (SendOuterBoundary, Density->Field+o, l*sizeof(real));
   memcpy (SendOuterBoundary+l, Vrad->Field+o, l*sizeof(real));
   memcpy (SendOuterBoundary+2*l, Vtheta->Field+o, l*sizeof(real));
+  memcpy (SendOuterBoundary+3*l, DDensity->Field+o, l*sizeof(real));
+  memcpy (SendOuterBoundary+4*l, DVrad->Field+o, l*sizeof(real));
+  memcpy (SendOuterBoundary+5*l, DVtheta->Field+o, l*sizeof(real));
+
   if (AdvecteLabel == YES) {
-    memcpy (SendInnerBoundary+3*l, Label->Field+l, l*sizeof(real));
-    memcpy (SendOuterBoundary+3*l, Label->Field+o, l*sizeof(real));
+    memcpy (SendInnerBoundary+6*l, Label->Field+l, l*sizeof(real));
+    memcpy (SendOuterBoundary+6*l, Label->Field+o, l*sizeof(real));
   }
   if (CPU_Rank % 2 == 0) {
     if (CPU_Rank > 0) {
@@ -85,8 +93,11 @@ void CommunicateBoundaries (Density, Vrad, Vtheta, Label)
     memcpy (Density->Field, RecvInnerBoundary, l*sizeof(real));
     memcpy (Vrad->Field, RecvInnerBoundary+l, l*sizeof(real));
     memcpy (Vtheta->Field, RecvInnerBoundary+2*l, l*sizeof(real));
+    memcpy (DDensity->Field, RecvInnerBoundary+3*l, l*sizeof(real));
+    memcpy (DVrad->Field, RecvInnerBoundary+4*l, l*sizeof(real));
+    memcpy (DVtheta->Field, RecvInnerBoundary+5*l, l*sizeof(real));
     if (AdvecteLabel == YES) {
-      memcpy (Label->Field, RecvInnerBoundary+3*l, l*sizeof(real));
+      memcpy (Label->Field, RecvInnerBoundary+6*l, l*sizeof(real));
     }
   }
   if (CPU_Rank < CPU_Number-1) {
@@ -95,8 +106,11 @@ void CommunicateBoundaries (Density, Vrad, Vtheta, Label)
     memcpy (Density->Field+oo, RecvOuterBoundary, l*sizeof(real));
     memcpy (Vrad->Field+oo, RecvOuterBoundary+l, l*sizeof(real));
     memcpy (Vtheta->Field+oo, RecvOuterBoundary+2*l, l*sizeof(real));
+    memcpy (DDensity->Field+oo, RecvOuterBoundary+3*l, l*sizeof(real));
+    memcpy (DVrad->Field+oo, RecvOuterBoundary+4*l, l*sizeof(real));
+    memcpy (DVtheta->Field+oo, RecvOuterBoundary+5*l, l*sizeof(real));
     if (AdvecteLabel == YES) {
-      memcpy (Label->Field+oo, RecvOuterBoundary+3*l, l*sizeof(real));
+      memcpy (Label->Field+oo, RecvOuterBoundary+6*l, l*sizeof(real));
     }
   }
 }

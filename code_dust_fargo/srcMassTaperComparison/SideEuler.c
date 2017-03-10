@@ -104,7 +104,9 @@ void InitComputeAccel ()
     }
   }
 }
-  
+
+/*calculate the acceleration from the disk to x,y */ 
+ 
 Pair ComputeAccel (Rho, x, y, rsmoothing, mass)
 PolarGrid *Rho;
 real x, y, rsmoothing, mass;
@@ -125,23 +127,104 @@ real x, y, rsmoothing, mass;
 void OpenBoundary (Vrad, Rho)
 PolarGrid *Vrad, *Rho;
 {
-  int i,j,l,ns;
-  real *rho, *vr;
-  if (CPU_Rank != 0) return;
+  int i,j,l,ns, nr;
+  real *rho, *vr, vri;
   ns = Rho->Nsec;
+  nr = Rho->Nrad;
   rho = Rho->Field;
   vr  = Vrad->Field;
-  i = 1;
+  if(CPU_Rank == 0){
+   i = 1;
 #pragma omp parallel for private(l)
-  for (j = 0; j < ns; j++) {
+   for (j = 0; j < ns; j++) {
     l = j+i*ns;
-    rho[l-ns] = rho[l];		/* copy first ring into ghost ring */
-    if ((vr[l+ns] > 0.0) || (rho[l] < SigmaMed[0]))
+    rho[l-ns] = rho[l]*Rmed[1]/Rmed[0];		/* copy first ring into ghost ring */
+    if ((vr[l+ns] > 0.0)){
+// || (rho[l] < SigmaMed[0]))
       vr[l] = 0.0; /* we just allow outflow [inwards] */
+    }else{
+      if(NELSONBOUND){
+	vri = -3.*FViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX); 
+	if(fabs(vr[l+ns])>fabs(vri))
+	  vr[l]=vri;
+	else
+	  vr[l]=vr[l+ns];
+      }else{
+	vr[l] = vr[l+ns];
+      }
+    }
+   }
+  }
+  if (CPU_Rank == CPU_Number-1){
+   i = nr-2;
+   for (j = 0; j < ns; j++) {
+    l = j+i*ns;
+    rho[l+ns]=rho[l];         // copy first ring into ghost ring
+    if ((vr[l] < 0.0))
+// || (rho[l] < SigmaMed[nr-2]))
+      vr[l+ns]  = 0.0; // we just allow outflow [outwards]
     else
-      vr[l] = vr[l+ns];
+      vr[l+ns] = vr[l];
+   }
   }
 }
+
+void OpenBoundaryd (Vrad, Rhog, Rhod)
+PolarGrid *Vrad, *Rhod, *Rhog;
+{
+  int i,j,l,ns, nr;
+  real *rho, *vr, *rhog, vri, tstop, ita;
+  ns = Rhod->Nsec;
+  nr = Rhod->Nrad;
+  rho = Rhod->Field;
+  rhog = Rhog->Field;
+  vr  = Vrad->Field;
+  if(CPU_Rank == 0){
+   i = 1;
+#pragma omp parallel for private(l)
+   for (j = 0; j < ns; j++) {
+    l = j+i*ns;
+    rho[l-ns] = rho[l]*Rmed[1]/Rmed[0];         /* copy first ring into ghost ring */
+    if ((vr[l+ns] > 0.0)){
+// || (rho[l] < SigmaMed[0]))
+      vr[l] = 0.0; /* we just allow outflow [inwards] */
+    }else{
+      if(NELSONBOUNDD){
+	if(GasDcouple == YES){		/* GasDcouple means it is dust and we should use dust drift speed*/
+	  tstop=2.813e-6*PSize/rhog[l]*PI/2.;
+	  ita=-(AspectRatio(Rmed[i]) * AspectRatio(Rmed[i]) * pow(Rmed[i], 2.*FLARINGINDEX))*(2.*FLARINGINDEX-1.0-SIGMASLOPE);
+          vri = 3.*(-FViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX)/tstop-ita*sqrt(G*1.0/Rmed[i]))/(tstop+1./tstop);
+          if(fabs(vr[l+ns])>fabs(vri))
+            vr[l]=vri;
+          else
+            vr[l]=vr[l+ns];
+        }else{
+	  vri = -3.*DFViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX);
+          if(fabs(vr[l+ns])>fabs(vri))
+            vr[l]=vri;
+          else
+            vr[l]=vr[l+ns];
+	}
+      }else{
+        vr[l] = vr[l+ns];
+      }
+    }
+   }
+  }
+  if (CPU_Rank == CPU_Number-1){
+   i = nr-2;
+   for (j = 0; j < ns; j++) {
+    l = j+i*ns;
+    rho[l+ns]=rho[l] ;         // copy first ring into ghost ring
+    if ((vr[l] < 0.0))
+// || (rho[l] < SigmaMed[nr-2]))
+      vr[l+ns] = 0.0; // we just allow outflow [outwards]
+    else
+      vr[l+ns] = vr[l];
+   }
+  }
+}
+
 
 void NonReflectingBoundary (Vrad, Rho)
 PolarGrid *Vrad, *Rho;
@@ -237,18 +320,30 @@ void ApplyOuterSourceMass (Rho, Vrad)
 }
 
 
-void ApplyBoundaryCondition (Vrad, Vtheta, Rho, dt)
-PolarGrid *Vrad, *Vtheta, *Rho;
+void ApplyBoundaryCondition (Vrad, Vtheta, Rho, DVrad, DVtheta, DRho,dt)
+PolarGrid *Vrad, *Vtheta, *Rho, *DVrad, *DVtheta, *DRho;
 real dt;
 {
+  int gas, dust;
+
   if (Stockholm == YES) {
-    StockholmBoundary (Vrad, Vtheta, Rho, dt);
+    StockholmBoundary (Vrad, Vtheta, Rho, dt, 1);
     return;
   }
-  if (OpenInner == YES) OpenBoundary (Vrad, Rho);
+
+  if (OpenInner == YES) {
+    OpenBoundary (Vrad, Rho);
+    OpenBoundaryd (DVrad, Rho, DRho);
+  }
   if (NonReflecting == YES) NonReflectingBoundary (Vrad, Rho);
-  if (Evanescent == YES) StockholmBoundary (Vrad, Vtheta, Rho, dt);
+  if (Evanescent == YES) {
+    gas = 1; dust = 0;
+    StockholmBoundary (Vrad, Vtheta, Rho, dt, gas);
+    StockholmBoundary (DVrad, DVtheta, DRho, dt, dust);
+    //OpenBoundaryd (DVrad, Rho, DRho);
+  }
   if (OuterSourceMass == YES) ApplyOuterSourceMass (Rho, Vrad);
+ 
 }
 
 void CorrectVtheta (vtheta, domega)
