@@ -15,7 +15,7 @@ real r;
   if (r < CAVITYRADIUS) cavity = 1.0/CAVITYRATIO; /* This is *not* a steady state */
 				/* profile, if a cavity is defined. It first needs */
 				/* to relax towards steady state, on a viscous time scale */
-  return cavity*ScalingFactor*SIGMA0*pow(r,-SIGMASLOPE)*exp(-r/100.);
+  return cavity*ScalingFactor*SIGMA0*pow(r,-SIGMASLOPE); //*exp(-r/100.);
 }
 
 real DSigma(r)
@@ -25,7 +25,7 @@ real r;
   if (r < CAVITYRADIUS) cavity = 1.0/CAVITYRATIO; /* This is *not* a steady state */
                                 /* profile, if a cavity is defined. It first needs */
                                 /* to relax towards steady state, on a viscous time scale */
-  return cavity*ScalingFactor*SIGMA0*pow(r,-SIGMASLOPE)/100.*exp(-r/100.);
+  return cavity*ScalingFactor*SIGMA0*pow(r,-SIGMASLOPE)/GASTODUSTRATIO; //*exp(-r/100.);
 }
 
 
