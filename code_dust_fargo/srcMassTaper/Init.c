@@ -72,7 +72,7 @@ PolarGrid *dust_density, *dust_v_rad, *dust_v_theta;
   InitEuler (gas_density, gas_v_rad, gas_v_theta, dust_density, dust_v_rad, dust_v_theta);
   InitLabel (gas_label);
   if (Restart == YES) {
-    CheckRebin (NbRestart);
+    //CheckRebin (NbRestart); // ## I got rid of this, but I shouldn't have! ##
     MPI_Barrier (MPI_COMM_WORLD); /* Don't start reading before master has finished rebining... */
 				  /* It shouldn't be a problem though since a sequential read is */
                                   /* imposed in the ReadfromFile function below */
@@ -87,7 +87,10 @@ PolarGrid *dust_density, *dust_v_rad, *dust_v_theta;
     ReadfromFile (dust_v_rad, "gasdvrad", NbRestart);
     ReadfromFile (dust_v_theta, "gasdvtheta", NbRestart);
     /* End of New Dust Part */
-    if (StoreSigma) RefillSigma (gas_density);
+    if (StoreSigma) {
+      RefillSigma (gas_density);
+      RefillSigma (dust_density);
+    }
     fprintf (stderr, "done\n");
     fflush (stderr);
   }
