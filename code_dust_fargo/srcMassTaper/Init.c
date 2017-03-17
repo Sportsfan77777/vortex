@@ -72,7 +72,10 @@ PolarGrid *dust_density, *dust_v_rad, *dust_v_theta;
   InitEuler (gas_density, gas_v_rad, gas_v_theta, dust_density, dust_v_rad, dust_v_theta);
   InitLabel (gas_label);
   if (Restart == YES) {
-    //CheckRebin (NbRestart); // ## I got rid of this, but I shouldn't have! ##
+    //CheckRebin (NbRestart); 
+    /* ### Getting rid of the above line makes restart work again, but I don't know why. ###
+     * ### It could have something to do with reading the dust radii instead of the gas radii. ### */
+
     MPI_Barrier (MPI_COMM_WORLD); /* Don't start reading before master has finished rebining... */
 				  /* It shouldn't be a problem though since a sequential read is */
                                   /* imposed in the ReadfromFile function below */
