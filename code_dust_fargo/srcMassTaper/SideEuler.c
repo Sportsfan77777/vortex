@@ -8,7 +8,7 @@ manipulate PolarGrid 's or initialize the forces evaluation.
 
 #include "fargo.h"
 
-extern boolean OpenInner, NonReflecting, Evanescent, OuterSourceMass;
+extern boolean OpenInner, NonReflecting, Evanescent, Mixed, OuterSourceMass;
 extern Pair DiskOnPrimaryAcceleration;
 
 real GasTotalMass (array)
@@ -340,7 +340,11 @@ real dt;
     gas = 1; dust = 0;
     StockholmBoundary (Vrad, Vtheta, Rho, dt, gas);
     StockholmBoundary (DVrad, DVtheta, DRho, dt, dust);
-    //OpenBoundaryd (DVrad, Rho, DRho);
+  }
+  if (Mixed == YES) {
+    gas = 1;
+    StockholmBoundary (Vrad, Vtheta, Rho, dt, gas);
+    OpenBoundaryd (DVrad, Rho, DRho);
   }
   if (OuterSourceMass == YES) ApplyOuterSourceMass (Rho, Vrad);
  
@@ -367,6 +371,10 @@ real dt;
     //StockholmBoundary (Vrad, Vtheta, Rho, dt, gas);
     StockholmBoundary (DVrad, DVtheta, DRho, dt, dust); // Only apply dust bc --- used after dust diffusion (Diffd)
     //OpenBoundaryd (DVrad, Rho, DRho);
+  }
+  if (Mixed == YES) {
+    gas = 1; dust = 0;
+    OpenBoundaryd (DVrad, Rho, DRho); // Only apply dust bc --- used after dust diffusion (Diffd)
   }
   if (OuterSourceMass == YES) ApplyOuterSourceMass (Rho, Vrad);
  

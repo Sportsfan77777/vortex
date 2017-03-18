@@ -10,7 +10,7 @@ of an acceleration (LT^-2).
 
 #include "fargo.h"
 
-extern boolean OpenInner, NonReflecting, Evanescent;
+extern boolean OpenInner, NonReflecting, Evanescent, Mixed;
 extern Pair DiskOnPrimaryAcceleration;
 
 Force ComputeForce (Rho, x, y, rsmoothing, mass)

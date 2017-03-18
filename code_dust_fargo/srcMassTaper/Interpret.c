@@ -26,7 +26,7 @@ boolean         IsDisk = YES, NonReflecting = NO, Corotating = NO, OuterSourceMa
 boolean         Write_Density = YES, Write_Velocity = YES, Indirect_Term = YES;
 boolean         FakeAccretion = NO;
 boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
-boolean         Evanescent = NO;
+boolean         Evanescent = NO; Mixed = NO;
 boolean         VortexDiffusion = NO;
 
 void
@@ -154,6 +154,7 @@ char *filename;
   if ((*OPENINNERBOUNDARY == 'O') || (*OPENINNERBOUNDARY == 'o')) OpenInner = YES;
   if ((*OPENINNERBOUNDARY == 'N') || (*OPENINNERBOUNDARY == 'n')) NonReflecting = YES;
   if ((*OPENINNERBOUNDARY == 'E') || (*OPENINNERBOUNDARY == 'e')) Evanescent = YES; /// #### ADDED EVANESCENT ####
+  if ((*OPENINNERBOUNDARY == 'M') || (*OPENINNERBOUNDARY == 'm')) Mixed = YES; /// #### ADDED MIXED (Gas: Evanescent; Dust: Open) ####
   if ((*GRIDSPACING == 'L') || (*GRIDSPACING == 'l')) LogGrid = YES;
   if ((*DISK == 'N') || (*DISK == 'n')) IsDisk = NO;
   if ((*FRAME == 'C') || (*FRAME == 'c')) Corotating = YES;

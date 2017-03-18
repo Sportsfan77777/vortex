@@ -11,7 +11,7 @@ conditions.
 
 #include "fargo.h"
 
-extern boolean OpenInner, NonReflecting, Evanescent;
+extern boolean OpenInner, NonReflecting, Evanescent, Mixed;
 extern Pair DiskOnPrimaryAcceleration;
 
 Force ComputeForceStockholm (Rho, x, y, rsmoothing, mass)
@@ -231,7 +231,7 @@ int gas;
     vtheta   = Vtheta->Field;
     R_inf = RMIN*1.25;
     R_sup = RMAX*.84; // ### was 0.84 originally!!! ###
-    for (i = Zero_or_active; i < Max_or_active; i++) {
+    for (i = 0; i < nr; i++) {
         for (j = 0; j < ns; j++) {
             l = j+i*ns;
             ramp = 0.0;
