@@ -106,7 +106,7 @@ except:
 # Plot Parameters
 cmap = "inferno"
 gas_clim = [0, 2]
-dust_clim = [0, 0.02]
+dust_clim = [0, 0.1]
 
 fontsize = 14
 my_dpi = 100
@@ -126,14 +126,14 @@ def make_plot(frame, show = False):
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
 
         # Set up figure
-        fig = plot.figure(figsize = (1400 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+        fig = plot.figure(figsize = (1700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
         ###### Gas Density ######
         # Select Plot
         plot.subplot(1, 2, 1)
 
         # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
+        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) / surface_density_zero
         xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
         if axis == "zoom":
@@ -145,7 +145,7 @@ def make_plot(frame, show = False):
 
         plot.xlim(-sq, sq)
         plot.ylim(-sq, sq)
-        plot.axes().set_aspect('equal')
+        #plot.axes().set_aspect('equal')
 
         ### Plot ###
         result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
@@ -183,7 +183,7 @@ def make_plot(frame, show = False):
         plot.subplot(1, 2, 2)
 
         # Data
-        density = (fromfile("gasddens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
+        density = (fromfile("gasddens%d.dat" % i).reshape(num_rad, num_theta)) / surface_density_zero
         xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
         if axis == "zoom":
@@ -195,7 +195,7 @@ def make_plot(frame, show = False):
 
         plot.xlim(-sq, sq)
         plot.ylim(-sq, sq)
-        plot.axes().set_aspect('equal')
+        #plot.axes().set_aspect('equal')
 
         ### Plot ###
         result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
