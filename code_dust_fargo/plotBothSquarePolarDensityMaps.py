@@ -130,7 +130,7 @@ def make_plot(frame, show = False):
 
         ###### Gas Density ######
         # Select Plot
-        plot = fig.add_subplot(1, 2, 1)
+        plot.subplot(1, 2, 1)
 
         # Data
         density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
@@ -180,7 +180,7 @@ def make_plot(frame, show = False):
 
         ###### Dust Density ######
         # Select Plot
-        plot = fig.add_subplot(1, 2, 2)
+        plot.subplot(1, 2, 2)
 
         # Data
         density = (fromfile("gasddens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
