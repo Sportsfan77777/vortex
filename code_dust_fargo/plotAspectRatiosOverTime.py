@@ -95,14 +95,14 @@ def get_extents(args):
         tmp_vortex_density = np.copy(vortex_density)
 
         # Mark Above/Below Threshold
-        tmp_vortex_density[tmp_vortex_density >= threshold] = 1
-        tmp_vortex_density[tmp_vortex_density <  threshold] = 0
+        tmp_vortex_density[tmp_vortex_density <= threshold] = 0
+        tmp_vortex_density[tmp_vortex_density >  threshold] = 1
 
         counts = np.sum(tmp_vortex_density, axis = 1)
         median_count = np.median(counts)
 
         # Store Median (converted to angle)
-        median_count = (median_count / num_theta) * (180.0 / np.pi)
+        median_count *= (360.0 / num_theta)
 
         if t_i == 0:
             az_widths0[i] = median_count
@@ -116,6 +116,7 @@ def get_extents(args):
             az_widths10[i] = median_count
 
         # Print Update
+
         #print "%d: %.4f, %.4f, %.4f, %.4f" % (frame, m50, m75, m90, m99)
 
 ## Use These Frames ##
