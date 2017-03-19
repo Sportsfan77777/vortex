@@ -74,10 +74,6 @@ def get_quartiles(args):
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
     background_density = (fromfile("gasddens0.dat").reshape(num_rad, num_theta)) / surface_density_zero
 
-    # Look for 2x initial density
-    diff_density = density - background_density 
-    diff_density[diff_density < 0] = 0 # only include excess
-
     # Get Vortex Vicinity Indices
     averagedDensity = np.average(density, axis = 1)
     peak_rad, peak_density = find_peak(averagedDensity)
