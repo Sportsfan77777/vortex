@@ -152,7 +152,7 @@ def make_plot():
     # Annotate
     this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Dust Overdensity", fontsize = fontsize)
+    plot.ylabel("Dust Density", fontsize = fontsize)
     plot.title(this_title, fontsize = fontsize)
 
     plot.legend(loc = "upper left")
