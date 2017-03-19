@@ -95,8 +95,7 @@ def get_quartiles(args):
 
     # Look for 2x initial density (mask everything else)
     not_overdense = np.array(vortex_density < 2.0 * vortex_background_density)
-    masked_density = np.ma.array(vortex_density, mask = not_overdense)
-    masked_density = np.ma.filled(masked_density, np.nan) # fill masked elements with np.nan
+    masked_density = (np.ma.array(vortex_density, mask = not_overdense)).compressed() # return non-masked data only
 
     # Get Data (if not all masked)
     if not np.all(not_overdense):
