@@ -267,11 +267,11 @@ def make_aspect_ratio_plot():
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     # Collect Data
-    aspect_ratios0 = np.nan_to_num(np.array(rs) * np.array(az_widths0) / np.array(r_widths0))
-    aspect_ratios1 = np.nan_to_num(np.array(rs) * np.array(az_widths1) / np.array(r_widths1))
-    aspect_ratios2 = np.nan_to_num(np.array(rs) * np.array(az_widths2) / np.array(r_widths2))
-    aspect_ratios5 = np.nan_to_num(np.array(rs) * np.array(az_widths5) / np.array(r_widths5))
-    aspect_ratios10 = np.nan_to_num(np.array(rs) * np.array(az_widths10) / np.array(r_widths10))
+    aspect_ratios0 = (np.pi / 180.0) * np.nan_to_num(np.array(rs) * np.array(az_widths0) / np.array(r_widths0))
+    aspect_ratios1 = (np.pi / 180.0) * np.nan_to_num(np.array(rs) * np.array(az_widths1) / np.array(r_widths1))
+    aspect_ratios2 = (np.pi / 180.0) * np.nan_to_num(np.array(rs) * np.array(az_widths2) / np.array(r_widths2))
+    aspect_ratios5 = (np.pi / 180.0) * np.nan_to_num(np.array(rs) * np.array(az_widths5) / np.array(r_widths5))
+    aspect_ratios10 = (np.pi / 180.0) * np.nan_to_num(np.array(rs) * np.array(az_widths10) / np.array(r_widths10))
 
     # Curves
     plot.plot(frame_range, aspect_ratios0, linewidth = linewidth, label = "0.05")
