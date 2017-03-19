@@ -99,10 +99,10 @@ def get_quartiles(args):
 
     # Get Data (if not all masked)
     if not np.all(not_overdense):
-        m50 = np.nanpercentile(masked_density, 50) # Note: mask has no effect on np.percentile
-        m75 = np.nanpercentile(masked_density, 75)
-        m90 = np.nanpercentile(masked_density, 90)
-        m99 = np.nanpercentile(masked_density, 99)
+        m50 = np.percentile(masked_density, 50) # Note: mask has no effect on np.percentile
+        m75 = np.percentile(masked_density, 75)
+        m90 = np.percentile(masked_density, 90)
+        m99 = np.percentile(masked_density, 99)
 
         # Store Data
         track50[i] = m50
