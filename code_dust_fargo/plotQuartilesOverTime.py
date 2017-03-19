@@ -144,10 +144,10 @@ def make_plot():
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     # Curves
-    plot.plot(frame_range, track50, linewidth = linewidth, label = "50")
-    plot.plot(frame_range, track75, linewidth = linewidth, label = "75")
-    plot.plot(frame_range, track90, linewidth = linewidth, label = "90")
     plot.plot(frame_range, track99, linewidth = linewidth, label = "99")
+    plot.plot(frame_range, track90, linewidth = linewidth, label = "90")
+    plot.plot(frame_range, track75, linewidth = linewidth, label = "75")
+    plot.plot(frame_range, track50, linewidth = linewidth, label = "50")
 
     # Annotate
     this_title = readTitle()
@@ -155,7 +155,7 @@ def make_plot():
     plot.ylabel("Dust Overdensity", fontsize = fontsize)
     plot.title(this_title, fontsize = fontsize)
 
-    plot.legend(loc = "lower right")
+    plot.legend(loc = "upper left")
 
     # Limits
     plot.xlim(0, frame_range[-1])
