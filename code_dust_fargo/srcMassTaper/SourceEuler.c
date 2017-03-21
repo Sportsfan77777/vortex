@@ -418,7 +418,7 @@ real dt;
       ljp = l+1;
       if (j == ns-1) ljp = i*ns;
       /* Adding Separate Vortex Diffusion */
-      if (VortexDiffusion == YES) {
+      if (VortexDiffusion == YES && PhysicalTime > (2.0 * M_PI * DIFFUSIONTIME)) {
         if (Rmed[i] > VORTEXDIFFIN && Rmed[i] < VORTEXDIFFOUT) {
           dust_overdensity = drho[l] / DSigmaMed[i];
           // check if 'current divided by initial' overdensity exceeds threshold
