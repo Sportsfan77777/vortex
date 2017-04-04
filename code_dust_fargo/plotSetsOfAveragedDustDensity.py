@@ -83,7 +83,7 @@ def make_plot(i, frame, show = False):
             x = (rad - 1) / scale_height
             prefix = "zoom_"
             plot.xlim(-10, 30) # to match the ApJL paper
-            plot.ylim(0, 1.2)
+            plot.ylim(0, 0.1)
             xlabel = r"($r - r_p$) $/$ $h$"
         else:
             x = rad
