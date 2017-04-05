@@ -107,7 +107,7 @@ def make_plot(frame, show = False):
 
         # Calculate Viscosity Parameter ()
         measured_viscosity = vrad * vtheta
-        log_measured_viscosity = np.log(measured_viscosity)
+        log_measured_viscosity = np.log10(measured_viscosity)
 
         ### Plot ###
         result = plot.pcolormesh(x, theta, np.transpose(log_measured_viscosity), cmap = cmap)
@@ -149,7 +149,7 @@ def make_plot(frame, show = False):
 
         # Calculate Viscosity Parameter ()
         measured_dust_viscosity = dust_vrad * dust_vtheta
-        log_measured_dust_viscosity = np.log(measured_dust_viscosity)
+        log_measured_dust_viscosity = np.log10(measured_dust_viscosity)
 
         ### Plot ###
         result = plot.pcolormesh(x, theta, np.transpose(log_measured_dust_viscosity), cmap = cmap)
