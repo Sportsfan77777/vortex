@@ -106,7 +106,7 @@ def make_plot(frame, show = False):
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta)) - vtheta0
 
         # Calculate Viscosity Parameter ()
-        measured_viscosity = vrad * vtheta
+        measured_viscosity = np.abs(vrad) * np.abs(vtheta)
         log_measured_viscosity = np.log10(measured_viscosity)
 
         ### Plot ###
