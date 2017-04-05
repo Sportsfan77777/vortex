@@ -148,7 +148,7 @@ def make_plot(frame, show = False):
         dust_vtheta = (fromfile("gasdvtheta%d.dat" % i).reshape(num_rad, num_theta)) - dust_vtheta0
 
         # Calculate Viscosity Parameter ()
-        measured_dust_viscosity = dust_vrad * dust_vtheta
+        measured_dust_viscosity = np.abs(dust_vrad) * np.abs(dust_vtheta)
         log_measured_dust_viscosity = np.log10(measured_dust_viscosity)
 
         ### Plot ###
