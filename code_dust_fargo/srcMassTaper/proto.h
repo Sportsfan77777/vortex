@@ -68,6 +68,7 @@ void OpenBoundaryd ();
 void NonReflectingBoundary ();
 void ApplyOuterSourceMass ();
 void ApplyBoundaryCondition ();
+void ApplyDustBoundaryCondition ();
 void CorrectVtheta ();
 boolean DetectCrash ();
 void FillPolar1DArrays ();

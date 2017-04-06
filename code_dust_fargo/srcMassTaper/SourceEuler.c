@@ -416,8 +416,8 @@ real dt;
       viscosity = FViscosity (Rmed[i]);
     }
     else {
-      viscosityp = VORTEXDIFFUSIONBACKGROUND
-      viscosity = VORTEXDIFFUSIONBACKGROUND
+      viscosityp = VORTEXDIFFUSIONBACKGROUND;
+      viscosity = VORTEXDIFFUSIONBACKGROUND;
     }
 
     for (j = 0; j < ns; j++){
@@ -445,8 +445,8 @@ real dt;
               viscosity = FViscosity (Rmed[i]);
             }
             else {
-              viscosityp = VORTEXDIFFUSIONBACKGROUND
-              viscosity = VORTEXDIFFUSIONBACKGROUND
+              viscosityp = VORTEXDIFFUSIONBACKGROUND;
+              viscosity = VORTEXDIFFUSIONBACKGROUND;
             }
           }
         }
