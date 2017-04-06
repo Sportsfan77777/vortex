@@ -409,8 +409,16 @@ real dt;
   for (i = 0; i < nr-1; i++){
     dtheta = 2.0*PI/(real)ns;
     invdtheta = 1.0/dtheta;
-    viscosityp = FViscosity (Rsup[i]);
-    viscosity = FViscosity (Rmed[i]);
+
+    // Set Background Diffusion Rate (can be parameter or just gas viscosity)
+    if (VORTEXDIFFUSIONBACKGROUND == -1) {
+      viscosityp = FViscosity (Rsup[i]);
+      viscosity = FViscosity (Rmed[i]);
+    }
+    else {
+      viscosityp = VORTEXDIFFUSIONBACKGROUND
+      viscosity = VORTEXDIFFUSIONBACKGROUND
+    }
 
     for (j = 0; j < ns; j++){
       l = j+i*ns;
