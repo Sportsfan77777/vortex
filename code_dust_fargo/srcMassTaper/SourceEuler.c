@@ -432,8 +432,14 @@ real dt;
             viscosity = FViscosity (Rmed[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
           }
           else {
-            viscosityp = FViscosity (Rsup[i]);
-            viscosity = FViscosity (Rmed[i]);
+            if (VORTEXDIFFUSIONBACKGROUND == -1) {
+              viscosityp = FViscosity (Rsup[i]);
+              viscosity = FViscosity (Rmed[i]);
+            }
+            else {
+              viscosityp = VORTEXDIFFUSIONBACKGROUND
+              viscosity = VORTEXDIFFUSIONBACKGROUND
+            }
           }
         }
       }
