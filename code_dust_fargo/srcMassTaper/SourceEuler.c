@@ -7,13 +7,13 @@ transport substep is treated elsewhere. */
 
 #include "fargo.h"
 
-#define CFLSECURITY 0.5		/* Maximum fraction of zone size */
-				/* swept in one timestep */
+#define CFLSECURITY 0.5   /* Maximum fraction of zone size */
+        /* swept in one timestep */
 
-#define CVNR 1.41       	/* Shocks are spread over CVNR zones:       */
+#define CVNR 1.41         /* Shocks are spread over CVNR zones:       */
                                 /* von Neumann-Richtmyer viscosity constant */
-				/* Beware of misprint in Stone and Norman's */
-				/* paper : use C2^2 instead of C2           */
+        /* Beware of misprint in Stone and Norman's */
+        /* paper : use C2^2 instead of C2           */
 
 static PolarGrid *TemperInt, *DTemperInt;
 static PolarGrid *VradNew,   *VradInt, *DVradNew,   *DVradInt;
@@ -43,7 +43,7 @@ PolarGrid *array;
     for (j = 0; j < ns; j++) {
       l = j+i*ns;
       if (ptr[l] < 0.0) 
-	bool = YES;
+  bool = YES;
       if (ptr[l]<DENSITYFLOOR)ptr[l]=DENSITYFLOOR;
     }
   }
@@ -65,11 +65,11 @@ void FillPolar1DArrays ()
     mastererr ("Warning : no `radii.dat' file found. Using default.\n");
     if (LogGrid == YES) {
       for (i = 0; i <= GLOBALNRAD; i++) {
-	Radii[i] = RMIN*exp((real)i/(real)GLOBALNRAD*log(RMAX/RMIN));
+  Radii[i] = RMIN*exp((real)i/(real)GLOBALNRAD*log(RMAX/RMIN));
       }
     } else {
       for (i = 0; i <= GLOBALNRAD; i++) {
-	Radii[i] = RMIN+drrsep*(real)(i);
+  Radii[i] = RMIN+drrsep*(real)(i);
       }
     }
   } else {
@@ -139,7 +139,7 @@ PolarGrid *Rho, *Vr, *Vt, *DRho, *DVr, *DVt;
   DVthetaInt    = CreatePolarGrid(NRAD, NSEC, "DVthetaInt");
   DTemperInt    = CreatePolarGrid(NRAD, NSEC, "DTemperInt");
 
-  TStop		= CreatePolarGrid(NRAD, NSEC, "TStop"); /* dust stoping time */
+  TStop   = CreatePolarGrid(NRAD, NSEC, "TStop"); /* dust stoping time */
   Diag1         = CreatePolarGrid(NRAD, NSEC, "Diag1"); /* three diagnostic */
   Diag2         = CreatePolarGrid(NRAD, NSEC, "Diag2");
   Diag3         = CreatePolarGrid(NRAD, NSEC, "Diag3");
@@ -206,10 +206,10 @@ PlanetarySystem *sys;
     if (IsDisk == YES) {
       CommunicateBoundaries (Rho,Vrad,Vtheta,DRho,DVrad,DVtheta,Label);
       if (SloppyCFL == NO) {
-	gastimestepcfl = 1;
-	gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /* dust CFL condition included*/
-	MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
-	dt = (DT-dtemp)/(real)GasTimeStepsCFL;
+  gastimestepcfl = 1;
+  gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /* dust CFL condition included*/
+  MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
+  dt = (DT-dtemp)/(real)GasTimeStepsCFL;
       }
       AccreteOntoPlanets (Rho, Vrad, Vtheta,DRho, DVrad, DVtheta, dt, sys); /* Dust can accrete but its mass not added to the planet and won't affect planet momentum */
     }
@@ -217,7 +217,7 @@ PlanetarySystem *sys;
     DiskOnPrimaryAcceleration.x = 0.0;
     DiskOnPrimaryAcceleration.y = 0.0;
     if (Corotating == YES) GetPsysInfo (sys, MARK);
-    if (IsDisk == YES) {	/*Dust's effect onto the planet movement is ignored */
+    if (IsDisk == YES) {  /*Dust's effect onto the planet movement is ignored */
       DiskOnPrimaryAcceleration   = ComputeAccel (Rho, 0.0, 0.0, 0.0, 0.0);
       FillForcesArrays (sys);
       AdvanceSystemFromDisk (Rho, sys, dt);  /* the planets move due to the force from the disk */
@@ -227,8 +227,8 @@ PlanetarySystem *sys;
       OmegaNew = GetPsysInfo(sys, GET) / dt;
       domega = OmegaNew-OmegaFrame;
       if (IsDisk == YES){
-	CorrectVtheta (Vtheta, domega);
-	CorrectVtheta (DVtheta, domega);  /*In Corotating frame, both gas and dust vtheta needs to be changed*/ 
+  CorrectVtheta (Vtheta, domega);
+  CorrectVtheta (DVtheta, domega);  /*In Corotating frame, both gas and dust vtheta needs to be changed*/ 
       }
       OmegaFrame = OmegaNew;
     }
@@ -238,20 +238,20 @@ PlanetarySystem *sys;
       Crashed = DetectCrash (Rho);  /* test for negative density values */
       Crashed = DetectCrash (DRho); 
       if (Crashed == YES) {
-	if (AlreadyCrashed == 0) {
-	  timeCRASH=PhysicalTime;   /* if it appears to be the first crash */
-	  fprintf (stdout,"\nCrash! at time %.12g\n", timeCRASH);
-	  WriteDiskPolar (Rho, 999);    /* We write the HD arrays */
-	  WriteDiskPolar (Vrad, 999);   /* in order to keep a track */
-	  WriteDiskPolar (Vtheta, 999); /* of what happened */
-	  WriteDiskPolar (DRho, 999);    /* We write the HD arrays */
+  if (AlreadyCrashed == 0) {
+    timeCRASH=PhysicalTime;   /* if it appears to be the first crash */
+    fprintf (stdout,"\nCrash! at time %.12g\n", timeCRASH);
+    WriteDiskPolar (Rho, 999);    /* We write the HD arrays */
+    WriteDiskPolar (Vrad, 999);   /* in order to keep a track */
+    WriteDiskPolar (Vtheta, 999); /* of what happened */
+    WriteDiskPolar (DRho, 999);    /* We write the HD arrays */
           WriteDiskPolar (DVrad, 999);   /* in order to keep a track */
           WriteDiskPolar (DVtheta, 999); /* of what happened */
-	}
-	AlreadyCrashed++;
-	masterprint ("c");
+  }
+  AlreadyCrashed++;
+  masterprint ("c");
       } else {
-	masterprint (".");
+  masterprint (".");
       }
       fflush (stdout);
       SubStep1 (Vrad, Vtheta, Rho, DVrad, DVtheta, DRho, dt);
@@ -306,11 +306,11 @@ PolarGrid *Rho, *DRho, *Vrad, *Vtheta,*DVrad,*DVtheta;
         cs2 = SOUNDSPEED[i]*SOUNDSPEED[i];
         cs2m= SOUNDSPEED[i-1]*SOUNDSPEED[i-1];
         gradp = (cs2*rho[l]-cs2m*rho[lim])*2.0/(rho[l]+rho[lim])*InvDiffRmed[i];
-	dvrad[l]=vrad[l]+1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*gradp;
-//	diag1[l]=rho[l];
-//	diag2[l]=(dvrad[l]-vrad[l])/(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*(gradp+1.e-20));
-//   	diag2[l]=dvrad[l];
-//	diag3[l]=vrad[l];
+  dvrad[l]=vrad[l]+1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*gradp;
+//  diag1[l]=rho[l];
+//  diag2[l]=(dvrad[l]-vrad[l])/(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*(gradp+1.e-20));
+//    diag2[l]=dvrad[l];
+//  diag3[l]=vrad[l];
       }
   }
 
@@ -324,9 +324,9 @@ PolarGrid *Rho, *DRho, *Vrad, *Vtheta,*DVrad,*DVtheta;
         if (j == 0) ljm = i*ns+ns-1;
         ljp = l+1;
         if (j == ns-1) ljp = i*ns;
-	cs2   = SOUNDSPEED[i]*SOUNDSPEED[i];
+  cs2   = SOUNDSPEED[i]*SOUNDSPEED[i];
         gradp = cs2*(rho[l]-rho[ljm])*2.0/(rho[l]+rho[ljm])*invdxtheta;
-	dvtheta[l]=vtheta[l]+1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*gradp;
+  dvtheta[l]=vtheta[l]+1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*gradp;
 //        diag3[l]=dvtheta[l];
       }
   }
@@ -361,10 +361,10 @@ PolarGrid *Rho, *DRho, *Vrad, *Vtheta,*DVrad,*DVtheta;
         cs2m= SOUNDSPEED[i-1]*SOUNDSPEED[i-1];
         gradp = (cs2*rho[l]-cs2m*rho[lim])*2.0/(rho[l]+rho[lim])*InvDiffRmed[i];
 //        diag2[l]=(vrad[l]-dvrad[l])/(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]*(gradp+1.e-20));
-//	diag2[l]=(diag2[l]-dvrad[l])/(dvrad[l]+1.e-20);
-//	diag3[l]=(diag3[l]-dvtheta[l])/(dvtheta[l]+1.e-20);
-//	diag3[l]=dvrad[l]-vrad[l];
-//	diag2[l]=rho[l];
+//  diag2[l]=(diag2[l]-dvrad[l])/(dvrad[l]+1.e-20);
+//  diag3[l]=(diag3[l]-dvtheta[l])/(dvtheta[l]+1.e-20);
+//  diag3[l]=dvrad[l]-vrad[l];
+//  diag2[l]=rho[l];
       }
   }
 
@@ -484,7 +484,7 @@ real dt;
   real *vradint, *vthetaint, *dvradint, *dvthetaint;
   real gradp, gradphi, vt2, dvt2, dxtheta, cs2, cs2m, dcs2, dcs2m, dgradp, dforcer, dforcet;
   real invdxtheta;
-  real supp_torque=0.0;		/* for imposed disk drift */
+  real supp_torque=0.0;   /* for imposed disk drift */
   real *Pot;
   nr = Vrad->Nrad;
   ns = Vrad->Nsec;
@@ -505,50 +505,50 @@ real dt;
   ts = TStop->Field;
   diag1 = Diag1->Field;
   diag2 = Diag2->Field;
-				/* In this substep we take into account     */
-				/* the source part of Euler equations       */
-				/* (i.e. the R.H.S. in classical notation). */
+        /* In this substep we take into account     */
+        /* the source part of Euler equations       */
+        /* (i.e. the R.H.S. in classical notation). */
 #pragma omp parallel private(j,l,lim,ljm,ljp,cs2,cs2m,dxtheta,vt2,gradp,gradphi,invdxtheta,supp_torque)
   {
     if(GasDcouple == YES){
       for (i = 0; i < nr; i++){
         for (j = 0; j < ns; j++){
-	  l = j+i*ns;
-	  ts[l]=2.813e-6*PSize/rho[l]*PI/2.;
+    l = j+i*ns;
+    ts[l]=2.813e-6*PSize/rho[l]*PI/2.;
         }
       }
     } 
 #pragma omp for nowait
     for (i = 1; i < nr; i++) {
       for (j = 0; j < ns; j++) {
-	l = j+i*ns;
-	lim = l-ns;
-	ljm = l-1;
-	if (j == 0) ljm = i*ns+ns-1;
-	ljp = l+1;
-	if (j == ns-1) ljp = i*ns;
-	cs2 = SOUNDSPEED[i]*SOUNDSPEED[i];
-	cs2m= SOUNDSPEED[i-1]*SOUNDSPEED[i-1];
-	gradp = (cs2*rho[l]-cs2m*rho[lim])*2.0/(rho[l]+rho[lim])*InvDiffRmed[i];
-	gradphi = (Pot[l]-Pot[lim])*InvDiffRmed[i];
+  l = j+i*ns;
+  lim = l-ns;
+  ljm = l-1;
+  if (j == 0) ljm = i*ns+ns-1;
+  ljp = l+1;
+  if (j == ns-1) ljp = i*ns;
+  cs2 = SOUNDSPEED[i]*SOUNDSPEED[i];
+  cs2m= SOUNDSPEED[i-1]*SOUNDSPEED[i-1];
+  gradp = (cs2*rho[l]-cs2m*rho[lim])*2.0/(rho[l]+rho[lim])*InvDiffRmed[i];
+  gradphi = (Pot[l]-Pot[lim])*InvDiffRmed[i];
         vt2 = vtheta[l]+vtheta[ljp]+vtheta[lim]+vtheta[ljp-ns];
         vt2 = vt2/4.0+Rinf[i]*OmegaFrame;
         vt2 = vt2*vt2;
-	vradint[l] = vrad[l]+dt*(-gradp-gradphi+vt2*InvRinf[i]);
-	if(!SFTA){			/* dust */
-	  dcs2 = DSOUNDSPEED[i]*DSOUNDSPEED[i];
+  vradint[l] = vrad[l]+dt*(-gradp-gradphi+vt2*InvRinf[i]);
+  if(!SFTA){      /* dust */
+    dcs2 = DSOUNDSPEED[i]*DSOUNDSPEED[i];
           dcs2m= DSOUNDSPEED[i-1]*DSOUNDSPEED[i-1];
-	  dgradp = (dcs2*drho[l]-dcs2m*drho[lim])*2.0/(drho[l]+drho[lim])*InvDiffRmed[i];
-	  dvt2 = dvtheta[l]+dvtheta[ljp]+dvtheta[lim]+dvtheta[ljp-ns];
+    dgradp = (dcs2*drho[l]-dcs2m*drho[lim])*2.0/(drho[l]+drho[lim])*InvDiffRmed[i];
+    dvt2 = dvtheta[l]+dvtheta[ljp]+dvtheta[lim]+dvtheta[ljp-ns];
           dvt2 = dvt2/4.0+Rinf[i]*OmegaFrame;
           dvt2 = dvt2*dvt2;
-	  dvradint[l] =dvrad[l]+dt*(-gradphi-dgradp+dvt2*InvRinf[i]);
-	  if(GasDcouple == YES){
-	    dforcer = -1./(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]+dt/2.)*(dvrad[l]-vrad[l]);
-	    dvradint[l] += dt*dforcer;
-	    diag1[l] = dforcer;
-	  }
-	}
+    dvradint[l] =dvrad[l]+dt*(-gradphi-dgradp+dvt2*InvRinf[i]);
+    if(GasDcouple == YES){
+      dforcer = -1./(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]+dt/2.)*(dvrad[l]-vrad[l]);
+      dvradint[l] += dt*dforcer;
+      diag1[l] = dforcer;
+    }
+  }
       }
     }
 #pragma omp for
@@ -557,27 +557,27 @@ real dt;
       dxtheta = 2.0*PI/(real)ns*Rmed[i];
       invdxtheta = 1.0/dxtheta;
       for (j = 0; j < ns; j++) {
-	l = j+i*ns;
-	lim = l-ns;
-	ljm = l-1;
-	if (j == 0) ljm = i*ns+ns-1;
-	ljp = l+1;
-	if (j == ns-1) ljp = i*ns;
-	cs2m = cs2 = SOUNDSPEED[i]*SOUNDSPEED[i];
-	gradp = cs2*(rho[l]-rho[ljm])*2.0/(rho[l]+rho[ljm])*invdxtheta;
-	gradphi = (Pot[l]-Pot[ljm])*invdxtheta;
-	vthetaint[l] = vtheta[l]-dt*(gradp+gradphi);
+  l = j+i*ns;
+  lim = l-ns;
+  ljm = l-1;
+  if (j == 0) ljm = i*ns+ns-1;
+  ljp = l+1;
+  if (j == ns-1) ljp = i*ns;
+  cs2m = cs2 = SOUNDSPEED[i]*SOUNDSPEED[i];
+  gradp = cs2*(rho[l]-rho[ljm])*2.0/(rho[l]+rho[ljm])*invdxtheta;
+  gradphi = (Pot[l]-Pot[ljm])*invdxtheta;
+  vthetaint[l] = vtheta[l]-dt*(gradp+gradphi);
         vthetaint[l] += dt*supp_torque; /* imposeddiskdrift cannot be used for dust */
-	if(!SFTA){		/* dust */
+  if(!SFTA){    /* dust */
           dcs2m = dcs2 = DSOUNDSPEED[i]*DSOUNDSPEED[i];
           dgradp=dcs2*(drho[l]-drho[ljm])*2.0/(drho[l]+drho[ljm])*invdxtheta;
-	  dvthetaint[l] = dvtheta[l]-dt*(gradphi+dgradp);
-	  if(GasDcouple == YES){
-	    dforcet = -1./(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]+dt/2.)*(dvtheta[l]-vtheta[l]);
-	    dvthetaint[l] += dt*dforcet; 
-	    diag2[l] = dforcet;
-	  }
-	}
+    dvthetaint[l] = dvtheta[l]-dt*(gradphi+dgradp);
+    if(GasDcouple == YES){
+      dforcet = -1./(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]+dt/2.)*(dvtheta[l]-vtheta[l]);
+      dvthetaint[l] += dt*dforcet; 
+      diag2[l] = dforcet;
+    }
+  }
       }
     }
   }
@@ -639,7 +639,7 @@ real dt;
       if (dv < 0.0)
         qt[l] = CVNR*CVNR*rho[l]*dv*dv;
       else
-	qt[l] = 0.0;
+  qt[l] = 0.0;
 
       if (ddv < 0.0) 
         dqt[l] = CVNR*CVNR*drho[l]*ddv*ddv;
@@ -652,15 +652,15 @@ real dt;
 #pragma omp for nowait
     for (i = 1; i < nr; i++) {
       for (j = 0; j < ns; j++) {
-	l = j+i*ns;
-	lim = l-ns;
-	lip = l+ns;
-	ljm = l-1;
-	if (j == 0) ljm = i*ns+ns-1;
-	ljp = l+1;
-	if (j == ns-1) ljp = i*ns;
-	vradnew[l] = vrad[l]-dt*2.0/(rho[l]+rho[lim])*(qr[l]-qr[lim])*InvDiffRmed[i];
-	dvradnew[l] = dvrad[l]-dt*2.0/(drho[l]+drho[lim])*(dqr[l]-dqr[lim])*InvDiffRmed[i]; /* dust */
+  l = j+i*ns;
+  lim = l-ns;
+  lip = l+ns;
+  ljm = l-1;
+  if (j == 0) ljm = i*ns+ns-1;
+  ljp = l+1;
+  if (j == ns-1) ljp = i*ns;
+  vradnew[l] = vrad[l]-dt*2.0/(rho[l]+rho[lim])*(qr[l]-qr[lim])*InvDiffRmed[i];
+  dvradnew[l] = dvrad[l]-dt*2.0/(drho[l]+drho[lim])*(dqr[l]-dqr[lim])*InvDiffRmed[i]; /* dust */
       }
     }
 #pragma omp for
@@ -668,20 +668,20 @@ real dt;
       dxtheta = 2.0*PI/(real)ns*Rmed[i];
       invdxtheta = 1.0/dxtheta;
       for (j = 0; j < ns; j++) {
-	l = j+i*ns;
-	lim = l-ns;
-	lip = l+ns;
-	ljm = l-1;
-	if (j == 0) ljm = i*ns+ns-1;
-	ljp = l+1;
-	if (j == ns-1) ljp = i*ns;
-	vthetanew[l] = vtheta[l]-dt*2.0/(rho[l]+rho[ljm])*(qt[l]-qt[ljm])*invdxtheta;
-	dvthetanew[l] = dvtheta[l]-dt*2.0/(drho[l]+drho[ljm])*(dqt[l]-dqt[ljm])*invdxtheta; /* dust */
+  l = j+i*ns;
+  lim = l-ns;
+  lip = l+ns;
+  ljm = l-1;
+  if (j == 0) ljm = i*ns+ns-1;
+  ljp = l+1;
+  if (j == ns-1) ljp = i*ns;
+  vthetanew[l] = vtheta[l]-dt*2.0/(rho[l]+rho[ljm])*(qt[l]-qt[ljm])*invdxtheta;
+  dvthetanew[l] = dvtheta[l]-dt*2.0/(drho[l]+drho[ljm])*(dqt[l]-dqt[ljm])*invdxtheta; /* dust */
       }
     }
   }
 }
-		   		   
+             
 long ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, deltaT)
 PolarGrid *Vrad, *Vtheta, *DVrad, *DVtheta;
 real deltaT;
@@ -723,11 +723,12 @@ real deltaT;
     for (j = 0; j < ns; j++) {
       l = j+i*ns;
       if (FastTransport == YES){
-	Vresidual[j] = vt[l]-Vmoy[i];  /* FARGO algorithm */
-	DVresidual[j] = dvt[l]-DVmoy[i];
-      }else{
-	Vresidual[j] = vt[l];	       /* Standard algorithm */
-	DVresidual[j]= dvt[l];
+        Vresidual[j] = vt[l]-Vmoy[i];  /* FARGO algorithm */
+        DVresidual[j] = dvt[l]-DVmoy[i];
+      }
+      else {
+        Vresidual[j] = vt[l];        /* Standard algorithm */
+        DVresidual[j]= dvt[l];
       }
     }
     Vresidual[ns]=Vresidual[0];
@@ -753,10 +754,11 @@ real deltaT;
       else invdt6=1.e-10;
 
       if(Rmed[i]>COUPLEINN){
-	invdt8 = 1./(ts[l]+1.e-6)*sqrt(G*1.0/Rmed[i])/Rmed[i];
-	if(DustImp==YES||GasDcouple==NO)invdt8 = 1.e-10;
- 	if(SFTA)invdt8=1.e-10;
-      }else{
+        invdt8 = 1./(ts[l]+1.e-6)*sqrt(G*1.0/Rmed[i])/Rmed[i];
+        if(DustImp==YES||GasDcouple==NO)invdt8 = 1.e-10;
+        if(SFTA)invdt8=1.e-10;
+      }
+      else {
         invdt8=1e-10;
       }
 
@@ -784,19 +786,22 @@ real deltaT;
       dt= min2(dtg,dtd);
       dt=max2(dt,1.e-10);
       if (dt < newdt) {
-	newdt = dt;
-	ideb = i;
-        jdeb = j;
-	itdbg8=1.0/invdt8;
-	itdbg=dtg;
-	if (debug == YES) {
-	  ideb = i;
-	  jdeb = j;
-	  itdbg1 = 1.0/invdt1; itdbg2=1.0/invdt2; itdbg3=1.0/invdt3; itdbg4=1.0/invdt4; itdbg5=1.0/invdt5; itdbg6=1.0/invdt6 ; itdbg7=1.0/invdt7 ; itdbg8=1.0/invdt8; itdbg9=1.0/invdt9;
-	  mdtdbg = newdt;
-	  viscr = dxrad/devr/4.0/CVNR/CVNR;     
-	  visct = dxtheta/devt/4.0/CVNR/CVNR;
-	}
+        // Only change CFL if inside CFL range
+        if (Rmed[i] > CFLIN && Rmed[i] < CFLOUT) {
+          newdt = dt;
+          ideb = i;
+          jdeb = j;
+          itdbg8=1.0/invdt8;
+          itdbg=dtg;
+          if (debug == YES) {
+            ideb = i;
+            jdeb = j;
+            itdbg1 = 1.0/invdt1; itdbg2=1.0/invdt2; itdbg3=1.0/invdt3; itdbg4=1.0/invdt4; itdbg5=1.0/invdt5; itdbg6=1.0/invdt6 ; itdbg7=1.0/invdt7 ; itdbg8=1.0/invdt8; itdbg9=1.0/invdt9;
+            mdtdbg = newdt;
+            viscr = dxrad/devr/4.0/CVNR/CVNR;     
+            visct = dxtheta/devt/4.0/CVNR/CVNR;
+          }
+        }
       }  
     }
   }
@@ -822,7 +827,7 @@ real deltaT;
     printf ("   Arise from r with limit     : %g\n", viscr);
     printf ("   and from theta with limit   : %g\n", visct);
     printf ("Dust Viscosity limit                : %g\n", itdbg9);
-    printf ("Dust Sound speed limit	    : %g\n", itdbg7);
+    printf ("Dust Sound speed limit     : %g\n", itdbg7);
     printf ("Dust Radial motion limit            : %g\n", itdbg5);
     printf ("Dust Residual circular motion limit : %g\n", itdbg6);
     printf ("Dust Radial aerodrag limit     : dvr %g vr %g ts %g %g\n", dvr[jdeb+ideb*ns], vr[jdeb+ideb*ns], ts[jdeb+ideb*ns], itdbg8);
