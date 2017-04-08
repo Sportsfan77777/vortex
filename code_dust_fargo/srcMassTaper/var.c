@@ -91,5 +91,8 @@ InitVariables()
   var("DIFFUSIONTIME", &DIFFUSIONTIME, REAL, NO, "0.0");
   // Made Gas-to-Dust Ratio a Parameter
   var("GASTODUSTRATIO", &GASTODUSTRATIO, REAL, NO, "100.0");
+  // CFL Variables
+  var("CFLIN", &CFLIN, REAL, NO, "0.0");
+  var("CFLOUT", &CFLOUT, REAL, NO, "100000.0");
 }
 
