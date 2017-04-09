@@ -28,6 +28,7 @@ boolean         FakeAccretion = NO;
 boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 boolean         Evanescent = NO; Mixed = NO;
 boolean         VortexDiffusion = NO;
+boolean         GasCFL = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -222,6 +223,9 @@ char *filename;
 
   // #### NEW VORTEX DIFFUSION VARIABLES #### //
   if ((*VORTEXDIFFUSION == 'Y') || (*VORTEXDIFFUSION == 'y')) VortexDiffusion = YES;
+  
+  // #### NEW CFL VARAIBLES #### //
+  if ((*GASCFL == 'y') || (*GASCFL=='Y')) GasCFL = YES;
 }
 
 void PrintUsage (execname)
