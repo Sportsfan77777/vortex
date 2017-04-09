@@ -25,7 +25,7 @@ static int AlreadyCrashed = 0;
 static long GasTimeStepsCFL;
 
 extern int TimeStep;
-extern boolean FastTransport, IsDisk, VortexDiffusion;
+extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL;
 Pair DiskOnPrimaryAcceleration;
 
 
