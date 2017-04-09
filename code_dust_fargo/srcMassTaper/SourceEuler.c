@@ -786,7 +786,7 @@ real deltaT;
 
       if (GasCFL) {
         // Determine timestep from gas only
-        dt = dtg
+        dt = dtg;
       }
       else {
         // Use the minimum (This is the one that makes more sense.)
