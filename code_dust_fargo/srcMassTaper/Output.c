@@ -244,9 +244,8 @@ PolarGrid   *dens, *gasvr, *gasvt, *label;
   }
 }
 
-void WriteDTFile(TimeStep, number)
+void WriteDTFile(TimeStep)
 int TimeStep;
-int number;
 {
   FILE *output;
   char name[256];

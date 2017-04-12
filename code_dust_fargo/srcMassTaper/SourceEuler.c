@@ -22,11 +22,13 @@ static real timeCRASH;
 extern boolean Corotating;
 
 static int AlreadyCrashed = 0;
-static long GasTimeStepsCFL;
+static long GasTimeStepsCFL; // Actually, store as 1000 * GasTimeStepsCFL + 100 * cfl_r
 
 extern int TimeStep;
 extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL;
 Pair DiskOnPrimaryAcceleration;
+
+extern Recent_cfl_r, Recent_dt;
 
 
 boolean DetectCrash (array)
@@ -199,17 +201,26 @@ PlanetarySystem *sys;
       gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /*dust CFL condition included */
   }
   MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
-  dt = DT / (real)GasTimeStepsCFL;
+  dt = DT / (real)(GasTimeStepsCFL / 1000);
   while (dtemp < 0.999999999*DT) {
     MassTaper = PhysicalTime/(MASSTAPER*2.0*M_PI);
     MassTaper = (MassTaper > 1.0 ? 1.0 : pow(sin(MassTaper*M_PI/2.0),2.0));
     if (IsDisk == YES) {
       CommunicateBoundaries (Rho,Vrad,Vtheta,DRho,DVrad,DVtheta,Label);
       if (SloppyCFL == NO) {
-  gastimestepcfl = 1;
-  gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /* dust CFL condition included*/
-  MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
-  dt = (DT-dtemp)/(real)GasTimeStepsCFL;
+          gastimestepcfl = 1;
+          gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /* dust CFL condition included*/
+          MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
+          dt = (DT-dtemp)/(real)GasTimeStepsCFL;
+
+          // Record cfl_r
+          Recent_cfl_r = (real)(GasTimeStepsCFL % 1000) / 100.0;
+
+          // Reset to actual
+          dt = (DT-dtemp)/(real)(GasTimeStepsCFL / 1000);
+
+          // Record dt
+          Recent_dt = dt
       }
       AccreteOntoPlanets (Rho, Vrad, Vtheta,DRho, DVrad, DVtheta, dt, sys); /* Dust can accrete but its mass not added to the planet and won't affect planet momentum */
     }
@@ -846,7 +857,8 @@ real deltaT;
       printf ("or from the imposed DT interval.\n");
     }
   }
-  return (long)(ceil(deltaT/newdt));
+
+  return (long)(1000 * ceil(deltaT/newdt) + (int)(100.0 * Rmed[ideb]));
 }
 
 void AddMass(Rho,Vrad,Vtheta,dt)

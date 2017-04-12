@@ -15,7 +15,7 @@ extern real     LostMass,LostMassd,AccRate,AccRated;
 extern boolean  Corotating;
 real            ScalingFactor = 1.0;
 
-extern real     Recent_cfl_r, Recent_dt;
+real            Recent_cfl_r = 0.0, Recent_dt = 0.0;
 
 int
 main(argc, argv)
@@ -147,7 +147,7 @@ char *argv[];
     if (InnerOutputCounter == 1) {     /* diagnostics are not written for dust */
       InnerOutputCounter = 0;
       WriteBigPlanetSystemFile (sys, TimeStep);
-      WriteDTFile(sys, Timestep, Recent_cfl_r, Recent_dt);
+      WriteDTFile(Timestep);
       UpdateLog (sys, gas_density, PhysicalTime);
       if (Stockholm == YES)
 	UpdateLogStockholm (sys, gas_density, TimeStep, PhysicalTime);
