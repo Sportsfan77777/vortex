@@ -259,7 +259,7 @@ int TimeStep;
   output = fopenp (name, "a");
 
   // What is slowing things down and how much???
-  fprintf (output, "%d\t%#.18g%#.18g\t%#.18g\n", Timestep, PhysicalTime, Recent_cfl_r, Recent_dt); 
+  fprintf (output, "%d\t%#.18g%#.18g\t%#.18g\n", TimeStep, PhysicalTime, Recent_cfl_r, Recent_dt); 
 
   fclose (output);
   printf ("done\n");

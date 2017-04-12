@@ -147,7 +147,7 @@ char *argv[];
     if (InnerOutputCounter == 1) {     /* diagnostics are not written for dust */
       InnerOutputCounter = 0;
       WriteBigPlanetSystemFile (sys, TimeStep);
-      WriteDTFile(Timestep);
+      WriteDTFile(TimeStep);
       UpdateLog (sys, gas_density, PhysicalTime);
       if (Stockholm == YES)
 	UpdateLogStockholm (sys, gas_density, TimeStep, PhysicalTime);
