@@ -12,6 +12,7 @@ seek information about the planets at a restart.
 static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
 extern real     LostMass, LostMassd, OmegaFrame, AccRate, AccRated;
 extern boolean  Write_Density, Write_Velocity, IsDisk;
+extern real     Recent_cfl_r, Recent_dt;
 
 void EmptyPlanetSystemFile (sys)
 PlanetarySystem *sys;
