@@ -169,21 +169,21 @@ real a,b;
 }
 
 long convertToLong(x, y) 
-int x, y;
+unsigned int x, y;
 {
-    return ( ((long)x) << 16 ) | y;  
+    return ( ((long)x) << 32 ) | y;  
 }
 
-int retrieveX(a)
+unsigned int retrieveX(a)
 long a;
 {
-    return (int)((a >> 16) & 0xFFFFFFFF);
+    return (unsigned int)((a >> 32) & 0xFFFFFFFF);
 }
 
-int retrieveY(a)
+unsigned int retrieveY(a)
 long a;
 {
-    return (int)(a & 0xFFFFFFFF);
+    return (unsigned int)(a & 0xFFFFFFFF);
 }
 
 void ActualiseGas (array, newarray)
@@ -880,7 +880,7 @@ real deltaT;
   }
 
   // return (long) ceil(deltaT/newdt);
-  return convertToLong( (int)(ceil(deltaT/newdt)), (int)(100.0 * Rmed[ideb]));
+  return convertToLong( (unsigned int)(ceil(deltaT/newdt)), (unsigned int)(100.0 * Rmed[ideb]));
 }
 
 void AddMass(Rho,Vrad,Vtheta,dt)
