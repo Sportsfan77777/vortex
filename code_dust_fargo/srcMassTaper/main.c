@@ -15,8 +15,6 @@ extern real     LostMass,LostMassd,AccRate,AccRated;
 extern boolean  Corotating;
 real            ScalingFactor = 1.0;
 
-real            Recent_cfl_r = 1.0, Recent_dt = 1.0;
-
 int
 main(argc, argv)
 int argc;

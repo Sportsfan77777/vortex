@@ -28,7 +28,7 @@ extern int TimeStep;
 extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL;
 Pair DiskOnPrimaryAcceleration;
 
-extern Recent_cfl_r, Recent_dt;
+real Recent_cfl_r = 5.0, Recent_dt = 6.0;
 
 
 boolean DetectCrash (array)
