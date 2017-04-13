@@ -12,6 +12,8 @@ seek information about the planets at a restart.
 static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
 extern real     LostMass, LostMassd, OmegaFrame, AccRate, AccRated;
 extern boolean  Write_Density, Write_Velocity, IsDisk;
+
+extern int      Recent_cfl_steps;
 extern real     Recent_cfl_r, Recent_dt;
 
 void EmptyPlanetSystemFile (sys)
@@ -259,7 +261,7 @@ int TimeStep;
   output = fopenp (name, "a");
 
   // What is slowing things down and how much???
-  fprintf (output, "%d\t%.9f\t%.9f\t%.9f\n", TimeStep, PhysicalTime, Recent_cfl_r, Recent_dt); 
+  fprintf (output, "%d\t%.9f\t%.9f\t%d\t%.9f\n", TimeStep, PhysicalTime, Recent_cfl_r, Recent_cfl_steps, Recent_dt);
 
   fclose (output);
   printf ("done\n");

@@ -28,7 +28,8 @@ extern int TimeStep;
 extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL;
 Pair DiskOnPrimaryAcceleration;
 
-real Recent_cfl_r = 5.0, Recent_dt = 6.0;
+int Recent_cfl_steps = 3;
+real Recent_cfl_r = 2.0, Recent_dt = 4.0;
 
 
 boolean DetectCrash (array)
@@ -167,6 +168,23 @@ real a,b;
   return a;
 }
 
+long convertToLong(x, y) 
+int x, y;
+{
+    return ( ((long)x) << 32 ) | y;  
+}
+
+long retrieveX(a)
+long a;
+{
+    return (int)((a >> 32) & 0xFFFFFFFF);
+}
+
+long retrieveY(a)
+long a;
+{
+    return (int)(a & 0xFFFFFFFF);
+}
 
 void ActualiseGas (array, newarray)
 PolarGrid *array, *newarray;
@@ -202,8 +220,8 @@ PlanetarySystem *sys;
   }
   MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
   
-  //dt = DT / (real)(GasTimeStepsCFL / 1000);
-  dt = DT / (real)GasTimeStepsCFL;
+  dt = DT / (real)(retrieveX(GasTimeStepsCFL));
+  //dt = DT / (real)GasTimeStepsCFL;
 
   while (dtemp < 0.999999999*DT) {
     MassTaper = PhysicalTime/(MASSTAPER*2.0*M_PI);
@@ -215,16 +233,14 @@ PlanetarySystem *sys;
           gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /* dust CFL condition included*/
           MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
           
-          dt = (DT-dtemp)/(real)GasTimeStepsCFL;
-
-          // Record cfl_r
-          //Recent_cfl_r = (real)(GasTimeStepsCFL % 1000) / 100.0;
+          //dt = (DT-dtemp)/(real)GasTimeStepsCFL;
 
           // Reset to actual
-          //dt = (DT-dtemp)/(real)(GasTimeStepsCFL / 1000);
+          dt = DT / (real)(retrieveX(GasTimeStepsCFL));
 
-          // Record dt
-          Recent_cfl_r = (real)GasTimeStepsCFL;
+          // Record cfl_r, cfl_steps, dt
+          Recent_cfl_r = (real)(retrieveY(GasTimeStepsCFL)) / 100.0;
+          Recent_cfl_steps = (retrieveX(GasTimeStepsCFL));
           Recent_dt = dt;
       }
       AccreteOntoPlanets (Rho, Vrad, Vtheta,DRho, DVrad, DVtheta, dt, sys); /* Dust can accrete but its mass not added to the planet and won't affect planet momentum */
@@ -863,8 +879,8 @@ real deltaT;
     }
   }
 
-  //return (long)(1000 * ceil(deltaT/newdt) + (int)(100.0 * Rmed[ideb]));
-  return (long) ceil(deltaT/newdt);
+  // return (long) ceil(deltaT/newdt);
+  return convertToLong( (int)(ceil(deltaT/newdt)), (int)(100.0 * Rmed[ideb]));
 }
 
 void AddMass(Rho,Vrad,Vtheta,dt)
