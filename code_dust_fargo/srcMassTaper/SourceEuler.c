@@ -22,7 +22,7 @@ static real timeCRASH;
 extern boolean Corotating;
 
 static int AlreadyCrashed = 0;
-static long GasTimeStepsCFL; // Actually, store as 1000 * GasTimeStepsCFL + 100 * cfl_r
+static long GasTimeStepsCFL; // Actually, store GasTimeStepsCFL | 100 * cfl_r
 
 extern int TimeStep;
 extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL;
@@ -171,13 +171,13 @@ real a,b;
 long convertToLong(x, y) 
 int x, y;
 {
-    return ( ((long)x) << 32 ) | y;  
+    return ( ((long)x) << 16 ) | y;  
 }
 
 int retrieveX(a)
 long a;
 {
-    return (int)((a >> 32) & 0xFFFFFFFF);
+    return (int)((a >> 16) & 0xFFFFFFFF);
 }
 
 int retrieveY(a)
