@@ -224,6 +224,7 @@ PlanetarySystem *sys;
           //dt = (DT-dtemp)/(real)(GasTimeStepsCFL / 1000);
 
           // Record dt
+          Recent_cfl_r = (real)GasTimeStepsCFL;
           Recent_dt = dt;
       }
       AccreteOntoPlanets (Rho, Vrad, Vtheta,DRho, DVrad, DVtheta, dt, sys); /* Dust can accrete but its mass not added to the planet and won't affect planet momentum */
