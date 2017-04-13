@@ -168,6 +168,7 @@ real a,b;
   return a;
 }
 
+// Source: http://stackoverflow.com/questions/4738480/pass-two-integers-as-one-integer
 long convertToLong(x, y) 
 unsigned int x, y;
 {
@@ -185,6 +186,7 @@ long a;
 {
     return (unsigned int)(a & 0xFFFFFFFF);
 }
+// Above: Store two integers as one
 
 void ActualiseGas (array, newarray)
 PolarGrid *array, *newarray;
