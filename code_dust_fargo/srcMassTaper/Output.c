@@ -236,10 +236,12 @@ PolarGrid   *dens, *gasvr, *gasvt, *label;
     WriteDiskPolar (gasvr, local_index);
     WriteDiskPolar (gasvt, local_index);
 
+    /* In the future, add a parameter for including these outputs:
     WriteDiskPolar (TStop, local_index);
     WriteDiskPolar (Diag1, local_index);
     WriteDiskPolar (Diag2, local_index);
     WriteDiskPolar (Diag3, local_index);
+    */
     if (AdvecteLabel == YES)
       WriteDiskPolar (label, index);
     MPI_Barrier (MPI_COMM_WORLD);
