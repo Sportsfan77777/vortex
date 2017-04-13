@@ -25,7 +25,7 @@ static PolarGrid *RadMomP, *RadMomM, *ThetaMomP, *ThetaMomM, *ExtLabel, *VthetaR
 static PolarGrid *Work, *QRStar, *Elongations,  *DWork, *DQRStar;
 
 extern int TimeStep;
-extern boolean OpenInner, FastTransport;
+extern boolean OpenInner, FastTransport, ExtraFiles;
 
 real LostMass = 0.0, LostMassd = 0.0;
 real AccRate;

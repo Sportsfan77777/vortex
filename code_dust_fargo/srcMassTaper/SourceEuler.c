@@ -25,7 +25,7 @@ static int AlreadyCrashed = 0;
 static long GasTimeStepsCFL; // Actually, store GasTimeStepsCFL | 100 * cfl_r
 
 extern int TimeStep;
-extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL;
+extern boolean FastTransport, IsDisk, VortexDiffusion, GasCFL, ExtraFiles;
 Pair DiskOnPrimaryAcceleration;
 
 int Recent_cfl_steps = 3;
