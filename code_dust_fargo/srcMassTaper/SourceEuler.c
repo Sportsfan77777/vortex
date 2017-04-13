@@ -174,13 +174,13 @@ int x, y;
     return ( ((long)x) << 32 ) | y;  
 }
 
-long retrieveX(a)
+int retrieveX(a)
 long a;
 {
     return (int)((a >> 32) & 0xFFFFFFFF);
 }
 
-long retrieveY(a)
+int retrieveY(a)
 long a;
 {
     return (int)(a & 0xFFFFFFFF);
