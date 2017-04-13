@@ -201,7 +201,10 @@ PlanetarySystem *sys;
       gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /*dust CFL condition included */
   }
   MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
-  dt = DT / (real)(GasTimeStepsCFL / 1000);
+  
+  //dt = DT / (real)(GasTimeStepsCFL / 1000);
+  dt = DT / (real)GasTimeStepsCFL;
+
   while (dtemp < 0.999999999*DT) {
     MassTaper = PhysicalTime/(MASSTAPER*2.0*M_PI);
     MassTaper = (MassTaper > 1.0 ? 1.0 : pow(sin(MassTaper*M_PI/2.0),2.0));
@@ -211,13 +214,14 @@ PlanetarySystem *sys;
           gastimestepcfl = 1;
           gastimestepcfl = ConditionCFL (Vrad, Vtheta, DVrad, DVtheta, DT-dtemp); /* dust CFL condition included*/
           MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
+          
           dt = (DT-dtemp)/(real)GasTimeStepsCFL;
 
           // Record cfl_r
-          Recent_cfl_r = (real)(GasTimeStepsCFL % 1000) / 100.0;
+          //Recent_cfl_r = (real)(GasTimeStepsCFL % 1000) / 100.0;
 
           // Reset to actual
-          dt = (DT-dtemp)/(real)(GasTimeStepsCFL / 1000);
+          //dt = (DT-dtemp)/(real)(GasTimeStepsCFL / 1000);
 
           // Record dt
           Recent_dt = dt;
@@ -795,18 +799,18 @@ real deltaT;
       dtg = CFLSECURITY/sqrt(invdt1*invdt1+invdt2*invdt2+invdt3*invdt3+invdt4*invdt4);
       dtd = CFLSECURITY/sqrt(invdt7*invdt7+invdt5*invdt5+invdt6*invdt6+invdt8*invdt8+invdt9*invdt9);
 
-      if (GasCFL) {
+      //if (GasCFL) {
         // Determine timestep from gas only
-        dt = dtg;
-      }
-      else {
+        //dt = dtg;
+      //}
+      //else {
         // Use the minimum (This is the one that makes more sense.)
         dt = min2(dtg,dtd);
-      }
+      //}
       dt=max2(dt,1.e-10); // but not lower than this value!
       if (dt < newdt) {
         // Only change CFL if inside CFL range
-        if (Rmed[i] > CFLIN && Rmed[i] < CFLOUT) {
+        //if (Rmed[i] > CFLIN && Rmed[i] < CFLOUT) {
           newdt = dt;
           ideb = i;
           jdeb = j;
@@ -820,7 +824,7 @@ real deltaT;
             viscr = dxrad/devr/4.0/CVNR/CVNR;     
             visct = dxtheta/devt/4.0/CVNR/CVNR;
           }
-        }
+        //}
       }  
     }
   }
@@ -858,7 +862,8 @@ real deltaT;
     }
   }
 
-  return (long)(1000 * ceil(deltaT/newdt) + (int)(100.0 * Rmed[ideb]));
+  //return (long)(1000 * ceil(deltaT/newdt) + (int)(100.0 * Rmed[ideb]));
+  return (long) ceil(deltaT/newdt);
 }
 
 void AddMass(Rho,Vrad,Vtheta,dt)
