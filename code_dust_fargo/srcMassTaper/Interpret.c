@@ -29,6 +29,7 @@ boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 boolean         Evanescent = NO; Mixed = NO;
 boolean         VortexDiffusion = NO;
 boolean         GasCFL = NO;
+boolean         ExtraFiles = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -226,6 +227,9 @@ char *filename;
   
   // #### NEW CFL VARAIBLES #### //
   if ((*GASCFL == 'y') || (*GASCFL=='Y')) GasCFL = YES;
+
+  // #### NEW VARIABLE TO GET RID OF DIAGNOSTICS #### //
+  if ((*EXTRAFILES == 'y') || (*EXTRAFILES=='Y')) ExtraFiles = YES;
 }
 
 void PrintUsage (execname)
