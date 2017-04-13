@@ -236,7 +236,7 @@ PlanetarySystem *sys;
           //dt = (DT-dtemp)/(real)GasTimeStepsCFL;
 
           // Reset to actual
-          dt = DT / (real)(retrieveX(GasTimeStepsCFL));
+          dt = (DT-dtemp) / (real)(retrieveX(GasTimeStepsCFL));
 
           // Record cfl_r, cfl_steps, dt
           Recent_cfl_r = (real)(retrieveY(GasTimeStepsCFL)) / 100.0;
