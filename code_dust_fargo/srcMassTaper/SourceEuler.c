@@ -143,9 +143,12 @@ PolarGrid *Rho, *Vr, *Vt, *DRho, *DVr, *DVt;
   DTemperInt    = CreatePolarGrid(NRAD, NSEC, "DTemperInt");
 
   TStop   = CreatePolarGrid(NRAD, NSEC, "TStop"); /* dust stoping time */
-  Diag1         = CreatePolarGrid(NRAD, NSEC, "Diag1"); /* three diagnostic */
-  Diag2         = CreatePolarGrid(NRAD, NSEC, "Diag2");
-  Diag3         = CreatePolarGrid(NRAD, NSEC, "Diag3");
+
+  if (ExtraFiles == YES) {
+    Diag1         = CreatePolarGrid(NRAD, NSEC, "Diag1"); /* three diagnostic */
+    Diag2         = CreatePolarGrid(NRAD, NSEC, "Diag2");
+    Diag3         = CreatePolarGrid(NRAD, NSEC, "Diag3");
+  }
 
   if (DustDiff == YES) {
     Fdiffrp         = CreatePolarGrid(NRAD, NSEC, "Fdiffrp");
@@ -325,10 +328,15 @@ PolarGrid *Rho, *DRho, *Vrad, *Vtheta,*DVrad,*DVtheta;
   vtheta = Vtheta->Field;
   dvrad = DVrad->Field;
   dvtheta = DVtheta->Field;
+
   ts = TStop->Field;
-  diag1 = Diag1->Field;
-  diag2 = Diag2->Field;
-  diag3 = Diag3->Field;
+
+  if (ExtraFiles == YES) {
+    diag1 = Diag1->Field;
+    diag2 = Diag2->Field;
+    diag3 = Diag3->Field;
+  }
+
   for (i = 1; i < nr; i++){
       for (j = 0; j < ns; j++){
         l = j+i*ns;
@@ -379,10 +387,15 @@ PolarGrid *Rho, *DRho, *Vrad, *Vtheta,*DVrad,*DVtheta;
   vtheta = Vtheta->Field;
   dvrad = DVrad->Field;
   dvtheta = DVtheta->Field;
+
   ts = TStop->Field;
-  diag1 = Diag1->Field;
-  diag2 = Diag2->Field;
-  diag3 = Diag3->Field;
+
+  if (ExtraFiles == YES) {
+    diag1 = Diag1->Field;
+    diag2 = Diag2->Field;
+    diag3 = Diag3->Field;
+  }
+
   for (i = 1; i < nr; i++){
       for (j = 0; j < ns; j++){
         l = j+i*ns;
@@ -438,7 +451,10 @@ real dt;
   dvtheta = DVtheta->Field;
   fdiffrp = Fdiffrp->Field;
   fdifftp = Fdifftp->Field;
-  diag3 = Diag3->Field;
+
+  if (ExtraFiles == YES) {
+     diag3 = Diag3->Field;
+  }
 
   for (i = 0; i < nr-1; i++){
     dtheta = 2.0*PI/(real)ns;
@@ -489,7 +505,10 @@ real dt;
 
       fdiffrp[l]=-viscosityp*(rho[lip]+rho[l])/2.*(drho[lip]/rho[lip]-drho[l]/rho[l])*InvDiffRmed[i+1];
       fdifftp[l]=-viscosity*(rho[ljp]+rho[l])/2.*(drho[ljp]/rho[ljp]-drho[l]/rho[l])*invdtheta/Rmed[i];
-      diag3[l]=-viscosityp*(log(drho[lip]/rho[lip])-log(drho[l]/rho[l]))/(log(Rmed[i+1])-log(Rmed[i]))/Rsup[i];
+
+      if (ExtraFiles == YES) {
+        diag3[l]=-viscosityp*(long(drho[lip]/rho[lip])-log(drho[l]/rho[l]))/(log(Rmed[i+1])-log(Rmed[i]))/Rsup[i];
+      }
     }
   } 
   for (i = 1; i < nr-1; i++){
@@ -536,9 +555,13 @@ real dt;
   dvthetaint = DVthetaInt->Field;
 
   Pot = Potential->Field;
+
   ts = TStop->Field;
-  diag1 = Diag1->Field;
-  diag2 = Diag2->Field;
+
+  if (ExtraFiles == YES) {
+    diag1 = Diag1->Field;
+    diag2 = Diag2->Field;
+  }
         /* In this substep we take into account     */
         /* the source part of Euler equations       */
         /* (i.e. the R.H.S. in classical notation). */
@@ -580,7 +603,10 @@ real dt;
     if(GasDcouple == YES){
       dforcer = -1./(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]+dt/2.)*(dvrad[l]-vrad[l]);
       dvradint[l] += dt*dforcer;
-      diag1[l] = dforcer;
+
+      if (ExtraFiles == YES) {
+         diag1[l] = dforcer;
+      }
     }
   }
       }
@@ -609,7 +635,10 @@ real dt;
     if(GasDcouple == YES){
       dforcet = -1./(1./sqrt(G*1.0/Rmed[i])*Rmed[i]*ts[l]+dt/2.)*(dvtheta[l]-vtheta[l]);
       dvthetaint[l] += dt*dforcet; 
-      diag2[l] = dforcet;
+
+      if (ExtraFiles == YES) {
+        diag2[l] = dforcet;
+      }
     }
   }
       }

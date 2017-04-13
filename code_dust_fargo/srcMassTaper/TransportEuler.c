@@ -545,7 +545,11 @@ real dt;
   vr = Vrad->Field;
   qb=  Qbase->Field;
   work=Work->Field;
-  diag3 = Diag3->Field;
+
+  if (ExtraFiles == YES) {
+      diag3 = Diag3->Field;
+  }
+
   l=ns;
   dtheta = 2.0*PI/(real)ns;
   AccRate=0.;
