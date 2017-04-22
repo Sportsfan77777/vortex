@@ -60,7 +60,8 @@ taper_time = int(float(fargo_par["MassTaper"]))
 
 cm_size = float(fargo_par["PSIZE"])
 mm_size = int(cm_size * 10.0)
-stokes_number = (2.813 * 10**-6) * (cm_size)
+# St = (pi / 2) * (const.) (a) / (\sigma)
+stokes_number = (np.pi / 2.0) * (2.813 * 10**-6) * (cm_size) / (surface_density_zero)
 
 ### Converter ###
 
@@ -225,7 +226,7 @@ def make_plot(frame, show = False):
         plot.minorticks_on()
 
         # Annotate
-        title1 = r"$St = %.2f$ (%d $\rm{mm}$)" % (stokes_number, mm_size)
+        title1 = r"$\mathrm{St} = %.2f$ ($%d$ $\rm{mm}$)" % (stokes_number, mm_size)
         title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
