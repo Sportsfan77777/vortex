@@ -60,7 +60,7 @@ taper_time = int(float(fargo_par["MassTaper"]))
 
 cm_size = float(fargo_par["PSIZE"])
 mm_size = int(cm_size * 10.0)
-stokes_number = (2.813 * 10^-6) * (cm_size)
+stokes_number = (2.813 * 10**-6) * (cm_size)
 
 ### Converter ###
 
