@@ -58,6 +58,10 @@ viscosity = float(fargo_par["Viscosity"])
 planet_mass = float(fargo_par["PlanetMass"])
 taper_time = int(float(fargo_par["MassTaper"]))
 
+cm_size = float(fargo_par["PSIZE"])
+mm_size = int(cm_size * 10.0)
+stokes_number = (2.813 * 10^-6) * (cm_size)
+
 ### Converter ###
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
@@ -221,7 +225,7 @@ def make_plot(frame, show = False):
         plot.minorticks_on()
 
         # Annotate
-        title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+        title1 = r"$St = %.2f$ (%d $\rm{mm}$)" % (stokes_number, mm_size)
         title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
@@ -245,8 +249,8 @@ if len(sys.argv) > 1:
     frame_number = int(sys.argv[1])
     if frame_number == -1:
         # Plot Sample
-        max_frame = 125 #util.find_max_frame()
-        sample = np.linspace(0, max_frame, 126) # 100 evenly spaced frames
+        max_frame = 1200 #util.find_max_frame()
+        sample = range(0, max_frame, 10) # spaced by 10
         #for i in sample:
         #    make_plot(i)
 
