@@ -176,7 +176,7 @@ def make_plot(frame, show = False):
         plot.minorticks_on()
 
         # Annotate
-        title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+        title1 = r"$m_p = %d$ $M_{Jup}$, $\alpha_{disk} = %d \times 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), 3, int(np.log(viscosity) / np.log(10)) + 2, taper_time)
         title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
