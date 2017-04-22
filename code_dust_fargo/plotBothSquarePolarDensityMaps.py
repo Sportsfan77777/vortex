@@ -226,7 +226,7 @@ def make_plot(frame, show = False):
         plot.minorticks_on()
 
         # Annotate
-        title1 = r"$\mathrm{St} = %.2f$ ($%d$ $\rm{mm}$)" % (stokes_number, mm_size)
+        title1 = r"$\mathrm{St} = %.2f$ ($\mathrm{(}%d$ $\rm{mm)}$" % (stokes_number, mm_size)
         title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
         #plot.xlabel("x", fontsize = fontsize)
         #plot.ylabel("y", fontsize = fontsize)
