@@ -16,8 +16,8 @@ import numpy as np
 import util
 
 # All File Prefixes
-prefixes = ['gasdens', 'gasvrad', 'gasvtheta']
-new_prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta']
+prefixes = ['gasdens', 'gasvrad', 'gasvtheta', 'gasddens', 'gasdvrad', 'gasdvtheta', 'gasDiag1', 'gasDiag2', 'gasDiag3']
+new_prefixes = ['rm_gasdens', 'rm_gasvrad', 'rm_gasvtheta', 'rm_gasddens', 'rm_gasdvrad', 'rm_gasdvtheta', 'rm_gasDiag1', 'rm_gasDiag2', 'rm_gasDiag3']
 
 fargo_fn = "fargo2D1D"
 if os.path.exists(fargo_fn):
