@@ -30,15 +30,15 @@ sizes = ["cm", "hcm", "mm", "hmm", "hum"]
 
 # Input File
 fn = sys.argv[1]
-new_fn = "cgs_%s" % fn
 
 # Replace size with %s
 for size in sizes:
     fn = fn.replace(size, r"%s")
 
+new_fn = "cgs_%s" % fn # output file
+
 # Compile list of filenames
 fns = []
-new_fns = []
 for size in sizes:
     fns.append(fn % size)
 
@@ -62,7 +62,7 @@ for i, size_i in enumerate(sizes):
 combination_array = combination_array.flatten()
 
 # Save New Data
-np.save(new_fn, combination_array)
+np.save(fn % "all", combination_array)
 
 
 
