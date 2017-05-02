@@ -26,6 +26,9 @@ density_unit = mass_unit / radius_unit**3 # unit conversion factor
 # Grain Sizes
 sizes = ["cm", "hcm", "mm", "hmm", "hum"]
 
+# Vortex Locations
+locations = [0, 0, 0, 0, 0]
+
 ######################################################################
 
 # Input File
@@ -49,10 +52,11 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 num_rad = float(fargo_par["Nrad"])
 num_theta = float(fargo_par["Nsec"])
 
-# Data
+# Get Data and Shift to 
 density_arrays = {}
-for (size_i, fn_i) in zip(sizes, fns):
-    density_arrays[size_i] = fromfile(fn_i).reshape(num_rad, num_theta)
+for (size_i, location_i, fn_i) in zip(sizes, locations, fns):
+    shift_i = int((180.0 - location_i) * (num_theta))
+    density_arrays[size_i] = np.roll(fromfile(fn_i).reshape(num_rad, num_theta), shift_i, axis = 1)
 
 # Convert Data and Combine (Interleave) 
 combination_array = np.zeros((num_rad * num_theta, len(sizes)))
