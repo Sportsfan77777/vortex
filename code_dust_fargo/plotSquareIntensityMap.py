@@ -46,11 +46,11 @@ if not os.path.exists(param_fn):
     subprocess.Popen(split_command)
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+num_rad = float(fargo_par["Nrad"])
+num_theta = float(fargo_par["Nsec"])
 
-rad = np.loadtxt("used_rad.dat")[:-1]
-theta = np.linspace(0, 2 * np.pi, num_theta)
+rad = np.linspace(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]), num_rad + 1)
+theta = np.linspace(0, 2 * np.pi, num_theta + 1)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
