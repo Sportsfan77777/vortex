@@ -130,8 +130,11 @@ def make_plot(frame, show = False):
         ax = fig.add_subplot(111)
 
         # Data
-        intensity = (fromfile("intensitymap.out").reshape(num_rad, num_theta))
+        data = np.loadtxt("intensitymap.out")
+        intensity = data[:, -1].reshape(num_rad, num_theta)
         xs_grid, ys_grid, intensity_cart = polar_to_cartesian(intensity, rad, theta)
+
+        clim = [np.percentile(intensity, 10), np.percentile(intensity, 90)]
 
         # Axis
         #if axis == "zoom":
@@ -158,7 +161,7 @@ def make_plot(frame, show = False):
         ### Plot ###
         result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
         cbar = fig.colorbar(result)
-        #result.set_clim(clim[0], clim[1])
+        result.set_clim(clim[0], clim[1])
 
         cbar.set_label(r"Intensity", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
 
