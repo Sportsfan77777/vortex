@@ -83,10 +83,5 @@ for i, size_i in enumerate(sizes):
 combination_array = combination_array.flatten() # interleave to 1-d
 
 # Save New Data
-np.save(fn % "all", combination_array)
-
-
-
-
-
+np.savetxt(fn % "all", combination_array)
 
