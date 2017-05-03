@@ -68,7 +68,7 @@ def find_argmax(density):
 middle = np.searchsorted(theta, np.pi)
 density_arrays = {}
 
-for (size_i, location_i, fn_i) in zip(sizes, locations, fns):
+for (size_i, fn_i) in zip(sizes, fns):
     tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
     location_i = find_argmax(tmp_density)
 
