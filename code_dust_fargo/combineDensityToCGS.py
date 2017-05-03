@@ -80,7 +80,7 @@ combination_array = np.zeros((num_rad * num_theta, len(sizes)))
 for i, size_i in enumerate(sizes):
     combination_array[:, i] = (density_arrays[size_i] * density_unit).flatten('F') # F = column-major
 
-combination_array = combination_array.flatten()
+combination_array = combination_array.flatten() # interleave to 1-d
 
 # Save New Data
 np.save(fn % "all", combination_array)
