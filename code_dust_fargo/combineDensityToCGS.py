@@ -26,9 +26,6 @@ density_unit = mass_unit / radius_unit**3 # unit conversion factor
 # Grain Sizes
 sizes = ["cm", "hcm", "mm", "hmm", "hum"]
 
-# Vortex Locations
-locations = [0, 0, 0, 0, 0]
-
 ######################################################################
 
 # Input File
@@ -52,11 +49,31 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 num_rad = float(fargo_par["Nrad"])
 num_theta = float(fargo_par["Nsec"])
 
-# Get Data and Shift to 
+rad = np.linspace(float("Rmin"), float(fargo_par["Rmax"]), num_rad + 1)
+theta = np.linspace(0, 2 * np.pi, num_theta + 1)
+
+### Helper Function ###
+def find_argmax(density):
+    # Returns Azimuthal Argmax
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    density_segment = density[outer_disk_start : outer_disk_end]
+
+    argmax = np.argmax(density_segment)
+    arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
+
+    return arg_phi
+
+# Get Data and Shift Vortex to Middle
+middle = np.searchsorted(theta, np.pi)
 density_arrays = {}
+
 for (size_i, location_i, fn_i) in zip(sizes, locations, fns):
-    shift_i = int((180.0 - location_i) * (num_theta))
-    density_arrays[size_i] = np.roll(fromfile(fn_i).reshape(num_rad, num_theta), shift_i, axis = 1)
+    tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
+    location_i = find_argmax(tmp_density)
+
+    shift_i = int((middle - location_i) * (num_theta))
+    density_arrays[size_i] = np.roll(tmp_density, shift_i, axis = 1)
 
 # Convert Data and Combine (Interleave) 
 combination_array = np.zeros((num_rad * num_theta, len(sizes)))
