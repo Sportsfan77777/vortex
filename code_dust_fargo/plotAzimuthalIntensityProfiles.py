@@ -134,9 +134,9 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.xticks(angles, degree_angles)
 
     # Annotate
-    this_title = readTitle()
+    this_title = "" #readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Density", fontsize = fontsize)
+    plot.ylabel("Azimuthal Intensity", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
