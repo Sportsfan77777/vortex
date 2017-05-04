@@ -159,11 +159,11 @@ if len(sys.argv) > 1:
         max_frame = util.find_max_frame()
         sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
-            azimuthal_radii, azimuthal_profiles = get_data(i)
+            azimuthal_radii, azimuthal_profiles = get_data()
             make_plot(i, azimuthal_radii, azimuthal_profiles)
     else:
         # Plot Single
-        azimuthal_radii, azimuthal_profiles = get_data(frame_number)
+        azimuthal_radii, azimuthal_profiles = get_data()
         make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = True)
 else:
     # Search for maximum frame
