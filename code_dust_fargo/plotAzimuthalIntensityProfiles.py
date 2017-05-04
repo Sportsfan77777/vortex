@@ -41,6 +41,22 @@ theta = np.linspace(0, 2 * np.pi, num_theta + 1)
 surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
+### Input Parameters ###
+chosen_radius = 1.5
+num_scale_heights = 2.0
+num_profiles = 2
+
+if len(sys.argv) > 2:
+    chosen_radius = float(sys.argv[2])
+if len(sys.argv) > 3:
+    num_scale_heights = float(sys.argv[3])
+if len(sys.argv) > 4:
+    num_profiles = int(sys.argv[4])
+
+num_profiles = 2 * num_profiles + 1 # Center at chosen radius, take "num_profiles" on each side
+
+##################################################################
+
 ### Helper Methods ###
 def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
@@ -75,20 +91,6 @@ def get_data():
     data = np.loadtxt("intensitymap.out")
     intensity = data[:, -1].reshape(num_rad, num_theta)
 
-    # Gather Azimuthal Profiles
-    chosen_radius = 1.5
-    num_scale_heights = 2.0
-    num_profiles = 2
-
-    # If Given as Parameters
-    if len(sys.argv) > 2:
-        chosen_radius = float(sys.argv[2])
-    if len(sys.argv) > 3:
-        num_scale_heights = float(sys.argv[3])
-    if len(sys.argv) > 4:
-        num_profiles = int(sys.argv[4])
-
-    num_profiles = 2 * num_profiles + 1 # Center at chosen radius, take "num_profiles" on each side
     spread = num_scale_heights * scale_height # half-width
 
     azimuthal_radii = np.linspace(chosen_radius - spread, chosen_radius + spread, num_profiles)
@@ -142,7 +144,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save and Close
-    plot.savefig("%s/azimuthal_intensity_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/azimuthal_intensity_%04d_r%d.png" % (directory, frame, int(10 * chosen_radius), int(num_scale_heights), int(num_profiles)), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
