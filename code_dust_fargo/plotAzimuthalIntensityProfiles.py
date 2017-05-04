@@ -75,9 +75,6 @@ def get_data():
     data = np.loadtxt("intensitymap.out")
     intensity = data[:, -1].reshape(num_rad, num_theta)
 
-    peak_rad, peak_density = find_peak(averagedDensity)
-    min_rad, min_density = find_min(averagedDensity, peak_rad)
-
     # Gather Azimuthal Profiles
     chosen_radius = 1.5
     num_scale_heights = 2.0
