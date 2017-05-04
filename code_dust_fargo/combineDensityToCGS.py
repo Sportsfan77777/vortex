@@ -75,7 +75,7 @@ for (size_i, fn_i) in zip(sizes, fns):
     tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
     location_i = find_argmax(tmp_density)
 
-    shift_i = int((middle - location_i) * (num_theta))
+    shift_i = int(middle - location_i)
     density_arrays[size_i] = np.roll(tmp_density, shift_i, axis = 1)
 
 # Convert Data and Combine (Interleave) 
