@@ -84,11 +84,11 @@ def get_data():
     num_profiles = 2
 
     # If Given as Parameters
-    if len(sys.argv > 2)
+    if len(sys.argv > 2):
         chosen_radius = sys.argv[2]
-    if len(sys.argv > 3)
+    if len(sys.argv > 3):
         num_scale_heights = sys.argv[3]
-    if len(sys.argv > 4)
+    if len(sys.argv > 4):
         num_profiles = sys.argv[4]
 
     num_profiles = 2 * num_profiles + 1 # Center at chosen radius, take "num_profiles" on each side
