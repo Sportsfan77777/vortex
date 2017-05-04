@@ -21,10 +21,13 @@ radius = 5.0 # radius of planet (in AU)
 mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
-density_unit = mass_unit / radius_unit**3 # unit conversion factor
+density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
 # Grain Sizes
-sizes = ["cm", "hcm", "mm", "hmm", "hum"]
+sizes = ["hum", "hmm", "mm", "hcm", "cm"]
+
+# Save As
+save_name = "all"
 
 ######################################################################
 
@@ -83,5 +86,5 @@ for i, size_i in enumerate(sizes):
 combination_array = combination_array.flatten() # interleave to 1-d
 
 # Save New Data
-np.savetxt(new_fn % "all", combination_array)
+np.savetxt(new_fn % save_name, combination_array)
 
