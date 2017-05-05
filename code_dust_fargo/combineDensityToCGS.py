@@ -85,7 +85,7 @@ for (size_i, fn_i) in zip(size_labels, fns):
 
 # Convert Data
 combination_array = np.zeros((num_rad * num_theta, len(sizes)))
-for i, size_i in enumerate(sizes):
+for i, size_i in enumerate(size_labels):
     combination_array[:, i] = (density_arrays[size_i] * density_unit).flatten('F') # F = column-major
 
 # Interpolate to More Grain Sizes
