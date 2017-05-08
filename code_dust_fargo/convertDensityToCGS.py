@@ -47,6 +47,8 @@ new_fn = "cgs_%s" % fn
 param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
+scale_height = float(fargo_par["AspectRatio"])
+
 num_rad = float(fargo_par["Nrad"])
 num_theta = float(fargo_par["Nsec"])
 
@@ -83,7 +85,7 @@ try:
     os.mkdir(save_directory)
 except:
     print "Directory Already Exists"
-    
+
 np.savetxt("%s/radial.dat" % save_directory, new_rad)
 np.savetxt("%s/azimuthal.dat" % save_directory, new_theta)
 np.savetxt("%s/grain.dat" % save_directory, interpolated_sizes)
