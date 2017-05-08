@@ -33,8 +33,13 @@ save_directory = "interpolatedGasDensityMaps"
 input_directory = "rt_input"
 
 # System Parameters
-radius = 5.0
+mass = 1.0 # (in solar masses)
+radius = 5.0 # radius of planet (in AU)
+
+mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+
+density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -103,7 +108,7 @@ def make_plot(frame, show = False):
 
         # Data
         density = (np.loadtxt(sys.argv[2]).reshape(num_rad, num_theta))
-        normalized_density = density / surface_density_zero
+        normalized_density = (density / density_unit) / surface_density_zero
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
