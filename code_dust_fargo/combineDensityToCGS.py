@@ -127,7 +127,7 @@ interpolated_combination_array = size_interpolation_function(interpolated_sizes)
 interleaved_array = interpolated_combination_array.flatten() # interleave to 1-d
 
 # Bonus: Gather Temperature
-temperatures = np.array([temperature(r) for r in new_rad])
+temperatures = np.array([temperature(r * radius_unit) for r in new_rad])
 
 # Save New Data
 try:
@@ -135,7 +135,7 @@ try:
 except:
     print "Directory Already Exists"
 
-np.savetxt("%s/radial.dat" % save_directory, new_rad)
+np.savetxt("%s/radial.dat" % save_directory, new_rad * radius_unit)
 np.savetxt("%s/azimuthal.dat" % save_directory, new_theta)
 np.savetxt("%s/grain.dat" % save_directory, interpolated_sizes)
 np.savetxt("%s/temperature.dat" % save_directory, temperatures)

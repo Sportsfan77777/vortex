@@ -78,7 +78,7 @@ interpolated_density = density_interpolation_function(new_rad, new_theta)
 density_cgs = (interpolated_density * density_unit).flatten('F') # F = column-major
 
 # Bonus: Gather Temperature
-temperatures = np.array([temperature(r) for r in new_rad])
+temperatures = np.array([temperature(r * radius_unit) for r in new_rad])
 
 # Save New Data
 try:
@@ -86,7 +86,7 @@ try:
 except:
     print "Directory Already Exists"
 
-np.savetxt("%s/radial.dat" % save_directory, new_rad)
+np.savetxt("%s/radial.dat" % save_directory, new_rad * radius_unit)
 np.savetxt("%s/azimuthal.dat" % save_directory, new_theta)
 np.savetxt("%s/temperature.dat" % save_directory, temperatures)
 np.savetxt(save_directory + "/" + new_fn, density_cgs)
