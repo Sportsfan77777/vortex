@@ -88,7 +88,6 @@ except:
 
 np.savetxt("%s/radial.dat" % save_directory, new_rad)
 np.savetxt("%s/azimuthal.dat" % save_directory, new_theta)
-np.savetxt("%s/grain.dat" % save_directory, interpolated_sizes)
 np.savetxt("%s/temperature.dat" % save_directory, temperatures)
 np.save(save_directory + new_fn, density_cgs)
 
