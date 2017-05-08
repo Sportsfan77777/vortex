@@ -28,7 +28,7 @@ radius = 5.0 # radius of planet (in AU)
 mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
-density_unit = mass_unit / radius_unit**3 # unit conversion factor
+density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
 # Output Resolution
 new_num_rad = 300
