@@ -32,6 +32,10 @@ from readTitle import readTitle
 save_directory = "interpolatedGasDensityMaps"
 input_directory = "rt_input"
 
+# System Parameters
+radius = 5.0
+radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 pickled = util.pickle_parameters()
@@ -44,7 +48,7 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 #rad = np.loadtxt("used_rad.dat")[:-1, 0]
 #theta = np.linspace(0, 2 * np.pi, num_theta)
 
-rad = np.loadtxt("%s/radial.dat" % input_directory)
+rad = np.loadtxt("%s/radial.dat" % input_directory) / radius_unit
 theta = np.loadtxt("%s/azimuthal.dat" % input_directory)
 
 num_rad = len(rad)
@@ -98,7 +102,7 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
-        density = (fromfile(sys.argv[2]).reshape(num_rad, num_theta))
+        density = (np.loadtxt(sys.argv[2]).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
         ### Plot ###
