@@ -30,6 +30,7 @@ import util
 from readTitle import readTitle
 
 save_directory = "interpolatedGasDensityMaps"
+input_directory = "rt_input"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -43,8 +44,8 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 #rad = np.loadtxt("used_rad.dat")[:-1, 0]
 #theta = np.linspace(0, 2 * np.pi, num_theta)
 
-rad = np.loadtxt("radial.dat")
-theta = np.loadtxt("azimuthal.dat")
+rad = np.loadtxt("%s/radial.dat" % input_directory)
+theta = np.loadtxt("%s/azimuthal.dat" % input_directory)
 
 num_rad = len(rad)
 num_theta = len(theta)
