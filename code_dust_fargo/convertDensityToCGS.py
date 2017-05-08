@@ -75,7 +75,7 @@ density_interpolation_function = sp_int.interp2d(rad, theta, density)
 interpolated_density = density_interpolation_function(new_rad, new_theta)
 
 # Convert Data
-density_cgs = interpolated_density * density_unit
+density_cgs = (interpolated_density * density_unit).flatten('F') # F = column-major
 
 # Bonus: Gather Temperature
 temperatures = np.array([temperature(r) for r in new_rad])
