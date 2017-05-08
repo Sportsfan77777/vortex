@@ -29,7 +29,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "interpolatedGasDensityMaps"
+save_directory = "interpolatedDustDensityMaps"
 input_directory = "rt_input"
 
 # System Parameters
@@ -72,7 +72,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+clim = [0, 0.02]
 
 fontsize = 14
 my_dpi = 100
@@ -119,10 +119,10 @@ def make_plot(frame, show = False):
         this_title = readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Interpolated Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+        plot.title("Interpolated Dust Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sinterpolatedDensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%sinterpolatedDustDensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
