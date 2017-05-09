@@ -113,11 +113,11 @@ for (size_i, fn_i) in zip(size_labels, fns):
 combination_array = np.zeros((new_num_rad * new_num_theta, len(sizes)))
 for i, size_i in enumerate(size_labels):
     # Interpolate
-    density_interpolation_function = sp_int.interp2d(rad, theta, density_arrays[size_i])
+    density_interpolation_function = sp_int.interp2d(rad, theta, np.transpose(density_arrays[size_i])) # Careful: z is flattened!
     interpolated_density = density_interpolation_function(new_rad, new_theta)
 
     # Convert to cgs
-    combination_array[:, i] = (interpolated_density * density_unit).flatten('F') # F = column-major
+    combination_array[:, i] = (interpolated_density * density_unit).flatten() # F = column-major (default w/ sp_int.interp2d)
 
 # Interpolate to More Grain Sizes
 size_interpolation_function = sp_int.interp1d(sizes, combination_array, axis = -1)

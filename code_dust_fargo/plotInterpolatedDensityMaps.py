@@ -107,7 +107,7 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
-        density = (np.loadtxt(sys.argv[2]).reshape(num_rad, num_theta))
+        density = (np.loadtxt(sys.argv[2]).reshape(num_rad, num_theta, order = "F"))
         normalized_density = (density / density_unit) / surface_density_zero
 
         ### Plot ###
