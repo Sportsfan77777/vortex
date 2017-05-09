@@ -71,7 +71,7 @@ def temperature(r):
 density = fromfile(fn).reshape(num_rad, num_theta)
 
 # Interpolate to Arbitary Resolution
-density_interpolation_function = sp_int.interp2d(rad, theta, density)
+density_interpolation_function = sp_int.interp2d(rad, theta, np.tranpose(density)) # Careful: z is flattened!
 interpolated_density = density_interpolation_function(new_rad, new_theta)
 
 # Convert Data
