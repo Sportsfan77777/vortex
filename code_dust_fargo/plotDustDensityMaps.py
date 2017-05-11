@@ -37,11 +37,11 @@ pickled = util.pickle_parameters()
 param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+rad = np.loadtxt("radial.dat")
+theta = np.loadtxt("azimuthal.dat")
 
-rad = np.loadtxt("used_rad.dat")[:-1, 1]
-theta = np.linspace(0, 2 * np.pi, num_theta)
+num_rad = len(rad)
+num_theta = len(theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
