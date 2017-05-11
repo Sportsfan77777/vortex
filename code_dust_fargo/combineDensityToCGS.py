@@ -147,7 +147,7 @@ range_b = interpolated_ranges[1:]
 size_weights = [integrate_size_distribution(x, y) for (x, y) in zip(range_a, range_b)]
 power_law = size_weights / np.sum(size_weights)
 
-power_law_array = power_law[:, None] * interpolated_combination_array
+power_law_array = power_law[None, :] * interpolated_combination_array
 
 # Combine (Interleave)
 interleaved_array = power_law_array.flatten() # interleave to 1-d
