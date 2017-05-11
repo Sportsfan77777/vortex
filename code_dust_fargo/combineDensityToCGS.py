@@ -38,8 +38,17 @@ density_unit = mass_unit / radius_unit**2 # unit conversion factor
 sizes = [0.01, 0.03, 0.1, 0.3, 1.0]
 size_labels = ["hum", "hmm", "mm", "hcm", "cm"]
 
-log_interpolated_sizes = np.linspace(np.log10(sizes[0]), np.log10(sizes[-1]), 100)
+num_grains = 100
+log_interpolated_sizes = np.linspace(np.log10(sizes[0]), np.log10(sizes[-1]), num_grains)
 interpolated_sizes = np.power(10.0, log_interpolated_sizes) # to be used in size interpolation
+
+# Grain Ranges (for power-law distribution)
+da = log_interpolated_sizes[1] - log_interpolated_sizes[0]
+log_interpolated_ranges = np.linspace(np.log10(sizes[0]) - 0.5 * da, np.log10(sizes[-1]) + 0.5 * da, num_grains + 1)
+interpolated_ranges = np.power(10.0, log_interpolated_ranges)
+
+number_density_power = -3.5
+surface_density_power = number_density_power + 3.0
 
 # Output Resolution
 new_num_rad = 300
@@ -98,6 +107,12 @@ def temperature(r):
     scale_height_cgs = scale_height * (r)
     return (mu * mp) * (scale_height_cgs**2 * omega_sq) / (kb) 
 
+def integrate_size_distribution(x, y):
+    """ Determine weight of each dust size bin """
+    def f(z):
+        return z ** (surface_density_power + 1.0) # +1 for integration
+    return f(y) - f(x)
+
 # Get Data and Shift Vortex to Middle
 middle = np.searchsorted(theta, np.pi)
 density_arrays = {}
@@ -126,8 +141,16 @@ for i, size_i in enumerate(size_labels):
 size_interpolation_function = sp_int.interp1d(sizes, combination_array, axis = -1)
 interpolated_combination_array = size_interpolation_function(interpolated_sizes)
 
+# Scale to a Power Law Distribution
+range_a = interpolated_ranges[:-1]
+range_b = interpolated_ranges[1:]
+size_weights = [integrate_size_distribution(x, y) for (x, y) in zip(range_a, range_b)]
+power_law = size_weights / np.sum(size_weights)
+
+power_law_array = power_law[:, None] * interpolated_combination_array
+
 # Combine (Interleave)
-interleaved_array = interpolated_combination_array.flatten() # interleave to 1-d
+interleaved_array = power_law_array.flatten() # interleave to 1-d
 
 # Bonus: Gather Temperature
 temperatures = np.array([temperature(r * radius_unit) for r in new_rad])
