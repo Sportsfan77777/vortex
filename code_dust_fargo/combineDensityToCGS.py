@@ -81,6 +81,8 @@ fargo_par = pickle.load(open(param_fn, "rb"))
 num_rad = float(fargo_par["Nrad"])
 num_theta = float(fargo_par["Nsec"])
 
+scale_height = float(fargo_par["AspectRatio"])
+
 rad = np.linspace(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]), num_rad + 1)[:-1]
 theta = np.linspace(0, 2 * np.pi, num_theta + 1)[:-1]
 
