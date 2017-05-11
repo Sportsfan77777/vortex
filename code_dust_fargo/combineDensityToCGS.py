@@ -137,7 +137,7 @@ for i, size_i in enumerate(size_labels):
     interpolated_density = interpolated_density.T
 
     # Convert to cgs
-    combination_array[:, i] = (interpolated_density * density_unit).flatten() # F = column-major (default w/ sp_int.interp2d)
+    combination_array[:, i] = (interpolated_density * density_unit).flatten()
 
 # Interpolate to More Grain Sizes
 size_interpolation_function = sp_int.interp1d(sizes, combination_array, axis = -1)
@@ -152,7 +152,7 @@ power_law = size_weights / np.sum(size_weights)
 power_law_array = power_law[None, :] * interpolated_combination_array
 
 # Combine (Interleave)
-interleaved_array = power_law_array.flatten() # interleave to 1-d
+interleaved_array = power_law_array.flatten('F') # interleave to 1-d
 
 # Bonus: Gather Temperature
 temperatures = np.array([temperature(r * radius_unit) for r in new_rad])
