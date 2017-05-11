@@ -92,12 +92,12 @@ def make_plot(frame, show = False):
 
         # Data
         data = np.loadtxt("intensitymap.out")
-        intensity = data[:, -1].reshape(num_theta, num_rad)
+        intensity = data[:, -1].reshape(num_rad, num_theta)
 
-        clim = [np.percentile(intensity, 10), np.percentile(intensity, 90)]
+        clim = [np.percentile(intensity, 10), np.percentile(intensity, 95)]
 
         ### Plot ###
-        result = ax.pcolormesh(x, theta, intensity, cmap = cmap)
+        result = ax.pcolormesh(x, theta, np.transpose(intensity), cmap = cmap)
         fig.colorbar(result)
         result.set_clim(clim[0], clim[1])
 

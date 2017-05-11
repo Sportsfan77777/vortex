@@ -116,6 +116,9 @@ for i, size_i in enumerate(size_labels):
     density_interpolation_function = sp_int.interp2d(rad, theta, np.transpose(density_arrays[size_i])) # Careful: z is flattened!
     interpolated_density = density_interpolation_function(new_rad, new_theta)
 
+    # Transpose (shape is backward w/ interpolation function)
+    interpolated_density = interpolated_density.T
+
     # Convert to cgs
     combination_array[:, i] = (interpolated_density * density_unit).flatten() # F = column-major (default w/ sp_int.interp2d)
 

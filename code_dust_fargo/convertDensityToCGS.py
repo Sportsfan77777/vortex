@@ -74,6 +74,9 @@ density = fromfile(fn).reshape(num_rad, num_theta)
 density_interpolation_function = sp_int.interp2d(rad, theta, np.tranpose(density)) # Careful: z is flattened!
 interpolated_density = density_interpolation_function(new_rad, new_theta)
 
+# Transpose (shape is backward w/ interpolation function)
+interpolated_density = interpolated_density.T
+
 # Convert Data
 density_cgs = (interpolated_density * density_unit).flatten() # F = column-major (default w/ sp_int.interp2d)
 
