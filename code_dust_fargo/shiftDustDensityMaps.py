@@ -105,7 +105,7 @@ def make_plot(frame, show = False):
             xlabel = "Radius"
 
         # Data
-        density = (fromfile("gasddens%d_%s.dat" % (i, size).reshape(num_rad, num_theta))
+        density = (fromfile("gasddens%d_%s.dat" % (i, size)).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
         location_i = find_argmax(normalized_density)
