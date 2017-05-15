@@ -57,6 +57,8 @@ except:
 # Plot Parameters
 cmap = "RdYlBu_r"
 #clim = [0, 2]
+clim_in = np.searchsorted(rad, 1.1)
+clim_out = np.searchsorted(rad, 2.3)
 
 fontsize = 14
 my_dpi = 100
@@ -94,7 +96,7 @@ def make_plot(frame, show = False):
         data = np.loadtxt("intensitymap.out")
         intensity = data[:, -1].reshape(num_rad, num_theta)
 
-        clim = [np.percentile(intensity, 10), np.percentile(intensity, 95)]
+        clim = [np.percentile(intensity[clim_in : clim_out, :], 10), np.percentile(intensity[clim_in : clim_out, :], 95)]
 
         ### Plot ###
         result = ax.pcolormesh(x, theta, np.transpose(intensity), cmap = cmap)
