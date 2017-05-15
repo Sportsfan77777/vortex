@@ -31,13 +31,17 @@ from readTitle import readTitle
 
 save_directory = "shiftedDustDensityMaps"
 
+# Units
+radius = 5.0
+radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 pickled = util.pickle_parameters()
 param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-rad = np.loadtxt("radial.dat")
+rad = np.loadtxt("radial.dat") / radius_unit
 theta = np.loadtxt("azimuthal.dat")
 
 num_rad = len(rad)
@@ -70,7 +74,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+clim = [0, 0.02]
 
 fontsize = 14
 my_dpi = 100
@@ -129,6 +133,9 @@ def make_plot(frame, show = False):
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
+
+        # Save Shifted Data
+        #### Write this part! ####
 
     i = frame
     choose_axis(i, "normal")
