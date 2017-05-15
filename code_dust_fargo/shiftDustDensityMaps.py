@@ -35,6 +35,14 @@ save_directory = "shiftedDustDensityMaps"
 radius = 5.0
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
+# Vortex Locations
+centers = {}
+centers["cm"] = 119.5
+centers["hcm"] = 214.9
+centers["mm"] = 180.2
+centers["hmm"] = 184.5
+centers["hum"] = 185.6
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 pickled = util.pickle_parameters()
@@ -112,7 +120,10 @@ def make_plot(frame, show = False):
         density = (fromfile("gasddens%d_%s.dat" % (i, size)).reshape(num_rad, num_theta))
         normalized_density = density / surface_density_zero
 
-        location_i = find_argmax(normalized_density)
+        # Rotate Vortex to Center
+        #location_i = find_argmax(normalized_density)
+        location_phi = (np.pi / 180.0) * centers[size]
+        location_i = np.searchsorted(theta, location_phi)
 
         shift_i = int(middle - location_i)
         normalized_density = np.roll(normalized_density, shift_i, axis = 1)
@@ -136,6 +147,9 @@ def make_plot(frame, show = False):
 
         # Save Shifted Data
         #### Write this part! ####
+        shifted_data = np.roll(density, shift_i, axis = 1)
+        shift_savename = "shifted_gasddens%d_%s.npy" % (i, size)
+        np.save(shift_savename, shifted_data)
 
     i = frame
     choose_axis(i, "normal")
