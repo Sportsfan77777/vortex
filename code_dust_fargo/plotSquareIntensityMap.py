@@ -37,6 +37,10 @@ plot.register_cmap(name = 'inferno', cmap = cmaps.inferno)
 plot.register_cmap(name = 'plasma', cmap = cmaps.plasma)
 plot.register_cmap(name = 'magma', cmap = cmaps.magma)
 
+# System Parameters
+radius = 5.0 # radius of planet (in AU)
+radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 param_fn = "params.p"
