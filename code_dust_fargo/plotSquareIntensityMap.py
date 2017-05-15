@@ -50,7 +50,7 @@ if not os.path.exists(param_fn):
     subprocess.Popen(split_command)
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-rad = np.loadtxt("radial.dat")
+rad = np.loadtxt("radial.dat") / radius_unit
 theta = np.loadtxt("azimuthal.dat")
 
 num_rad = len(rad)

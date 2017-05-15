@@ -31,13 +31,17 @@ from readTitle import readTitle
 
 save_directory = "intensityMaps"
 
+# System Parameters
+radius = 5.0 # radius of planet (in AU)
+radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 pickled = util.pickle_parameters()
 param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-rad = np.loadtxt("radial.dat")
+rad = np.loadtxt("radial.dat") / radius_unit
 theta = np.loadtxt("azimuthal.dat")
 
 num_rad = len(rad)
