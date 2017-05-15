@@ -121,10 +121,15 @@ density_arrays = {}
 
 for (size_i, fn_i) in zip(size_labels, fns):
     tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
-    location_i = find_argmax(tmp_density)
 
-    shift_i = int(middle - location_i)
-    density_arrays[size_i] = np.roll(tmp_density, shift_i, axis = 1)
+    if "shift" in fn_i:
+        # Already Shifted
+        density_arrays[size_i] = tmp_density
+    else:
+        # Shift!
+        location_i = find_argmax(tmp_density)
+        shift_i = int(middle - location_i)
+        density_arrays[size_i] = np.roll(tmp_density, shift_i, axis = 1)
 
 # Convert Data and Interpolate to Arbitary Resolution
 combination_array = np.zeros((new_num_rad * new_num_theta, len(sizes)))
