@@ -149,10 +149,10 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.ylabel("Azimuthal Intensity", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
+    legend = plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save and Close
-    plot.savefig("%s/azimuthal_intensity_%04d_at%d_r%02d_h%d_n%d.png" % (directory, frame, wavelength, int(10 * chosen_radius), int(num_scale_heights), int(num_profiles)), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/azimuthal_intensity_%04d_at%d_r%02d_h%d_n%d.png" % (directory, frame, wavelength, int(10 * chosen_radius), int(num_scale_heights), int(num_profiles)), bbox_inches = 'tight', bbox_extra_artists = (legend, ), dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
