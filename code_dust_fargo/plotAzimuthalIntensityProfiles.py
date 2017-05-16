@@ -45,6 +45,10 @@ num_theta = len(theta)
 surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
+## Get RT Parameters ##
+rt_par = np.loadtxt("parameters.dat")
+wavelength = int(float(rt_par[2]))
+
 ### Input Parameters ###
 chosen_radius = 1.5
 num_scale_heights = 2.0
@@ -140,7 +144,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.xticks(angles, degree_angles)
 
     # Annotate
-    this_title = "" #readTitle()
+    this_title = r"r = %d, $\lambda$ = %d $\mu m$" % (int(radius), wavelength) #readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
     plot.ylabel("Azimuthal Intensity", fontsize = fontsize)
     plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
@@ -148,7 +152,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save and Close
-    plot.savefig("%s/azimuthal_intensity_%04d_r%02d_h%d_n%d.png" % (directory, frame, int(10 * chosen_radius), int(num_scale_heights), int(num_profiles)), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/azimuthal_intensity_%04d_at%d_r%02d_h%d_n%d.png" % (directory, frame, wavelength, int(10 * chosen_radius), int(num_scale_heights), int(num_profiles)), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
