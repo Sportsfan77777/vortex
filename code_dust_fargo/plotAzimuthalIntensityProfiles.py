@@ -26,6 +26,10 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+# System Parameters
+radius = 20.0 # radius of planet (in AU)
+radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
 pickled = util.pickle_parameters()
