@@ -52,7 +52,7 @@ new_num_theta = 400
 
 # Save As
 save_directory = "rt_input"
-save_name = "single%d" % (int(micron_in_cm* chosen_grain))
+save_name = "single%d" % (int(round(micron_in_cm * chosen_grain, 0)))
 
 ######################################################################
 
