@@ -38,7 +38,7 @@ plot.register_cmap(name = 'plasma', cmap = cmaps.plasma)
 plot.register_cmap(name = 'magma', cmap = cmaps.magma)
 
 # System Parameters
-radius = 5.0 # radius of planet (in AU)
+radius = 20.0 # radius of planet (in AU)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
 ### Get FARGO Parameters ###
@@ -62,6 +62,10 @@ viscosity = float(fargo_par["Viscosity"])
 
 planet_mass = float(fargo_par["PlanetMass"])
 taper_time = int(float(fargo_par["MassTaper"]))
+
+## Get RT Parameters ##
+rt_par = np.loadtxt("parameters.dat")
+wavelength = int(float(rt_par[2]))
 
 ### Converter ###
 
@@ -196,7 +200,7 @@ def make_plot(frame, show = False):
         plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
         # Save and Close
-        plot.savefig("%ssquareIntensityMap_%04d.png" % (prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%ssquareIntensityMap%04d_r%d_at%d.png" % (prefix, i, int(radius), wavelength), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)

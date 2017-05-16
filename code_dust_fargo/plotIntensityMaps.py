@@ -32,7 +32,7 @@ from readTitle import readTitle
 save_directory = "intensityMaps"
 
 # System Parameters
-radius = 5.0 # radius of planet (in AU)
+radius = 20.0 # radius of planet (in AU)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
 ### Get FARGO Parameters ###
@@ -49,6 +49,10 @@ num_theta = len(theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
+
+## Get RT Parameters ##
+rt_par = np.loadtxt("parameters.dat")
+wavelength = int(float(rt_par[2]))
 
 ##### PLOTTING #####
 
@@ -108,13 +112,13 @@ def make_plot(frame, show = False):
         result.set_clim(clim[0], clim[1])
 
         # Annotate
-        this_title = "" #readTitle()
+        this_title = r"r = %d AU, $\lambda$ = %d $\mu$m" % (int(radius), wavelength) #readTitle()
         plot.xlabel(xlabel, fontsize = fontsize)
         plot.ylabel(r"$\phi$", fontsize = fontsize)
         plot.title("Intensity Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%sintensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%sintensityMap%04d_r%d_at%d.png" % (save_directory, prefix, i, int(radius), wavelength), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
