@@ -133,8 +133,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(theta[:-1], azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+    for radius_i, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
+        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius_i)
 
     # Axis
     angles = np.linspace(0, 2 * np.pi, 7)
