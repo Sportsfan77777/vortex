@@ -41,6 +41,8 @@ size_labels = ["hum", "hmm", "mm", "hcm", "cm"]
 
 num_grains = 1
 chosen_grain = 870.0 / micron_in_cm
+if len(sys.argv) > 2:
+    chosen_grain = float(sys.argv[2]) / micron_in_cm
 
 interpolated_sizes = [chosen_grain] # to be used in size interpolation
 
