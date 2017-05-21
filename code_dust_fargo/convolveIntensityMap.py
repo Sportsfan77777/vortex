@@ -106,6 +106,8 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     return xs_grid, ys_grid, cart_data
 
 def convolve_intensity(intensity):
+	# Source: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve
+
 	# Determine Gaussian Parameters
 	dr = rad[1] - rad[0]
 	sigma = int(beam_size / dr)
