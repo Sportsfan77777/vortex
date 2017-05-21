@@ -29,6 +29,12 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+import colormaps as cmaps
+plot.register_cmap(name = 'viridis', cmap = cmaps.viridis)
+plot.register_cmap(name = 'inferno', cmap = cmaps.inferno)
+plot.register_cmap(name = 'plasma', cmap = cmaps.plasma)
+plot.register_cmap(name = 'magma', cmap = cmaps.magma)
+
 save_directory = "intensityMaps"
 
 # System Parameters
