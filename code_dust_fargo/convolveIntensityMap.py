@@ -42,7 +42,7 @@ param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
 rad = np.loadtxt("radial.dat") / radius_unit
-theta = np.linspace(0, np.pi, float(fargo_par["Nsec"]))
+theta = np.linspace(0, 2.0 * np.pi, int(fargo_par["Nsec"]) + 1)
 #theta = np.loadtxt("azimuthal.dat")
 
 num_rad = len(rad)
