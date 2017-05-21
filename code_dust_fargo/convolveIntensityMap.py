@@ -50,6 +50,10 @@ num_theta = len(theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
+viscosity = float(fargo_par["Viscosity"])
+
+planet_mass = float(fargo_par["PlanetMass"])
+taper_time = int(float(fargo_par["MassTaper"]))
 
 ## Get RT Parameters ##
 rt_par = np.loadtxt("parameters.dat")
