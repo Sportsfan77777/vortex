@@ -42,7 +42,7 @@ radius = 20.0 # radius of planet (in AU)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
 # Image Parameters
-beam_size = 1.4 / radius # corresponds to 1.4 AU
+beam_size = 5.0 / radius # corresponds to 1.4 AU
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -134,6 +134,9 @@ cmap = "inferno"
 clim_in = np.searchsorted(rad, 1.1)
 clim_out = np.searchsorted(rad, 2.3)
 
+clim_low = 10
+clim_high = 96
+
 fontsize = 14
 my_dpi = 100
 
@@ -189,7 +192,7 @@ def make_plot(frame, show = False):
         result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(convolved_intensity), cmap = cmap)
         cbar = fig.colorbar(result)
 
-        clim = [np.percentile(intensity[clim_in : clim_out, :], 10), np.percentile(intensity[clim_in : clim_out, :], 99x)]
+        clim = [np.percentile(intensity[clim_in : clim_out, :], clim_low), np.percentile(intensity[clim_in : clim_out, :], clim_high)]
         result.set_clim(clim[0], clim[1])
 
         cbar.set_label(r"Intensity", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
