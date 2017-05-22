@@ -151,7 +151,9 @@ for i, size_i in enumerate(size_labels):
 
     # Scale
     if scale:
-        interpolated_sizes *= scale_factor # To maintain same Stokes number
+        sizes *= scale_factor # To maintain same Stokes number
+        interpolated_sizes *= scale_factor
+
         interpolated_density *= scale_factor
 
     # Cavity
