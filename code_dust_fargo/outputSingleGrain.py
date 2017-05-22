@@ -36,7 +36,7 @@ radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
 # Grain Sizes
-sizes = [0.01, 0.03, 0.1, 0.3, 1.0]
+sizes = np.array([0.01, 0.03, 0.1, 0.3, 1.0])
 size_labels = ["hum", "hmm", "mm", "hcm", "cm"]
 
 num_grains = 1
