@@ -186,10 +186,10 @@ def make_plot(frame, show = False):
         plot.axes().set_aspect('equal')
 
         ### Plot ###
-        result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
+        result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(convolved_intensity), cmap = cmap)
         cbar = fig.colorbar(result)
 
-        clim = [np.percentile(intensity[clim_in : clim_out, :], 10), np.percentile(intensity[clim_in : clim_out, :], 95)]
+        clim = [np.percentile(intensity[clim_in : clim_out, :], 10), np.percentile(intensity[clim_in : clim_out, :], 99x)]
         result.set_clim(clim[0], clim[1])
 
         cbar.set_label(r"Intensity", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
