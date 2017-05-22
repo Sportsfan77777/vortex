@@ -32,10 +32,10 @@ pickled = util.pickle_parameters()
 param_fn = "params.p"
 fargo_par = pickle.load(open(param_fn, "rb"))
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+rad = np.linspace(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]), float(fargo_par["Nrad"]))
+num_rad = len(rad)
 
-rad = np.loadtxt("used_rad.dat")[:-1, 0]
+num_theta = float(fargo_par["Nsec"])
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density = float(fargo_par["Sigma0"])
