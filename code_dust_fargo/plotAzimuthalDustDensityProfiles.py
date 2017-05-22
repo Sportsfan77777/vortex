@@ -78,7 +78,7 @@ def get_data(frame, size):
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
-    if (len(sys.argv) > 3)
+    if (len(sys.argv) > 3):
         peak_rad = float(sys.argv[3])
 
     # Gather Azimuthal Profiles
