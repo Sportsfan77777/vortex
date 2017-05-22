@@ -155,9 +155,6 @@ for i, size_i in enumerate(size_labels):
 
     # Scale
     if scale:
-        sizes *= scale_factor # To maintain same Stokes number
-        interpolated_sizes *= scale_factor
-
         interpolated_density *= scale_factor
 
     # Cavity
@@ -167,6 +164,11 @@ for i, size_i in enumerate(size_labels):
 
     # Convert to cgs
     combination_array[:, i] = (interpolated_density * density_unit).flatten()
+
+# Scale Sizes
+if scale:
+    sizes *= scale_factor # To maintain same Stokes number
+    interpolated_sizes *= scale_factor
 
 # Interpolate to More Grain Sizes
 size_interpolation_function = sp_int.interp1d(sizes, combination_array, axis = -1)
