@@ -72,7 +72,7 @@ def find_min(averagedDensity, peak_rad):
 
 def get_data(frame, size):
     # Find Peak in Radial Profile (in Outer Disk)
-    density = (fromfile("shifted_gasddens%d_%s.dat" % (frame, size)).reshape(num_rad, num_theta)) / surface_density
+    density = (fromfile("shifted_gasddens%d_%s.npy" % (frame, size))[:-10].reshape(num_rad, num_theta)) / surface_density
     averagedDensity = np.average(density, axis = 1)
 
     peak_rad, peak_density = find_peak(averagedDensity)
