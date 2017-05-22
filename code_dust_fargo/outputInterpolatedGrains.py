@@ -128,7 +128,11 @@ middle = np.searchsorted(theta, np.pi)
 density_arrays = {}
 
 for (size_i, fn_i) in zip(size_labels, fns):
-    tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
+    if "npy" in fn_i:
+        # Not sure why this happens
+        tmp_density = (fromfile(fn_i)[:-10]).reshape(num_rad, num_theta)
+    else:
+        tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
 
     if "shift" in fn_i:
         # Already Shifted
