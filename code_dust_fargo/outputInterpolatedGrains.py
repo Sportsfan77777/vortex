@@ -54,9 +54,17 @@ surface_density_power = number_density_power + 3.0
 new_num_rad = 300
 new_num_theta = 400
 
+# Scale?
+scale = True # Scales by scale_factor
+scale_factor = 10.0
+
+# Cavity?
+cavity = False # Depletes r < cavity_cutoff by a factor of 100
+cavity_cutoff = 0.92
+
 # Save As
 save_directory = "rt_input"
-save_name = "double_interpolated"
+save_name = "scaled_double_interpolated"
 
 ######################################################################
 
@@ -115,12 +123,15 @@ def integrate_size_distribution(x, y):
         return z ** (surface_density_power + 1.0) # +1 for integration
     return f(y) - f(x)
 
-# Get Data and Shift Vortex to Middle
+# Get Data, Create an Inner Cavity, and Shift Vortex to Middle
 middle = np.searchsorted(theta, np.pi)
 density_arrays = {}
 
 for (size_i, fn_i) in zip(size_labels, fns):
     tmp_density = fromfile(fn_i).reshape(num_rad, num_theta)
+
+    if cavity:
+
 
     if "shift" in fn_i:
         # Already Shifted
@@ -131,7 +142,7 @@ for (size_i, fn_i) in zip(size_labels, fns):
         shift_i = int(middle - location_i)
         density_arrays[size_i] = np.roll(tmp_density, shift_i, axis = 1)
 
-# Convert Data and Interpolate to Arbitary Resolution
+# Convert Data, Possibly Manipulate Data, and Interpolate to Arbitary Resolution
 combination_array = np.zeros((new_num_rad * new_num_theta, len(sizes)))
 for i, size_i in enumerate(size_labels):
     # Interpolate
@@ -140,6 +151,16 @@ for i, size_i in enumerate(size_labels):
 
     # Transpose (shape is backward w/ interpolation function)
     interpolated_density = interpolated_density.T
+
+    # Scale
+    if scale:
+        interpolated_sizes *= scale_factor # To maintain same Stokes number
+        interpolated_density *= scale_factor
+
+    # Cavity
+    if cavity:
+        cavity_cutoff_i = np.searchsorted(new_rad, cavity_cutoff)
+        interpolated_density[:cavity_cutoff_i, ] /= 100.0
 
     # Convert to cgs
     combination_array[:, i] = (interpolated_density * density_unit).flatten()

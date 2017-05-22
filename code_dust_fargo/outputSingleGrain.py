@@ -50,6 +50,14 @@ interpolated_sizes = [chosen_grain] # to be used in size interpolation
 new_num_rad = 300
 new_num_theta = 400
 
+# Scale?
+scale = True # Scales by scale_factor
+scale_factor = 10.0
+
+# Cavity?
+cavity = False # Depletes r < cavity_cutoff by a factor of 100
+cavity_cutoff = 0.92
+
 # Save As
 save_directory = "rt_input"
 save_name = "single%d" % (int(round(micron_in_cm * chosen_grain, 0)))
@@ -136,6 +144,16 @@ for i, size_i in enumerate(size_labels):
 
     # Transpose (shape is backward w/ interpolation function)
     interpolated_density = interpolated_density.T
+
+    # Scale
+    if scale:
+        interpolated_sizes *= scale_factor # To maintain same Stokes number
+        interpolated_density *= scale_factor
+
+    # Cavity
+    if cavity:
+        cavity_cutoff_i = np.searchsorted(new_rad, cavity_cutoff)
+        interpolated_density[:cavity_cutoff_i, ] /= 100.0
 
     # Convert to cgs
     combination_array[:, i] = (interpolated_density * density_unit).flatten()
