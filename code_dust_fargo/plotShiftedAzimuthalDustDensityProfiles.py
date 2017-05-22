@@ -82,7 +82,7 @@ def get_data(frame, size):
         peak_rad = float(sys.argv[3])
 
     # Gather Azimuthal Profiles
-    num_profiles = 5
+    num_profiles = 7
     spread = 1.0 * scale_height # half-width
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
