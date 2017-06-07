@@ -29,8 +29,8 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
-#import util
-#from readTitle import readTitle
+import util
+from readTitle import readTitle
 
 save_directory = "gasDensitySlices"
 
@@ -49,10 +49,10 @@ rad = np.linspace(float((pluto_par["X1-grid"])[1]), float((pluto_par["X1-grid"])
 phi = np.linspace(float((pluto_par["X2-grid"])[1]), float((pluto_par["X2-grid"])[4]), num_phi)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density_zero = float(fargo_par["Sigma0_Param"])
-scale_height = float(fargo_par["AspectRatio"])
+surface_density_zero = float(pluto_par["Sigma0_Param"])
+scale_height = float(pluto_par["AspectRatio"])
 
-max_frame = 
+max_frame = 100
 
 ### Helper Functions ###
 
@@ -194,7 +194,7 @@ def new_option_parser():
                     dest="t_out", type = "float", default = phi[0],
                     help="start of phi range")
   parser.add_option("-d", 
-                    dest="t_out", type = "float", default = phi[-1]
+                    dest="t_out", type = "float", default = phi[-1],
                     help="end of phi range")
   parser.add_option("-e", 
                     dest="z_in", type = "float", default = theta[0],
