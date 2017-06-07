@@ -22,7 +22,7 @@ import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -159,7 +159,7 @@ def new_option_parser():
                     dest="frame", type = "int",
                     help="frame to plot")
   parser.add_option("--sample", action = "store_true", default = False,
-                    dest="skip_r",
+                    dest="sample",
                     help="range of frames to plot (do not show) --- use vwx to specify")
   parser.add_option("-v", 
                     dest="s_start", type = "int",
