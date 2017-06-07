@@ -42,11 +42,11 @@ param_fn = "params.p"
 pluto_par = pickle.load(open(param_fn, "rb"))
 
 num_rad = int((pluto_par["X1-grid"])[2])
-num_phi = int((pluto_par["X2-grid"])[2])
+num_z = int((pluto_par["X2-grid"])[2])
 num_theta = int((pluto_par["X3-grid"])[2])
 
 rad = np.linspace(float((pluto_par["X1-grid"])[1]), float((pluto_par["X1-grid"])[4]), num_rad)
-phi = np.linspace(float((pluto_par["X2-grid"])[1]), float((pluto_par["X2-grid"])[4]), num_phi)
+zs = np.linspace(float((pluto_par["X2-grid"])[1]), float((pluto_par["X2-grid"])[4]), num_phi)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float((pluto_par["Sigma0_Param"])[0])
@@ -83,31 +83,34 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("rho.%04d.dbl" % frame).reshape(num_theta, num_phi, num_rad))
+    density = (fromfile("rho.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
     normalized_density = density / surface_density_zero
 
     ### Plot ###
     if o.r_slice is not None:
         # Axes
-        xs = phi; 
-        ys = theta
+        xs = theta
+        ys = zs
         # Slice
-        this_slice = np.searchsorted(rad, o.r_slice)
-        density_slice = normalized_density[:, :, this_slice]
+        slice_choice = "rad"; this_slice = o.r_slice
+        this_slice_i = np.searchsorted(rad, this_slice)
+        density_slice = normalized_density[:, :, this_slice_i]
     elif o.t_slice is not None:
         # Axes
         xs = rad
-        ys = theta
+        ys = zs
         # Slice
-        this_slice = np.searchsorted(phi, o.t_slice)
-        density_slice = normalized_density[:, this_slice, :]
+        slice_choice = "phi"; this_slice = o.t_slice
+        this_slice_i = np.searchsorted(phi, this_slice)
+        density_slice = normalized_density[this_slice_i, :, :]
     elif o.z_slice is not None:
         # Axes
         xs = rad
-        ys = phi
+        ys = theta
         # Slice
-        this_slice = np.searchsorted(theta, o.z_slice)
-        density_slice = normalized_density[this_slice, :, :]
+        slice_choice = "theta"; this_slice = o.z_slice
+        this_slice_i = np.searchsorted(theta, this_slice)
+        density_slice = normalized_density[:, this_slice_i, :]
 
     result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
     fig.colorbar(result)
@@ -125,7 +128,7 @@ def make_plot(frame, show = False):
         plot.ylim(o.t_in, o.t_out)
 
     # Annotate
-    r_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
+    r_label = "Radius"; phi_label = "Phi"; z_label = "Theta"
 
     if o.r_slice is not None:
         xlabel = phi_label; ylabel = z_label; suffix = "tz"
@@ -137,7 +140,7 @@ def make_plot(frame, show = False):
     #this_title = readTitle()
     plot.xlabel(xlabel, fontsize = fontsize)
     plot.ylabel(ylabel, fontsize = fontsize)
-    plot.title("Gas Density Slice at Orbit %d" % (orbit), fontsize = fontsize + 1)
+    plot.title("Gas Density Slice (%s = %s) at Orbit %d" % (slice_choice, this_slice, orbit), fontsize = fontsize + 1)
 
     # Save and Close
     plot.savefig("%s/densitySlice_%s%04d.png" % (save_directory, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
@@ -186,16 +189,16 @@ def new_option_parser():
                     dest="r_out", type = "float", default = rad[-1],
                     help="end of r range")
   parser.add_option("-c", 
-                    dest="t_in", type = "float", default = phi[0],
+                    dest="t_in", type = "float", default = theta[0],
                     help="start of phi range")
   parser.add_option("-d", 
-                    dest="t_out", type = "float", default = phi[-1],
+                    dest="t_out", type = "float", default = theta[-1],
                     help="end of phi range")
   parser.add_option("-e", 
-                    dest="z_in", type = "float", default = theta[0],
+                    dest="z_in", type = "float", default = zs[0],
                     help="start of theta range (out of the plane!)")
   parser.add_option("-f", 
-                    dest="z_out", type = "int", default = theta[-1],
+                    dest="z_out", type = "int", default = zs[-1],
                     help="end of theta range (out of the plane!)")
 
   return parser
