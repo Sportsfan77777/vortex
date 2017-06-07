@@ -114,24 +114,24 @@ def make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     # Limits
-    if o.r_slice is not missing:
+    if o.r_slice is not None:
         plot.xlim(o.t_in, o.t_out)
         plot.ylim(o.z_in, o.z_out)
-    elif o.t_slice is not missing:
+    elif o.t_slice is not None:
         plot.xlim(o.r_in, o.r_out)
         plot.ylim(o.z_in, o.z_out)
-    elif o.z_slice is not missing:
+    elif o.z_slice is not None:
         plot.xlim(o.r_in, o.r_out)
         plot.ylim(o.t_in, o.t_out)
 
     # Annotate
     rad_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
 
-    if o.r_slice is not missing:
+    if o.r_slice is not None:
         xlabel = phi_label; ylabel = theta_label; suffix = "tz"
-    elif o.t_slice is not missing:
+    elif o.t_slice is not None:
         xlabel = r_label; ylabel = z_label; suffix = "rz"
-    elif o.z_slice is not missing:
+    elif o.z_slice is not None:
         xlabel = r_label; ylabel = theta_label; suffix = "rt"
 
     #this_title = readTitle()
