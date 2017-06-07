@@ -50,7 +50,7 @@ phi = np.linspace(float((pluto_par["X2-grid"])[1]), float((pluto_par["X2-grid"])
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float((pluto_par["Sigma0_Param"])[0])
-scale_height = float((pluto_par["AspectRatio"])[0])
+scale_height = float((pluto_par["AspectRatio_Param"])[0])
 
 max_frame = 100
 
