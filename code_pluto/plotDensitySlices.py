@@ -32,6 +32,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
+missing = -e**e
 save_directory = "gasDensitySlices"
 
 ### Get FARGO Parameters ###
@@ -87,65 +88,60 @@ def make_plot(frame, show = False):
     normalized_density = density / surface_density_zero
 
     ### Plot ###
-    if skip_r:
+    if r_slice is not missing:
         # Axes
-        xs = phi
+        xs = phi; 
         ys = theta
         # Slice
         this_slice = np.searchsorted(rad, skip_r)
         density_slice = normalized_density[:, :, this_slice]
-    elif skip_t:
+    elif t_slice is not missing:
         # Axes
         xs = rad
         ys = theta
         # Slice
         this_slice = np.searchsorted(phi, skip_t)
         density_slice = normalized_density[:, this_slice, :]
-    elif skip_z:
+    elif z_slice is not missing:
         # Axes
         xs = rad
         ys = phi
         # Slice
         this_slice = np.searchsorted(theta, skip_z)
-        density_slice = normalized_density[this_slice, :, :, ]
+        density_slice = normalized_density[this_slice, :, :]
 
     result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
     # Limits
-    if skip_r:
+    if r_slice is not missing:
         plot.xlim(o.t_in, o.t_out)
         plot.ylim(o.z_in, o.z_out)
-    elif skip_t:
+    elif t_slice is not missing:
         plot.xlim(o.r_in, o.r_out)
         plot.ylim(o.z_in, o.z_out)
-    elif skip_z:
+    elif z_slice is not missing:
         plot.xlim(o.r_in, o.r_out)
         plot.ylim(o.t_in, o.t_out)
-
-    x = rad
-    prefix = ""
-    plot.xlim(rad[0], rad[-1])
-    xlabel = "Radius"
 
     # Annotate
     rad_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
 
-    if skip_r:
-        xlabel = phi_label; ylabel = theta_label
-    elif skip_t:
-        xlabel = r_label; ylabel = z_label
-    elif skip_z:
-        xlabel = r_label; ylabel = theta_label
+    if r_slice is not missing:
+        xlabel = phi_label; ylabel = theta_label; suffix = "tz"
+    elif t_slice is not missing:
+        xlabel = r_label; ylabel = z_label; suffix = "rz"
+    elif z_slice is not missing:
+        xlabel = r_label; ylabel = theta_label; suffix = "rt"
 
     #this_title = readTitle()
     plot.xlabel(xlabel, fontsize = fontsize)
     plot.ylabel(ylabel, fontsize = fontsize)
-    plot.title("Gas Density Map at Orbit %d" % (orbit), fontsize = fontsize + 1)
+    plot.title("Gas Density Slice at Orbit %d" % (orbit), fontsize = fontsize + 1)
 
     # Save and Close
-    plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/densitySlice_%s%04d.png" % (save_directory, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
@@ -154,6 +150,7 @@ def make_plot(frame, show = False):
 
 def new_option_parser():
   parser = OptionParser()
+  
   # Frame(s)
   parser.add_option("--frame", default = None,
                     dest="frame", type = "int",
@@ -171,16 +168,15 @@ def new_option_parser():
                     dest="s_rate", type = "int", default = 20,
                     help="rate of sample (range call)")
 
-
   # Which direction to skip? (Store the slice)
   parser.add_option("-r",
-                    dest="skip_r", type = "float", default = None,
+                    dest="r_slice", type = "float", default = missing,
                     help="if missing radial direction, store r slice")
   parser.add_option("-t",
-                    dest="skip_t", type = "float", default = None,
+                    dest="t_slice", type = "float", default = missing,
                     help="if missing azimuthal direction, store t slice")
   parser.add_option("-z",
-                    dest="skip_z", type = "float", default = None,
+                    dest="z_slice", type = "float", default = missing,
                     help="if missing theta direction (out of the plane!), store z slice")
 
   # Ranges in plot? (defaults are domain ranges)
