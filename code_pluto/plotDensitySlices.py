@@ -1,10 +1,11 @@
 """
-plot 2-D density maps
+plot 2-D density slices of 3-D simulations
 
-python plotDensityMaps.py
-python plotDensityMaps.py frame_number
-python plotDensityMaps.py -1 <<<===== Plots a sample
-python plotDensityMaps.py -m
+Options:
+
+Usage:
+python plotDensitySlices.py -r (-t, -z)
+python plotDensitySlices.py
 """
 
 import sys
@@ -14,6 +15,8 @@ import pickle
 import glob
 import time
 from multiprocessing import Pool
+
+from optparse import OptionParser
 
 import math
 import numpy as np
@@ -49,6 +52,10 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density_zero = float(fargo_par["Sigma0_Param"])
 scale_height = float(fargo_par["AspectRatio"])
 
+max_frame = 
+
+### Helper Functions ###
+
 ##### PLOTTING #####
 
 # Make Directory
@@ -66,90 +73,116 @@ my_dpi = 100
 
 
 def make_plot(frame, show = False):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    def choose_axis(i, axis):
-        # Orbit Number
-        #time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        #orbit = int(round(time / (2 * np.pi), 0)) * i
-        orbit = i
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+    # Orbit Number
+    #time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+    #orbit = int(round(time / (2 * np.pi), 0)) * i
+    orbit = frame
 
-        # Axis
-        angles = np.linspace(0, 2 * np.pi, 7)
-        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+    # Set up figure
+    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    ax = fig.add_subplot(111)
 
-        plot.ylim(0, 2 * np.pi)
-        plot.yticks(angles, degree_angles)
-        if axis == "zoom":
-            x = (rad - 1) / scale_height
-            prefix = "zoom_"
-            plot.xlim(0, 40) # to match the ApJL paper
-            xlabel = r"($r - r_p$) $/$ $h$"
-        else:
-            x = rad
-            prefix = ""
-            plot.xlim(rad[0], rad[-1])
-            xlabel = "Radius"
+    # Axis
+    angles = np.linspace(0, 2 * np.pi, 7)
+    degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
 
-        # Data
-        density = (fromfile("rho.%04d.dbl" % i).reshape(num_theta, num_rad))
-        normalized_density = density / surface_density_zero
+    plot.ylim(0, 2 * np.pi)
+    plot.yticks(angles, degree_angles)
 
-        ### Plot ###
-        result = ax.pcolormesh(x, theta, normalized_density, cmap = cmap)
-        fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+    x = rad
+    prefix = ""
+    plot.xlim(rad[0], rad[-1])
+    xlabel = "Radius"
 
-        # Annotate
-        #this_title = readTitle()
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d" % (orbit), fontsize = fontsize + 1)
+    # Data
+    density = (fromfile("rho.%04d.dbl" % i).reshape(num_theta, num_phi, num_rad))
+    normalized_density = density / surface_density_zero
 
-        # Save and Close
-        plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
+    ### Plot ###
+    result = ax.pcolormesh(x, theta, normalized_density, cmap = cmap)
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
 
-    i = frame
-    choose_axis(i, "normal")
-    #choose_axis(i, "zoom")
+    # Annotate
+    #this_title = readTitle()
+    plot.xlabel(xlabel, fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.title("Gas Density Map at Orbit %d" % (orbit), fontsize = fontsize + 1)
+
+    # Save and Close
+    plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+    if show:
+        plot.show()
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+### Option Parser ###
+
+def new_option_parser():
+  parser = OptionParser()
+  # Frame(s)
+  parser.add_option("--frame", default = None,
+                    dest="frame", type = "int",
+                    help="frame to plot")
+  parser.add_option("--sample", action = "store_true", default = False,
+                    dest="skip_r",
+                    help="range of frames to plot (do not show) --- use vwx to specify")
+  parser.add_option("-v", 
+                    dest="s_start", type = "int",
+                    help="start of sample (range call)")
+  parser.add_option("-w", 
+                    dest="s_end", type = "int", default = max_frame,
+                    help="end of sample (range call)")
+  parser.add_option("-x", default = 20,
+                    dest="s_rate", type = "int",
+                    help="rate of sample (range call)")
 
 
-##### Plot One File or All Files #####
+  # Which direction to skip?
+  parser.add_option("-r", action = "store_true", default = False,
+                    dest="skip_r",
+                    help="if missing radial direction")
+  parser.add_option("-t", action = "store_true", default = False,
+                    dest="skip_t",
+                    help="if missing azimuthal direction")
+  parser.add_option("-z", action = "store_true", default = False;
+                    dest="skip_z",
+                    help="if missing theta direction (out of the plane!)")
 
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            make_plot(i)
-    else:
-        # Plot Single
-        make_plot(frame_number, show = True)
+  # Ranges in plot? (defaults are domain ranges)
+  parser.add_option("-a", 
+                    dest="r_in", type = "float", default = rad[0],
+                    help="start of r range")
+  parser.add_option("-b", 
+                    dest="r_out", type = "float", default = rad[-1],
+                    help="end of r range")
+  parser.add_option("-c", 
+                    dest="t_out", type = "float", default = phi[0],
+                    help="start of phi range")
+  parser.add_option("-d", 
+                    dest="t_out", type = "float", default = phi[-1]
+                    help="end of phi range")
+  parser.add_option("-e", 
+                    dest="z_in", type = "float", default = theta[0],
+                    help="start of theta range (out of the plane!)")
+  parser.add_option("-f", 
+                    dest="z_out", type = "int", default = theta[1],
+                    help="end of theta range (out of the plane!)")
+
+  return parser
+
+##### Plot One File #####
+
+o, arguments = new_option_parser().parse_args()
+
+if o.sample:
+    sample = range(o.s_start, o.s_end, o.s_rate)
+    for frame_i in sample:
+        make_plot(frame_i)
+elif o.frame is not None:
+    make_plot(o.frame, show = True)
 else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    #p = Pool() # default number of processes is multiprocessing.cpu_count()
-    #p.map(make_plot, range(num_frames))
-    #p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
+    print "Must specify frame(s)!"
 
 
 
