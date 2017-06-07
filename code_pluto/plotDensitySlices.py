@@ -32,7 +32,6 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-missing = -e**e
 save_directory = "gasDensitySlices"
 
 ### Get FARGO Parameters ###
@@ -88,26 +87,26 @@ def make_plot(frame, show = False):
     normalized_density = density / surface_density_zero
 
     ### Plot ###
-    if r_slice is not missing:
+    if o.r_slice is not None:
         # Axes
         xs = phi; 
         ys = theta
         # Slice
-        this_slice = np.searchsorted(rad, skip_r)
+        this_slice = np.searchsorted(rad, o.r_slice)
         density_slice = normalized_density[:, :, this_slice]
-    elif t_slice is not missing:
+    elif o.t_slice is not None:
         # Axes
         xs = rad
         ys = theta
         # Slice
-        this_slice = np.searchsorted(phi, skip_t)
+        this_slice = np.searchsorted(phi, o.t_slice)
         density_slice = normalized_density[:, this_slice, :]
-    elif z_slice is not missing:
+    elif o.z_slice is not None:
         # Axes
         xs = rad
         ys = phi
         # Slice
-        this_slice = np.searchsorted(theta, skip_z)
+        this_slice = np.searchsorted(theta, o.z_slice)
         density_slice = normalized_density[this_slice, :, :]
 
     result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
@@ -115,24 +114,24 @@ def make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     # Limits
-    if r_slice is not missing:
+    if o.r_slice is not missing:
         plot.xlim(o.t_in, o.t_out)
         plot.ylim(o.z_in, o.z_out)
-    elif t_slice is not missing:
+    elif o.t_slice is not missing:
         plot.xlim(o.r_in, o.r_out)
         plot.ylim(o.z_in, o.z_out)
-    elif z_slice is not missing:
+    elif o.z_slice is not missing:
         plot.xlim(o.r_in, o.r_out)
         plot.ylim(o.t_in, o.t_out)
 
     # Annotate
     rad_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
 
-    if r_slice is not missing:
+    if o.r_slice is not missing:
         xlabel = phi_label; ylabel = theta_label; suffix = "tz"
-    elif t_slice is not missing:
+    elif o.t_slice is not missing:
         xlabel = r_label; ylabel = z_label; suffix = "rz"
-    elif z_slice is not missing:
+    elif o.z_slice is not missing:
         xlabel = r_label; ylabel = theta_label; suffix = "rt"
 
     #this_title = readTitle()
@@ -150,7 +149,7 @@ def make_plot(frame, show = False):
 
 def new_option_parser():
   parser = OptionParser()
-  
+
   # Frame(s)
   parser.add_option("--frame", default = None,
                     dest="frame", type = "int",
@@ -170,13 +169,13 @@ def new_option_parser():
 
   # Which direction to skip? (Store the slice)
   parser.add_option("-r",
-                    dest="r_slice", type = "float", default = missing,
+                    dest="r_slice", type = "float", default = None,
                     help="if missing radial direction, store r slice")
   parser.add_option("-t",
-                    dest="t_slice", type = "float", default = missing,
+                    dest="t_slice", type = "float", default = None,
                     help="if missing azimuthal direction, store t slice")
   parser.add_option("-z",
-                    dest="z_slice", type = "float", default = missing,
+                    dest="z_slice", type = "float", default = None,
                     help="if missing theta direction (out of the plane!), store z slice")
 
   # Ranges in plot? (defaults are domain ranges)
