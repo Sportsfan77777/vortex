@@ -46,7 +46,7 @@ num_z = int((pluto_par["X2-grid"])[2])
 num_theta = int((pluto_par["X3-grid"])[2])
 
 rad = np.linspace(float((pluto_par["X1-grid"])[1]), float((pluto_par["X1-grid"])[4]), num_rad)
-zs = np.linspace(float((pluto_par["X2-grid"])[1]), float((pluto_par["X2-grid"])[4]), num_phi)
+zs = np.linspace(float((pluto_par["X2-grid"])[1]), float((pluto_par["X2-grid"])[4]), num_z)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float((pluto_par["Sigma0_Param"])[0])
