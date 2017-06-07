@@ -191,7 +191,7 @@ def new_option_parser():
                     dest="r_out", type = "float", default = rad[-1],
                     help="end of r range")
   parser.add_option("-c", 
-                    dest="t_out", type = "float", default = phi[0],
+                    dest="t_in", type = "float", default = phi[0],
                     help="start of phi range")
   parser.add_option("-d", 
                     dest="t_out", type = "float", default = phi[-1],
