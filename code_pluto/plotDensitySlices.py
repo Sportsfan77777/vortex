@@ -101,7 +101,7 @@ def make_plot(frame, show = False):
         ys = zs
         # Slice
         slice_choice = "phi"; this_slice = o.t_slice
-        this_slice_i = np.searchsorted(phi, this_slice)
+        this_slice_i = np.searchsorted(zs, this_slice)
         density_slice = normalized_density[this_slice_i, :, :]
     elif o.z_slice is not None:
         # Axes
