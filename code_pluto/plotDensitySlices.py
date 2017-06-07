@@ -125,14 +125,14 @@ def make_plot(frame, show = False):
         plot.ylim(o.t_in, o.t_out)
 
     # Annotate
-    rad_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
+    r_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
 
     if o.r_slice is not None:
-        xlabel = phi_label; ylabel = theta_label; suffix = "tz"
+        xlabel = phi_label; ylabel = z_label; suffix = "tz"
     elif o.t_slice is not None:
         xlabel = r_label; ylabel = z_label; suffix = "rz"
     elif o.z_slice is not None:
-        xlabel = r_label; ylabel = theta_label; suffix = "rt"
+        xlabel = r_label; ylabel = phi_label; suffix = "rt"
 
     #this_title = readTitle()
     plot.xlabel(xlabel, fontsize = fontsize)
