@@ -162,13 +162,13 @@ def new_option_parser():
                     dest="sample",
                     help="range of frames to plot (do not show) --- use vwx to specify")
   parser.add_option("-v", 
-                    dest="s_start", type = "int",
+                    dest="s_start", type = "int", default = 0,
                     help="start of sample (range call)")
   parser.add_option("-w", 
                     dest="s_end", type = "int", default = max_frame,
                     help="end of sample (range call)")
-  parser.add_option("-x", default = 20,
-                    dest="s_rate", type = "int",
+  parser.add_option("-x", 
+                    dest="s_rate", type = "int", default = 20,
                     help="rate of sample (range call)")
 
 
