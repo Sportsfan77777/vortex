@@ -4,8 +4,8 @@ plot 2-D density slices of 3-D simulations
 Options:
 
 Usage:
-python plotDensitySlices.py --frame 500 -z 0 (or -t, -r)
-python plotDensitySlices.py --frame 500 -z 0 (or -t, -r) --a 1.0 -b 2.0 # center on vortex
+python plotDensityFluctuationSlices.py --frame 500 -z 0 (or -t, -r)
+python plotDensityFluctuationSlices.py --frame 500 -z 0 (or -t, -r) --a 1.0 -b 2.0 # center on vortex
 """
 
 import sys
@@ -32,7 +32,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "gasDensitySlices"
+save_directory = "gasDensityFluctuationSlices"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -66,7 +66,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
+clim = [-5, 1]
 
 fontsize = 14
 my_dpi = 100
@@ -86,6 +86,9 @@ def make_plot(frame, show = False):
     density = (fromfile("rho.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
     normalized_density = density / surface_density_zero
 
+    initial_density = (fromfile("rho.0000.dbl").reshape(num_theta, num_z, num_rad))
+    normalized_density_initial = initial_density / surface_density_zero
+
     ### Plot ###
     if o.r_slice is not None:
         # Axes
@@ -95,6 +98,7 @@ def make_plot(frame, show = False):
         slice_choice = "rad"; this_slice = o.r_slice
         this_slice_i = np.searchsorted(rad, this_slice)
         density_slice = normalized_density[:, :, this_slice_i].T
+        initial_slice = normalized_density_initial[:, :, this_slice_i].T
     elif o.t_slice is not None:
         # Axes
         xs = rad
@@ -103,6 +107,7 @@ def make_plot(frame, show = False):
         slice_choice = "phi"; this_slice = o.t_slice
         this_slice_i = np.searchsorted(zs, this_slice)
         density_slice = normalized_density[this_slice_i, :, :]
+        initial_slice = normalized_density_initial[this_slice_i, :, :]
     elif o.z_slice is not None:
         # Axes
         xs = rad
@@ -111,8 +116,12 @@ def make_plot(frame, show = False):
         slice_choice = "theta"; this_slice = o.z_slice
         this_slice_i = np.searchsorted(theta, this_slice)
         density_slice = normalized_density[:, this_slice_i, :]
+        initial_slice = normalized_density_initial[:, this_slice_i, :]
 
-    result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
+    noise = 10**(-10)
+    density_fluctutation_slice = np.log10(abs(density_slice - initial_slice) + noise) # Fluctuation
+
+    result = ax.pcolormesh(xs, ys, density_fluctutation_slice, cmap = cmap) # log10 of |fluctuation|
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
@@ -140,10 +149,10 @@ def make_plot(frame, show = False):
     #this_title = readTitle()
     plot.xlabel(xlabel, fontsize = fontsize)
     plot.ylabel(ylabel, fontsize = fontsize)
-    plot.title("Gas Density Slice (%s = %s) at Orbit %d" % (slice_choice, this_slice, orbit), fontsize = fontsize + 1)
+    plot.title("Gas Density Fluctuation Slice (%s = %s) at Orbit %d" % (slice_choice, this_slice, orbit), fontsize = fontsize + 1)
 
     # Save and Close
-    plot.savefig("%s/densitySlice_%s%04d.png" % (save_directory, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/densityFluctuationSlice_%s%04d.png" % (save_directory, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
