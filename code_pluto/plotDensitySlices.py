@@ -73,7 +73,6 @@ my_dpi = 100
 
 
 def make_plot(frame, show = False):
-
     # Orbit Number
     #time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     #orbit = int(round(time / (2 * np.pi), 0)) * i
@@ -83,31 +82,66 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
     ax = fig.add_subplot(111)
 
-    # Axis
-    angles = np.linspace(0, 2 * np.pi, 7)
-    degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+    # Data
+    density = (fromfile("rho.%04d.dbl" % frame).reshape(num_theta, num_phi, num_rad))
+    normalized_density = density / surface_density_zero
 
-    plot.ylim(0, 2 * np.pi)
-    plot.yticks(angles, degree_angles)
+    ### Plot ###
+    if skip_r:
+        # Axes
+        xs = phi
+        ys = theta
+        # Slice
+        this_slice = np.searchsorted(rad, skip_r)
+        density_slice = normalized_density[:, :, this_slice]
+    elif skip_t:
+        # Axes
+        xs = rad
+        ys = theta
+        # Slice
+        this_slice = np.searchsorted(phi, skip_t)
+        density_slice = normalized_density[:, this_slice, :]
+    elif skip_z:
+        # Axes
+        xs = rad
+        ys = phi
+        # Slice
+        this_slice = np.searchsorted(theta, skip_z)
+        density_slice = normalized_density[this_slice, :, :, ]
+
+    result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
+
+    # Limits
+    if skip_r:
+        plot.xlim(o.t_in, o.t_out)
+        plot.ylim(o.z_in, o.z_out)
+    elif skip_t:
+        plot.xlim(o.r_in, o.r_out)
+        plot.ylim(o.z_in, o.z_out)
+    elif skip_z:
+        plot.xlim(o.r_in, o.r_out)
+        plot.ylim(o.t_in, o.t_out)
 
     x = rad
     prefix = ""
     plot.xlim(rad[0], rad[-1])
     xlabel = "Radius"
 
-    # Data
-    density = (fromfile("rho.%04d.dbl" % i).reshape(num_theta, num_phi, num_rad))
-    normalized_density = density / surface_density_zero
-
-    ### Plot ###
-    result = ax.pcolormesh(x, theta, normalized_density, cmap = cmap)
-    fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
-
     # Annotate
+    rad_label = "Radius"; phi_label = r"$\phi$"; z_label = r"$\theta$"
+
+    if skip_r:
+        xlabel = phi_label; ylabel = theta_label
+    elif skip_t:
+        xlabel = r_label; ylabel = z_label
+    elif skip_z:
+        xlabel = r_label; ylabel = theta_label
+
     #this_title = readTitle()
     plot.xlabel(xlabel, fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.ylabel(ylabel, fontsize = fontsize)
     plot.title("Gas Density Map at Orbit %d" % (orbit), fontsize = fontsize + 1)
 
     # Save and Close
@@ -138,16 +172,16 @@ def new_option_parser():
                     help="rate of sample (range call)")
 
 
-  # Which direction to skip?
-  parser.add_option("-r", action = "store_true", default = False,
-                    dest="skip_r",
-                    help="if missing radial direction")
-  parser.add_option("-t", action = "store_true", default = False,
-                    dest="skip_t",
-                    help="if missing azimuthal direction")
-  parser.add_option("-z", action = "store_true", default = False;
-                    dest="skip_z",
-                    help="if missing theta direction (out of the plane!)")
+  # Which direction to skip? (Store the slice)
+  parser.add_option("-r",
+                    dest="skip_r", type = "float", default = None,
+                    help="if missing radial direction, store r slice")
+  parser.add_option("-t",
+                    dest="skip_t", type = "float", default = None,
+                    help="if missing azimuthal direction, store t slice")
+  parser.add_option("-z",
+                    dest="skip_z", type = "float", default = None,
+                    help="if missing theta direction (out of the plane!), store z slice")
 
   # Ranges in plot? (defaults are domain ranges)
   parser.add_option("-a", 
