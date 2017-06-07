@@ -200,7 +200,7 @@ def new_option_parser():
                     dest="z_in", type = "float", default = theta[0],
                     help="start of theta range (out of the plane!)")
   parser.add_option("-f", 
-                    dest="z_out", type = "int", default = theta[1],
+                    dest="z_out", type = "int", default = theta[-1],
                     help="end of theta range (out of the plane!)")
 
   return parser
