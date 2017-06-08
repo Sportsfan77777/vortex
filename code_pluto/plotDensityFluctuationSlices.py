@@ -152,7 +152,7 @@ def make_plot(frame, show = False):
     plot.title("Gas Density Fluctuation Slice (%s = %s) at Orbit %d" % (slice_choice, this_slice, orbit), fontsize = fontsize + 1)
 
     # Save and Close
-    plot.savefig("%s/densityFluctuationSlice_%s%04d.png" % (save_directory, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/%s_densityFluctuationSlice_%s%04d.png" % (save_directory, prefix, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
@@ -209,6 +209,11 @@ def new_option_parser():
   parser.add_option("-f", 
                     dest="z_out", type = "int", default = zs[-1],
                     help="end of theta range (out of the plane!)")
+
+  # Savename
+  parser.add_option("--name", 
+                    dest="prefix", default = "default",
+                    help="savename to identify input parameters for plot")
 
   return parser
 
