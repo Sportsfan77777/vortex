@@ -113,6 +113,9 @@ def make_plot(frame, show = False):
         this_slice_i = np.searchsorted(zs, this_slice)
         density_slice = normalized_density[:, this_slice_i, :]
 
+    print "Max:", np.max(normalized_density), np.max(density_slice) # Diagnostic
+    print "Min:", np.min(normalized_density), np.min(density_slice) # Diagnostic
+
     result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
 
     # Colorbar
