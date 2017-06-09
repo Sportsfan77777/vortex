@@ -115,7 +115,7 @@ def make_plot(frame, show = False):
 
     # Colorbar
     clim = [o.clim_a, o.clim_b]
-    
+
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
@@ -146,7 +146,7 @@ def make_plot(frame, show = False):
     plot.title("Gas Density Slice (%s = %s) at Orbit %d" % (slice_choice, this_slice, orbit), fontsize = fontsize + 1)
 
     # Save and Close
-    plot.savefig("%s/densitySlice_%s%04d.png" % (save_directory, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/%s_densitySlice_%s%04d.png" % (save_directory, prefix, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
