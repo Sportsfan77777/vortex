@@ -125,7 +125,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(xs, ys, density_fluctutation_slice, cmap = cmap) # log10 of |fluctuation|
 
     # Diagnostic
-    print "(100, 99.9, 99.5):", np.max(density_fluctutation_slice), np.percentile(density_fluctutation_slice, 99.9), np.percentile(density_fluctutation_slice, 99.5)
+    print np.max(density_fluctutation_slice)
 
     # Colorbar
     clim = [o.clim_a, o.clim_b]
