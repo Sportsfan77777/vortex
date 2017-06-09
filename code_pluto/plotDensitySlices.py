@@ -215,7 +215,7 @@ def new_option_parser():
                     help="clim min")
   parser.add_option("-q", 
                     dest="clim_b", type = "float", default = 2.0,
-                    help="clim min")
+                    help="clim max")
 
   # Savename
   parser.add_option("--name", 

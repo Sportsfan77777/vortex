@@ -66,7 +66,6 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [-3, 1]
 
 fontsize = 14
 my_dpi = 100
@@ -124,6 +123,13 @@ def make_plot(frame, show = False):
     density_fluctutation_slice = np.log10(abs(density_slice - initial_slice) / initial_slice + noise) # Fluctuation
 
     result = ax.pcolormesh(xs, ys, density_fluctutation_slice, cmap = cmap) # log10 of |fluctuation|
+
+    # Diagnostic
+    print "(100, 99.9, 99.5):", np.max(density_fluctutation_slice), np.percentile(density_fluctutation_slice, 99.9), np.percentile(density_fluctutation_slice, 99.5)
+
+    # Colorbar
+    clim = [o.clim_a, o.clim_b]
+
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
@@ -216,6 +222,14 @@ def new_option_parser():
   parser.add_option("--name", 
                     dest="prefix", default = "default",
                     help="savename to identify input parameters for plot")
+
+  # Colorbar Limits
+  parser.add_option("-p", 
+                    dest="clim_a", type = "float", default = -2.0,
+                    help="clim min")
+  parser.add_option("-q", 
+                    dest="clim_b", type = "float", default = 0.0,
+                    help="clim max")
 
   return parser
 
