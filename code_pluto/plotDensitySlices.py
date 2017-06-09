@@ -146,7 +146,7 @@ def make_plot(frame, show = False):
     plot.title("Gas Density Slice (%s = %s) at Orbit %d" % (slice_choice, this_slice, orbit), fontsize = fontsize + 1)
 
     # Save and Close
-    plot.savefig("%s/%s_densitySlice_%s%04d.png" % (save_directory, prefix, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
+    plot.savefig("%s/%s_densitySlice_%s%04d.png" % (save_directory, o.prefix, suffix, frame), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
     plot.close(fig) # Close Figure (to avoid too many figures)
