@@ -201,6 +201,11 @@ def new_option_parser():
                     dest="z_out", type = "int", default = zs[-1],
                     help="end of theta range (out of the plane!)")
 
+  # Savename
+  parser.add_option("--name", 
+                    dest="prefix", default = "default",
+                    help="savename to identify input parameters for plot")
+
   return parser
 
 ##### Plot One File #####
