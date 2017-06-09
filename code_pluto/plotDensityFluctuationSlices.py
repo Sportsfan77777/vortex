@@ -1,5 +1,5 @@
 """
-plot 2-D density slices of 3-D simulations
+plot 3-D density slices of 3-D simulations
 
 Options:
 
@@ -83,11 +83,13 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
+    normalization = surface_density_zero / (np.sqrt(2 * np.pi) * scale_height)
+
     density = (fromfile("rho.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
-    normalized_density = density / surface_density_zero
+    normalized_density = density / normalization
 
     initial_density = (fromfile("rho.0000.dbl").reshape(num_theta, num_z, num_rad))
-    normalized_density_initial = initial_density / surface_density_zero
+    normalized_density_initial = initial_density / normalization
 
     ### Plot ###
     if o.r_slice is not None:
