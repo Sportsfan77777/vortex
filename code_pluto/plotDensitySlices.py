@@ -66,7 +66,6 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 2]
 
 fontsize = 14
 my_dpi = 100
@@ -113,6 +112,10 @@ def make_plot(frame, show = False):
         density_slice = normalized_density[:, this_slice_i, :]
 
     result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
+
+    # Colorbar
+    clim = [o.clim_a, o.clim_b]
+    
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
@@ -200,6 +203,14 @@ def new_option_parser():
   parser.add_option("-f", 
                     dest="z_out", type = "int", default = zs[-1],
                     help="end of theta range (out of the plane!)")
+
+  # Colorbar Limits
+  parser.add_option("-p", 
+                    dest="clim_a", type = "float", default = 0.0,
+                    help="clim min")
+  parser.add_option("-q", 
+                    dest="clim_b", type = "float", default = 2.0,
+                    help="clim min")
 
   # Savename
   parser.add_option("--name", 
