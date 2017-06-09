@@ -18,7 +18,7 @@ def make_movies():
     # Movie Parameter
     fps = 3
 
-    path = "%s/%s%s.png" % (save_directory, tmp_name, "%04d-0120")
+    path = "%s/%s%s.png" % (save_directory, tmp_name, "%04d")
     output = "%s/%s.mov" % (save_directory, movie_name)
 
     ### Make Movie Command ###
