@@ -66,7 +66,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [-5, 1]
+clim = [-3, 1]
 
 fontsize = 14
 my_dpi = 100
@@ -121,7 +121,7 @@ def make_plot(frame, show = False):
         initial_slice = normalized_density_initial[:, this_slice_i, :]
 
     noise = 10**(-10)
-    density_fluctutation_slice = np.log10(abs(density_slice - initial_slice) + noise) # Fluctuation
+    density_fluctutation_slice = np.log10(abs(density_slice - initial_slice) / initial_slice + noise) # Fluctuation
 
     result = ax.pcolormesh(xs, ys, density_fluctutation_slice, cmap = cmap) # log10 of |fluctuation|
     fig.colorbar(result)
