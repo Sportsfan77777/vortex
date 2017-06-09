@@ -37,8 +37,8 @@ movie_name = name + "120-300_1MJ_visc7_taper500"
 base_path = save_directory
 base_name = name
 
-old_range = np.linspace(120, 300, 37)
-new_range = range(37)
+old_range = np.linspace(0, 600, 10)
+new_range = range(len(old_range))
 renumber(old_range, new_range, base_path = base_path, base_name = base_name)
 
 # Make Movies
