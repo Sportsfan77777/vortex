@@ -84,7 +84,7 @@ def make_plot(frame, show = False):
     # Data
     density = (fromfile("rho.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
 
-    normalization = surface_density_zero / (np.sqrt(2 * np.pi) * scale_height)
+    normalization = surface_density_zero / (np.sqrt(2.0 * np.pi) * scale_height)
     normalized_density = density / normalization
 
     ### Plot ###
@@ -102,7 +102,7 @@ def make_plot(frame, show = False):
         ys = zs
         # Slice
         slice_choice = "phi"; this_slice = o.t_slice
-        this_slice_i = np.searchsorted(zs, this_slice)
+        this_slice_i = np.searchsorted(theta, this_slice)
         density_slice = normalized_density[this_slice_i, :, :]
     elif o.z_slice is not None:
         # Axes
@@ -110,7 +110,7 @@ def make_plot(frame, show = False):
         ys = theta
         # Slice
         slice_choice = "theta"; this_slice = o.z_slice
-        this_slice_i = np.searchsorted(theta, this_slice)
+        this_slice_i = np.searchsorted(zs, this_slice)
         density_slice = normalized_density[:, this_slice_i, :]
 
     result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
