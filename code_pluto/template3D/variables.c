@@ -71,7 +71,7 @@ double omegaK(double R) {
    //return 2.0*CONST_PI/(R*sqrt(R)); // old method
    double omega_sq;
    omega_sq = bigG * g_inputParam[P_Mstar] / pow(R, 3);
-   return sqrt(omega_sq);
+   return (2.0*CONST_PI) * sqrt(omega_sq);
 }
 
 double rotating_omegaK() {
@@ -80,13 +80,58 @@ double rotating_omegaK() {
    else return 0;
 }
 
+double omega3D(double R, double z) {
+   // Angular Velocity (Omega) --- does not include rotating frame
+   double q, p;
+   double R_sq, z_sq;
+   double coeff_a, term_a, term_b, term_c;
+   
+   q = g_inputParam[P_TemperaturePower];
+   p = g_inputParam[P_DensityPower];
+
+   R_sq = pow(R, 2);
+   z_sq = pow(z, 2);
+
+   coeff_a = omegaK(R)
+   term_a = q * (R / pow(R_sq + z_sq, 0.5));
+   term_b = 1 - q;
+   term_c = (q + p) * pow(aspectRatio(R), 2);
+
+   return coeff_a * (term_a + term_b - term_c);
+}
+
+double omegaPower(double R, double z) {
+   // radial exponential dependence of omega (d ln Omega / d ln r)
+   double p, q, f;
+   double R_sq, z_sq;
+   double zeroth_order_term;
+   double coeff, second_order_term;
+
+   zeroth_order_term = -1.5;
+
+   f = flaringIndex(); 
+   q = g_inputParam[P_TemperaturePower];
+   p = g_inputParam[P_DensityPower];
+
+   R_sq = pow(R, 2);
+   z_sq = pow(z, 2);
+
+   term_a = f * R * (z_sq / pow(R_sq + z_sq, 1.5));
+   term_b = -f * (p + q) * pow(R, f);
+   
+   coeff = omegaK(R) / omega3D(R, z);
+   second_order_term = term_a + term_b;
+
+   return zeroth_order_term + 0.5 * pow(coeff, 2) * second_order_term;
+}
+
 double vtheta2D(double R) {
    // Azimuthal Velocity (v_theta = v_Keplerian)
    return R * omegaK(R);
 }
 
 double vtheta3D(double R, double z) {
-   // Azimuthal Velocity (v_theta)
+   // Azimuthal Velocity (v_theta) --- includes rotating frame
    double q, p;
    double R_sq, z_sq;
    double coeff_a, term_a, term_b, term_c;
@@ -103,6 +148,72 @@ double vtheta3D(double R, double z) {
    term_c = (q + p) * pow(aspectRatio(R), 2);
 
    return coeff_a * sqrt(term_a + term_b - term_c) - R * rotating_omegaK();
+}
+
+double radialVelocity(double R, double z) {
+   // Radial Velocity (v_rad)
+   return omegaPower(R, z) * viscosityNu(R, z) / r
+}
+
+/// Viscosity ///
+
+double viscosityNu(double R, double z) {
+  // "viscosity component" of kinematic viscosity (nu = mu / rho)
+  // viscosity profile: See MKL 2014, Section 4.1.1
+  // Parameters: Cylindrical R and z
+
+  double visc_lower_amplitude, visc_upper_amplitude;
+  double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
+  double z_coor, ramp;
+  double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
+  double viscosity;
+
+  if (g_inputParam[P_ViscosityType] == 1) {
+    // alpha viscosity
+    lower_alpha = g_inputParam[P_BaseViscosity];
+    upper_alpha = g_inputParam[P_MaxViscosity];
+
+    visc_lower_amplitude = lower_alpha * soundSpeed(r0) * scaleHeight(r0);
+    visc_upper_amplitude = upper_alpha * soundSpeed(r0) * scaleHeight(r0);
+  }
+  else if (g_inputParam[P_ViscosityType] == 2) {
+    // mass accretion rate
+    lower_accretion_rate = g_inputParam[P_BaseViscosity];
+    upper_accretion_rate = g_inputParam[P_MaxViscosity];
+
+    visc_lower_amplitude = lower_accretion_rate / density2D(r0);
+    visc_upper_amplitude = upper_accretion_rate / density2D(r0);
+  }
+  else if (g_inputParam[P_ViscosityType] == 3) {
+    // constant
+    visc_lower_amplitude = g_inputParam[P_BaseViscosity];
+    visc_upper_amplitude = g_inputParam[P_MaxViscosity];
+  }
+  else {
+    // zero
+    return 0.0; // exit!
+  }
+
+  // The rest of the amplitude
+  density_factor = density3D(r0, z) / density3D(R, z);
+  visc_lower_amplitude *= (density_factor * omegaPower(R, z));
+  visc_upper_amplitude *= (density_factor * omegaPower(R, z));
+
+  // Z-profile
+  z_coor = z / scaleHeight(r0); // z in number of scaleights
+  ramp_amplitude = visc_upper_amplitude - visc_lower_amplitude;
+  ramp_center = g_inputParam[P_ViscosityRampCenter]; // in number of scale heights
+  ramp_width = g_inputParam[P_ViscosityRampWidth]; // in number of scale heights
+
+  positive_z_angle = (z_coor - ramp_center) / ramp_width;
+  negative_z_angle = (z_coor + ramp_center) / ramp_width;
+  ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle))
+
+  z_profile = 1.0 + (ramp_amplitude - 1.0) * ramp;
+  
+  // Full Expression
+  viscosity = visc_amplitude * z_profile;
+  return viscosity;
 }
 
 /// Potential ///
@@ -135,7 +246,7 @@ double smoothingLength() {
 
 double stellarPotential(double r) {
    // Gravitational Potential of Star (\phi_*)
-   return -bigG * g_inputParam[P_Mstar] / r;
+   return (4.0 * CONST_PI*CONST_PI) * -bigG * g_inputParam[P_Mstar] / r;
 }
 
 double planetPotential(double r, double R, double angle) {

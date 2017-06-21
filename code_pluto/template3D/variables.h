@@ -19,8 +19,14 @@ double pressure(double R, double z);
 /// Velocity ///
 double omegaK(double R);
 double rotating_omegaK();
+double omega3D(double R, double z);
+double omegaPower(double R, double z);
 double vtheta2D(double R);
 double vtheta3D(double R, double z);
+double radialVelocity(double R, double z);
+
+/// Viscosity ///
+double viscosityNu(double R, double z);
 
 /// Potential ///
 double planetMass();
