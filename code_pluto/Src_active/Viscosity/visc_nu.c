@@ -30,7 +30,9 @@ void Visc_nu(double *v, double x1, double x2, double x3,
 }
 
 double kinematic_viscosity(double R, double z) {
-  /* viscosity profile */
+  // viscosity profile: See MKL 2014, Section 4.1.1
+  // Parameters: Cylindrical R and z
+
   double visc_lower_amplitude, visc_upper_amplitude;
   double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
   double ramp, ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
@@ -63,6 +65,9 @@ double kinematic_viscosity(double R, double z) {
   }
 
   // The rest of the amplitude
+  density_factor = density3D(r0, z) / density3D(R, z);
+  visc_lower_amplitude *= (density_factor * omegaPower(R, z));
+  visc_upper_amplitude *= (density_factor * omegaPower(R, z));
 
   // Z-profile
   ramp_amplitude = visc_upper_amplitude - visc_lower_amplitude;
@@ -73,7 +78,7 @@ double kinematic_viscosity(double R, double z) {
 
   z_profile = 1.0 + (ramp_amplitude - 1.0) * ramp;
   
+  // Full Expression
   viscosity = visc_amplitude * z_profile;
-  
   return viscosity;
 }
