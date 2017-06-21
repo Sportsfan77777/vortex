@@ -108,7 +108,7 @@ void Init (double *us, double x1, double x2, double x3)
   
   us[RHO] = density3D(R, z);
 
-  us[VX1] = 0.0; // r 
+  us[VX1] = radialVelocity(R, z); // r 
   us[VX2] = 0.0; // phi (out of the plane)
   us[VX3] = vtheta3D(R, z); // theta (azimuthal)
 
