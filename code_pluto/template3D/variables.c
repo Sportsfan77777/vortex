@@ -169,15 +169,15 @@ double viscosityNu(double R, double z) {
   double viscosity;
 
   if (g_inputParam[P_ViscosityType] == 1) {
-    // alpha viscosity
+    // alpha viscosity (variable with 'r')
     lower_alpha = g_inputParam[P_BaseViscosity];
     upper_alpha = g_inputParam[P_MaxViscosity];
 
-    visc_lower_amplitude = lower_alpha * soundSpeed(r0) * scaleHeight(r0);
-    visc_upper_amplitude = upper_alpha * soundSpeed(r0) * scaleHeight(r0);
+    visc_lower_amplitude = lower_alpha * soundSpeed(R) * scaleHeight(R);
+    visc_upper_amplitude = upper_alpha * soundSpeed(R) * scaleHeight(R);
   }
   else if (g_inputParam[P_ViscosityType] == 2) {
-    // mass accretion rate
+    // mass accretion rate (constant)
     lower_accretion_rate = g_inputParam[P_BaseViscosity];
     upper_accretion_rate = g_inputParam[P_MaxViscosity];
 
