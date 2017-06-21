@@ -25,7 +25,7 @@ void Visc_nu(double *v, double x1, double x2, double x3,
       z = x1 * cos(x2)
   #endif
 
-  *nu1 = kinematic_viscosity(R, z) * density3D(R, z); // nu = mu * rho
+  *nu1 = kinematic_viscosity(R, z) * v[RHO]; // nu = mu * rho
   *nu2 = 0.0; // bulk viscosity
 }
 
