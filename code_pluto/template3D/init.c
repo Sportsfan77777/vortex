@@ -80,7 +80,7 @@ void Init (double *us, double x1, double x2, double x3)
   #endif
 
   #if ROTATING_FRAME == YES
-   g_OmegaZ  = sqrt(1.0 + g_inputParam[Mplanet]/g_inputParam[Mstar]*CONST_Mearth/CONST_Msun);
+   g_OmegaZ  = sqrt(1.0 + g_inputParam[P_Mplanet]/g_inputParam[P_Mstar]*CONST_Mearth/CONST_Msun);
    g_OmegaZ *= 2.0*CONST_PI;
   #endif
   
@@ -272,7 +272,8 @@ void NormalizeDensity (const Data *d, Grid *grid)
   int   i, j, k;
   double mc;
         
-  mc  = 0.5*g_inputParam[Mdisk]*CONST_Msun;
+  //mc  = 0.5*g_inputParam[Mdisk]*CONST_Msun;
+  mc = 0.1;
   mc /= UNIT_DENSITY*UNIT_LENGTH*UNIT_LENGTH*UNIT_LENGTH;
   DOM_LOOP(k,j,i){
     d->Vc[RHO][k][j][i] *= mc;
@@ -306,7 +307,8 @@ double BodyForcePotential(double x1, double x2, double x3)
  *
  *************************************************************************** */
 {
-  double d, R, r, z, th, x, y, phiplanet, rsm;
+  double R, r, z, th, x, y;
+  double angle_cell, angle_planet, angular_separation;
   double xp, yp, t, phi;
 
   #if GEOMETRY == POLAR
@@ -339,8 +341,8 @@ double BodyForcePotential(double x1, double x2, double x3)
    double OmegaZ;
    t = g_time;
    if (g_stepNumber == 2) t += g_dt;
-   OmegaZ  = sqrt(1.0 + g_inputParam[Mplanet]/g_inputParam[Mstar]*CONST_Mearth/CONST_Msun);
-   OmegaZ *= 2.0*CONST_PI;
+   OmegaZ  = sqrt(1.0 + g_inputParam[P_Mplanet]/g_inputParam[P_Mstar]*CONST_Mearth/CONST_Msun);
+   //OmegaZ *= 2.0*CONST_PI;
 
    xp = cos(OmegaZ*t);
    yp = sin(OmegaZ*t);
@@ -349,13 +351,11 @@ double BodyForcePotential(double x1, double x2, double x3)
    yp = 1.0/sqrt(2.0); 
   #endif
 
-  d = sqrt((x-xp)*(x-xp) + (y-yp)*(y-yp) + z*z);
-  rsm = 0.03*R;
-  if (d > rsm) phiplanet = g_inputParam[Mplanet]/d;
-  else phiplanet = g_inputParam[Mplanet]/d*(pow(d/rsm,4.)-2.*pow(d/rsm,3.)+2.*d/rsm);
-  
-  phi  = - 4.0*CONST_PI*CONST_PI/g_inputParam[Mstar];
-  phi *= (g_inputParam[Mstar]/r + phiplanet*CONST_Mearth/CONST_Msun);
+  angle_cell = x3; // phi (angle in the plane)
+  angle_planet = atan2(yp, xp); 
+  angular_separation = angle_cell - angle_planet; // between cell and planet
+
+  phi = stellarPotential(r) + planetPotential(r, R, angular_separation);
 
   return phi;
 }

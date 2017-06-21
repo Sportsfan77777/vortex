@@ -18,7 +18,15 @@ double pressure(double R, double z);
 
 /// Velocity ///
 double omegaK(double R);
+double rotating_omegaK();
 double vtheta2D(double R);
 double vtheta3D(double R, double z);
+
+/// Potential ///
+double planetMass();
+double distanceToPlanet(double r, double R, double angle);
+double smoothingLength();
+double stellarPotential(double r);
+double planetPotential(double r, double R, double angle);
 
 #endif // VARIABLES_H_

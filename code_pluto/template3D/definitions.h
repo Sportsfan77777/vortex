@@ -1,5 +1,5 @@
 #define  PHYSICS                 HD
-#define  DIMENSIONS              3
+#define  DIMENSIONS              2
 #define  COMPONENTS              3
 #define  GEOMETRY                SPHERICAL
 #define  BODY_FORCE              POTENTIAL
@@ -8,7 +8,7 @@
 #define  TIME_STEPPING           RK2
 #define  DIMENSIONAL_SPLITTING   NO
 #define  NTRACER                 0
-#define  USER_DEF_PARAMETERS     8
+#define  USER_DEF_PARAMETERS     11
 
 /* -- physics dependent declarations -- */
 
@@ -16,24 +16,28 @@
 #define  ENTROPY_SWITCH          NO
 #define  THERMAL_CONDUCTION      NO
 #define  VISCOSITY               NO
-#define  ROTATING_FRAME          NO
+#define  ROTATING_FRAME          YES
 
 /* -- user-defined parameters (labels) -- */
 
-#define  Mstar                   0
-#define  Mdisk                   1
-#define  Mplanet                 2
-#define  Viscosity               3
-#define  AspectRatio_Param       4
-#define  DensityPower            5
-#define  TemperaturePower        6
-#define  Sigma0_Param            7
+#define  P_Mstar                 0
+#define  P_Mplanet               1
+#define  P_Viscosity             2
+#define  P_AspectRatio           3
+#define  P_DensityPower          4
+#define  P_TemperaturePower      5
+#define  P_Sigma0                6
+#define  P_SmoothingLength       7
+#define  P_SMOOTH_SCALE_HEIGHT   8
+#define  P_SMOOTH_HILL_RADIUS    9
+#define  P_INDIRECT_TERM        10
+
 
 /* [Beg] user-defined constants (do not change this line) */
 
 #define  UNIT_LENGTH             (5.2*CONST_au)
 #define  UNIT_DENSITY            (CONST_Msun/(UNIT_LENGTH*UNIT_LENGTH*UNIT_LENGTH))
-#define  UNIT_VELOCITY           (sqrt(CONST_G*g_inputParam[Mstar]*CONST_Msun/UNIT_LENGTH))
+#define  UNIT_VELOCITY           (sqrt(CONST_G*g_inputParam[P_Mstar]*CONST_Msun/UNIT_LENGTH))
 
 /* [End] user-defined constants (do not change this line) */
 
