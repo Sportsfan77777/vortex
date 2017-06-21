@@ -25,7 +25,7 @@ void Visc_nu(double *v, double x1, double x2, double x3,
       z = x1 * cos(x2)
   #endif
 
-  *nu1 = kinematic_viscosity(R, z);
+  *nu1 = kinematic_viscosity(R, z) * v[RHO]; // nu = mu * rho
   *nu2 = 0.0; // bulk viscosity
 }
 
@@ -71,6 +71,8 @@ double kinematic_viscosity(double R, double z) {
 
   // Z-profile
   ramp_amplitude = visc_upper_amplitude - visc_lower_amplitude;
+  ramp_center = g_inputParam[P_ViscosityRampCenter];
+  ramp_width = g_inputParam[P_ViscosityRampWidth];
 
   positive_z_angle = (z - ramp_center) / ramp_width;
   negative_z_angle = (z + ramp_center) / ramp_width;
