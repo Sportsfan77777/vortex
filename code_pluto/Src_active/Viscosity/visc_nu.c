@@ -36,7 +36,8 @@ double kinematic_viscosity(double R, double z) {
 
   double visc_lower_amplitude, visc_upper_amplitude;
   double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
-  double ramp, ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
+  double z_coor, ramp;
+  double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
   double viscosity;
 
   if (g_inputParam[P_ViscosityType] == 1) {
@@ -71,12 +72,13 @@ double kinematic_viscosity(double R, double z) {
   visc_upper_amplitude *= (density_factor * omegaPower(R, z));
 
   // Z-profile
+  z_coor = z / scaleHeight(r0); // z in number of scaleights
   ramp_amplitude = visc_upper_amplitude - visc_lower_amplitude;
-  ramp_center = g_inputParam[P_ViscosityRampCenter];
-  ramp_width = g_inputParam[P_ViscosityRampWidth];
+  ramp_center = g_inputParam[P_ViscosityRampCenter]; // in number of scale heights
+  ramp_width = g_inputParam[P_ViscosityRampWidth]; // in number of scale heights
 
-  positive_z_angle = (z - ramp_center) / ramp_width;
-  negative_z_angle = (z + ramp_center) / ramp_width;
+  positive_z_angle = (z_coor - ramp_center) / ramp_width;
+  negative_z_angle = (z_coor + ramp_center) / ramp_width;
   ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle))
 
   z_profile = 1.0 + (ramp_amplitude - 1.0) * ramp;
