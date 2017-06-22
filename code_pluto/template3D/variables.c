@@ -63,8 +63,7 @@ double pressure(double R, double z) {
     return pow(soundSpeed(R), 2) * density3D(R, z);
 }
 
-
-/// Velocity ///
+/// Azimuthal Velocity ///
 
 double omegaK(double R) {
    // Keplerian Angular Velocity --- Set by Kepler's 3rd Law
@@ -125,13 +124,13 @@ double omegaPower(double R, double z) {
    return zeroth_order_term + 0.5 * pow(coeff, 2) * second_order_term;
 }
 
-double vtheta2D(double R) {
-   // Azimuthal Velocity (v_theta = v_Keplerian)
+double azimuthalVelocity2D(double R) {
+   // Azimuthal Velocity (v_phi = v_Keplerian)
    return R * omegaK(R);
 }
 
-double vtheta3D(double R, double z) {
-   // Azimuthal Velocity (v_theta) --- includes rotating frame
+double azimuthalVelocity3D(double R, double z) {
+   // Azimuthal Velocity (v_phi) --- includes rotating frame
    double q, p;
    double R_sq, z_sq;
    double coeff_a, term_a, term_b, term_c;
@@ -150,9 +149,21 @@ double vtheta3D(double R, double z) {
    return coeff_a * sqrt(term_a + term_b - term_c) - R * rotating_omegaK();
 }
 
-double radialVelocity(double R, double z) {
-   // Radial Velocity (v_rad)
-   return omegaPower(R, z) * viscosityNu(R, z) / r
+/// Radial Velocity ///
+
+double cylindricalRadialVelocity(double R, double z) {
+   // Radial Velocity (v_R) --- set by viscous torque (v_R = nu / R * (d ln Omega / d ln R))
+   return omegaPower(R, z) * viscosityNu(R, z) / R;
+}
+
+double radialVelocity_rComponent(double R, double theta, double z) {
+   // Spherical Radial Velocity (v_r) --- set by coordinate change (v_r = V_R * sin theta)
+   return cylindricalRadialVelocity(R, z) * sin(theta);
+}
+
+double radialVelocity_thetaComponent(double R, double theta, double z) {
+   // Spherical Radial Velocity: Small Theta Component (v_theta) --- set by coordinate change (v_r = V_R * cos theta)
+   return cylindricalRadialVelocity(R, z) * cos(theta);
 }
 
 /// Viscosity ///

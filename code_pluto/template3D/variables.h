@@ -16,14 +16,18 @@ double aspectRatio(double R);
 double soundSpeed(double R);
 double pressure(double R, double z);
 
-/// Velocity ///
+/// Azimuthal Velocity ///
 double omegaK(double R);
 double rotating_omegaK();
 double omega3D(double R, double z);
 double omegaPower(double R, double z);
-double vtheta2D(double R);
-double vtheta3D(double R, double z);
-double radialVelocity(double R, double z);
+double azimuthalVelocity2D(double R);
+double azimuthalVelocity3D(double R, double z);
+
+/// Radial Velocity ///
+double cylindricalRadialVelocity(double R, double z);
+double radialVelocity_rComponent(double R, double theta, double z);
+double radialVelocity_thetaComponent(double R, double theta, double z);
 
 /// Viscosity ///
 double viscosityNu(double R, double z);

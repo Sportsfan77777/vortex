@@ -73,15 +73,9 @@ void Init (double *us, double x1, double x2, double x3)
  *********************************************************************** */
 {
   double r, th, R, z, H, OmegaK, cs;
-  double scrh;
 
   #if EOS == IDEAL
    g_gamma = 1.01;
-  #endif
-
-  #if ROTATING_FRAME == YES
-   g_OmegaZ  = sqrt(1.0 + g_inputParam[P_Mplanet]/g_inputParam[P_Mstar]*CONST_Mearth/CONST_Msun);
-   g_OmegaZ *= 2.0*CONST_PI;
   #endif
   
   #if GEOMETRY == POLAR
@@ -102,22 +96,18 @@ void Init (double *us, double x1, double x2, double x3)
    z  = r*cos(th);
   #endif
   
-  H      = scaleHeight(R);
-  OmegaK = omegaK(R);
-  cs     = soundSpeed(R);
-  
+  // Initialize Field Variables
   us[RHO] = density3D(R, z);
 
-  us[VX1] = radialVelocity(R, z); // r 
-  us[VX2] = 0.0; // phi (out of the plane)
-  us[VX3] = vtheta3D(R, z); // theta (azimuthal)
+  us[VX1] = radialVelocity_rComponent(R, th, z); // r 
+  us[VX2] = radialVelocity_thetaComponent(R, th, z); // theta (out of the plane)
+  us[VX3] = azimuthalVelocity3D(R, z); // phi (azimuthal)
 
-  //us[iVPHI] = R*(OmegaK - g_OmegaZ);
   #if EOS == IDEAL
    us[PRS] = pressure(R, z);
   #elif EOS == ISOTHERMAL
 //   g_isoSoundSpeed = cs;
-     g_isoSoundSpeed = CONST_PI*0.1;
+     g_isoSoundSpeed = CONST_PI*0.1; // keep in mind, this is for Omega = 2 * pi
   #endif
 
 #if DUST == YES
@@ -171,7 +161,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
-      d->Vc[iVPHI][k][j][i] = vtheta3D(R, z);
+      d->Vc[iVPHI][k][j][i] = azimuthalVelocity3D(R, z);
       #if EOS == IDEAL
           d->Vc[PRS][k][j][i]  = pressure(R, z);
       #endif
@@ -191,7 +181,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
-      d->Vc[iVPHI][k][j][i] = vtheta3D(R, z);
+      d->Vc[iVPHI][k][j][i] = azimuthalVelocity3D(R, z);
       #if EOS == IDEAL
           d->Vc[PRS][k][j][i]  = pressure(R, z);
       #endif
@@ -211,7 +201,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
-      d->Vc[iVPHI][k][j][i] = vtheta3D(R, z);
+      d->Vc[iVPHI][k][j][i] = azimuthalVelocity3D(R, z);
       #if EOS == IDEAL
           d->Vc[PRS][k][j][i]  = pressure(R, z);
       #endif
