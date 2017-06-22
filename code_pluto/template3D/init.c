@@ -133,7 +133,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
 {
   int   i, j, k, nv;
   double *x1, *x2, *x3, R, z, OmegaK, v[256];
-  static int do_once = 1;
+  static int do_once = 0;
   
   x1 = grid[IDIR].x;
   x2 = grid[JDIR].x;
@@ -152,12 +152,15 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     X1_BEG_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
+         th = x2;
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = 0.0;
-      #if GEOMETRY == CYLINDRICAL ||  GEOMETRY == SPHERICAL
+      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
+      #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
+      #elif GEOMETRY == SPHERICAL
+          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
@@ -172,14 +175,17 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     X1_END_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
+         th = x2;
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = 0.0;
-      #if GEOMETRY == CYLINDRICAL ||  GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
+      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
+      #if GEOMETRY == CYLINDRICAL
+          d->Vc[VX2][k][j][i]   = 0.0; // vphi
+      #elif GEOMETRY == SPHERICAL
+          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
-          d->Vc[VX3][k][j][i]   = 0.0; // vz
+          d->Vc[VX3][k][j][i]   = 0.0; // vtheta
       #endif
       d->Vc[iVPHI][k][j][i] = azimuthalVelocity3D(R, z);
       #if EOS == IDEAL
@@ -192,12 +198,15 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     X2_BEG_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
+         th = x2;
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = 0.0;
-      #if GEOMETRY == CYLINDRICAL ||  GEOMETRY == SPHERICAL
+      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
+      #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
+      #elif GEOMETRY == SPHERICAL
+          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
