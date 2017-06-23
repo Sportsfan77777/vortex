@@ -132,7 +132,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
  *********************************************************************** */
 {
   int   i, j, k, nv;
-  double *x1, *x2, *x3, R, z, OmegaK, v[256];
+  double *x1, *x2, *x3, R, th, z, OmegaK, v[256];
   static int do_once = 0;
   
   x1 = grid[IDIR].x;
@@ -152,7 +152,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     X1_BEG_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
-         th = x2;
+         th = x2[j];
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
@@ -175,7 +175,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     X1_END_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
-         th = x2;
+         th = x2[j];
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
@@ -198,7 +198,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     X2_BEG_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
-         th = x2;
+         th = x2[j];
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);

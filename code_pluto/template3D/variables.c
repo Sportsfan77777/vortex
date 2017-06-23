@@ -91,7 +91,7 @@ double omega3D(double R, double z) {
    R_sq = pow(R, 2);
    z_sq = pow(z, 2);
 
-   coeff_a = omegaK(R)
+   coeff_a = omegaK(R);
    term_a = q * (R / pow(R_sq + z_sq, 0.5));
    term_b = 1 - q;
    term_c = (q + p) * pow(aspectRatio(R), 2);
@@ -104,7 +104,7 @@ double omegaPower(double R, double z) {
    double p, q, f;
    double R_sq, z_sq;
    double zeroth_order_term;
-   double coeff, second_order_term;
+   double coeff, second_order_term, term_a, term_b;
 
    zeroth_order_term = -1.5;
 
@@ -173,11 +173,11 @@ double viscosityNu(double R, double z) {
   // viscosity profile: See MKL 2014, Section 4.1.1
   // Parameters: Cylindrical R and z
 
-  double visc_lower_amplitude, visc_upper_amplitude;
+  double visc_lower_amplitude, visc_upper_amplitude, density_factor;
   double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
   double z_coor, ramp;
   double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
-  double viscosity;
+  double viscosity z_profile;
 
   if (g_inputParam[P_ViscosityType] == 1) {
     // alpha viscosity (variable with 'r')
@@ -218,12 +218,12 @@ double viscosityNu(double R, double z) {
 
   positive_z_angle = (z_coor - ramp_center) / ramp_width;
   negative_z_angle = (z_coor + ramp_center) / ramp_width;
-  ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle))
+  ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle));
 
   z_profile = 1.0 + (ramp_amplitude - 1.0) * ramp;
   
   // Full Expression
-  viscosity = visc_amplitude * z_profile;
+  viscosity = visc_lower_amplitude * z_profile;
   return viscosity;
 }
 
