@@ -96,7 +96,7 @@ double omega3D(double R, double z) {
    term_b = 1 - q;
    term_c = (q + p) * pow(aspectRatio(R), 2);
 
-   return coeff_a * (term_a + term_b - term_c);
+   return coeff_a * sqrt(term_a + term_b - term_c);
 }
 
 double omegaPower(double R, double z) {
