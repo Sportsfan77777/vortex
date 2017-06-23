@@ -8,14 +8,14 @@
 #define  TIME_STEPPING           RK2
 #define  DIMENSIONAL_SPLITTING   NO
 #define  NTRACER                 0
-#define  USER_DEF_PARAMETERS     11
+#define  USER_DEF_PARAMETERS     16
 
 /* -- physics dependent declarations -- */
 
 #define  EOS                     ISOTHERMAL
 #define  ENTROPY_SWITCH          NO
 #define  THERMAL_CONDUCTION      NO
-#define  VISCOSITY               NO
+#define  VISCOSITY               YES
 #define  ROTATING_FRAME          YES
 
 /* -- user-defined parameters (labels) -- */
@@ -31,7 +31,11 @@
 #define  P_SMOOTH_SCALE_HEIGHT   8
 #define  P_SMOOTH_HILL_RADIUS    9
 #define  P_INDIRECT_TERM        10
-
+#define  P_ViscosityType        11
+#define  P_BaseViscosity        12
+#define  P_MaxViscosity         13
+#define  P_ViscosityRampCenter  14
+#define  P_ViscosityRampWidth   15
 
 /* [Beg] user-defined constants (do not change this line) */
 
@@ -46,7 +50,7 @@
 #define  INITIAL_SMOOTHING   NO
 #define  WARNING_MESSAGES    YES
 #define  PRINT_TO_FILE       NO
-#define  INTERNAL_BOUNDARY   NO
+#define  INTERNAL_BOUNDARY   YES
 #define  SHOCK_FLATTENING    NO
 #define  CHAR_LIMITING       NO
 #define  LIMITER             VANLEER_LIM
