@@ -141,7 +141,7 @@ double azimuthalVelocity3D(double R, double z) {
    R_sq = pow(R, 2);
    z_sq = pow(z, 2);
 
-   coeff_a = vtheta2D(R);
+   coeff_a = azimuthalVelocity2D(R);
    term_a = q * (R / pow(R_sq + z_sq, 0.5));
    term_b = 1 - q;
    term_c = (q + p) * pow(aspectRatio(R), 2);
