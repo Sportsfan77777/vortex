@@ -47,7 +47,7 @@ num_theta = int((pluto_par["X3-grid"])[2])
 
 if ((pluto_par["X1-grid"])[3] == "l+"):
     # log grid
-    rad = np.linspace(np.log(float((pluto_par["X1-grid"])[1])), np.log(float((pluto_par["X1-grid"])[4])), num_rad)
+    rad = np.linspace(np.log10(float((pluto_par["X1-grid"])[1])), np.log10(float((pluto_par["X1-grid"])[4])), num_rad)
 else:
     # uniform grid
     rad = np.linspace(float((pluto_par["X1-grid"])[1]), float((pluto_par["X1-grid"])[4]), num_rad)
