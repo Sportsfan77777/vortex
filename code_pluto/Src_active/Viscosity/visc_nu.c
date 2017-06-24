@@ -21,8 +21,8 @@ void Visc_nu(double *v, double x1, double x2, double x3,
   #if GEOMETRY == CYLINDRICAL || POLAR
       R = x1;
   #elif GEOMETRY == SPHERICAL
-      R = x1 * sin(x2)
-      z = x1 * cos(x2)
+      R = x1 * sin(x2);
+      z = x1 * cos(x2);
   #endif
 
   *nu1 = viscosityNu(R, z) * v[RHO]; // nu = mu * rho
