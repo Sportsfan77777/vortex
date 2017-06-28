@@ -153,7 +153,10 @@ double azimuthalVelocity3D(double R, double z) {
 
 double cylindricalRadialVelocity(double R, double z) {
    // Radial Velocity (v_R) --- set by viscous torque (v_R = nu / R * (d ln Omega / d ln R))
-   return omegaPower(R, z) * viscosityNu(R, z) / R;
+   double unit_velocity;
+
+   unit_velocity = 2.0 * CONST_PI;
+   return unit_velocity * (omegaPower(R, z) * viscosityNu(R, z) / R);
 }
 
 double radialVelocity_rComponent(double R, double theta, double z) {
