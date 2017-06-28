@@ -220,7 +220,7 @@ double viscosityNu(double R, double z) {
 
   // Z-profile
   z_coor = z / scaleHeight(r0); // z in number of scaleights
-  ramp_amplitude = visc_upper_amplitude - visc_lower_amplitude;
+  ramp_amplitude = (visc_upper_amplitude - visc_lower_amplitude) / visc_lower_amplitude;
   ramp_center = g_inputParam[P_ViscRampCenter]; // in number of scale heights
   ramp_width = g_inputParam[P_ViscRampWidth]; // in number of scale heights
 
