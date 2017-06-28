@@ -207,8 +207,9 @@ double viscosityNu(double R, double z) {
 
   // The rest of the amplitude
   density_factor = density3D(r0, z) / density3D(R, z);
-  //visc_lower_amplitude *= (density_factor * omegaPower(R, z));
-  //visc_upper_amplitude *= (density_factor * omegaPower(R, z));
+  omega_factor = omegaPower(r0, z) / omegaPower(R, z);
+  //visc_lower_amplitude *= (density_factor * omega_factor);
+  //visc_upper_amplitude *= (density_factor * omega_factor);
 
   if (g_inputParam[P_BaseViscosity] >= g_inputParam[P_MaxViscosity]) {
      // No Ramp!
