@@ -173,7 +173,7 @@ double viscosityNu(double R, double z) {
   // viscosity profile: See MKL 2014, Section 4.1.1
   // Parameters: Cylindrical R and z
 
-  double visc_lower_amplitude, visc_upper_amplitude, density_factor;
+  double visc_lower_amplitude, visc_upper_amplitude, density_factor, omega_factor;
   double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
   double z_coor, ramp;
   double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
