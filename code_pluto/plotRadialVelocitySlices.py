@@ -87,10 +87,10 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("vx1.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
+    radial_velocity = (fromfile("vx1.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
 
-    normalization = surface_density_zero / (np.sqrt(2.0 * np.pi) * scale_height)
-    normalized_density = density / normalization
+    normalization = 2.0 * np.pi
+    normalized_radial_velocity = radial_velocity / normalization
 
     ### Plot ###
     if o.r_slice is not None:
@@ -100,7 +100,7 @@ def make_plot(frame, show = False):
         # Slice
         slice_choice = "rad"; this_slice = o.r_slice
         this_slice_i = np.searchsorted(rad, this_slice)
-        density_slice = normalized_density[:, :, this_slice_i].T
+        radial_velocity_slice = normalized_radial_velocity[:, :, this_slice_i].T
     elif o.t_slice is not None:
         # Axes
         xs = rad
@@ -108,7 +108,7 @@ def make_plot(frame, show = False):
         # Slice
         slice_choice = "phi"; this_slice = o.t_slice
         this_slice_i = np.searchsorted(theta, this_slice)
-        density_slice = normalized_density[this_slice_i, :, :]
+        radial_velocity_slice = normalized_radial_velocity[this_slice_i, :, :]
     elif o.z_slice is not None:
         # Axes
         xs = rad
@@ -116,12 +116,12 @@ def make_plot(frame, show = False):
         # Slice
         slice_choice = "theta"; this_slice = o.z_slice
         this_slice_i = np.searchsorted(zs, this_slice)
-        density_slice = normalized_density[:, this_slice_i, :]
+        radial_velocity_slice = normalized_radial_velocity[:, this_slice_i, :]
 
-    print "Max:", np.max(normalized_density), np.max(density_slice) # Diagnostic
-    print "Min:", np.min(normalized_density), np.min(density_slice) # Diagnostic
+    print "Max:", np.max(normalized_radial_velocity), np.max(radial_velocity_slice) # Diagnostic
+    print "Min:", np.min(normalized_radial_velocity), np.min(radial_velocity_slice) # Diagnostic
 
-    result = ax.pcolormesh(xs, ys, density_slice, cmap = cmap)
+    result = ax.pcolormesh(xs, ys, radial_velocity_slice, cmap = cmap)
 
     # Colorbar
     clim = [o.clim_a, o.clim_b]
