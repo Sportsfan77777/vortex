@@ -33,7 +33,6 @@ double density3D(double R, double z) {
 }
 
 /// Pressure + Temperature ///
-
 double flaringIndex() {
    // Flaring Index
    return (-g_inputParam[P_TemperaturePower] + 1) / 2.0;
@@ -62,6 +61,7 @@ double pressure(double R, double z) {
     // Pressure --- Set by ideal gas law (?)
     return pow(soundSpeed(R), 2) * density3D(R, z);
 }
+
 
 /// Azimuthal Velocity ///
 
@@ -96,7 +96,7 @@ double omega3D(double R, double z) {
    term_b = 1 - q;
    term_c = (q + p) * pow(aspectRatio(R), 2);
 
-   return coeff_a * sqrt(term_a + term_b - term_c);
+   return coeff_a * (term_a + term_b - term_c);
 }
 
 double omegaPower(double R, double z) {
@@ -177,7 +177,7 @@ double viscosityNu(double R, double z) {
   double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
   double z_coor, ramp;
   double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
-  double viscosity z_profile;
+  double viscosity, z_profile;
 
   if (g_inputParam[P_ViscosityType] == 1) {
     // alpha viscosity (variable with 'r')
@@ -207,20 +207,27 @@ double viscosityNu(double R, double z) {
 
   // The rest of the amplitude
   density_factor = density3D(r0, z) / density3D(R, z);
-  visc_lower_amplitude *= (density_factor * omegaPower(R, z));
-  visc_upper_amplitude *= (density_factor * omegaPower(R, z));
+  //visc_lower_amplitude *= (density_factor * omegaPower(R, z));
+  //visc_upper_amplitude *= (density_factor * omegaPower(R, z));
+
+  if (g_inputParam[P_BaseViscosity] >= g_inputParam[P_MaxViscosity]) {
+     // No Ramp!
+     return visc_lower_amplitude;
+  }
+
+  ///// With Ramp /////
 
   // Z-profile
   z_coor = z / scaleHeight(r0); // z in number of scaleights
   ramp_amplitude = visc_upper_amplitude - visc_lower_amplitude;
-  ramp_center = g_inputParam[P_ViscosityRampCenter]; // in number of scale heights
-  ramp_width = g_inputParam[P_ViscosityRampWidth]; // in number of scale heights
+  ramp_center = g_inputParam[P_ViscRampCenter]; // in number of scale heights
+  ramp_width = g_inputParam[P_ViscRampWidth]; // in number of scale heights
 
   positive_z_angle = (z_coor - ramp_center) / ramp_width;
   negative_z_angle = (z_coor + ramp_center) / ramp_width;
   ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle));
 
-  z_profile = 1.0 + (ramp_amplitude - 1.0) * ramp;
+  z_profile = 1.0 + (ramp_amplitude) * ramp;
   
   // Full Expression
   viscosity = visc_lower_amplitude * z_profile;
@@ -248,8 +255,12 @@ double smoothingLength() {
    // Smoothing Length (either H, r_h, or 0.0)
    double reference_radius;
 
-   if (g_inputParam[P_SMOOTH_SCALE_HEIGHT]) reference_radius = g_inputParam[P_AspectRatio];
-   else if (g_inputParam[P_SMOOTH_HILL_RADIUS]) reference_radius = r0 * pow(planetMass() / g_inputParam[P_Mstar], 1.0 / 3.0);
+   if (g_inputParam[P_SmoothingType] == 1) {
+       reference_radius = g_inputParam[P_AspectRatio]; // (H / R) at r0
+   }
+   else if (g_inputParam[P_SmoothingType] == 2) {
+       reference_radius = r0 * pow(planetMass() / g_inputParam[P_Mstar], 1.0 / 3.0); // Hill Radius
+   }
    else reference_radius = 0.0;
 
    return 0.6 * reference_radius;
@@ -270,11 +281,12 @@ double planetPotential(double r, double R, double angle) {
 
    phi = -bigG * planet_mass / d;
 
-   if (g_inputParam[P_INDIRECT_TERM]) {
+   if (g_inputParam[P_IndirectTerm]) {
        indirect_term = -planet_mass * R * cos(angle) / pow(r0, 2);
        phi += indirect_term;
    }
 
    return phi;
 }
+
 

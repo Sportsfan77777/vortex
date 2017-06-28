@@ -73,9 +73,15 @@ void Init (double *us, double x1, double x2, double x3)
  *********************************************************************** */
 {
   double r, th, R, z, H, OmegaK, cs;
+  double scrh;
 
   #if EOS == IDEAL
    g_gamma = 1.01;
+  #endif
+
+  #if ROTATING_FRAME == YES
+   g_OmegaZ  = sqrt(1.0 + g_inputParam[P_Mplanet]/g_inputParam[P_Mstar]*CONST_Mearth/CONST_Msun);
+   g_OmegaZ *= 2.0*CONST_PI;
   #endif
   
   #if GEOMETRY == POLAR
@@ -107,7 +113,7 @@ void Init (double *us, double x1, double x2, double x3)
    us[PRS] = pressure(R, z);
   #elif EOS == ISOTHERMAL
 //   g_isoSoundSpeed = cs;
-     g_isoSoundSpeed = CONST_PI*0.1; // keep in mind, this is for Omega = 2 * pi
+     g_isoSoundSpeed = CONST_PI*0.1;
   #endif
 
 #if DUST == YES
@@ -156,11 +162,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
+      d->Vc[VX1][k][j][i]   = 0; radialVelocity_rComponent(R, th, z);
       #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
       #elif GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
+          d->Vc[VX2][k][j][i]   = 0; radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
@@ -179,11 +185,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
+      d->Vc[VX1][k][j][i]   = 0; radialVelocity_rComponent(R, th, z);
       #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vphi
       #elif GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
+          d->Vc[VX2][k][j][i]   = 0; radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vtheta
       #endif
@@ -202,11 +208,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
+      d->Vc[VX1][k][j][i]   = 0; radialVelocity_rComponent(R, th, z);
       #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
       #elif GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
+          d->Vc[VX2][k][j][i]   = 0; radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
@@ -216,6 +222,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
       #endif
     }
   }
+
 
 /* original below ************************
 
@@ -271,8 +278,7 @@ void NormalizeDensity (const Data *d, Grid *grid)
   int   i, j, k;
   double mc;
         
-  //mc  = 0.5*g_inputParam[Mdisk]*CONST_Msun;
-  mc = 0.1;
+  mc  = 0.5*g_inputParam[P_Mdisk]*CONST_Msun;
   mc /= UNIT_DENSITY*UNIT_LENGTH*UNIT_LENGTH*UNIT_LENGTH;
   DOM_LOOP(k,j,i){
     d->Vc[RHO][k][j][i] *= mc;
@@ -306,7 +312,7 @@ double BodyForcePotential(double x1, double x2, double x3)
  *
  *************************************************************************** */
 {
-  double R, r, z, th, x, y;
+  double d, R, r, z, th, x, y, phiplanet, rsm;
   double angle_cell, angle_planet, angular_separation;
   double xp, yp, t, phi;
 
@@ -341,7 +347,7 @@ double BodyForcePotential(double x1, double x2, double x3)
    t = g_time;
    if (g_stepNumber == 2) t += g_dt;
    OmegaZ  = sqrt(1.0 + g_inputParam[P_Mplanet]/g_inputParam[P_Mstar]*CONST_Mearth/CONST_Msun);
-   //OmegaZ *= 2.0*CONST_PI;
+   OmegaZ *= 2.0*CONST_PI;
 
    xp = cos(OmegaZ*t);
    yp = sin(OmegaZ*t);
@@ -350,6 +356,16 @@ double BodyForcePotential(double x1, double x2, double x3)
    yp = 1.0/sqrt(2.0); 
   #endif
 
+  /* d = sqrt((x-xp)*(x-xp) + (y-yp)*(y-yp) + z*z);
+  rsm = 0.03*R;
+  if (d > rsm) phiplanet = g_inputParam[P_Mplanet]/d;
+  else phiplanet = g_inputParam[P_Mplanet]/d*(pow(d/rsm,4.)-2.*pow(d/rsm,3.)+2.*d/rsm);
+  
+  phi  = - 4.0*CONST_PI*CONST_PI/g_inputParam[P_Mstar];
+  phi *= (g_inputParam[P_Mstar]/r + phiplanet*CONST_Mearth/CONST_Msun);
+
+  return phi; */
+
   angle_cell = x3; // phi (angle in the plane)
   angle_planet = atan2(yp, xp); 
   angular_separation = angle_cell - angle_planet; // between cell and planet
@@ -357,5 +373,6 @@ double BodyForcePotential(double x1, double x2, double x3)
   phi = stellarPotential(r) + planetPotential(r, R, angular_separation);
 
   return phi;
+
 }
 #endif

@@ -1,13 +1,13 @@
 #!/bin/bash
 ###### Job name ######
-#PBS -N planet
+#PBS -N test11_simpleNu
 ###### Output files ######
 #PBS -o z.out
 #PBS -e z.err
 ###### Number of nodes and cores ######
-#PBS -l nodes=4:ppn=16
+#PBS -l nodes=1:ppn=16
 ###### Queue name ######
-#PBS -q medium
+#PBS -q small
 ###### Specific the shell types ######
 #PBS -S /bin/bash
 
