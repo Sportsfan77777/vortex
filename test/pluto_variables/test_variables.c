@@ -238,6 +238,7 @@ int main() {
   printf("z: %f\n", z);
   printf("z / H: %f\n", z / 0.06);
 
+  printf("Azimuthal Velocity 2D: %f\n", azimuthalVelocity2D(r, z));
   printf("Omega3D: %f\n", omega3D(r, z));
   printf("Azimuthal Velocity 3D: %f\n", azimuthalVelocity3D(r, z));
   printf("Omega Power: %f\n", omegaPower(r, z));
