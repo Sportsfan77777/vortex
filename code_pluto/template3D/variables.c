@@ -294,4 +294,24 @@ double planetPotential(double r, double R, double angle) {
    return phi;
 }
 
+/// External Torque ///
 
+double externalTorque_WindOnly(double R, double z); {
+   // External Torque for Disk Wind with No Viscosity
+   return 0.0;
+}
+
+double externalTorque_WindWithViscosity(double R, double z) {
+   // External Torque for Disk Wind with Non-zero Viscosity
+   return 0.0;
+}
+
+double externalTorque(double R, double z) {
+   // External Torque due to Disk Wind ( F = T_{ext} / (R * rho) )
+   if (g_inputParam[P_BaseViscosity] > 0.0) {
+      externalTorque_WindOnly(R, z);
+   }
+   else {
+      externalTorque_WindWithViscosity(R, z);
+   } 
+}

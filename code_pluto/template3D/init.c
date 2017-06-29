@@ -219,6 +219,18 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     }
   }
 
+  /// Internal Boundary (External Torque) ///
+
+  if (side == 0) {
+    DOM_LOOP(k, j, i) {
+      #if GEOMETRY == SPHERICAL
+         R = x1[i]*sin(x2[j]);
+         th = x2[j];
+         z = x1[i]*cos(x2[j]);
+      #endif
+      d->Vc[VX3][k][j][i] += externalTorque(R, z) * g_dt;
+    }
+  }
 
 /* original below ************************
 

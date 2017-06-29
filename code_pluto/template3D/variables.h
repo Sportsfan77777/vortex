@@ -39,4 +39,9 @@ double smoothingLength();
 double stellarPotential(double r);
 double planetPotential(double r, double R, double angle);
 
+/// External Torque ///
+double externalTorque(double R, double z);
+double externalTorque_WindOnly(double R, double z);
+double externalTorque_WindWithViscosity(double R, double z);
+
 #endif // VARIABLES_H_
