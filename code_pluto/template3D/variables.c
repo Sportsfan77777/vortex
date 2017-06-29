@@ -168,9 +168,91 @@ double radialVelocity_thetaComponent(double R, double theta, double z) {
 
 /// Viscosity ///
 
+double simpleViscosityNu(double input, double R, double z) {
+  // Simple Viscosity (nu)
+  // Input Parameter setting viscosity (input); Coordinates (R, z)
+
+  double unit_viscosity;
+  double alpha, accretion_rate;
+  double viscosity;
+
+  // Units (Omega = 2 * pi)
+  unit_viscosity = 1.0 / (2.0 * CONST_PI)
+
+  if (g_inputParam[P_ViscosityType] == 1) {
+    // alpha viscosity (variable with 'r')
+    alpha = input;
+    viscosity = alpha * soundSpeed(R) * scaleHeight(R);
+  }
+  else if (g_inputParam[P_ViscosityType] == 2) {
+    // mass accretion rate (constant)
+    accretion_rate = input;
+    viscosity = lower_accretion_rate / density2D(r0);
+
+    // Fix Units
+    viscosity *= unit_viscosity;
+  }
+  else if (g_inputParam[P_ViscosityType] == 3) {
+    // constant
+    viscsosity = input;
+
+    // Fix Units
+    viscosity *= unit_viscosity;
+  }
+  else {
+    // zero
+    viscosity = 0.0;
+  }
+
+  // Return
+  return viscosity;
+}
+
+double viscsosityProfileZ(double z) {
+  // Z-dependence of Viscosity (Ramp shape -- see MKL 2014)
+
+  double z_coor, ramp;
+  double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
+  double z_profile;
+
+  if (g_inputParam[P_BaseViscosity] >= g_inputParam[P_MaxViscosity]) {
+      // No Ramp
+      return 1.0;
+  }
+  else {
+      // Ramp
+      z_coor = z / scaleHeight(r0); // z in number of scaleights
+      ramp_amplitude = (visc_upper_amplitude - visc_lower_amplitude) / visc_lower_amplitude;
+      ramp_center = g_inputParam[P_ViscRampCenter]; // in number of scale heights
+      ramp_width = g_inputParam[P_ViscRampWidth]; // in number of scale heights
+
+      positive_z_angle = (z_coor - ramp_center) / ramp_width;
+      negative_z_angle = (z_coor + ramp_center) / ramp_width;
+      ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle));
+
+      z_profile = 1.0 + (ramp_amplitude) * ramp;
+      return z_profile;
+  }
+}
+
+double simpleViscosityRadialFactor(double R, double z) {
+  // This component of the viscosity removes the radial dependence (when there is no magnetic torque)
+  double density_factor, omega_factor;
+
+  density_factor = density3D(r0, z) / density3D(R, z);
+  omega_factor = omegaPower(r0, z) / omegaPower(R, z);
+  
+  return (density_factor * omega_factor);
+}
+
+double combinedViscosityRadialFactor(double R, double z) {
+  // This component of the viscosity removes the radial dependence (when there is a magnetic torque)
+
+}
+
 double viscosityNu(double R, double z) {
   // "viscosity component" of kinematic viscosity (nu = mu / rho)
-  // viscosity profile: See MKL 2014, Section 4.1.1
+  // viscosity profile altered to equilibrium: See MKL 2014, Section 4.1.1
   // Parameters: Cylindrical R and z
 
   double unit_viscosity;
@@ -180,33 +262,20 @@ double viscosityNu(double R, double z) {
   double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
   double viscosity, z_profile;
 
-  // Units (Omega = 2 * pi)
-  unit_viscosity = 2.0 * CONST_PI
+  // Input Parameters
+  visc_lower_amplitude = simpleViscosityNu(g_inputParam[P_BaseViscosity], R, z);
+  visc_upper_amplitude = simpleViscosityNu(g_inputParam[P_MaxViscosity], R, z);
 
-  if (g_inputParam[P_ViscosityType] == 1) {
-    // alpha viscosity (variable with 'r')
-    lower_alpha = g_inputParam[P_BaseViscosity];
-    upper_alpha = g_inputParam[P_MaxViscosity];
+  // Z-Profile
+  z_profile = viscsosityProfileZ(z);
 
-    visc_lower_amplitude = lower_alpha * soundSpeed(R) * scaleHeight(R);
-    visc_upper_amplitude = upper_alpha * soundSpeed(R) * scaleHeight(R);
-  }
-  else if (g_inputParam[P_ViscosityType] == 2) {
-    // mass accretion rate (constant)
-    lower_accretion_rate = g_inputParam[P_BaseViscosity];
-    upper_accretion_rate = g_inputParam[P_MaxViscosity];
-
-    visc_lower_amplitude = lower_accretion_rate / density2D(r0);
-    visc_upper_amplitude = upper_accretion_rate / density2D(r0);
-  }
-  else if (g_inputParam[P_ViscosityType] == 3) {
-    // constant
-    visc_lower_amplitude = g_inputParam[P_BaseViscosity];
-    visc_upper_amplitude = g_inputParam[P_MaxViscosity];
+  // Get rid of r-dependence
+  if (g_inputParam[P_WindAccretionRate] > 0.0) {
+      // pass for now
+      viscosity_radial_factor = simpleViscosityRadialFactor();
   }
   else {
-    // zero
-    return 0.0; // exit!
+      viscosity_radial_factor = combinedViscosityRadialFactor();
   }
 
   // The rest of the amplitude
@@ -215,28 +284,8 @@ double viscosityNu(double R, double z) {
   //visc_lower_amplitude *= (density_factor * omega_factor);
   //visc_upper_amplitude *= (density_factor * omega_factor);
 
-  if (g_inputParam[P_BaseViscosity] >= g_inputParam[P_MaxViscosity]) {
-     // No Ramp!
-     return visc_lower_amplitude * (unit_viscosity);
-  }
-
-  ///// With Ramp /////
-
-  // Z-profile
-  z_coor = z / scaleHeight(r0); // z in number of scaleights
-  ramp_amplitude = (visc_upper_amplitude - visc_lower_amplitude) / visc_lower_amplitude;
-  ramp_center = g_inputParam[P_ViscRampCenter]; // in number of scale heights
-  ramp_width = g_inputParam[P_ViscRampWidth]; // in number of scale heights
-
-  positive_z_angle = (z_coor - ramp_center) / ramp_width;
-  negative_z_angle = (z_coor + ramp_center) / ramp_width;
-  ramp = 0.5 * (2.0 + tanh(positive_z_angle) - tanh(negative_z_angle));
-
-  z_profile = 1.0 + (ramp_amplitude) * ramp;
-  
-  // Full Expression
-  viscosity = visc_lower_amplitude * z_profile;
-  return viscosity * (unit_viscosity);
+  viscosity = visc_lower_amplitude * z_profile * viscosity_radial_factor;
+  return viscosity;
 }
 
 /// External Torque ///
