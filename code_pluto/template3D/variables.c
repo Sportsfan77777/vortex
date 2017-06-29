@@ -116,7 +116,7 @@ double omegaPower(double R, double z) {
    z_sq = pow(z, 2);
 
    term_a = q * R * (z_sq / pow(R_sq + z_sq, 1.5));
-   term_b = -2.0 * f * (p + q) * (aspectRatio(r0)) * pow(R, 2.0 * f);
+   term_b = -2.0 * f * (p + q) * pow(aspectRatio(r0), 2) * pow(R, 2.0 * f);
    
    coeff = omegaK(R) / omega3D(R, z);
    second_order_term = term_a + term_b;
