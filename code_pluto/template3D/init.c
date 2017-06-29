@@ -139,20 +139,12 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
 {
   int   i, j, k, nv;
   double *x1, *x2, *x3, R, th, z, OmegaK, v[256];
-  static int do_once = 0;
   
   x1 = grid[IDIR].x;
   x2 = grid[JDIR].x;
   x3 = grid[KDIR].x;
 
-  #if DIMENSIONS == 3
-  if (side == 0){
-    if (do_once){
-      NormalizeDensity(d, grid);
-      do_once = 0;
-    }
-  }
-  #endif
+  /// Inner Boundary ///
 
   if (side == X1_BEG){
     X1_BEG_LOOP(k,j,i){
@@ -177,6 +169,8 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     }
   }
 
+  /// Outer Boundary ///
+
   if (side == X1_END){
     X1_END_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
@@ -200,7 +194,9 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
     }
   }
 
- if (side == X2_BEG){
+  /// Upper Boundary (z != 0) ///
+
+  if (side == X2_BEG){
     X2_BEG_LOOP(k,j,i){
       #if GEOMETRY == SPHERICAL
          R = x1[i]*sin(x2[j]);
