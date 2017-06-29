@@ -32,16 +32,17 @@ double radialVelocity_thetaComponent(double R, double theta, double z);
 /// Viscosity ///
 double viscosityNu(double R, double z);
 
+/// External Torque ///
+double magneticWind(double z);
+double externalTorque(double R, double z);
+double externalTorque_WindOnly(double R, double z);
+double externalTorque_WindWithViscosity(double R, double z);
+
 /// Potential ///
 double planetMass();
 double distanceToPlanet(double r, double R, double angle);
 double smoothingLength();
 double stellarPotential(double r);
 double planetPotential(double r, double R, double angle);
-
-/// External Torque ///
-double externalTorque(double R, double z);
-double externalTorque_WindOnly(double R, double z);
-double externalTorque_WindWithViscosity(double R, double z);
 
 #endif // VARIABLES_H_

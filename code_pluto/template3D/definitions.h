@@ -8,7 +8,7 @@
 #define  TIME_STEPPING           RK2
 #define  DIMENSIONAL_SPLITTING   NO
 #define  NTRACER                 0
-#define  USER_DEF_PARAMETERS     16
+#define  USER_DEF_PARAMETERS     17
 
 /* -- physics dependent declarations -- */
 
@@ -36,6 +36,7 @@
 #define  P_MaxViscosity          13
 #define  P_ViscRampCenter        14
 #define  P_ViscRampWidth         15
+#define  P_WindAccretionRate     16
 
 /* [Beg] user-defined constants (do not change this line) */
 

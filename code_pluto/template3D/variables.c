@@ -239,6 +239,36 @@ double viscosityNu(double R, double z) {
   return viscosity * (unit_viscosity);
 }
 
+/// External Torque ///
+
+double magneticWind(double z) {
+   // Magnetic Wind
+  double magnetic_accretion_rate;
+
+  magnetic_accretion_rate = g_inputParam[P_WindAccretionRate];
+  return magnetic_accretion_rate;
+}
+
+double externalTorque_WindOnly(double R, double z); {
+   // External Torque for Disk Wind with No Viscosity ()
+   return 0.5 * magneticWind(z) * OmegaK(R);
+}
+
+double externalTorque_WindWithViscosity(double R, double z) {
+   // External Torque for Disk Wind with Non-zero Viscosity
+   return 0.0;
+}
+
+double externalTorqueTerm(double R, double z) {
+   // External Torque due to Disk Wind ( F = T_{ext} / R )
+   if (g_inputParam[P_BaseViscosity] > 0.0) {
+      return externalTorque_WindOnly(R, z) / R;
+   }
+   else {
+      return externalTorque_WindWithViscosity(R, z) / R;
+   } 
+}
+
 /// Potential ///
 
 double planetMass() {
@@ -292,26 +322,4 @@ double planetPotential(double r, double R, double angle) {
    }
 
    return phi;
-}
-
-/// External Torque ///
-
-double externalTorque_WindOnly(double R, double z); {
-   // External Torque for Disk Wind with No Viscosity
-   return 0.0;
-}
-
-double externalTorque_WindWithViscosity(double R, double z) {
-   // External Torque for Disk Wind with Non-zero Viscosity
-   return 0.0;
-}
-
-double externalTorque(double R, double z) {
-   // External Torque due to Disk Wind ( F = T_{ext} / (R * rho) )
-   if (g_inputParam[P_BaseViscosity] > 0.0) {
-      externalTorque_WindOnly(R, z);
-   }
-   else {
-      externalTorque_WindWithViscosity(R, z);
-   } 
 }
