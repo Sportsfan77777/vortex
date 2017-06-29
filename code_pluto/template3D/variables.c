@@ -236,7 +236,8 @@ double viscsosityProfileZ(double z) {
 }
 
 double simpleViscosityRadialFactor(double R, double z) {
-  // This component of the viscosity removes the radial dependence (when there is no magnetic torque)
+  // This component of the viscosity removes the radial dependence 
+  // of the total mass accretion rate (when there is no magnetic torque)
   double density_factor, omega_factor;
 
   density_factor = density3D(r0, z) / density3D(R, z);
@@ -246,8 +247,8 @@ double simpleViscosityRadialFactor(double R, double z) {
 }
 
 double combinedViscosityRadialFactor(double R, double z) {
-  // This component of the viscosity removes the radial dependence (when there is a magnetic torque)
-
+  // This component of the viscosity removes the radial dependence 
+  // of the total mass accretion rate (when there is a magnetic torque)
 }
 
 double viscosityNu(double R, double z) {
