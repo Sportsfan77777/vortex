@@ -153,10 +153,7 @@ double azimuthalVelocity3D(double R, double z) {
 
 double cylindricalRadialVelocity(double R, double z) {
    // Radial Velocity (v_R) --- set by viscous torque (v_R = nu / R * (d ln Omega / d ln R))
-   double unit_velocity;
-
-   unit_velocity = 2.0 * CONST_PI;
-   return unit_velocity * (omegaPower(R, z) * viscosityNu(R, z) / R);
+   return omegaPower(R, z) * viscosityNu(R, z) / R;
 }
 
 double radialVelocity_rComponent(double R, double theta, double z) {
@@ -176,11 +173,15 @@ double viscosityNu(double R, double z) {
   // viscosity profile: See MKL 2014, Section 4.1.1
   // Parameters: Cylindrical R and z
 
+  double unit_viscosity;
   double visc_lower_amplitude, visc_upper_amplitude, density_factor, omega_factor;
   double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
   double z_coor, ramp;
   double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
   double viscosity, z_profile;
+
+  // Units (Omega = 2 * pi)
+  unit_viscosity = 2.0 * CONST_PI
 
   if (g_inputParam[P_ViscosityType] == 1) {
     // alpha viscosity (variable with 'r')
@@ -216,7 +217,7 @@ double viscosityNu(double R, double z) {
 
   if (g_inputParam[P_BaseViscosity] >= g_inputParam[P_MaxViscosity]) {
      // No Ramp!
-     return visc_lower_amplitude;
+     return visc_lower_amplitude * (unit_viscosity);
   }
 
   ///// With Ramp /////
@@ -235,7 +236,7 @@ double viscosityNu(double R, double z) {
   
   // Full Expression
   viscosity = visc_lower_amplitude * z_profile;
-  return viscosity;
+  return viscosity * (unit_viscosity);
 }
 
 /// Potential ///
