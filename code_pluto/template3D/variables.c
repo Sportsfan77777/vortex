@@ -208,8 +208,9 @@ double simpleViscosityNu(double input, double R, double z) {
   return viscosity;
 }
 
-double viscsosityProfileZ(double z) {
+double zProfileViscosity(double z, double visc_lower_amplitude, double visc_upper_amplitude) {
   // Z-dependence of Viscosity (Ramp shape -- see MKL 2014)
+  // Parameters: z, bottom of ramp, top of ramp
 
   double z_coor, ramp;
   double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
@@ -235,18 +236,19 @@ double viscsosityProfileZ(double z) {
   }
 }
 
-double simpleViscosityRadialFactor(double R, double z) {
+double simpleViscosityRadialOffset(double visc, double R, double z) {
   // This component of the viscosity removes the radial dependence 
   // of the total mass accretion rate (when there is no magnetic torque)
   double density_factor, omega_factor;
 
   density_factor = density3D(r0, z) / density3D(R, z);
   omega_factor = omegaPower(r0, z) / omegaPower(R, z);
-  
-  return (density_factor * omega_factor);
+
+  reference_viscosity = simpleViscosityNu(visc, r0, z);
+  return reference_viscosity * (density_factor * omega_factor);
 }
 
-double combinedViscosityRadialFactor(double R, double z) {
+double combinedViscosityRadialOffset(double visc, double R, double z) {
   // This component of the viscosity removes the radial dependence 
   // of the total mass accretion rate (when there is a magnetic torque)
 }
@@ -256,36 +258,27 @@ double viscosityNu(double R, double z) {
   // viscosity profile altered to equilibrium: See MKL 2014, Section 4.1.1
   // Parameters: Cylindrical R and z
 
-  double unit_viscosity;
-  double visc_lower_amplitude, visc_upper_amplitude, density_factor, omega_factor;
-  double lower_alpha, upper_alpha, lower_accretion_rate, upper_accretion_rate;
-  double z_coor, ramp;
-  double ramp_amplitude, ramp_center, ramp_width, negative_z_angle, positive_z_angle;
-  double viscosity, z_profile;
+  double visc_lower_amplitude, visc_upper_amplitude;
+  double z_profile, radial_offset;
 
   // Input Parameters
   visc_lower_amplitude = simpleViscosityNu(g_inputParam[P_BaseViscosity], R, z);
   visc_upper_amplitude = simpleViscosityNu(g_inputParam[P_MaxViscosity], R, z);
 
   // Z-Profile
-  z_profile = viscsosityProfileZ(z);
+  z_profile = zProfileViscosity(z, visc_lower_amplitude, visc_upper_amplitude);
 
   // Get rid of r-dependence
   if (g_inputParam[P_WindAccretionRate] > 0.0) {
-      // pass for now
-      viscosity_radial_factor = simpleViscosityRadialFactor();
+      // Just Viscosity
+      radial_offset = simpleViscosityRadialOffset();
   }
   else {
-      viscosity_radial_factor = combinedViscosityRadialFactor();
+      // Viscosity and Magnetic Torque
+      radial_offset = combinedViscosityRadialOffset();
   }
 
-  // The rest of the amplitude
-  density_factor = density3D(r0, z) / density3D(R, z);
-  omega_factor = omegaPower(r0, z) / omegaPower(R, z);
-  //visc_lower_amplitude *= (density_factor * omega_factor);
-  //visc_upper_amplitude *= (density_factor * omega_factor);
-
-  viscosity = visc_lower_amplitude * z_profile * viscosity_radial_factor;
+  viscosity = visc_lower_amplitude * z_profile * radial_offset;
   return viscosity;
 }
 
