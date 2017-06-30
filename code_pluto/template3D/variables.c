@@ -352,7 +352,7 @@ double externalTorque(double R, double z) {
    double magnetic_accretion_rate;
    magnetic_accretion_rate = magneticAccretionRate(z);
 
-   return 0.5 * magnetic_accretion_rate * OmegaK(R);
+   return 0.5 * magnetic_accretion_rate * omegaK(R);
 }
 
 double externalMagneticForce(double R, double z, double density) {
