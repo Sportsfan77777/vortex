@@ -30,13 +30,19 @@ double radialVelocity_rComponent(double R, double theta, double z);
 double radialVelocity_thetaComponent(double R, double theta, double z);
 
 /// Viscosity ///
+double simpleViscosityNu(double input, double R, double z);
+double zProfileViscosity(double z, double visc_lower_amplitude, double visc_upper_amplitude);
+double simpleViscosityRadialOffset(double visc, double R, double z);
+double combinedViscosityRadialOffset(double visc, double R, double z);
 double viscosityNu(double R, double z);
 
 /// External Torque ///
-double magneticWind(double z);
+double zProfile_MagneticWind(double z);
+double zProfile_HallEffect(double z);
+double integratedMagneticTorqueTerm(double R, double z);
+double magneticAccretionRate(double z);
 double externalTorque(double R, double z);
-double externalTorque_WindOnly(double R, double z);
-double externalTorque_WindWithViscosity(double R, double z);
+double externalMagneticForce(double R, double z, double density);
 
 /// Potential ///
 double planetMass();
