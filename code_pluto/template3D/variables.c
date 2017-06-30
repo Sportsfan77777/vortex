@@ -158,7 +158,7 @@ double cylindricalRadialVelocity(double R, double z) {
    double viscous_term, magnetic_term;
 
    viscous_term = omegaPower(R, z) * viscosityNu(R, z) / R;
-   magnetic_term = magneticAccretionRate(z) / (R * density3D(R, z))
+   magnetic_term = magneticAccretionRate(z) / (R * density3D(R, z));
 
    return viscous_term + magnetic_term;
 }
