@@ -187,7 +187,7 @@ double simpleViscosityNu(double input, double R, double z) {
   else if (g_inputParam[P_ViscosityType] == 2) {
     // mass accretion rate (constant)
     accretion_rate = input;
-    viscosity = lower_accretion_rate / density2D(r0);
+    viscosity = lower_accretion_rate / (3.0 * CONST_PI * density2D(r0));
 
     // Fix Units
     viscosity *= unit_viscosity;
@@ -251,6 +251,21 @@ double simpleViscosityRadialOffset(double visc, double R, double z) {
 double combinedViscosityRadialOffset(double visc, double R, double z) {
   // This component of the viscosity removes the radial dependence 
   // of the total mass accretion rate (when there is a magnetic torque)
+  double term_aa, term_ab, term_aba, term_abb;
+  double term_a, term_a, term_c;
+
+  term_aa = (R * azimuthalVelocity2D(R)) / (r0 * azimuthalVelocity2D(r0)); // angular momentum factor
+
+  term_aba = integratedMagneticTorqueTerm(r0, z); // f(r0, z)
+  term_abb = pow(r0, 2.0) * density3D(r0, z) * omega3D(r0, z) * omegaPower(r0, z); // term_c(r0)
+  term_ab = term_aba + term_abb; // f(r0) + term_c(r0)
+  
+  term_a = term_aa * term_ab; // (angular momentum factor) * (f + term_c(r0))
+
+  term_b = integratedMagneticTorqueTerm(R, z); // f(r, z)
+  term_c = pow(R, 2.0) * density3D(R, z) * omega3D(R, z) * omegaPower(R, z);
+
+  return (term_a - term_b) / term_c;
 }
 
 double viscosityNu(double R, double z) {
@@ -284,32 +299,77 @@ double viscosityNu(double R, double z) {
 
 /// External Torque ///
 
-double magneticWind(double z) {
-   // Magnetic Wind
-  double magnetic_accretion_rate;
+double zProfile_MagneticWind(double z) {
+   // Magnetic Wind Profile (w/ Amplitude)
+   double peak_magnetic_accretion_rate;
+   peak_magnetic_accretion_rate = g_inputParam[P_MagneticAccretion];
 
-  magnetic_accretion_rate = g_inputParam[P_WindAccretionRate];
-  return magnetic_accretion_rate;
+   return peak_magnetic_accretion_rate;
 }
 
-double externalTorque_WindOnly(double R, double z); {
-   // External Torque for Disk Wind with No Viscosity ()
-   return 0.5 * magneticWind(z) * OmegaK(R);
+double zProfile_HallEffect(double z) {
+   // Hall Effect Profile (w/ Amplitude)
+   double peak_magnetic_accretion_rate;
+   peak_magnetic_accretion_rate = g_inputParam[P_MagneticAccretion];
+
+   return peak_magnetic_accretion_rate;
 }
 
-double externalTorque_WindWithViscosity(double R, double z) {
-   // External Torque for Disk Wind with Non-zero Viscosity
-   return 0.0;
+double integratedMagneticTorqueTerm(double R, double z) {
+   // Integrated Magnetic Torque (f | df/dR = R * T_{ext}, f = M_dot * R^2 * Omega / 4)
+   // Only used to determine equilibrium viscosity with a magnetic torque
+   return 0.25 * magneticAccretionRate(z) * pow(R, 2.0) * omegaK(R);
 }
 
-double externalTorqueTerm(double R, double z) {
-   // External Torque due to Disk Wind ( F = T_{ext} / R )
-   if (g_inputParam[P_BaseViscosity] > 0.0) {
-      return externalTorque_WindOnly(R, z) / R;
+double magneticAccretionRate(double z) {
+   // Magnetic Accretion Rate
+   double magnetic_accretion_rate_amplitude, z_profile;
+   double magnetic_accretion_rate;
+
+   magnetic_accretion_rate_amplitude = g_inputParam[P_MagneticAccretion];
+
+   if (g_inputParam[P_MagneticEffect] == 1) {
+      // Magnetic Wind
+      z_profile = zProfile_MagneticWind(z);
+   }
+   else if (g_inputParam[P_MagneticEffect] == 2) {
+      // Hall Effect
+      z_profile = zProfile_HallEffect(z);
    }
    else {
-      return externalTorque_WindWithViscosity(R, z) / R;
-   } 
+      // None
+      z_profile = 0.0;
+   }
+
+   magnetic_accretion_rate = magnetic_accretion_rate_amplitude * z_profile;
+   return magnetic_accretion_rate * z_profile;
+}
+
+double externalTorque(double R, double z) {
+   // External Torque --- Magnetic (T_{ext})
+   double magnetic_accretion_rate;
+
+   if (g_inputParam[P_MagneticEffect] == 1) {
+      // Magnetic Wind
+      magnetic_accretion_rate = magneticAccretionRate_Wind(z);
+   }
+   else if (g_inputParam[P_MagneticEffect] == 2) {
+      // Hall Effect
+      magnetic_accretion_rate = magneticAccretionRate_HallEffect(z);
+   }
+   else {
+      // None
+      magnetic_accretion_rate = 0.0;
+   }
+
+   magnetic_accretion_rate = magneticAccretionRate(z);
+
+   return 0.5 * magnetic_accretion_rate * OmegaK(R);
+}
+
+double externalMagneticForce(double R, double z, double density) {
+   // External Force --- Magnetic ( F = T_{ext} / (R * density) )
+   return externalTorque(R, z) / (R * density);
 }
 
 /// Potential ///
