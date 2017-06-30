@@ -257,7 +257,7 @@ double combinedViscosityRadialOffset(double visc, double R, double z) {
   term_aa = (R * azimuthalVelocity2D(R)) / (r0 * azimuthalVelocity2D(r0)); // angular momentum factor
 
   term_aba = integratedMagneticTorqueTerm(r0, z); // f(r0, z)
-  term_abb = pow(r0, 2.0) * density3D(r0, z) * omega3D(r0, z) * omegaPower(r0, z); // term_c(r0)
+  term_abb = (pow(r0, 2.0) * density3D(r0, z) * omega3D(r0, z) * omegaPower(r0, z)) * simpleViscosityNu(r0); // term_c(r0) * nu(r0)
   term_ab = term_aba + term_abb; // f(r0) + term_c(r0)
 
   term_a = term_aa * term_ab; // (angular momentum factor) * (f + term_c(r0))
