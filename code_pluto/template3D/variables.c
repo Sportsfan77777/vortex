@@ -187,14 +187,14 @@ double simpleViscosityNu(double input, double R, double z) {
   else if (g_inputParam[P_ViscosityType] == 2) {
     // mass accretion rate (constant)
     accretion_rate = input;
-    viscosity = lower_accretion_rate / (3.0 * CONST_PI * density2D(r0));
+    viscosity = accretion_rate / (3.0 * CONST_PI * density2D(r0));
 
     // Fix Units
     viscosity *= unit_viscosity;
   }
   else if (g_inputParam[P_ViscosityType] == 3) {
     // constant
-    viscsosity = input;
+    viscosity = input;
 
     // Fix Units
     viscosity *= unit_viscosity;
