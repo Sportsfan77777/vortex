@@ -152,8 +152,15 @@ double azimuthalVelocity3D(double R, double z) {
 /// Radial Velocity ///
 
 double cylindricalRadialVelocity(double R, double z) {
-   // Radial Velocity (v_R) --- set by viscous torque (v_R = nu / R * (d ln Omega / d ln R))
-   return omegaPower(R, z) * viscosityNu(R, z) / R;
+   // Radial Velocity (v_R) --- set by viscous torque and magnetic torque
+   // Viscous Torque Contribution: (v_R = nu / R * (d ln Omega / d ln R))
+   // Magnetic Torque Contribution: M_dot / (r * density)
+   double viscous_term, magnetic_term;
+
+   viscous_term = omegaPower(R, z) * viscosityNu(R, z) / R;
+   magnetic_term = magneticAccretionRate(z) / (R * density3D(R, z))
+
+   return viscous_term + magnetic_term;
 }
 
 double radialVelocity_rComponent(double R, double theta, double z) {
@@ -318,17 +325,17 @@ double zProfile_HallEffect(double z) {
 }
 
 double integratedMagneticTorqueTerm(double R, double z) {
-   // Integrated Magnetic Torque (f | df/dR = R * T_{ext}, f = M_dot * R^2 * Omega / 4)
+   // Integrated Magnetic Torque (f | df/dR = R * T_{ext}, f = M_dot * R^2 * Omega)
    // Only used to determine equilibrium viscosity with a magnetic torque
-   return 0.25 * magneticAccretionRate(z) * pow(R, 2.0) * omegaK(R);
+   return magneticAccretionRate(z) * pow(R, 2.0) * omegaK(R);
 }
 
 double magneticAccretionRate(double z) {
-   // Magnetic Accretion Rate
+   // Magnetic Accretion Rate (\dot{M_m}) --- Note: Negative of the Input Parameter
    double magnetic_accretion_rate_amplitude, z_profile;
    double magnetic_accretion_rate;
 
-   magnetic_accretion_rate_amplitude = g_inputParam[P_MagneticAccretion];
+   magnetic_accretion_rate_amplitude = -g_inputParam[P_MagneticAccretion]; // Note: Negative of Input!
 
    if (g_inputParam[P_MagneticEffect] == 1) {
       // Magnetic Wind
