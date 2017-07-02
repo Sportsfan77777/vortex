@@ -82,14 +82,14 @@ def convert_to_cylindrical(spherical_velocity_field):
     phi_field[:, 0, 0] = thetas
     phi_field[:, :, :] = phi_field[:, 0, 0]
 
-    # cos, sin of angles
+    # cos, sin of angles (3-D grid)
     cos_theta = np.cos(theta_field)
     sin_theta = np.sin(theta_field)
 
     cos_phi = np.cos(phi_field)
     sin_phi = np.sin(phi_field)
 
-    # combinations of angles
+    # combinations of angles (3-D grid)
     cos_theta_cos_phi = cos_theta * cos_phi
     cos_theta_sin_phi = cos_theta * sin_phi
     sin_theta_cos_phi = sin_theta * cos_phi
