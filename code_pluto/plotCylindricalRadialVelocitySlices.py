@@ -67,23 +67,46 @@ def convert_to_cylindrical(spherical_velocity_field):
     theta_velocity = (fromfile("vx2.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
     phi_velocity = (fromfile("vx3.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
     
+    # Velocity Fields
     velocity_field = np.zeros((3, num_theta, num_z, num_rad))
     velocity_field[0] = radial_velocity
     velocity_field[1] = theta_velocity
     velocity_field[2] = phi_velocity
 
-    first_transformation_matrix = np.zeros((3, num_theta, num_z, num_rad))
-    first_transformation_matrix[0] = []
-    first_transformation_matrix[1] = []
-    first_transformation_matrix[2] = []
+    # Angle Grids
+    theta_field = np.zeros(num_theta, num_z, num_rad)
+    theta_field[0, :, 0] = zs
+    theta_field[:, :, :] = theta_field[0, :, 0]
 
-    second_transformation_matrix = np.zeros((3, num_theta, num_z, num_rad))
+    phi_field = np.zeros(num_theta, num_z, num_rad)
+    phi_field[:, 0, 0] = thetas
+    phi_field[:, :, :] = phi_field[:, 0, 0]
 
+    # cos, sin of angles
+    cos_theta = np.cos(theta_field)
+    sin_theta = np.sin(theta_field)
+
+    cos_phi = np.cos(phi_field)
+    sin_phi = np.sin(phi_field)
+
+    # Transform to Cartesian
+    first_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
+    first_transformation_matrix[0] = [cos_phi, sin_phi, 0]
+    first_transformation_matrix[1] = [-sin_phi, cos_phi, 0]
+    first_transformation_matrix[2] = [0, 0, 1]
+
+    # Transform to Cylindrical
+    second_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
+    second_transformation_matrix[2] = [cos_phi, sin_phi, 0]
+    second_transformation_matrix[1] = [-sin_phi, cos_phi, 0]
+    second_transformation_matrix[0] = [0, 0, 1]
+
+    # Apply Transformations
     cartesian_velocity_field = first_transformation_matrix * spherical_velocity_field
 
     cylindrical_field = second_transformation_matrix * cartesian_velocity_field
 
-    return 1.0
+    return cylindrical_radial_velocity
 
 ##### PLOTTING #####
 
