@@ -89,21 +89,28 @@ def convert_to_cylindrical(spherical_velocity_field):
     cos_phi = np.cos(phi_field)
     sin_phi = np.sin(phi_field)
 
+    # combinations of angles
+    cos_theta_cos_phi = np.outer(cos_theta, cos_phi)
+    cos_theta_sin_phi = np.outer(cos_theta, sin_phi)
+    sin_theta_cos_phi = np.outer(sin_theta, cos_phi)
+    sin_theta_sin_phi = np.outer(sin_theta, sin_phi)
+
     # Transform to Cartesian
     first_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
-    first_transformation_matrix[0] = [cos_phi, sin_phi, 0]
-    first_transformation_matrix[1] = [-sin_phi, cos_phi, 0]
-    first_transformation_matrix[2] = [0, 0, 1]
+    f = first_transformation_matrix
+    f[0, 0] = sin_theta_cos_phi; f[0, 1] = cos_theta_cos_phi; f[0, 2] = -sin_phi
+    f[1, 0] = sin_theta_sin_phi; f[1, 1] = cos_theta_sin_phi; f[1, 2] = cos_phi
+    f[2, 0] = cos_theta; f[2, 1] = -sin_theta; f[2, 2] = 1
 
     # Transform to Cylindrical
     second_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
-    second_transformation_matrix[2] = [cos_phi, sin_phi, 0]
-    second_transformation_matrix[1] = [-sin_phi, cos_phi, 0]
-    second_transformation_matrix[0] = [0, 0, 1]
+    s = second_transformation_matrix
+    s[0, 0] = cos_phi; s[0, 1] = sin_phi; s[0, 2] = 0
+    s[1, 0] = -sin_phi; s[1, 1] = cos_phi; s[1, 2] = 0
+    s[2, 0] = 0; s[2, 1] = 0; s[2, 2] = 1
 
     # Apply Transformations
     cartesian_velocity_field = first_transformation_matrix * spherical_velocity_field
-
     cylindrical_field = second_transformation_matrix * cartesian_velocity_field
 
     return cylindrical_radial_velocity
