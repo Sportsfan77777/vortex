@@ -61,7 +61,7 @@ max_frame = 100
 
 ### Helper Functions ###
 
-def convert_to_cylindrical(spherical_velocity_field):
+def convert_to_cylindrical(frame):
     # Converts Vector Field from Spherical to Cylindrical Coordinates
     radial_velocity = (fromfile("vx1.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
     theta_velocity = (fromfile("vx2.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
@@ -75,8 +75,7 @@ def convert_to_cylindrical(spherical_velocity_field):
 
     # Angle Grids
     theta_field = np.zeros(num_theta, num_z, num_rad)
-    theta_field[0, :, 0] = zs
-    theta_field[:, :, :] = theta_field[0, :, 0]
+    theta_field[:, :, :] = zs[np.newaxis, :, np.newaxis]
 
     phi_field = np.zeros(num_theta, num_z, num_rad)
     phi_field[:, 0, 0] = thetas
@@ -96,7 +95,7 @@ def convert_to_cylindrical(spherical_velocity_field):
     sin_theta_sin_phi = sin_theta * sin_phi
 
     # Transform to Cartesian
-    first_transformation_matrix = np.zeros((num_theta, num_z, num_rad))
+    first_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
     f = first_transformation_matrix
     f[0, 0] = sin_theta_cos_phi; f[0, 1] = cos_theta_cos_phi; f[0, 2] = -sin_phi
     f[1, 0] = sin_theta_sin_phi; f[1, 1] = cos_theta_sin_phi; f[1, 2] = cos_phi
@@ -143,8 +142,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    radial_velocity = (fromfile("vx1.%04d.dbl" % frame).reshape(num_theta, num_z, num_rad))
-    cylindrical_radial_velocity = convert_to_cylindrical()
+    cylindrical_radial_velocity = convert_to_cylindrical(frame)
 
     normalization = 2.0 * np.pi
     normalized_radial_velocity = cylindrical_radial_velocity / normalization
@@ -187,7 +185,7 @@ def make_plot(frame, show = False):
     if o.clim_b is not None:
         result.set_clim(clim[0], clim[1])
     else:
-        result.set_clim(min(radial_velocity_slice), 0.0)
+        result.set_clim(np.min(radial_velocity_slice), 0.0)
 
     # Limits
     if o.r_slice is not None:

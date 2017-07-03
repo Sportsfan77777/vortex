@@ -130,7 +130,7 @@ def make_plot(frame, show = False):
     if o.clim_b is not None:
         result.set_clim(clim[0], clim[1])
     else:
-        result.set_clim(min(radial_velocity_slice), 0.0)
+        result.set_clim(np.min(radial_velocity_slice), 0.0)
 
     # Limits
     if o.r_slice is not None:
