@@ -100,7 +100,7 @@ def convert_to_cylindrical(spherical_velocity_field):
     f = first_transformation_matrix
     f[0, 0] = sin_theta_cos_phi; f[0, 1] = cos_theta_cos_phi; f[0, 2] = -sin_phi
     f[1, 0] = sin_theta_sin_phi; f[1, 1] = cos_theta_sin_phi; f[1, 2] = cos_phi
-    f[2, 0] = cos_theta; f[2, 1] = -sin_theta; f[2, 2] = 1
+    f[2, 0] = cos_theta; f[2, 1] = -sin_theta; f[2, 2] = 0
 
     # Transform to Cylindrical
     second_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
