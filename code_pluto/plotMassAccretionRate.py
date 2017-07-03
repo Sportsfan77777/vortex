@@ -98,9 +98,11 @@ def make_plot(frame, show = False):
     velocity_normalization = 2.0 * np.pi
     normalized_radial_velocity = radial_velocity / velocity_normalization
 
-    # Radius
+    # Cylindrical Radius
+    cylindrical_radius = np.outer(rad, np.sin(theta))
+
     radius_field = np.zeros((num_theta, num_z, num_rad))
-    radius_field[:, :, :] = rad[np.newaxis, np.newaxis, :]
+    radius_field[:, :, :] = cylindrical_radius[np.newaxis, :, :]
 
     # Combined
     mass_accretion_rate = normalized_density * normalized_radial_velocity * radius_field
