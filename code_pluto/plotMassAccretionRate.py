@@ -99,7 +99,7 @@ def make_plot(frame, show = False):
     normalized_radial_velocity = radial_velocity / velocity_normalization
 
     # Cylindrical Radius
-    cylindrical_radius = np.outer(rad, np.sin(theta))
+    cylindrical_radius = np.outer(np.sin(zs), rad)
 
     radius_field = np.zeros((num_theta, num_z, num_rad))
     radius_field[:, :, :] = cylindrical_radius[np.newaxis, :, :]
