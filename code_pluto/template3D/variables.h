@@ -32,8 +32,8 @@ double radialVelocity_thetaComponent(double R, double theta, double z);
 /// Viscosity ///
 double simpleViscosityNu(double input, double R, double z);
 double zProfileViscosity(double z, double visc_lower_amplitude, double visc_upper_amplitude);
-double simpleViscosityRadialOffset(double visc, double R, double z);
-double combinedViscosityRadialOffset(double visc, double R, double z);
+double simpleViscosityRadialOffset(double R, double z);
+double combinedViscosityRadialOffset(double R, double z);
 double viscosityNu(double R, double z);
 
 /// External Torque ///

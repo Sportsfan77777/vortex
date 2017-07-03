@@ -243,7 +243,7 @@ double zProfileViscosity(double z, double visc_lower_amplitude, double visc_uppe
   }
 }
 
-double simpleViscosityRadialOffset(, double R, double z) {
+double simpleViscosityRadialOffset(double R, double z) {
   // This component of the viscosity removes the radial dependence 
   // of the total mass accretion rate (when there is no magnetic torque)
   double density_factor, omega_factor;
