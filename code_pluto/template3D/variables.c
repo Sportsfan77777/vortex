@@ -294,12 +294,12 @@ double viscosityNu(double R, double z) {
 
   // Get rid of r-dependence
   if (g_inputParam[P_MagneticAccretion] > 0.0) {
-      // Just Viscosity
-      radial_offset = simpleViscosityRadialOffset(visc_lower_amplitude, R, z);
-  }
-  else {
       // Viscosity and Magnetic Torque
       radial_offset = combinedViscosityRadialOffset(visc_lower_amplitude, R, z);
+  }
+  else {
+      // Just Viscosity
+      radial_offset = simpleViscosityRadialOffset(visc_lower_amplitude, R, z);
   }
 
   viscosity = visc_lower_amplitude * z_profile * radial_offset;
