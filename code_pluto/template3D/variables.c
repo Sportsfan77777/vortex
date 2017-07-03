@@ -243,20 +243,18 @@ double zProfileViscosity(double z, double visc_lower_amplitude, double visc_uppe
   }
 }
 
-double simpleViscosityRadialOffset(double visc, double R, double z) {
+double simpleViscosityRadialOffset(, double R, double z) {
   // This component of the viscosity removes the radial dependence 
   // of the total mass accretion rate (when there is no magnetic torque)
   double density_factor, omega_factor;
-  double reference_viscosity;
 
   density_factor = density3D(r0, z) / density3D(R, z);
   omega_factor = omegaPower(r0, z) / omegaPower(R, z);
 
-  reference_viscosity = simpleViscosityNu(visc, r0, z);
-  return reference_viscosity * (density_factor * omega_factor);
+  return density_factor * omega_factor;
 }
 
-double combinedViscosityRadialOffset(double visc, double R, double z) {
+double combinedViscosityRadialOffset(double R, double z) {
   // This component of the viscosity removes the radial dependence 
   // of the total mass accretion rate (when there is a magnetic torque)
   double term_aa, term_ab, term_aba, term_abb;
@@ -295,11 +293,11 @@ double viscosityNu(double R, double z) {
   // Get rid of r-dependence
   if (g_inputParam[P_MagneticAccretion] > 0.0) {
       // Viscosity and Magnetic Torque
-      radial_offset = combinedViscosityRadialOffset(visc_lower_amplitude, R, z);
+      radial_offset = combinedViscosityRadialOffset(R, z);
   }
   else {
       // Just Viscosity
-      radial_offset = simpleViscosityRadialOffset(visc_lower_amplitude, R, z);
+      radial_offset = simpleViscosityRadialOffset(R, z);
   }
 
   viscosity = visc_lower_amplitude * z_profile * radial_offset;
