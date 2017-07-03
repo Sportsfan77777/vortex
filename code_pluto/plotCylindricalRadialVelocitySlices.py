@@ -113,6 +113,8 @@ def convert_to_cylindrical(spherical_velocity_field):
     cartesian_velocity_field = np.einsum('ij...,j...->i...', first_transformation_matrix, spherical_velocity_field)
     cylindrical_field = np.einsum('ij...,j...->i...', second_transformation_matrix, cartesian_velocity_field)
 
+    cylindrical_radial_velocity = cylindrical_field[0]
+
     return cylindrical_radial_velocity
 
 ##### PLOTTING #####
