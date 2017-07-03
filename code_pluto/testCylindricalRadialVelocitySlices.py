@@ -74,10 +74,10 @@ def convert_to_cylindrical(frame):
     velocity_field[2] = phi_velocity
 
     # Angle Grids
-    theta_field = np.zeros(num_theta, num_z, num_rad)
+    theta_field = np.zeros((num_theta, num_z, num_rad))
     theta_field[:, :, :] = zs[np.newaxis, :, np.newaxis]
 
-    phi_field = np.zeros(num_theta, num_z, num_rad)
+    phi_field = np.zeros((num_theta, num_z, num_rad))
     phi_field[:, 0, 0] = theta
     phi_field[:, :, :] = phi_field[:, 0, 0]
 
