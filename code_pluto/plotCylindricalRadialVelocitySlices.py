@@ -96,7 +96,7 @@ def convert_to_cylindrical(spherical_velocity_field):
     sin_theta_sin_phi = sin_theta * sin_phi
 
     # Transform to Cartesian
-    first_transformation_matrix = np.zeros((3, 3, num_theta, num_z, num_rad))
+    first_transformation_matrix = np.zeros((num_theta, num_z, num_rad))
     f = first_transformation_matrix
     f[0, 0] = sin_theta_cos_phi; f[0, 1] = cos_theta_cos_phi; f[0, 2] = -sin_phi
     f[1, 0] = sin_theta_sin_phi; f[1, 1] = cos_theta_sin_phi; f[1, 2] = cos_phi
@@ -110,8 +110,8 @@ def convert_to_cylindrical(spherical_velocity_field):
     s[2, 0] = 0; s[2, 1] = 0; s[2, 2] = 1
 
     # Apply Transformations
-    cartesian_velocity_field = first_transformation_matrix * spherical_velocity_field
-    cylindrical_field = second_transformation_matrix * cartesian_velocity_field
+    cartesian_velocity_field = np.einsum('ij...,j...->i...', first_transformation_matrix, spherical_velocity_field)
+    cylindrical_field = np.einsum('ij...,j...->i...', second_transformation_matrix, cartesian_velocity_field)
 
     return cylindrical_radial_velocity
 
