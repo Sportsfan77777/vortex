@@ -78,7 +78,7 @@ def convert_to_cylindrical(frame):
     theta_field[:, :, :] = zs[np.newaxis, :, np.newaxis]
 
     phi_field = np.zeros(num_theta, num_z, num_rad)
-    phi_field[:, 0, 0] = thetas
+    phi_field[:, 0, 0] = theta
     phi_field[:, :, :] = phi_field[:, 0, 0]
 
     # cos, sin of angles (3-D grid)
@@ -109,7 +109,7 @@ def convert_to_cylindrical(frame):
     s[2, 0] = 0; s[2, 1] = 0; s[2, 2] = 1
 
     # Apply Transformations
-    cartesian_velocity_field = np.einsum('ij...,j...->i...', first_transformation_matrix, spherical_velocity_field)
+    cartesian_velocity_field = np.einsum('ij...,j...->i...', first_transformation_matrix, velocity_field)
     cylindrical_field = np.einsum('ij...,j...->i...', second_transformation_matrix, cartesian_velocity_field)
 
     cylindrical_radial_velocity = cylindrical_field[0]
