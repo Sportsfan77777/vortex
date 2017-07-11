@@ -743,10 +743,10 @@ extern double g_inputParam[32];
 #endif
 
 /* *****************************************************
-       Initialization of Variables
+       Initialization of Variables and Boundary Conditions
    ***************************************************** */
 
 #include "variables.h" /* extra file for initializing variables */
-
+#include "boundary_conditions.h" /* extra file for initializing variables */
 
 #endif /* PLUTO_H */
