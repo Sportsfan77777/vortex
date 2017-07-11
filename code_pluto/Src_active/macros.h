@@ -51,6 +51,14 @@
 #define X2_END_LOOP(k,j,i) KTOT_LOOP(k) JEND_LOOP(j) ITOT_LOOP(i)
 #define X3_END_LOOP(k,j,i) KEND_LOOP(k) JTOT_LOOP(j) ITOT_LOOP(i)
 
+#define BOUNDARY_LOOP(side, k,j,i) \
+ if (side == X1_BEG) X1_BEG_LOOP(k,j,i) \
+ if (side == X2_BEG) X2_BEG_LOOP(k,j,i) \
+ if (side == X3_BEG) X3_BEG_LOOP(k,j,i) \
+ if (side == X1_END) X1_END_LOOP(k,j,i) \
+ if (side == X2_END) X2_END_LOOP(k,j,i) \
+ if (side == X3_END) X3_END_LOOP(k,j,i) \
+
 #define TRANSVERSE_LOOP(indx, ip, i,j,k) \
  if (g_dir == IDIR) {ip = &i; indx.pt1 = &j; indx.pt2 = &k;}  \
  if (g_dir == JDIR) {ip = &j; indx.pt1 = &i; indx.pt2 = &k;}  \
