@@ -154,11 +154,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = 0; radialVelocity_rComponent(R, th, z);
+      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
       #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
       #elif GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = 0; radialVelocity_thetaComponent(R, th, z); // vtheta
+          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
@@ -179,11 +179,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = 0; radialVelocity_rComponent(R, th, z);
+      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
       #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vphi
       #elif GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = 0; radialVelocity_thetaComponent(R, th, z); // vtheta
+          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vtheta
       #endif
@@ -204,11 +204,11 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          z = x1[i]*cos(x2[j]);
       #endif
       d->Vc[RHO][k][j][i]   = density3D(R, z);
-      d->Vc[VX1][k][j][i]   = 0; radialVelocity_rComponent(R, th, z);
+      d->Vc[VX1][k][j][i]   = radialVelocity_rComponent(R, th, z);
       #if GEOMETRY == CYLINDRICAL
           d->Vc[VX2][k][j][i]   = 0.0; // vz or vtheta
       #elif GEOMETRY == SPHERICAL
-          d->Vc[VX2][k][j][i]   = 0; radialVelocity_thetaComponent(R, th, z); // vtheta
+          d->Vc[VX2][k][j][i]   = radialVelocity_thetaComponent(R, th, z); // vtheta
       #elif GEOMETRY == POLAR && DIMENSIONS == 3
           d->Vc[VX3][k][j][i]   = 0.0; // vz
       #endif
@@ -228,7 +228,7 @@ void UserDefBoundary (const Data *d, RBox *box, int side, Grid *grid)
          th = x2[j];
          z = x1[i]*cos(x2[j]);
       #endif
-      d->Vc[VX3][k][j][i] += externalTorque(R, z) * g_dt;
+      d->Vc[VX3][k][j][i] += externalMagneticForce(R, z, d->Vc[RHO][k][j][i]) * g_dt;
     }
   }
 
