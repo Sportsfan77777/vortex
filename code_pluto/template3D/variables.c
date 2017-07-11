@@ -11,6 +11,11 @@ Initializes variables with functions (to be used in init.c)
 
 /// Density ///
 
+double densityPower() {
+  // Power Law for 3-D density (p) --- rho = rho_0 * r ^ -p
+  return g_inputParam[P_DensityPower] + (flaringIndex() + 1.0);
+}
+
 double density2D(double R) {
   // 2-D surface density (sigma) --- Power Law
   return g_inputParam[P_Sigma0] * pow(R / r0, -g_inputParam[P_DensityPower]);

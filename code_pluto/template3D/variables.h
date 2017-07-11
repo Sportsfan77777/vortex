@@ -6,6 +6,7 @@
 #define r0 1.0
 
 /// Density ///
+double densityPower();
 double density2D(double R);
 double density3D(double R, double z);
 
