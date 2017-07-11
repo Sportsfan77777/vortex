@@ -91,7 +91,7 @@ double omega3D(double R, double z) {
    double coeff_a, term_a, term_b, term_c;
    
    q = g_inputParam[P_TemperaturePower];
-   p = g_inputParam[P_DensityPower];
+   p = densityPower();
 
    R_sq = pow(R, 2);
    z_sq = pow(z, 2);
@@ -115,7 +115,7 @@ double omegaPower(double R, double z) {
 
    f = flaringIndex(); 
    q = g_inputParam[P_TemperaturePower];
-   p = g_inputParam[P_DensityPower];
+   p = densityPower();
 
    R_sq = pow(R, 2);
    z_sq = pow(z, 2);
@@ -141,7 +141,7 @@ double azimuthalVelocity3D(double R, double z) {
    double coeff_a, term_a, term_b, term_c;
    
    q = g_inputParam[P_TemperaturePower];
-   p = g_inputParam[P_DensityPower];
+   p = densityPower();
 
    R_sq = pow(R, 2);
    z_sq = pow(z, 2);
