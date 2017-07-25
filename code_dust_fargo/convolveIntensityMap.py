@@ -42,7 +42,8 @@ radius = 20.0 # radius of planet (in AU)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
 # Image Parameters
-beam_size = 5.0 / radius # corresponds to 1.4 AU
+beam_diameter = 10.0
+beam_size = 0.5 * (beam_diameter / radius) # the sigma of the gaussian, not the beam diameter
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
