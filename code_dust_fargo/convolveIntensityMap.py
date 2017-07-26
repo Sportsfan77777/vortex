@@ -69,7 +69,9 @@ taper_time = int(float(fargo_par["MassTaper"]))
 rt_par = np.loadtxt("parameters.dat")
 wavelength = int(float(rt_par[2]))
 
-### Converter ###
+### Helper Functions ###
+
+# Converter #
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
@@ -106,20 +108,38 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
 
     return xs_grid, ys_grid, cart_data
 
+# Convolver #
+
 def convolve_intensity(intensity):
-	# Source: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve
+    # Source: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve
 
-	# Determine Gaussian Parameters
-	dr = rad[1] - rad[0]
-	sigma = int(beam_size / dr)
-	window = signal.gaussian(5 * sigma, std = sigma)
+    # Determine Gaussian Parameters
+    dr = rad[1] - rad[0]
+    sigma = int(beam_size / dr)
+    window = signal.gaussian(5 * sigma, std = sigma)
 
-	# Construct 2-D Gaussian Kernel
-	normed_window = window / np.sum(window)
-	kernel = np.outer(normed_window, normed_window)
+    # Construct 2-D Gaussian Kernel
+    normed_window = window / np.sum(window)
+    kernel = np.outer(normed_window, normed_window)
 
-	convolved_intensity = signal.fftconvolve(intensity, kernel, mode = 'same')
-	return convolved_intensity
+    convolved_intensity = signal.fftconvolve(intensity, kernel, mode = 'same')
+    return convolved_intensity
+
+# Contraster #
+
+def record_contrast(intensity):
+    # Get intensity along x = 0
+    sliver = intensity[:, :]
+
+    # Find argmax (y-coor, and opposite y-coor)
+    max_yi = np.argmax(sliver)
+
+    # Mark contrast, max, opposite
+    maximum = np.max(sliver)
+    opposite = sliver[opposite_i]
+    contrast = maximum / opposite
+
+    return contrast, maximum, opposite
 
 ##### PLOTTING #####
 
@@ -166,6 +186,7 @@ def make_plot(frame, show = False):
 
         # Convolve Data
         convolved_intensity = convolve_intensity(intensity_cart)
+        contrast, maximum, opposite = record_contrast(convolved_intensity)
 
         # Axis
         #if axis == "zoom":
