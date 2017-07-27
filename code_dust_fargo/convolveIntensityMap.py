@@ -131,13 +131,20 @@ def record_contrast(intensity, xs, ys):
     # Get intensity along x = 0
     zero_i = np.searchsorted(xs, 0)
     two_sliver = intensity[zero_i - 1 : zero_i + 1, :] # two columns around x = 0
-    sliver = np.average(two_sliver, axis = -1)
+    sliver = np.average(two_sliver, axis = 0)
 
-    print len(sliver)
+    print np.shape(intensity)
+
+    # Mask inner disk
+    lower_i = np.searchsorted(ys, -1)
+    upper_i = np.searchsorted(ys, 1)
+    sliver[lower_i : upper_i] = 0.0
 
     # Find argmax (y-coor, and opposite y-coor)
     max_yi = np.argmax(sliver)
     max_y = ys[max_yi]
+
+    print max_yi, max_y, len(ys)
 
     opposite_i = np.searchsorted(ys, -max_y)
 
@@ -251,7 +258,7 @@ def make_plot(frame, show = False):
         plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
         # Write contrast
-        plot.text(2, -2, "Contrast: %.2f = %.2e / %.2e" % (contrast, maximum, opposite), c = "white", fontsize = fontsize)
+        plot.text(-2, 2, "Contrast: %.2f = %.2e / %.2e" % (contrast, maximum, opposite), color = "white", fontsize = fontsize)
 
         # Save and Close
         plot.savefig("%sconvolvedIntensityMap%04d_r%d_at%d.png" % (prefix, i, int(radius), wavelength), bbox_inches = 'tight', dpi = my_dpi)
