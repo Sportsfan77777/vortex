@@ -133,8 +133,6 @@ def record_contrast(intensity, xs, ys):
     two_sliver = intensity[zero_i - 1 : zero_i + 1, :] # two columns around x = 0
     sliver = np.average(two_sliver, axis = 0)
 
-    print np.shape(intensity)
-
     # Mask inner disk
     lower_i = np.searchsorted(ys, -1)
     upper_i = np.searchsorted(ys, 1)
@@ -143,8 +141,6 @@ def record_contrast(intensity, xs, ys):
     # Find argmax (y-coor, and opposite y-coor)
     max_yi = np.argmax(sliver)
     max_y = ys[max_yi]
-
-    print max_yi, max_y, len(ys)
 
     opposite_i = np.searchsorted(ys, -max_y)
 
