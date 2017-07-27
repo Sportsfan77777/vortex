@@ -151,6 +151,31 @@ def record_contrast(intensity, xs, ys):
 
     return contrast, maximum, opposite
 
+# Saver
+
+def save_in_polar(intensity_cart, xs, ys, order = 3):
+    ### Convert to Polar ###
+
+    # Set up rt-grid
+    old_rs = rad
+    old_thetas = theta
+
+    rs_grid, thetas_grid = np.meshgrid(old_rs, old_thetas)
+
+    # Interpolate xy-grid
+    interpolated_xs = interpolate(xs, np.arange(len(xs)), bounds_error = False)
+    interpolated_ys = interpolate(ys, np.arange(len(ys)), bounds_error = False)
+
+    # Match up rt-grid with xy-grid
+    new_xs = rs_grid * np.cos(thetas_grid)
+    new_ys = rs_grid * np.sin(thetas_grid)
+
+    polar_data = map_coordinates(intensity_cart, np.array([new_interpolated_xs, new_interpolated_ys]), order = order).reshape(new_xs.shape)
+
+    # Save
+    save_fn = "convolved_polar_intensity.npy"
+    np.save(save_fn, intensity_polar)
+
 ##### PLOTTING #####
 
 # Make Directory
