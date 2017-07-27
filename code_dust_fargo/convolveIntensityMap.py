@@ -106,7 +106,7 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
 
     cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
 
-    return xs_grid, ys_grid, cart_data
+    return xs, ys, xs_grid, ys_grid, cart_data
 
 # Convolver #
 
@@ -189,11 +189,11 @@ def make_plot(frame, show = False):
         # Data
         data = np.loadtxt("intensitymap.out")
         intensity = data[:, -1].reshape(num_rad, num_theta)
-        xs_grid, ys_grid, intensity_cart = polar_to_cartesian(intensity, rad, theta)
+        xs, ys, xs_grid, ys_grid, intensity_cart = polar_to_cartesian(intensity, rad, theta)
 
         # Convolve Data
         convolved_intensity = convolve_intensity(intensity_cart)
-        contrast, maximum, opposite = record_contrast(convolved_intensity, xs_grid, ys_grid)
+        contrast, maximum, opposite = record_contrast(convolved_intensity, xs, ys)
 
         # Axis
         #if axis == "zoom":
