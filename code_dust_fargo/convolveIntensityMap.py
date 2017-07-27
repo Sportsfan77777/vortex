@@ -127,12 +127,19 @@ def convolve_intensity(intensity):
 
 # Contraster #
 
-def record_contrast(intensity):
+def record_contrast(intensity, xs, ys):
     # Get intensity along x = 0
-    sliver = intensity[:, :]
+    zero_i = np.searchsorted(xs, 0)
+    two_sliver = intensity[zero_i - 1 : zero_i + 1, :] # two columns around x = 0
+    sliver = np.average(two_sliver, axis = -1)
+
+    print len(sliver)
 
     # Find argmax (y-coor, and opposite y-coor)
     max_yi = np.argmax(sliver)
+    max_y = ys[max_yi]
+
+    opposite_i = np.searchsorted(ys, -max_y)
 
     # Mark contrast, max, opposite
     maximum = np.max(sliver)
@@ -186,7 +193,7 @@ def make_plot(frame, show = False):
 
         # Convolve Data
         convolved_intensity = convolve_intensity(intensity_cart)
-        contrast, maximum, opposite = record_contrast(convolved_intensity)
+        contrast, maximum, opposite = record_contrast(convolved_intensity, xs_grid, ys_grid)
 
         # Axis
         #if axis == "zoom":
@@ -242,6 +249,9 @@ def make_plot(frame, show = False):
         #plot.ylabel("y", fontsize = fontsize)
         plot.title("%s" % (title2), y = 1.01, fontsize = fontsize)
         plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+        # Write contrast
+        plot.text(2, -2, "Contrast: %.2f = %.2e / %.2e" % (contrast, maximum, opposite), c = "white", fontsize = fontsize)
 
         # Save and Close
         plot.savefig("%sconvolvedIntensityMap%04d_r%d_at%d.png" % (prefix, i, int(radius), wavelength), bbox_inches = 'tight', dpi = my_dpi)
