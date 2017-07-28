@@ -151,7 +151,7 @@ def record_contrast(intensity, xs, ys):
 
     return contrast, maximum, opposite
 
-# Saver
+# Saver #
 
 def save_in_polar(intensity_cart, xs, ys, order = 3):
     ### Convert to Polar ###
@@ -170,6 +170,10 @@ def save_in_polar(intensity_cart, xs, ys, order = 3):
     new_xs = rs_grid * np.cos(thetas_grid)
     new_ys = rs_grid * np.sin(thetas_grid)
 
+    new_interpolated_xs = interpolated_xs(new_xs.ravel())
+    new_interpolated_ys = interpolated_ys(new_ys.ravel())
+
+    # Convert (Interpolate)
     polar_data = map_coordinates(intensity_cart, np.array([new_interpolated_xs, new_interpolated_ys]), order = order).reshape(new_xs.shape)
 
     # Save
