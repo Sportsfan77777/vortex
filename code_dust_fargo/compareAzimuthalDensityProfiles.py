@@ -70,10 +70,11 @@ def find_min(averagedDensity, peak_rad):
 
 #### Data ####
 
-def get_data(frame):
+def get_data(frame, size_a, size_b):
     # Find Peak in Radial Profile (in Outer Disk)
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
-    averagedDensity = np.average(density, axis = 1)
+    density_a = (fromfile("../%s-size/gasdens%d.dat" % (size_a, frame)).reshape(num_rad, num_theta)) / surface_density
+    density_b = (fromfile("../%s-size/gasdens%d.dat" % (size_b, frame)).reshape(num_rad, num_theta)) / surface_density
+    averagedDensity_a = np.average(density, axis = 1)
 
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)
@@ -105,6 +106,8 @@ alpha = 0.65
 fontsize = 14
 linewidth = 4
 
+color = ['b', 'g', 'r', 'c', 'y', 'm', 'k']
+
 def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
@@ -114,8 +117,9 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
     ### Plot ###
-    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+    for i, (radius, azimuthal_profile_i, azimuthal_profile_j) in enumerate(zip(azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b)):
+        plot.plot(theta, azimuthal_profile_i, linewidth = linewidth, alpha = alpha, c = color[i], linestyle = "-", label = "%.3f" % radius)
+        plot.plot(theta, azimuthal_profile_j, linewidth = linewidth, alpha = alpha, c = color[i], linestyle = "-.")
 
     # Axis
     angles = np.linspace(0, 2 * np.pi, 7)
@@ -142,17 +146,19 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
 if len(sys.argv) > 1:
     frame_number = int(sys.argv[1])
+    size_a = sys.argv[2]
+    size_b = sys.argv[3]
     if frame_number == -1:
         # Plot Sample
         max_frame = util.find_max_frame()
         sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
         for i in sample:
-            azimuthal_radii, azimuthal_profiles = get_data(i)
-            make_plot(i, azimuthal_radii, azimuthal_profiles)
+            azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b = get_data(i, size_a, size_b)
+            make_plot(i, azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b)
     else:
         # Plot Single
-        azimuthal_radii, azimuthal_profiles = get_data(frame_number)
-        make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = True)
+        azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b = get_data(frame_number, size_a, size_b)
+        make_plot(frame_number, azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b, show = True)
 else:
     # Search for maximum frame
     density_files = glob.glob("gasdens*.dat")
