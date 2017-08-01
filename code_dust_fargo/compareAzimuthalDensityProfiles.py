@@ -74,10 +74,10 @@ def get_data(frame, size_a, size_b):
     # Find Peak in Radial Profile (in Outer Disk)
     density_a = (fromfile("../%s-size/gasdens%d.dat" % (size_a, frame)).reshape(num_rad, num_theta)) / surface_density
     density_b = (fromfile("../%s-size/gasdens%d.dat" % (size_b, frame)).reshape(num_rad, num_theta)) / surface_density
-    averagedDensity_a = np.average(density, axis = 1)
+    averagedDensity_a = np.average(density_a, axis = 1)
 
-    peak_rad, peak_density = find_peak(averagedDensity)
-    min_rad, min_density = find_min(averagedDensity, peak_rad)
+    peak_rad, peak_density = find_peak(averagedDensity_a)
+    min_rad, min_density = find_min(averagedDensity_a, peak_rad)
 
     # Gather Azimuthal Profiles
     num_profiles = 5
@@ -85,9 +85,11 @@ def get_data(frame, size_a, size_b):
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
-    azimuthal_profiles = [density[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
 
-    return azimuthal_radii, azimuthal_profiles
+    azimuthal_profiles_a = [density_a[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
+    azimuthal_profiles_b = [density_b[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
+
+    return azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b
 
 ##### PLOTTING #####
 
