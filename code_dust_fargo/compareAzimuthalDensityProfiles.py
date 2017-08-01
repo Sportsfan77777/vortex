@@ -110,7 +110,7 @@ linewidth = 4
 
 color = ['b', 'g', 'r', 'c', 'y', 'm', 'k']
 
-def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
+def make_plot(frame, azimuthal_radii, azimuthal_profiles_a, azimuthal_profiles_b, show = False):
     # Orbit Number
     time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
     orbit = int(round(time / (2 * np.pi), 0)) * frame
