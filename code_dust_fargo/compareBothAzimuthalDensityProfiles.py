@@ -161,7 +161,7 @@ if len(sys.argv) > 1:
             make_plot(i, azimuthal_radii, azimuthal_gas_profiles, azimuthal_dust_profiles)
     else:
         # Plot Single
-        azimuthal_radii, azimuthal_gas_profiles, azimuthal_dust_profiles = get_data(frame_number, size)
+        azimuthal_radii, azimuthal_gas_profiles, azimuthal_dust_profiles = get_data(frame_number)
         make_plot(frame_number, azimuthal_radii, azimuthal_gas_profiles, azimuthal_dust_profiles, show = True)
 else:
     # Search for maximum frame
