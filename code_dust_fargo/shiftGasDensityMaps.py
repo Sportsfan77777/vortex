@@ -90,7 +90,7 @@ except:
 
 # Plot Parameters
 cmap = "RdYlBu_r"
-clim = [0, 0.02]
+clim = [0, 2]
 
 fontsize = 14
 my_dpi = 100
