@@ -36,6 +36,7 @@ radius = 5.0
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
 # Vortex Locations
+# T_growth = 1000
 centers = {}
 centers["cm"] = 119.5
 centers["hcm"] = 214.9
@@ -44,6 +45,7 @@ centers["hmm"] = 184.5
 centers["hum"] = 185.6
 centers["um"] = 184.5
 
+# T_growth = 10
 centers["cm"] = 120.9
 centers["hcm"] = 80.2
 centers["mm"] = 55.3
@@ -156,8 +158,9 @@ def make_plot(frame, show = False):
         # Save Shifted Data
         #### Write this part! ####
         shifted_data = np.roll(density, shift_i, axis = 1)
-        shift_savename = "shifted_gasdens%d_%s.npy" % (i, size)
-        np.save(shift_savename, shifted_data)
+        shift_savename = "shifted_gasdens%d_%s.p" % (i, size)
+        #np.save(shift_savename, shifted_data)
+        pickle.dump(shifted_data, open(shift_savename, 'r'))
 
     i = frame
     choose_axis(i, "normal")
