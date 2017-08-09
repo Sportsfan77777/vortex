@@ -130,7 +130,7 @@ def make_plot(frame, size, show = False):
 
         # Data
         if len(sys.argv) > 3:
-            density = (open("gasddens%d_%s.p" % (i, size), 'r') / surface_density_zero
+            density = pickle.load(open("gasddens%d_%s.p" % (i, size), 'r')) / surface_density_zero
         else:
             density = (fromfile("gasddens%d_%s.dat" % (i, size)).reshape(num_rad, num_theta)) / surface_density_zero
         xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
