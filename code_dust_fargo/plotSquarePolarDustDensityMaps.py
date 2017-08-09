@@ -49,7 +49,7 @@ num_rad = float(fargo_par["Nrad"])
 num_theta = float(fargo_par["Nsec"])
 
 rad = np.linspace(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]), num_rad + 1)
-theta = np.linspace(0, 2 * np.pi, num_theta + 1)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 surface_density_zero = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
@@ -59,6 +59,15 @@ planet_mass = float(fargo_par["PlanetMass"])
 taper_time = int(float(fargo_par["MassTaper"]))
 
 ### Converter ###
+
+def clear_inner_disk(data):
+    # get rid of inner disk (r < outer_limit)
+    filtered_data = np.copy(data)
+
+    outer_limit = np.searchsorted(rad, 1.05)
+    filtered_data[:outer_limit] = 0
+
+    return filtered_data
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
@@ -133,6 +142,8 @@ def make_plot(frame, size, show = False):
             density = pickle.load(open("shifted_gasddens%d_%s.p" % (i, size), 'r')) / surface_density_zero
         else:
             density = (fromfile("gasddens%d_%s.dat" % (i, size)).reshape(num_rad, num_theta)) / surface_density_zero
+            
+        density = clear_inner_disk(density)
         xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
 
         # Axis
