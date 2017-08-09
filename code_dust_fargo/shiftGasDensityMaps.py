@@ -160,7 +160,7 @@ def make_plot(frame, show = False):
         shifted_data = np.roll(density, shift_i, axis = 1)
         shift_savename = "shifted_gasdens%d_%s.p" % (i, size)
         #np.save(shift_savename, shifted_data)
-        pickle.dump(shifted_data, open(shift_savename, 'r'))
+        pickle.dump(shifted_data, open(shift_savename, 'w'))
 
     i = frame
     choose_axis(i, "normal")
