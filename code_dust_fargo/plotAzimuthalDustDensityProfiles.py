@@ -90,7 +90,7 @@ def getVortexParameters():
         return thousand_aspect_ratio, thousand_density, thousand_extent, thousand_radius_over_dr
 
 def semi_minor(angle, aspect_ratio, radius):
-    return radius * (abs(angle) * (np.pi / 180.0)) * 0.06 * 2 #aspect_ratio
+    return radius * (abs(angle - np.pi)) * 0.06 * 2 #aspect_ratio
 
 def calculate_xi(aspect_ratio):
     return 1 + aspect_ratio**(-2)
@@ -210,8 +210,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     ys_analytic = np.array([analytic_dust(semi_minor(x, aspect / 2.0, r_over_dr)) for x in xs_analytic])
 
     # Identify vortex range
-    start = np.searchsorted(xs_analytic, -extent / 2)
-    end = np.searchsorted(xs_analytic, extent / 2)
+    start = np.searchsorted(xs_analytic, np.pi - extent / 2)
+    end = np.searchsorted(xs_analytic, np.pi + extent / 2)
 
     plot.plot(xs_analytic[start : end], ys_analytic[start : end], c = 'k', linewidth = linewidth, linestyle = "--")
 
