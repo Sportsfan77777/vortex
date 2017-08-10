@@ -38,7 +38,7 @@ num_rad = len(rad)
 num_theta = float(fargo_par["Nsec"])
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density = float(fargo_par["Sigma0"])
+surface_density = float(fargo_par["Sigma0"]) / 100.0
 scale_height = float(fargo_par["AspectRatio"])
 
 mass_taper = float(fargo_par["MassTaper"])
@@ -225,7 +225,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     # Annotate
     this_title = "Size: %s" % size #readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Density", fontsize = fontsize)
+    plot.ylabel(r"$\Sigma$ $/$ $\Sigma_{0, }$ $_{dust}$", fontsize = fontsize)
     #plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
     plot.title("Orbit %d" % (orbit), fontsize = fontsize + 1)
 
