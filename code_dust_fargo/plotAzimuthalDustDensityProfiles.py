@@ -209,6 +209,11 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     xs_analytic = theta
     ys_analytic = np.array([analytic_dust(semi_minor(x, aspect / 2.0, r_over_dr)) for x in xs_analytic])
 
+    # Scale to Simulated Peak
+    center = np.searchsorted(xs_analytic, np.pi)
+    scale = ys_analytic[center] / (azimuthal_profiles[2])[center]
+    ys_analytic /= scale
+
     # Identify vortex range
     start = np.searchsorted(xs_analytic, np.pi - extent / 2)
     end = np.searchsorted(xs_analytic, np.pi + extent / 2)
