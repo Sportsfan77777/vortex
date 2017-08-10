@@ -149,8 +149,8 @@ def find_min(averagedDensity, peak_rad):
 
 def get_data(frame, size):
     # Find Peak in Radial Profile (in Outer Disk)
-    if os.path.exists("shifted_gasddens%d_%s.p" % (i, size)):
-        density = pickle.load(open("shifted_gasddens%d_%s.p" % (i, size), 'r')) / surface_density_zero
+    if os.path.exists("shifted_gasddens%d_%s.p" % (frame, size)):
+        density = pickle.load(open("shifted_gasddens%d_%s.p" % (frame, size), 'r')) / surface_density_zero
     else:
         density = (fromfile("gasdens%d_%s.dat" % (frame, size)).reshape(num_rad, num_theta)) / surface_density
 
