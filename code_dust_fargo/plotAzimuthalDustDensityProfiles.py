@@ -51,7 +51,7 @@ def stokes_number():
     stokes_numbers["mm"] = 3 * 10**(-3)
     stokes_numbers["hmm"] = 1 * 10**(-3)
     stokes_numbers["hum"] = 3 * 10**(-4)
-    stokes_numbers["mm"] = 3 * 10**(-6)
+    stokes_numbers["um"] = 3 * 10**(-6)
 
     size = sys.argv[2]
     return stokes_numbers[size]
@@ -207,7 +207,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     analytic_dust = lambda x : get_dust(x, aspect, overdensity, S = S)
 
     xs_analytic = theta
-    ys_analytic = np.array([analytic_dust(semi_minor(x, aspect / 2.0, r_over_dr)) for x in xs])
+    ys_analytic = np.array([analytic_dust(semi_minor(x, aspect / 2.0, r_over_dr)) for x in xs_analytic])
 
     # Identify vortex range
     start = np.searchsorted(xs_analytic, -extent / 2)
