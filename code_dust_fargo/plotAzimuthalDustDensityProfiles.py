@@ -199,7 +199,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     ### Plot ###
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.2f" % radius)
 
     ### Analytic Estimate ###
     S = chooseS()
