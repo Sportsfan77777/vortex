@@ -41,6 +41,83 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 surface_density = float(fargo_par["Sigma0"])
 scale_height = float(fargo_par["AspectRatio"])
 
+mass_taper = float(fargo_par["MassTaper"])
+
+### Helper Methods for Lyra+Lin
+def stokes_number():
+    stokes_numbers = {}
+    stokes_numbers["cm"] = 3 * 10**(-2)
+    stokes_numbers["hcm"] = 1 * 10**(-2)
+    stokes_numbers["mm"] = 3 * 10**(-3)
+    stokes_numbers["hmm"] = 1 * 10**(-3)
+    stokes_numbers["hum"] = 3 * 10**(-4)
+    stokes_numbers["mm"] = 3 * 10**(-6)
+
+    size = sys.argv[2]
+    return stokes_numbers[size]
+
+def chooseS():
+    alpha = 3 * 10**(-5) # corresponds to /nu = 10^-7 for h = 0.06
+    S = stokes_number() / alpha
+    return S
+
+def getVortexParameters():
+    if mass_taper < 10.1:
+        # M = 1, v = 10^-7, T_growth = 10
+        ten_radius = 1.7
+        ten_dr = 0.3
+        ten_angle = 120
+
+        ten_scale_height = 1 #scale_height * ten_radius
+        ten_density = 2.7 / ten_scale_height
+        ten_radius_over_dr = ten_radius / ten_dr
+        ten_extent = ten_angle * (np.pi / 180)
+        ten_aspect_ratio = ten_radius_over_dr * ten_extent
+
+        return ten_aspect_ratio, ten_density, ten_extent, ten_radius_over_dr
+    else:
+        # M = 1, v = 10^-7, T_growth = 1000
+        thousand_radius = 1.5
+        thousand_dr = 0.25
+        thousand_angle = 240
+
+        thousand_scale_height = 1 #scale_height * thousand_radius
+        thousand_density = 1.68 / thousand_scale_height
+        thousand_radius_over_dr = thousand_radius / thousand_dr
+        thousand_extent = thousand_angle * (np.pi / 180)
+        thousand_aspect_ratio = thousand_radius_over_dr * thousand_extent
+
+        return thousand_aspect_ratio, thousand_density, thousand_extent, thousand_radius_over_dr
+
+def semi_minor(angle, aspect_ratio, radius):
+    return radius * (abs(angle - 180.0) * (np.pi / 180.0)) * 0.06 * 2 #aspect_ratio
+
+def calculate_xi(aspect_ratio):
+    return 1 + aspect_ratio**(-2)
+
+def calculate_vorticity(aspect_ratio):
+    return 1.5 / (aspect_ratio - 1)
+
+def scale_function_sq(aspect_ratio):
+    xi = calculate_xi(aspect_ratio)
+    vorticity = calculate_vorticity(aspect_ratio)
+
+    first_term = 2.0 * vorticity * aspect_ratio
+    second_term = xi**(-1) * (2 * (vorticity)**2 + 3)
+
+    return first_term - second_term
+
+def get_dust(x, aspect_ratio, max_density, S = default_S):
+    f_sq = scale_function_sq(aspect_ratio)
+    #print f_sq
+
+    coeff = max_density * (S + 1)**(1.5)
+
+    argument = x**2 * f_sq
+    exp = np.exp(-(S + 1) * argument / 2.0)
+
+    return coeff * exp
+
 ### Helper Methods ###
 def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
@@ -72,7 +149,11 @@ def find_min(averagedDensity, peak_rad):
 
 def get_data(frame, size):
     # Find Peak in Radial Profile (in Outer Disk)
-    density = (fromfile("gasdens%d_%s.dat" % (frame, size)).reshape(num_rad, num_theta)) / surface_density
+    if os.path.exists("shifted_gasddens%d_%s.p" % (i, size)):
+        density = pickle.load(open("shifted_gasddens%d_%s.p" % (i, size), 'r')) / surface_density_zero
+    else:
+        density = (fromfile("gasdens%d_%s.dat" % (frame, size)).reshape(num_rad, num_theta)) / surface_density
+
     averagedDensity = np.average(density, axis = 1)
 
     peak_rad, peak_density = find_peak(averagedDensity)
@@ -120,6 +201,20 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
         plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
+    ### Analytic Estimate ###
+    S = chooseS()
+    aspect, overdensity, extent, r_over_dr = getVortexParameters()
+    analytic_dust = lambda x : get_dust(x, aspect, overdensity, S = S)
+
+    xs_analytic = theta
+    ys_analytic = np.array([analytic_dust(semi_minor(x, aspect / 2.0, r_over_dr)) for x in xs])
+
+    # Identify vortex range
+    start = np.searchsorted(xs_analytic, -extent / 2)
+    end = np.searchsorted(xs_analytic, extent / 2)
+
+    plot.plot(xs_analytic[start : end], ys_analytic[start : end], c = 'k', linewidth = linewidth, linestyle = "--")
+
     # Axis
     angles = np.linspace(0, 2 * np.pi, 7)
     degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
@@ -131,7 +226,9 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     this_title = "Size: %s" % size #readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
     plot.ylabel("Azimuthal Density", fontsize = fontsize)
-    plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
+    #plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
+    plot.title("Orbit %d" % (orbit), fontsize = fontsize + 1)
+
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
