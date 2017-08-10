@@ -90,7 +90,7 @@ def getVortexParameters():
         return thousand_aspect_ratio, thousand_density, thousand_extent, thousand_radius_over_dr
 
 def semi_minor(angle, aspect_ratio, radius):
-    return radius * (abs(angle - 180.0) * (np.pi / 180.0)) * 0.06 * 2 #aspect_ratio
+    return radius * (abs(angle) * (np.pi / 180.0)) * 0.06 * 2 #aspect_ratio
 
 def calculate_xi(aspect_ratio):
     return 1 + aspect_ratio**(-2)
