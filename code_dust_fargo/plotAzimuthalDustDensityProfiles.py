@@ -107,7 +107,7 @@ def scale_function_sq(aspect_ratio):
 
     return first_term - second_term
 
-def get_dust(x, aspect_ratio, max_density, S = default_S):
+def get_dust(x, aspect_ratio, max_density, S):
     f_sq = scale_function_sq(aspect_ratio)
     #print f_sq
 
