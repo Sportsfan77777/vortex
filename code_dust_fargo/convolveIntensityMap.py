@@ -71,6 +71,17 @@ wavelength = int(float(rt_par[2]))
 
 ### Helper Functions ###
 
+# Instant Viscous Evolution #
+
+def clear_inner_disk(data):
+    # get rid of inner disk (r < outer_limit)
+    filtered_data = np.copy(data)
+
+    outer_limit = np.searchsorted(rad, 1.05)
+    filtered_data[:outer_limit] = 0
+
+    return filtered_data
+
 # Converter #
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
@@ -221,6 +232,7 @@ def make_plot(frame, show = False):
         # Data
         data = np.loadtxt("intensitymap.out")
         intensity = data[:, -1].reshape(num_rad, num_theta)
+        intensity = clear_inner_disk(intensity)
         xs, ys, xs_grid, ys_grid, intensity_cart = polar_to_cartesian(intensity, rad, theta)
 
         # Convolve Data
