@@ -274,6 +274,10 @@ def make_plot(frame, show = False):
         circle = plot.Circle((0, 0), min(rad), color = "black")
         fig.gca().add_artist(circle)
 
+        # Add beam size
+        beam = plot.Circle((-2, -2), beam_size, color = "white")
+        fig.gca().add_artist(beam)
+
         # Label star and planet
         planet_size = (current_mass / (planet_mass / 0.001))
         plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
