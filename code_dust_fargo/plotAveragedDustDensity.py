@@ -31,7 +31,7 @@ from pylab import fromfile
 import util
 from readTitle import readTitle
 
-save_directory = "averagedDensity"
+save_directory = "averagedDustDensity"
 
 ### Get FARGO Parameters ###
 # Create param file if it doesn't already exist
@@ -85,11 +85,11 @@ def make_plot(frame, show = False):
             prefix = ""
             #plot.xlim(0, x[-1])
             plot.xlim(0.5, 2.0)
-            plot.ylim(0, 2.0)
+            plot.ylim(0, 0.02)
             xlabel = "Radius"
             
         # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
+        density = (fromfile("gasddens%d.dat" % i).reshape(num_rad, num_theta))
         averagedDensity = np.average(density, axis = 1) / surface_density
 
         ### Plot ###
@@ -103,7 +103,7 @@ def make_plot(frame, show = False):
         plot.title(r"$t = %d$ $\rm{orbits}$" % (orbit), fontsize = fontsize + 1)
 
         # Save and Close
-        plot.savefig("%s/%savg_density_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
+        plot.savefig("%s/%savg_dust_density_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
         if show:
             plot.show()
         plot.close(fig) # Close Figure (to avoid too many figures)
