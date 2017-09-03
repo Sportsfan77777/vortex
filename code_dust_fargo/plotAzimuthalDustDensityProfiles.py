@@ -43,6 +43,16 @@ scale_height = float(fargo_par["AspectRatio"])
 
 mass_taper = float(fargo_par["MassTaper"])
 
+# Size Labels
+size = sys.argv[2]
+size_label = {}
+size_label["cm"] = r"$\rm{cm}$"
+size_label["hcm"] = r"$3$ " + r"$\rm{mm}$"
+size_label["mm"] = r"$\rm{mm}$"
+size_label["hmm"] = r"$0.3$ "r"$\rm{mm}$"
+size_label["hum"] = r"$100$ " + r"$\rm{\mu m}$"
+size_label["um"] = r"$\rm{\mu m}$"
+
 ### Helper Methods for Lyra+Lin
 def stokes_number():
     stokes_numbers = {}
@@ -185,8 +195,12 @@ except:
 rcParams['figure.figsize'] = 5, 10
 my_dpi = 100
 
+labelsize = 15
+rcParams['xtick.labelsize'] = labelsize
+rcParams['ytick.labelsize'] = labelsize
+
 alpha = 0.65
-fontsize = 14
+fontsize = 17
 linewidth = 4
 
 def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
@@ -227,17 +241,27 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.xlim(0, 2 * np.pi)
     plot.xticks(angles, degree_angles)
 
-    # Annotate
+    ### Annotate ###
     this_title = "Size: %s" % size #readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
     plot.ylabel(r"$\Sigma$ $/$ $\Sigma_{0, }$ $_{dust}$", fontsize = fontsize)
     #plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
-    plot.title("Orbit %d" % (orbit), fontsize = fontsize + 1)
+    plot.title("Azimuthal Density Profiles: Orbit %d" % (orbit), fontsize = fontsize + 1)
 
+    # Particle Size
+    plot.text(20 * (np.pi / 180), 0.9 * plot.ylim()[1], size_label[size] + r"$\rm{-size}$", fontsize = fontsize, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
+    # Legend
+    plot.text(1.16 * plot.xlim()[1], 0.98 * plot.ylim()[1], "Radii", horizontalalignment = "center", fontsize = fontsize)
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 0.96)) # outside of plot)
 
-    # Save and Close
+    plot.text(1.16 * plot.xlim()[1], 0.5 * plot.ylim()[1], "Analytic", horizontalalignment = "center", fontsize = fontsize)
+    start_dash_x = 1.11 * plot.xlim()[1]
+    end_dash_x = 1.23 * plot.xlim()[1]
+    dash_y = 0.45 * plot.ylim()[1]
+    plot.plot([start_dash_x, end_dash_x], [dash_y, dash_y], linewidth = linewidth, linestyle = "--", clip_on = False)
+
+    ## Save and Close ##
     plot.savefig("%s/azimuthal_density_%04d_%s.png" % (directory, frame, size), bbox_inches = 'tight', dpi = my_dpi)
     if show:
         plot.show()
