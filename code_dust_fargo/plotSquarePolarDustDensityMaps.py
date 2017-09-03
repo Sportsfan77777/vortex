@@ -51,12 +51,22 @@ num_theta = float(fargo_par["Nsec"])
 rad = np.linspace(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]), num_rad + 1)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density_zero = float(fargo_par["Sigma0"])
+surface_density_zero = float(fargo_par["Sigma0"]) / 100.0
 scale_height = float(fargo_par["AspectRatio"])
 viscosity = float(fargo_par["Viscosity"])
 
 planet_mass = float(fargo_par["PlanetMass"])
 taper_time = int(float(fargo_par["MassTaper"]))
+
+# Size Labels
+size = sys.argv[2]
+size_label = {}
+size_label["cm"] = r"$\rm{cm}$"
+size_label["hcm"] = r"$3$ " + r"$\rm{mm}$"
+size_label["mm"] = r"$\rm{mm}$"
+size_label["hmm"] = r"$0.3$ "r"$\rm{mm}$"
+size_label["hum"] = r"$100$ " + r"$\rm{\mu m}$"
+size_label["um"] = r"$\rm{\mu m}$"
 
 ### Converter ###
 
@@ -114,9 +124,9 @@ except:
 
 # Plot Parameters
 cmap = "inferno"
-clim = [0, 0.1]
+clim = [0, 5]
 
-fontsize = 14
+fontsize = 15
 my_dpi = 100
 
 def make_plot(frame, size, show = False):
@@ -198,6 +208,8 @@ def make_plot(frame, size, show = False):
         #plot.ylabel("y", fontsize = fontsize)
         plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
         plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+        plot.text(0.9 * plot.xlim()[0], 0.8 * plot.ylim()[1], size_label[size] + r"$\rm{-size}$", fontsize = fontsize, color = "white", bbox = dict(facecolor = 'none', edgecolor = 'white', linewidth = 1.5, pad = 7.0))
 
         # Save and Close
         plot.savefig("%s/%ssquareDustDensityMap_%04d_%s.png" % (save_directory, prefix, i, size), bbox_inches = 'tight', dpi = my_dpi)
