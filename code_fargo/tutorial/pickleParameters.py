@@ -27,6 +27,20 @@ def store(line):
         name = line_sp[0]
         entry = line_sp[1]
 
+        # Convert to Proper Type (Integer, Float, or String?)
+        is_int = False
+        try:
+            entry = int(entry) # Integer?
+            is_int = True
+        except ValueError:
+            pass
+
+        if not is_int:
+            try:
+                entry = float(entry) # Float?
+            except ValueError:
+                pass # String!
+
         # Store
         par[name] = entry
 
