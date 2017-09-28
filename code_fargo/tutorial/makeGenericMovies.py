@@ -16,9 +16,8 @@ optional arguments:
   --fps FPS             movie frames per second (default: 5)
 """
 
-import subprocess
+import os, shutil, subprocess
 import time
-
 import argparse
 
 ### Movie Options ###
@@ -83,25 +82,13 @@ def delete_tmp_files(tmp_range, base_path, base_name):
 def make_movies():
     """ terminal ffmpeg command """
     ### Make Movie Command (Input: frames per second; path; output_name) ###
-    path = "%s/%s%s.png" % (directory, tmp_name, "%04d")
+    path = "%s/tmp_%s%s.png" % (directory, base_name, "%04d")
     output = "%s/%s.mp4" % (directory, movie_name)
 
     command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
     subprocess.Popen(command.split())
 
 ### Make Movies ###
-
-# Parse Arguments
-o, arguments = new_option_parser().parse_args()
-
-if o.sample:
-    sample = range(o.s_start, o.s_end, o.s_rate)
-    for frame_i in sample:
-        make_plot(frame_i)
-elif o.frame is not None:
-    make_plot(o.frame, show = True)
-else:
-    print "Must specify frame(s)!"
 
 # Re-number to consecutive frames
 base_path = directory
