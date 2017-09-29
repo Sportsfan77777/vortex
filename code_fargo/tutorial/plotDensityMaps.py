@@ -7,19 +7,15 @@ python plotDensityMaps.py -1 <<<===== Plots a sample
 python plotDensityMaps.py -m
 """
 
-import sys
-import os
-import subprocess
-import pickle
-import glob
+import sys, os, subprocess
+import pickle, glob
 from multiprocessing import Pool
+import argparse
 
 import math
 import numpy as np
 
-
 import matplotlib
-#matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -27,128 +23,167 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
-from readTitle import readTitle
 
-save_directory = "gasDensityMaps"
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
+
+###############################################################################
+
+### Input Parameters ###
+
+def new_argument_parser(description = "Plot gas density maps."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-s', dest = "run_parallel", action = 'store_false', default = True,
+                         help = 'for multiple plots, run in serial (default: run in parallel)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+                         help = 'save directory (default: gasDensityMaps)')
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+
+    parser.add_argument('--id', dest = "id_number", type = int, default = None,
+                         help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
+    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
+                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
+    
+
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = 2.5,
+                         help = 'maximum density in colorbar (default: 2.5)')
+
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
 
 ### Get FARGO Parameters ###
-# Create param file if it doesn't already exist
-param_fn = "params.p"
-if not os.path.exists(param_fn):
-    command = "python pickleParameters.py"
-    split_command = command.split()
-    subprocess.Popen(split_command)
-fargo_par = pickle.load(open(param_fn, "rb"))
+fargo_par = util.get_pickled_parameters() # Retrieve parameters from *.par file
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
-rad = np.loadtxt("used_rad.dat")[:-1]
+rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density_zero = float(fargo_par["Sigma0"])
-scale_height = float(fargo_par["AspectRatio"])
+planet_mass = fargo_par["PlanetMass"]
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+#scale_height = fargo_par["AspectRatio"]
+
+### Get Input Parameters ###
+
+# Frames
+if len(frames) == 1:
+    frame_range = frames
+elif len(frames) == 3:
+    start = frames[0]; end = frames[1]; rate = frames[2]
+    frame_range = range(start, end + 1, rate)
+
+    run_parallel = args.run_parallel
+else:
+    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
+    exit()
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+
+id_number = args.id_number
+if args.r_lim is None:
+    x_min = r_min; x_max = r_max
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+
+# Plot Parameters (constant)
+cmap = args.cmap
+clim = [0, args.cmax]
+
+fontsize = args.fontsize
+dpi = args.dpi
+
+###############################################################################
 
 ##### PLOTTING #####
 
-# Make Directory
-try:
-    os.mkdir(save_directory)
-except:
-    print "Directory Already Exists"
-
-# Plot Parameters
-cmap = "RdYlBu_r"
-clim = [0, 2]
-
-fontsize = 14
-my_dpi = 100
-
-
 def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+    # Set up figure
+    fig = plot.figure(figsize = (700, 600), dpi = dpi)
+    ax = fig.add_subplot(111)
 
-        # Axis
-        angles = np.linspace(0, 2 * np.pi, 7)
-        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+    # Data
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
 
-        plot.ylim(0, 2 * np.pi)
-        plot.yticks(angles, degree_angles)
-        if axis == "zoom":
-            x = (rad - 1) / scale_height
-            prefix = "zoom_"
-            plot.xlim(0, 40) # to match the ApJL paper
-            xlabel = r"($r - r_p$) $/$ $h$"
-        else:
-            x = rad
-            prefix = ""
-            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-            xlabel = "Radius"
+    ### Plot ###
+    x = rad
+    result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
 
-        # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
-        normalized_density = density / surface_density_zero
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
 
-        ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
-        fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+    # Annotate
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
 
-        # Annotate
-        this_title = readTitle()
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+    plot.xlabel("Radius", fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.title("Gas Density Map at Orbit %.1f" % (orbit), fontsize = fontsize + 1)
+    #plot.text() # add planet mass, disk mass, viscosity?
 
-        # Save and Close
-        plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
+    # Axes
+    angles = np.linspace(0, 2 * np.pi, 7)
+    #degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
 
-    i = frame
-    choose_axis(i, "normal")
-    choose_axis(i, "zoom")
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
+    plot.yticks(angles)
 
-
-##### Plot One File or All Files #####
-
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            make_plot(i)
+    # Save, Show,  and Close
+    if id_number is None:
+        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
     else:
-        # Plot Single
-        make_plot(frame_number, show = True)
+        save_fn = "%s/densityMap_id%04d_%04d.png" % (save_directory, id_number, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+
+##### Make Plots! #####
+
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
 else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    p = Pool() # default number of processes is multiprocessing.cpu_count()
-    p.map(make_plot, range(num_frames))
-    p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
-
-
+    if run_parallel:
+        p = Pool(4) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
 
