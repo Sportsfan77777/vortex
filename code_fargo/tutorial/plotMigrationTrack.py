@@ -16,6 +16,8 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
+import util
+
 ## Set file names ##
 orbit_fn = "orbit0.dat"
 
