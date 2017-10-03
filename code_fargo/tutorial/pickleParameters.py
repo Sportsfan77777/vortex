@@ -55,7 +55,7 @@ def store_planet_mass(line):
         # Parse
         planet_name = line_sp[0]
         if planet_name == "Jupiter":
-            par["PlanetMass"] = line_sp[2]
+            par["PlanetMass"] = float(line_sp[2])
 
 # Read file line by line
 with open(par_file, "r") as f:
