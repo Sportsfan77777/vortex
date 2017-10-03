@@ -82,18 +82,21 @@ r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-planet_mass = fargo_par["PlanetMass"]
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 surface_density_zero = fargo_par["Sigma0"]
-disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
-#scale_height = fargo_par["AspectRatio"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+alpha_viscosity = fargo_par["AlphaViscosity"]
 
 ### Get Input Parameters ###
 
 # Frames
-if len(frames) == 1:
-    frame_range = frames
-elif len(frames) == 3:
-    start = frames[0]; end = frames[1]; rate = frames[2]
+if len(args.frames) == 1:
+    frame_range = args.frames
+elif len(args.frames) == 3:
+    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
     frame_range = range(start, end + 1, rate)
 
     run_parallel = args.run_parallel
@@ -122,6 +125,9 @@ clim = [0, args.cmax]
 fontsize = args.fontsize
 dpi = args.dpi
 
+### Get Planet Location ###
+planet_tracker = np.loadtxt("bigplanet0.dat")
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -130,35 +136,54 @@ def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
 
     # Set up figure
-    fig = plot.figure(figsize = (700, 600), dpi = dpi)
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Data
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
+    # Center Data
+    middle = np.searchsorted(theta, np.pi)
+    normalized_density = np.roll(normalized_density, middle, axis = -1)
+
     ### Plot ###
     x = rad
-    result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
+    y = theta * (180.0 / np.pi)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
-    # Annotate
+    # Mark Planet
+    current_time = np.searchsorted(planet_tracker[:, 0], frame)
+    planet_x = planet_tracker[current_time, 1]; planet_y = planet_tracker[current_time, 2]
+
+    planet_radius = np.sqrt(planet_x**2 + planet_y**2) # Note: angle is fixed at 360 in rotating frame
+    plot.scatter(planet_radius, y[middle], c = "black", s = 20, marker = "o") # planet
+
+    # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
 
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Gas Density Map at Orbit %.1f" % (orbit), fontsize = fontsize + 1)
-    #plot.text() # add planet mass, disk mass, viscosity?
+    plot.title("Gas Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
+
+    # Annotate Simulation Parameters
+    text_x = 0.65 * (x_max - x_min) + x_min
+    text_y = 0.9 * y[-1]
+    line_sp = 0.065 * y[-1]
+    plot.text(text_x, text_y - 0.0 * line_sp, r"$M_\mathrm{planet} = %.1f$ $M_\mathrm{Jup}$" % planet_mass, fontsize = fontsize - 3) # add planet mass, disk mass, viscosity?
+    plot.text(text_x, text_y - 1.0 * line_sp, r"$M_\mathrm{disk} = %.1f$ $M_\mathrm{Jup}$" % disk_mass, fontsize = fontsize - 3)
+    plot.text(text_x, text_y - 2.0 * line_sp, r"$H/R |_\mathrm{r = 1} = %.02f$ " % (scale_height), fontsize = fontsize - 3)
+    plot.text(text_x, text_y - 3.0 * line_sp, r"$\alpha_\mathrm{viscosity} = %.0e$" % (alpha_viscosity), fontsize = fontsize - 3)
 
     # Axes
-    angles = np.linspace(0, 2 * np.pi, 7)
-    #degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
-
     plot.xlim(x_min, x_max)
     plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
 
     # Save, Show,  and Close
