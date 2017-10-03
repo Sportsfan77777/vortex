@@ -16,8 +16,6 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
-from readTitle import readTitle
-
 ## Set file names ##
 orbit_fn = "orbit0.dat"
 
@@ -33,6 +31,7 @@ xs = (data[:,0])[select] / (2 * np.pi) # Convert to num_orbits
 sm_axes = (data[:,2])[select] # Planet Semi-Major Axis
 eccs = (data[:,1])[select] # Planet Eccentricity
 
+"""
 # Calculate Analytic Rate
 viscosity = float(fargo_par["Viscosity"])
 delta_t = data[1,0] - data[0,0]
@@ -44,6 +43,7 @@ ys_analytic = [sm_axes[0]]
 for i, x in enumerate(xs[:-1]):
     a = next_a(ys_analytic[-1], delta_t) # Iterate through time
     ys_analytic.append(a)
+"""
 
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
@@ -60,19 +60,19 @@ def make_plot():
     plot.plot(xs, qs, c = "purple", alpha = alpha, linewidth = linewidth, label = "q")
 
     # Analytic
-    plot.plot(xs, ys_analytic, c = "black", linewidth = linewidth, label = "ideal")
+    #plot.plot(xs, ys_analytic, c = "black", linewidth = linewidth, label = "ideal")
 
     # Annotate
-    this_title = readTitle()
-    plot.title("%s" % this_title, fontsize = fontsize + 2)
+    #this_title = readTitle()
+    #plot.title("%s" % this_title, fontsize = fontsize + 2)
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Planet Distance ('a' or 'q')", fontsize = fontsize)
 
     plot.legend(loc = "upper left")
 
     # Limits
-    mins = [min(ys), min(qs), min(ys_analytic)]
-    maxes = [max(ys), max(qs), max(ys_analytic)]
+    mins = [min(ys), min(qs)]
+    maxes = [max(ys), max(qs)]
     plot.ylim(min(mins)- 0.002, max(maxes) + 0.015)
     plot.xlim(0, xs[-1])
 
