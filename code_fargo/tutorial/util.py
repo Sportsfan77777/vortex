@@ -6,12 +6,9 @@ not to be called
 """
 
 import os
-import subprocess
-import glob
-import time
 import pickle
 
-import numpy as np
+from pickleParameters import pickle_parameter_dictionary
 
 #### Miscellaneous ####
 
@@ -21,9 +18,7 @@ def get_pickled_parameters():
 
     if not os.path.exists(param_fn):
         # create pickle if it doesn't exist
-        command = "python pickleParameters.py"
-        subprocess.Popen(command.split())
-        time.sleep(1) # one sec -- give it time to execute
+        pickle_parameter_dictionary()
 
     return pickle.load(open(param_fn, "rb"))
 
