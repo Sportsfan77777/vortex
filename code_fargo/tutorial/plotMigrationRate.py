@@ -24,6 +24,9 @@ orbit_fn = "orbit0.dat"
 ### Get FARGO Parameters ###
 fargo_par = util.get_pickled_parameters() # Retrieve parameters from *.par file
 
+# Smoothing Function
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+
 # Load Data (and choose subset) = x-axis
 rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
 
@@ -32,8 +35,10 @@ select = range(0, len(data[:, -1]), rate)
 times = (data[:, 0])[select] / (2 * np.pi) # Convert to orbital times
 sm_axes = (data[:, 2])[select] # Planet Semi-Major Axis
 
+kernel_size = 50.0
 dt = times[1] - times[0] # Note: output is constant
-migration_rates = np.diff(sm_axes) / dt
+smoothed_sm_axes = smooth(sm_axes, kernel_size)
+migration_rates = np.diff(smoothed_sm_axes) / dt
 
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves

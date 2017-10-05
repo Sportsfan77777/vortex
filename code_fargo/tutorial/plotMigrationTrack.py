@@ -32,6 +32,9 @@ select = range(0, len(data[:, -1]), rate)
 times = (data[:, 0])[select] / (2 * np.pi) # Convert to orbital times
 sm_axes = (data[:, 2])[select] # Planet Semi-Major Axis
 
+# Smoothing Function
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
 fontsize = 14
@@ -39,8 +42,10 @@ linewidth = 3
 
 def make_plot():
     # Data
-    xs = times; ys = sm_axes
-    plot.plot(xs, ys, c = "blue", linewidth = linewidth)
+    kernel = 50.0
+    xs = times; ys = sm_axes; smoothed_ys = smooth(ys, kernel)
+    plot.plot(xs, ys, c = "blue", alpha = alpha, linewidth = linewidth)
+    plot.plot(xs, smoothed_ys, c = "blue", linewidth = linewidth)
 
     # Annotate
     plot.title("Migration Track", fontsize = fontsize + 2)
