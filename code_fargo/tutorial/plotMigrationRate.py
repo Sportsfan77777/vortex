@@ -32,6 +32,9 @@ select = range(0, len(data[:, -1]), rate)
 times = (data[:, 0])[select] / (2 * np.pi) # Convert to orbital times
 sm_axes = (data[:, 2])[select] # Planet Semi-Major Axis
 
+dt = times[1] - times[0] # Note: output is constant
+migration_rates = np.diff(sm_axes) / dt
+
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
 fontsize = 14
@@ -39,13 +42,13 @@ linewidth = 3
 
 def make_plot():
     # Data
-    xs = times; ys = sm_axes
+    xs = times[:-1]; ys = migration_rates
     plot.plot(xs, ys, c = "blue", linewidth = linewidth)
 
     # Annotate
-    plot.title("Migration Track", fontsize = fontsize + 2)
+    plot.title("Migration Rate", fontsize = fontsize + 2)
     plot.xlabel(r"$t$", fontsize = fontsize)
-    plot.ylabel(r"Planet Semimajor Axis ($a$)", fontsize = fontsize)
+    plot.ylabel(r"$\frac{da}{dt}$", fontsize = fontsize)
 
     #plot.legend(loc = "upper right")
 
@@ -54,7 +57,7 @@ def make_plot():
     plot.ylim(min(ys) - 0.002, max(ys) + 0.015)
 
     # Save and Close
-    plot.savefig("migrationTrack.png", bbox_inches = 'tight')
+    plot.savefig("migrationRate.png", bbox_inches = 'tight')
     plot.show()
 
     plot.cla()
