@@ -38,28 +38,32 @@ sm_axes = (data[:, 2])[select] # Planet Semi-Major Axis
 kernel_size = 50.0
 dt = times[1] - times[0] # Note: output is constant
 smoothed_sm_axes = smooth(sm_axes, kernel_size)
-migration_rates = np.diff(smoothed_sm_axes) / dt
+migration_rates = -np.diff(smoothed_sm_axes) / dt
 
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
-fontsize = 14
+fontsize = 16
 linewidth = 3
 
 def make_plot():
     # Data
-    xs = times[:-1]; ys = migration_rates
+    xs = sm_axes[:-1]; ys = migration_rates
     plot.plot(xs, ys, c = "blue", linewidth = linewidth)
+
+    # Analytic
+    ys_a = np.max(migration_rates) * np.power(xs, -0.25)
+    plot.plot(xs, ys_a, alpha = alpha, linestyle = "--", linewidth = linewidth - 1)
 
     # Annotate
     plot.title("Migration Rate", fontsize = fontsize + 2)
     plot.xlabel(r"$t$", fontsize = fontsize)
-    plot.ylabel(r"$\frac{da}{dt}$", fontsize = fontsize)
+    plot.ylabel(r"$-\frac{da}{dt}$", fontsize = fontsize)
 
     #plot.legend(loc = "upper right")
 
     # Limits
     plot.xlim(0, xs[-1])
-    plot.ylim(min(ys) - 0.002, max(ys) + 0.015)
+    plot.ylim(min(ys), max(ys))
 
     # Save and Close
     plot.savefig("migrationRate.png", bbox_inches = 'tight')
