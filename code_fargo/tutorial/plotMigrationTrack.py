@@ -33,7 +33,7 @@ times = (data[:, 0])[select] / (2 * np.pi) # Convert to orbital times
 sm_axes = (data[:, 2])[select] # Planet Semi-Major Axis
 
 # Smoothing Function
-smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size, mode = 'nearest') # smoothing filter
 
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
