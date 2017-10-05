@@ -56,7 +56,7 @@ def make_plot():
 
     # Annotate
     plot.title("Migration Rate", fontsize = fontsize + 2)
-    plot.xlabel(r"$t$", fontsize = fontsize)
+    plot.xlabel(r"$a$", fontsize = fontsize)
     plot.ylabel(r"$-\frac{da}{dt}$", fontsize = fontsize)
 
     #plot.legend(loc = "upper right")
