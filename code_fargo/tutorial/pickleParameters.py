@@ -56,15 +56,6 @@ def parse_parameters(par_dictionary):
         for line in f:
             store(line)
 
-    files = glob.glob("*.cfg") # usually Jup.cfg
-    cfg_file = files[0]
-
-# Read file line by line
-with open(cfg_file, "r") as f:
-    for line in f:
-        store_planet_mass(line) 
-
-
 def parse_planet_mass(par_dictionary):
     """ parse planet's mass """
 
