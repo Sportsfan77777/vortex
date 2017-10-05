@@ -59,10 +59,12 @@ def make_plot():
     plot.xlabel(r"$a$", fontsize = fontsize)
     plot.ylabel(r"$-\frac{da}{dt}$", fontsize = fontsize)
 
+    # Add second axis for time????
+
     #plot.legend(loc = "upper right")
 
     # Limits
-    plot.xlim(0, xs[-1])
+    plot.xlim(min(xs), max(xs))
     plot.ylim(min(ys), max(ys))
 
     # Save and Close
