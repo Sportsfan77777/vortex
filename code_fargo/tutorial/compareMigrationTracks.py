@@ -16,68 +16,53 @@ from matplotlib import rcParams as rc
 from scipy import signal as sig
 from scipy.ndimage import filters as ff
 
-from readTitle import readTitle
+import util
+
+## Choose directories ##
+directories = ["earth1", "earth2", "earth4", "jupiter1", "jupiter2", "saturn1"]
+
+###############################################################################
 
 ## Set file names ##
 orbit_fn = "orbit0.dat"
 
-### Get FARGO Parameters ###
-fargo_par = util.get_pickled_parameters() # Retrieve parameters from *.par file
-
-# Load Data (and choose subset) = x-axis
-rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
-
-data = np.loadtxt(orbit_fn)
-select = range(0, len(data[:,-1]), rate)
-xs = (data[:,0])[select] / (2 * np.pi) # Convert to num_orbits
-sm_axes = (data[:,2])[select] # Planet Semi-Major Axis
-eccs = (data[:,1])[select] # Planet Eccentricity
-
-# Calculate Analytic Rate
-viscosity = float(fargo_par["Viscosity"])
-delta_t = data[1,0] - data[0,0]
-def next_a(previous_a, delta_t):
-    timescale = (3.0 / 2) * previous_a**2 / viscosity
-    return previous_a * (1 - delta_t / timescale)
-
-ys_analytic = [sm_axes[0]]
-for i, x in enumerate(xs[:-1]):
-    a = next_a(ys_analytic[-1], delta_t) # Iterate through time
-    ys_analytic.append(a)
+# Smoothing Function
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size, mode = 'nearest') # smoothing filter
 
 # Plot Parameters
-alpha = 0.2 # for non-smoothed curves
+kernel_size = 20
+
 fontsize = 14
 linewidth = 3
 
+def add_track(directory):
+    fn = "../%s/%s" % (directory, orbit_fn)
+    data = np.loadtxt(fn)
+
+    times = data[:, 0] / (2 * np.pi) # Convert to orbital times
+    sm_axes = data[:, 2] # Planet Semi-Major Axis
+
+    xs = times; ys = smooth(sm_axes, kernel_size)
+    plot.plot(xs, ys, linewidth = linewidth, label = directory)
+
 def make_plot():
     # Curves
-    ys = sm_axes
-    qs = np.array([a * (1 - e) for (a, e) in zip(ys, eccs)])
-
-    # Data
-    plot.plot(xs, ys, c = "blue", linewidth = linewidth, label = "a")
-    plot.plot(xs, qs, c = "purple", alpha = alpha, linewidth = linewidth, label = "q")
-
-    # Analytic
-    plot.plot(xs, ys_analytic, c = "black", linewidth = linewidth, label = "ideal")
+    for directory in directories:
+        add_track(directory)
 
     # Annotate
-    this_title = readTitle()
-    plot.title("%s" % this_title, fontsize = fontsize + 2)
-    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Planet Distance ('a' or 'q')", fontsize = fontsize)
+    plot.title("Migration Track", fontsize = fontsize + 2)
+    plot.xlabel(r"$t$", fontsize = fontsize)
+    plot.ylabel(r"Planet Semimajor Axis ($a$)", fontsize = fontsize)
 
-    plot.legend(loc = "upper left")
+    plot.legend(loc = "upper right")
 
     # Limits
-    mins = [min(ys), min(qs), min(ys_analytic)]
-    maxes = [max(ys), max(qs), max(ys_analytic)]
-    plot.ylim(min(mins)- 0.002, max(maxes) + 0.015)
-    plot.xlim(0, xs[-1])
+    #plot.xlim(0, xs[-1])
+    #plot.ylim(min_y, max_y)
 
     # Save and Close
-    plot.savefig("planetDistance.png", bbox_inches = 'tight')
+    plot.savefig("migrationTrackComparison.png", bbox_inches = 'tight')
     plot.show()
 
     plot.cla()
