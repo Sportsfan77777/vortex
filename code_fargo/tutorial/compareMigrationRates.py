@@ -39,6 +39,9 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 fontsize = 14
 linewidth = 3
 
+start = 10 # start time
+end = 95 # end time
+
 def add_track(directory, index):
     fn = "../%s/%s" % (directory, orbit_fn)
     data = np.loadtxt(fn)
@@ -50,7 +53,7 @@ def add_track(directory, index):
     smoothed_sm_axes = smooth(sm_axes, kernel_size)
     migration_rates = -(np.diff(smoothed_sm_axes) / dt) / smoothed_sm_axes[:-1] # -(da/dt) / a
 
-    xs = times[:-1]; ys = migration_rates
+    xs = times[start : end]; ys = migration_rates[start : end]
     plot.plot(xs, ys, linewidth = linewidth, label = directory, c = colors[index])
 
 def make_plot():
@@ -63,10 +66,10 @@ def make_plot():
     plot.xlabel(r"$t$", fontsize = fontsize)
     plot.ylabel(r"$-\frac{1}{a} \frac{da}{dt}$", fontsize = fontsize)
 
-    plot.legend(loc = "lower left")
+    plot.legend(loc = "upper right")
 
     # Limits
-    #plot.xlim(0, xs[-1])
+    plot.xlim(0, 1.5 * end)
     #plot.ylim(min_y, max_y)
 
     # Save and Close
