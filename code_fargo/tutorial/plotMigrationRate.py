@@ -25,7 +25,7 @@ orbit_fn = "orbit0.dat"
 fargo_par = util.get_pickled_parameters() # Retrieve parameters from *.par file
 
 # Smoothing Function
-smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size, mode = 'nearest') # smoothing filter
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
 # Load Data (and choose subset) = x-axis
 rate = 1 # If 1, choose all of the data. If >1, choose all_data / rate
@@ -47,24 +47,18 @@ linewidth = 3
 
 def make_plot():
     # Data
-    xs = sm_axes[:-1]; ys = migration_rates
+    xs = times[:-1]; ys = migration_rates
     plot.plot(xs, ys, c = "blue", linewidth = linewidth)
-
-    # Analytic
-    ys_a = np.max(migration_rates) * np.power(xs, -0.25)
-    plot.plot(xs, ys_a, alpha = alpha, linestyle = "--", linewidth = linewidth - 1)
 
     # Annotate
     plot.title("Migration Rate", fontsize = fontsize + 2)
-    plot.xlabel(r"$a$", fontsize = fontsize)
+    plot.xlabel(r"$t$", fontsize = fontsize)
     plot.ylabel(r"$-\frac{da}{dt}$", fontsize = fontsize)
-
-    # Add second axis for time????
 
     #plot.legend(loc = "upper right")
 
     # Limits
-    plot.xlim(min(xs), max(xs))
+    plot.xlim(0, xs[-1])
     plot.ylim(min(ys), max(ys))
 
     # Save and Close
