@@ -45,8 +45,9 @@ def add_track(directory, index):
 
     times = data[:, 0] / (2 * np.pi) # Convert to orbital times
     sm_axes = data[:, 2] # Planet Semi-Major Axis
-    smoothed_sm_axes = smooth(sm_axes, kernel_size)
 
+    dt = times[1] - times[0] # Note: output is constant
+    smoothed_sm_axes = smooth(sm_axes, kernel_size)
     migration_rates = -(np.diff(smoothed_sm_axes) / dt) / sm_axes[:-1] # -(da/dt) / a
 
     xs = times; ys = migration_rates
