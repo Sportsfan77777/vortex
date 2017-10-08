@@ -72,7 +72,7 @@ def parse_planet_mass(par_dictionary):
     # Read file line by line
     with open(cfg_file, "r") as f:
         for line in f:
-            store_planet_mass(line) 
+            store(line)
 
 
 def pickle_parameter_dictionary():
