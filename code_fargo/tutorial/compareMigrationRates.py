@@ -50,7 +50,7 @@ def add_track(directory, index):
     smoothed_sm_axes = smooth(sm_axes, kernel_size)
     migration_rates = -(np.diff(smoothed_sm_axes) / dt) / smooth_sm_axes[:-1] # -(da/dt) / a
 
-    xs = times; ys = migration_rates
+    xs = times[:-1]; ys = migration_rates
     plot.plot(xs, ys, linewidth = linewidth, label = directory, c = colors[index])
 
 def make_plot():
