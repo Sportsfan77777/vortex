@@ -38,16 +38,22 @@ sm_axes = (data[:, 2])[select] # Planet Semi-Major Axis
 kernel_size = 50.0
 dt = times[1] - times[0] # Note: output is constant
 smoothed_sm_axes = smooth(sm_axes, kernel_size)
-migration_rates = -np.diff(smoothed_sm_axes) / dt
+migration_rates = -(np.diff(smoothed_sm_axes) / dt) / smoothed_sm_axes[:-1] # -(da/dt) / a
 
 # Plot Parameters
 alpha = 0.2 # for non-smoothed curves
 fontsize = 16
 linewidth = 3
 
+start_time = 10 # start time
+end_time = 95 # end time
+
 def make_plot():
     # Data
-    xs = times[:-1]; ys = migration_rates
+    start = np.searchsorted(times, start_time)
+    end = np.searchsorted(times, end_time)
+
+    xs = times[start : end]; ys = migration_rates[start : end]
     plot.plot(xs, ys, c = "blue", linewidth = linewidth)
 
     # Annotate
