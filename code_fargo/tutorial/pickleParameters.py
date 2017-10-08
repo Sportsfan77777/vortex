@@ -5,13 +5,6 @@ save parameters from a single *.par file into a pickled dictionary
 import pickle as p
 import glob
 
-# Find *.par file (assume there is only one *.par file)
-
-par = {}
-
-files = glob.glob("*.par")
-par_file = files[0]
-
 def parse_parameters(par_dictionary):
     """ stores parameters in *.par file """
 
