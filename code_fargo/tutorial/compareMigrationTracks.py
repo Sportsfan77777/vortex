@@ -19,7 +19,7 @@ from scipy.ndimage import filters as ff
 import util
 
 ## Choose directories ##
-directories = ["earth1", "earth2", "earth4", "jupiter1", "jupiter2", "saturn1"]
+directories = ["earth1", "earth4", "earth16", "jupiter2", "jupiter1", "saturn1", "saturn-half"]
 
 ###############################################################################
 
@@ -32,10 +32,14 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size, mode
 # Plot Parameters
 kernel_size = 20
 
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
+          '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
+          '#bcbd22', '#17becf']
+
 fontsize = 14
 linewidth = 3
 
-def add_track(directory):
+def add_track(directory, index):
     fn = "../%s/%s" % (directory, orbit_fn)
     data = np.loadtxt(fn)
 
@@ -43,19 +47,19 @@ def add_track(directory):
     sm_axes = data[:, 2] # Planet Semi-Major Axis
 
     xs = times; ys = smooth(sm_axes, kernel_size)
-    plot.plot(xs, ys, linewidth = linewidth, label = directory)
+    plot.plot(xs, ys, linewidth = linewidth, label = directory, c = colors[index])
 
 def make_plot():
     # Curves
-    for directory in directories:
-        add_track(directory)
+    for i, directory in enumerate(directories):
+        add_track(directory, i)
 
     # Annotate
-    plot.title("Migration Track", fontsize = fontsize + 2)
+    plot.title("Migration Tracks", fontsize = fontsize + 2)
     plot.xlabel(r"$t$", fontsize = fontsize)
     plot.ylabel(r"Planet Semimajor Axis ($a$)", fontsize = fontsize)
 
-    plot.legend(loc = "upper right")
+    plot.legend(loc = "lower left")
 
     # Limits
     #plot.xlim(0, xs[-1])
