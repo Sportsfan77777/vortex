@@ -29,7 +29,32 @@ from pylab import fromfile
 
 directories = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 
+def generate_secondary_files():
+	""" Step 1: write other *.dat files """
+	pass
 
+def convert_units():
+	""" Step 2: convert density from code units to cgs units"""
+	pass
 
+def polish(cavity = True, scale = 1):
+	"Step 3: get rid of inner cavity and scale dust densities to different grain size" 
+	pass
+
+def center_vortex():
+	""" Step 4: center the vortex so that the peak is at 180 degrees """
+	pass
+
+def resample():
+	""" Step 5: """
+	pass
+
+def interpolate_density():
+	""" Step 6: interpolate to more grain sizes """
+	pass
+
+def output_density_txt():
+	""" Step 7: output txt file """
+	pass
 
 
