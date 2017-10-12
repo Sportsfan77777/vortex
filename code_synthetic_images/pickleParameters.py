@@ -2,6 +2,7 @@
 save parameters from a single *.par file into a pickled dictionary
 """
 
+import os
 import pickle as p
 import glob
 
@@ -78,8 +79,9 @@ def parse_planet_mass(par_dictionary):
 def pickle_parameter_dictionary(directory = "."):
     """ dump all parameters into a pickle file """
 
+    cwd = os.getcwd()
     if directory is not ".":
-        pass
+        os.chdir(directory)
 
     parameter_dictionary = {}
 
@@ -90,7 +92,7 @@ def pickle_parameter_dictionary(directory = "."):
     p.dump(parameter_dictionary, open(dict_name, "wb"))
 
     if directory is not ".":
-        pass
+        os.chdir(cwd)
 
 # Main
 if __name__ is "__main__":
