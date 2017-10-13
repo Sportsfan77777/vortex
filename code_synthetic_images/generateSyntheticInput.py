@@ -203,16 +203,18 @@ def generate_secondary_files(rad, theta, sizes):
     np.savetxt("%s/temperature.dat" % save_directory, temperatures)
 
 def output_density_txt(density, frame):
-    """ Step 7: output txt file (combine with step 8?) """
+    """ Step 7: output txt file """
     interleaved_density = density.flatten('F') # interleave to 1-d
 
-    fn = "gasddens%d.dat" % frame
-    np.savetxt(save_directory + "/" + (new_fn % save_name), interleaved_density)
+    fn = "%s/gasddens%d.dat" % (save_directory, frame)
+    np.savetxt(fn, interleaved_density)
 
 def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
-    fn = "gasddens%d.p" % frame
-    pickle.dump(density, open(fn, 'w'))
+    composite_density = np.sum(density, axis = -1)
+
+    fn = "%s/gasddens%d.p" % (save_directory, frame)
+    pickle.dump(composite_density, open(fn, 'w'))
 
 def full_procedure(frame):
     """ Every Step """
