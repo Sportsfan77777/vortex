@@ -95,5 +95,5 @@ def pickle_parameter_dictionary(directory = "."):
         os.chdir(cwd)
 
 # Main
-if __name__ is "__main__":
+if __name__ == "__main__":
     pickle_parameter_dictionary()

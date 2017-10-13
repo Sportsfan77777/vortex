@@ -87,5 +87,5 @@ def pickle_parameter_dictionary():
     p.dump(parameter_dictionary, open(dict_name, "wb"))
 
 # Main
-if __name__ is "__main__":
+if __name__ == "__main__":
     pickle_parameter_dictionary()
