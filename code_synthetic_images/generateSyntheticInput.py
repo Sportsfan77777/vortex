@@ -26,15 +26,73 @@ import math
 import numpy as np
 from scipy import interpolate as sp_int
 
+import argparse
 from pylab import fromfile
 
 directories = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
 
-# System Parameters
-mass = 1.0 # (in solar masses)
-radius = 20.0 # radius of planet (in AU)
+### Input Parameters ###
 
+def new_argument_parser(description = "Generate input for synthetic images."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # System Parameters
+    parser.add_argument('-m', dest = "mass", type = float, default = 1.0,
+                         help = 'mass of star in solar masses (default: 1.0)')
+    parser.add_argument('-r', dest = "radius", type = float, default = 1.0,
+                         help = 'radius of planet in AU (default: 20.0)')
+
+    # Save Parameters
+    parser.add_argument('-g', dest = "num_grains", type = int, default = 100,
+                         help = 'number of interpolated grains (default: 100)')
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
+                         help = 're-sample resolution (default: [300, 400])')
+    parser.add_argument('--save', dest = "save_directory", default = ".",
+                         help = 'save directory (default: ".")')
+
+    return parser
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get FARGO Parameters ###
+directory = "../%s-size" % directories[0]
+fargo_par = util.get_pickled_parameters(directory = directory) # Retrieve parameters from *.par file
+
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+### Get Input Parameters ###
+
+# Frames
+if len(args.frames) == 1:
+    frame_range = args.frames
+elif len(args.frames) == 3:
+    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
+    frame_range = range(start, end + 1, rate)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# System Parameters
+mass = args.mass # (in solar masses)
+radius = args.radius # radius of planet (in AU)
+
+# Save Parameters
+new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
+save_directory = args.save_directory
+
+### Miscellaneous ###
 # Constants (G, \mu, m_p, k_b)
 G = 6.67 * 10**-8; mu = 2.34; mp = 1.67 * 10**-24; kb = 1.38 * 10**-16
 
@@ -42,11 +100,14 @@ G = 6.67 * 10**-8; mu = 2.34; mp = 1.67 * 10**-24; kb = 1.38 * 10**-16
 mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
-def retrieve_density(sizes):
-    """ Step 0: Retrieve density """
-    density = np.zeros((num_rad * num_theta, len(sizes)))
+### Task Functions ###
 
-    for i, (size_i, fn_i) in enumerate(zip(size_labels, fns)):
+def retrieve_density(frame, sizes):
+    """ Step 0: Retrieve density """
+    density = np.zeros((num_rad, num_theta, len(sizes)))
+
+    for i, size_i in enumerate(sizes):
+        fn_i = "../%s-size/gasddens%d.dat" % (size_i, frame)
         density[:, :, i] = fromfile(fn_i).reshape(num_rad, num_theta)
 
     return density
@@ -56,6 +117,7 @@ def convert_units(density):
     density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
     density *= density_unit
+    return density
 
 def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
     """ Step 2: get rid of inner cavity and scale dust densities to different grain size """
@@ -68,6 +130,8 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
     density *= scale
     sizes *= scale
 
+    return density
+
 def center_vortex(vortex_start = None, vortex_end = 2000):
     """ Step 3: center the vortex so that the peak is at 180 degrees """
     pass
@@ -75,13 +139,14 @@ def center_vortex(vortex_start = None, vortex_end = 2000):
 def resample(new_num_rad = 300, new_num_theta = 400):
     """ Step 4: lower resolution (makes txt output smaller) """
 
+    new_density = np.zeros((new_num_rad, new_num_theta, len(sizes)))
+
     new_rad = np.linspace(fargo_par["Rmin"], fargo_par["Rmax"], new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
-    # Note: how to handle density arrays??? 6 separate, or 1 with an extra dimension
-    # The input to interp2d must be 2-D!
-    interpolator = sp_int.interp2d(rad, theta, np.transpose(density_arrays[size_i])) # Careful: z is flattened!
-    new_density = (interpolator(new_rad, new_theta)).T # Note: result needs to be transposed
+    for i in len(sizes):
+        interpolator = sp_int.interp2d(rad, theta, np.transpose(density[:, :, i])) # Careful: z is flattened!
+        new_density[:, :, i] = (interpolator(new_rad, new_theta)).T # Note: result needs to be transposed
     
     return new_rad, new_theta, new_density
 
@@ -137,26 +202,47 @@ def generate_secondary_files(rad, theta, sizes):
     np.savetxt("%s/grain.dat" % save_directory, sizes)
     np.savetxt("%s/temperature.dat" % save_directory, temperatures)
 
-def output_density_txt(density):
+def output_density_txt(density, frame):
     """ Step 7: output txt file (combine with step 8?) """
-    interleaved_density = power_law_array.flatten('F') # interleave to 1-d
+    interleaved_density = density.flatten('F') # interleave to 1-d
+
+    fn = "gasddens%d.dat" % frame
     np.savetxt(save_directory + "/" + (new_fn % save_name), interleaved_density)
 
-def output_density_pickle(density):
+def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
+    fn = "gasddens%d.p" % frame
+    pickle.dump(density, open(fn, 'w'))
 
-    #pickle.dump(density, open(, ))
-    pass
+def full_procedure(frame):
+    """ Every Step """
+    density = retrieve_density(frame, sizes)
+
+    density = convert_units(density)
+    density = polish(density)
+    density = center_vortex(density)
+    new_rad, new_theta, density = resample(new_num_rad = new_num_rad, new_num_theta = new_num_theta)
+    density = interpolate_density(density, num_grains)
+    output_density_txt(density, frame)
+    output_density_pickle(density, frame)
+
+    if frame == frame_range[0]:
+        generate_secondary_files(new_rad, new_theta, sizes)
+
 
 ### Generate Synthetic Input ###
 
-density = retrieve_density()
+# Iterate through frames
 
-convert_units(density)
-polish(density)
-center_vortex()
-resample()
-interpolate_density()
-generate_secondary_files()
-output_density_txt()
-output_density_pickle()
+if len(frame_range) == 1:
+    full_procedure(frame_range[0])
+else:
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(full_procedure, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            full_procedure(frame)
+
+
