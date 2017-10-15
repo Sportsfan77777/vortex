@@ -4,6 +4,15 @@ Usage: trackVortexCenters.py
 Plots vortex centers over time.
 """
 
+import pickle
+import glob
+from multiprocessing import Pool
+
+import numpy as np
+
+import argparse
+from pylab import fromfile
+
 directories = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
 
