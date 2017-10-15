@@ -10,6 +10,8 @@ from multiprocessing import Pool
 
 import numpy as np
 
+from matplotlib import pyplot as plot
+
 import argparse
 from pylab import fromfile
 
