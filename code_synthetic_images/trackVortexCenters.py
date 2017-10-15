@@ -96,7 +96,7 @@ def method2(density):
     # Get peak in azimuthal profile
     avg_density = np.average(density_segment, axis = 1) # avg over theta
     arg_peak = np.argmax(avg_density)
-    peak_rad = np.searchsorted(rad, 1.1 + rad[arg_peak])
+    peak_rad = np.searchsorted(rad, rad[outer_disk_start + arg_peak])
 
     # Average over half a scale height
     half_width = 0.25 * scale_height
@@ -131,10 +131,10 @@ def full_procedure(index):
         density = retrieve_density(frame, directories[index])
 
         center_m1 = method1(density)
-        #center_m2 = method2(density)
+        center_m2 = method2(density)
 
         centers_m1[i, index] = center_m1
-        #centers_m2[i, index] = center_m2
+        centers_m2[i, index] = center_m2
 
 
 ###############################################################################
@@ -206,5 +206,5 @@ else:
         full_procedure(i)
 
 make_plot(centers_m1, 1)
-#make_plot(centers_m2, 2)
-#make_plot(centers_m2 - centers_m1, 3)
+make_plot(centers_m2, 2)
+make_plot(centers_m2 - centers_m1, 3)
