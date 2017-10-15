@@ -96,7 +96,7 @@ def method2(density):
     # Get peak in azimuthal profile
     avg_density = np.average(density_segment, axis = 1) # avg over theta
     segment_arg_peak = np.argmax(avg_density)
-    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segement_arg_peak])
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
     peak_rad = rad[arg_peak]
 
     # Average over half a scale height
