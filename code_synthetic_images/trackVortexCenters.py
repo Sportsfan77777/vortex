@@ -44,6 +44,8 @@ r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
+scale_height = fargo_par["AspectRatio"]
+
 ### Get Input Parameters ###
 
 # Frames
