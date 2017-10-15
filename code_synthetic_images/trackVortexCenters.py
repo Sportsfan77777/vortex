@@ -95,8 +95,9 @@ def method2(density):
 
     # Get peak in azimuthal profile
     avg_density = np.average(density_segment, axis = 1) # avg over theta
-    arg_peak = np.argmax(avg_density)
-    peak_rad = np.searchsorted(rad, rad[outer_disk_start + arg_peak])
+    segment_arg_peak = np.argmax(avg_density)
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segement_arg_peak])
+    peak_rad = rad[arg_peak]
 
     # Average over half a scale height
     half_width = 0.25 * scale_height
@@ -117,8 +118,8 @@ def method2(density):
     # Pick threshold
     threshold = np.percentile(density_sliver, 95)
 
-    left_i = np.searchsorted(avg_density_sliver, side = "left")
-    right_i = np.searchsorted(avg_density_sliver, side = "right")
+    left_i = np.searchsorted(avg_density_sliver, threshold, side = "left")
+    right_i = np.searchsorted(avg_density_sliver, threshold, side = "right")
 
     middle_i = (left_i + right_i) / 2.0
 
