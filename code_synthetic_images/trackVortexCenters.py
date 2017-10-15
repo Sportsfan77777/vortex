@@ -123,7 +123,9 @@ def method2(density):
 
     middle_i = (left_i + right_i) / 2.0
 
-    return (theta[middle_i] + theta[arg_center] - theta[middle]) * (180.0 / np.pi)
+    # Return
+    center_theta = theta[arg_center] + (theta[middle_i] - theta[middle])
+    return center_theta * (180.0 / np.pi)
 
 def full_procedure(index):
     directory = "../%s-size" % directories[index]
