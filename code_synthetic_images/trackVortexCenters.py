@@ -13,6 +13,8 @@ import numpy as np
 import argparse
 from pylab import fromfile
 
+import util
+
 directories = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
 
@@ -178,12 +180,14 @@ def make_plot(centers_mi, method, show = True):
 # Iterate through frames
 
 if num_cores > 1:
+    indices = range(6)
+    
     p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-    p.map(full_procedure, directories)
+    p.map(full_procedure, indices)
     p.terminate()
 else:
-    for directory in directories:
-        full_procedure(directory)
+    for i, directory in enumerate(directories):
+        full_procedure(i)
 
 make_plot(centers_m1, 1)
 make_plot(centers_m2, 2)
