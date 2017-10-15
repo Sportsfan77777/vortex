@@ -110,7 +110,7 @@ def method2(density):
     arg_center = np.argmax(avg_density_sliver)
 
     shift_i = int(middle - arg_center)
-    avg_density_sliver = np.roll(avg_density_sliver, shift_i, axis = 1)
+    avg_density_sliver = np.roll(avg_density_sliver, shift_i)
 
     # Pick threshold
     threshold = np.percentile(density_sliver, 95)
