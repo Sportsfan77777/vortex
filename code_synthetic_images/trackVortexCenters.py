@@ -58,8 +58,8 @@ def retrieve_density(frame, sizes):
     return density
 
 def method1():
-	""" argmax """
-	outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+    """ argmax """
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
     density_segment = density[outer_disk_start : outer_disk_end]
 
@@ -69,9 +69,9 @@ def method1():
     return theta[arg_phi]
 
 def method2():
-	""" center of threshold """
-	# Search outer disk only
-	outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+    """ center of threshold """
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
     density_segment = density[outer_disk_start : outer_disk_end]
 
@@ -107,14 +107,14 @@ def method2():
     return theta[middle_i] + theta[shift_i]
 
 def full_procedure(index):
-	directory = "../%s-size" % directories[index]
+    directory = "../%s-size" % directories[index]
 
-	for i, frame in enumerate(frame_range):
-		center_m1 = method1()
-		center_m2 = method2()
+    for i, frame in enumerate(frame_range):
+        center_m1 = method1()
+        center_m2 = method2()
 
-		centers_m1[i, index] = center_m1
-		centers_m2[i, index] = center_m2
+        centers_m1[i, index] = center_m1
+        centers_m2[i, index] = center_m2
 
 
 ###############################################################################
@@ -130,24 +130,24 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 def make_plot(centers_mi, method, show = True):
 
-	# Set up figure
+    # Set up figure
     fig = plot.figure()
 
-	### Line Plot ###
-	for i, directory in enumerate(directories):
-		plot.plot(frame_range, centers_mi[:, i], c = colors[i], linewidth = linewidth, label = "directory")
+    ### Line Plot ###
+    for i, directory in enumerate(directories):
+        plot.plot(frame_range, centers_mi[:, i], c = colors[i], linewidth = linewidth, label = "directory")
 
-	# Annotate Axes
-	plot.xlabel("Time (planet orbits)", fontsize = fontsize)
+    # Annotate Axes
+    plot.xlabel("Time (planet orbits)", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
     if method == 3:
-    	plot.title("Difference in Vortex Centers", fontsize = fontsize + 1)
+        plot.title("Difference in Vortex Centers", fontsize = fontsize + 1)
     else:
-    	plot.title("Vortex Centers: Method %d" % method, fontsize = fontsize + 1)
+        plot.title("Vortex Centers: Method %d" % method, fontsize = fontsize + 1)
 
-	plot.legend(loc = "upper right")
+    plot.legend(loc = "upper right")
 
-	# Axes
+    # Axes
     plot.xlim(frame_range[0], frame_range[-1])
     plot.ylim(0, 360)
 
