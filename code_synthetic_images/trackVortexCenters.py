@@ -98,7 +98,7 @@ def method2(density):
 
     # Average over half a scale height
     half_width = 0.25 * scale_height
-    zoom_start = np.searchsorted(rada, peak_rad - half_width)
+    zoom_start = np.searchsorted(rad, peak_rad - half_width)
     zoom_end = np.searchsorted(rad, peak_rad + half_width)
 
     # Zoom in on peak
