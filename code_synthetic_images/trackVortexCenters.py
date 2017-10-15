@@ -66,7 +66,7 @@ centers_m2 = np.zeros((len(frame_range), len(directories)))
 def retrieve_density(frame, size):
     """ Step 0: Retrieve density """
 
-    fn_i = "../%s-size/gasddens%d.dat" % (size_i, frame)
+    fn_i = "../%s-size/gasddens%d.dat" % (size, frame)
     density = fromfile(fn_i).reshape(num_rad, num_theta)
 
     return density
