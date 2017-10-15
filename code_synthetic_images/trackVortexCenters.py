@@ -84,7 +84,7 @@ def method1(density):
     argmax = np.argmax(density_segment)
     arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
 
-    return theta[arg_phi]
+    return theta[arg_phi] * (180.0 / np.pi)
 
 def method2(density):
     """ center of threshold """
@@ -122,7 +122,7 @@ def method2(density):
 
     middle_i = (left_i + right_i) / 2.0
 
-    return theta[middle_i] + theta[shift_i]
+    return (theta[middle_i] + theta[shift_i]) * (180.0 / np.pi)
 
 def full_procedure(index):
     directory = "../%s-size" % directories[index]
