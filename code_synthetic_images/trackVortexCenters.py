@@ -129,10 +129,10 @@ def full_procedure(index):
         density = retrieve_density(frame, directories[index])
 
         center_m1 = method1(density)
-        center_m2 = method2(density)
+        #center_m2 = method2(density)
 
         centers_m1[i, index] = center_m1
-        centers_m2[i, index] = center_m2
+        #centers_m2[i, index] = center_m2
 
 
 ###############################################################################
@@ -204,5 +204,5 @@ else:
         full_procedure(i)
 
 make_plot(centers_m1, 1)
-make_plot(centers_m2, 2)
-make_plot(centers_m2 - centers_m1, 3)
+#make_plot(centers_m2, 2)
+#make_plot(centers_m2 - centers_m1, 3)
