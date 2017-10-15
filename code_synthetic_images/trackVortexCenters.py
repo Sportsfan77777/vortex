@@ -109,7 +109,7 @@ def method2(density):
     middle = np.searchsorted(theta, np.pi)
     arg_center = np.argmax(avg_density_sliver)
 
-    shift_i = int(middle - center_i)
+    shift_i = int(middle - arg_center)
     avg_density_sliver = np.roll(avg_density_sliver, shift_i, axis = 1)
 
     # Pick threshold
