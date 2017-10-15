@@ -155,7 +155,7 @@ def make_plot(centers_mi, method, show = True):
 
     ### Line Plot ###
     for i, directory in enumerate(directories):
-        plot.plot(frame_range, centers_mi[:, i], c = colors[i], linewidth = linewidth, label = "directory")
+        plot.plot(frame_range, centers_mi[:, i], c = colors[i], linewidth = linewidth, label = directory)
 
     # Annotate Axes
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
