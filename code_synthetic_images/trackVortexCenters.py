@@ -56,19 +56,22 @@ elif len(args.frames) == 3:
 # Number of Cores 
 num_cores = args.num_cores
 
+### Analyis Output ##
+
+centers_m1 = np.zeros((len(frame_range), len(directories)))
+centers_m2 = np.zeros((len(frame_range), len(directories)))
+
 ### Task Functions ###
 
-def retrieve_density(frame, sizes):
+def retrieve_density(frame, size):
     """ Step 0: Retrieve density """
-    density = np.zeros((num_rad, num_theta, len(sizes)))
 
-    for i, size_i in enumerate(sizes):
-        fn_i = "../%s-size/gasddens%d.dat" % (size_i, frame)
-        density[:, :, i] = fromfile(fn_i).reshape(num_rad, num_theta)
+    fn_i = "../%s-size/gasddens%d.dat" % (size_i, frame)
+    density = fromfile(fn_i).reshape(num_rad, num_theta)
 
     return density
 
-def method1():
+def method1(density):
     """ argmax """
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
@@ -79,7 +82,7 @@ def method1():
 
     return theta[arg_phi]
 
-def method2():
+def method2(density):
     """ center of threshold """
     # Search outer disk only
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
@@ -121,8 +124,10 @@ def full_procedure(index):
     directory = "../%s-size" % directories[index]
 
     for i, frame in enumerate(frame_range):
-        center_m1 = method1()
-        center_m2 = method2()
+        density = retrieve_density(frame, directories[index])
+
+        center_m1 = method1(density)
+        center_m2 = method2(density)
 
         centers_m1[i, index] = center_m1
         centers_m2[i, index] = center_m2
@@ -160,10 +165,17 @@ def make_plot(centers_mi, method, show = True):
 
     # Axes
     plot.xlim(frame_range[0], frame_range[-1])
-    plot.ylim(0, 360)
 
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+    if method == 3:
+        plot.ylim(-180, 180)
+
+        angles = np.linspace(-180, 180, 7)
+        plot.yticks(angles)
+    else:
+        plot.ylim(0, 360)
+
+        angles = np.linspace(0, 360, 7)
+        plot.yticks(angles)
 
     # Save, Show, and Close
     save_fn = "vortexCenters_method%d.png" % method
@@ -181,7 +193,7 @@ def make_plot(centers_mi, method, show = True):
 
 if num_cores > 1:
     indices = range(6)
-    
+
     p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
     p.map(full_procedure, indices)
     p.terminate()
