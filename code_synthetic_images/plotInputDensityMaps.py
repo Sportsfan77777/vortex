@@ -136,7 +136,8 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("i%04d_gasddens%d.dat" % (id_number, frame)).reshape(num_rad, num_theta))
+    fn = "i%04d_gasddens%d.p" % (id_number, frame)
+    density = (pickle.load(open(fn, "rb")).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
     # Center Data
