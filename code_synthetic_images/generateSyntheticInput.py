@@ -166,12 +166,13 @@ def find_center(density, threshold_value = 0.05):
 def retrieve_density(frame, directories):
     """ Step 0: Retrieve density """
     density = np.zeros((num_rad, num_theta, len(sizes)))
+    starting_sizes = sizes
 
     for i, directory in enumerate(directories):
         fn_i = "../%s-size/gasddens%d.dat" % (directory, frame)
         density[:, :, i] = fromfile(fn_i).reshape(num_rad, num_theta)
 
-    return density
+    return density, starting_sizes
 
 def convert_units(density):
     """ Step 1: convert density from code units to cgs units """
@@ -180,7 +181,7 @@ def convert_units(density):
     density *= density_unit
     return density
 
-def polish(density, cavity_cutoff = 0.92, scale = 1):
+def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
     """ Step 2: get rid of inner cavity and scale dust densities to different grain size """
     # Cavity
     if cavity_cutoff is not None:
@@ -307,10 +308,10 @@ def output_density_pickle(density, frame):
 
 def full_procedure(frame):
     """ Every Step """
-    density = retrieve_density(frame, directories)
+    density, sizes = retrieve_density(frame, directories)
 
     density = convert_units(density)
-    density = polish(density)
+    density, sizes = polish(density, sizes)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
     density = interpolate_density(density, num_grains)
