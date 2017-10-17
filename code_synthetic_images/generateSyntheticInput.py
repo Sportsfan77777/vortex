@@ -29,6 +29,8 @@ from scipy import interpolate as sp_int
 import argparse
 from pylab import fromfile
 
+import util
+
 directories = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
 
@@ -161,12 +163,12 @@ def find_center(density, threshold_value = 0.05):
 
 ### Task Functions ###
 
-def retrieve_density(frame, sizes):
+def retrieve_density(frame, directories):
     """ Step 0: Retrieve density """
     density = np.zeros((num_rad, num_theta, len(sizes)))
 
-    for i, size_i in enumerate(sizes):
-        fn_i = "../%s-size/gasddens%d.dat" % (size_i, frame)
+    for i, directory in enumerate(directories):
+        fn_i = "../%s-size/gasddens%d.dat" % (directory, frame)
         density[:, :, i] = fromfile(fn_i).reshape(num_rad, num_theta)
 
     return density
@@ -305,7 +307,7 @@ def output_density_pickle(density, frame):
 
 def full_procedure(frame):
     """ Every Step """
-    density = retrieve_density(frame, sizes)
+    density = retrieve_density(frame, directories)
 
     density = convert_units(density)
     density = polish(density)
