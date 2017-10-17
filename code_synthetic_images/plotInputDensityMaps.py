@@ -37,9 +37,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Frame Selection
     parser.add_argument('frames', type = int, nargs = '+',
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
-    parser.add_argument('-s', dest = "run_parallel", action = 'store_false', default = True,
-                         help = 'for multiple plots, run in serial (default: run in parallel)') 
-    ######## ^^^^^^^ Switch run_parallel with number of cores!!! ##########
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
@@ -181,11 +180,13 @@ def make_plot(frame, show = False):
 
 ##### Make Plots! #####
 
+# Iterate through frames
+
 if len(frame_range) == 1:
     make_plot(frame_range[0], show = show)
 else:
-    if run_parallel:
-        p = Pool(4) # default number of processes is multiprocessing.cpu_count()
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
         p.map(make_plot, frame_range)
         p.terminate()
     else:
