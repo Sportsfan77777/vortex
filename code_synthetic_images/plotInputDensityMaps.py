@@ -48,9 +48,11 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
-
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
+                         help = 're-sample resolution (default: [300, 400])')
     parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
                          help = 'id number for this set of plot parameters (default: [r_min, r_max])')
     
@@ -78,9 +80,6 @@ fargo_par = util.get_pickled_parameters(directory = "../cm-size") # Retrieve par
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
-
-rad = np.linspace(r_min, r_max, num_rad)
-theta = np.linspace(0, 2 * np.pi, num_theta)
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
@@ -111,6 +110,10 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
+new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
+rad = np.linspace(r_min, r_max, new_num_rad)
+theta = np.linspace(0, 2 * np.pi, new_num_theta)
+
 id_number = args.id_number
 if args.r_lim is None:
     x_min = r_min; x_max = r_max
@@ -139,10 +142,6 @@ def make_plot(frame, show = False):
     fn = "i%04d_gasddens%d.p" % (id_number, frame)
     density = pickle.load(open(fn, "rb"))
     normalized_density = density / surface_density_zero
-
-    # Center Data
-    middle = np.searchsorted(theta, np.pi)
-    normalized_density = np.roll(normalized_density, middle, axis = -1)
 
     ### Plot ###
     x = rad
