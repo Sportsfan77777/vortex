@@ -118,6 +118,8 @@ def find_peak(density):
     argmax = np.argmax(density_segment)
     arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
 
+    ### Calculate shift for true center to 180 degrees ###
+    middle = np.searchsorted(theta, np.pi)
     shift_peak = int(middle - arg_phi)
 
     return shift_peak
@@ -160,6 +162,8 @@ def find_center(density, threshold_value = 0.05):
     ### Calculate shift for true center to 180 degrees ###
     middle = np.searchsorted(theta, np.pi)
     shift_c = int(middle - (center - shift_min))
+
+    return shift_c
 
 ### Task Functions ###
 
