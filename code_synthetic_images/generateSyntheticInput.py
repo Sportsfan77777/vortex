@@ -180,7 +180,7 @@ def convert_units(density):
     density *= density_unit
     return density
 
-def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
+def polish(density, cavity_cutoff = 0.92, scale = 1):
     """ Step 2: get rid of inner cavity and scale dust densities to different grain size """
     # Cavity
     if cavity_cutoff is not None:
@@ -310,7 +310,7 @@ def full_procedure(frame):
     density = retrieve_density(frame, directories)
 
     density = convert_units(density)
-    density, sizes = polish(density, sizes)
+    density = polish(density)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
     density = interpolate_density(density, num_grains)
