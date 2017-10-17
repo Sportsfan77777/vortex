@@ -54,6 +54,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     # Save Parameters
     parser.add_argument('-g', dest = "num_grains", type = int, default = 100,
                          help = 'number of interpolated grains (default: 100)')
+    parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
+                         help = 'negative power in grain size power law (default: 3.5)')
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
                          help = 're-sample resolution (default: [300, 400])')
     parser.add_argument('--save', dest = "save_directory", default = ".",
@@ -96,6 +98,7 @@ radius = args.radius # radius of planet (in AU)
 
 # Save Parameters
 num_grains = args.num_grains
+number_density_power = -args.number_density_power # Note: negative of input
 new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
 save_directory = args.save_directory
 
@@ -238,7 +241,7 @@ def resample(density, new_num_rad = 300, new_num_theta = 400):
     new_rad = np.linspace(fargo_par["Rmin"], fargo_par["Rmax"], new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
-    for i in len(sizes):
+    for i, _ in enumerate(sizes):
         interpolator = sp_int.interp2d(rad, theta, np.transpose(density[:, :, i])) # Careful: z is flattened!
         new_density[:, :, i] = (interpolator(new_rad, new_theta)).T # Note: result needs to be transposed
     
@@ -248,7 +251,7 @@ def interpolate_density(density, num_grains):
     """ Step 5: interpolate to more grain sizes """
 
     ### New Grain Sizes and Ranges ###
-    log_interpolated_sizes = np.linspace(np.log10(min(sizes)), np.log10(max(sizes[0])), num_grains)
+    log_interpolated_sizes = np.linspace(np.log10(min(sizes)), np.log10(max(sizes)), num_grains)
     interpolated_sizes = np.power(10.0, log_interpolated_sizes) # to be used in size interpolation
 
     # Grain Ranges (for power-law distribution)
@@ -258,9 +261,11 @@ def interpolate_density(density, num_grains):
 
     ### Interpolate ### 
     size_interpolator = sp_int.interp1d(sizes, density, axis = -1)
-    unweighted_interpolated_density = size_interpolation_function(interpolated_sizes)
+    unweighted_interpolated_density = size_interpolator(interpolated_sizes)
 
     # Scale to a Power Law Distribution
+    surface_density_power = number_density_power + 3.0
+
     def integrate_size_distribution(x, y):
         """ Determine weight of each dust size bin """
         def f(z):
