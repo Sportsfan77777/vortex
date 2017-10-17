@@ -104,6 +104,47 @@ G = 6.67 * 10**-8; mu = 2.34; mp = 1.67 * 10**-24; kb = 1.38 * 10**-16
 mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
+### Helper Functions ###
+
+def find_center(density):
+    """ return shift needed to shift vortex center to 180 degrees """
+    ### Identify center using threshold ###
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    density_segment = density[outer_disk_start : outer_disk_end]
+
+    # Get peak in azimuthal profile
+    avg_density = np.average(density_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_density)
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+    peak_rad = rad[arg_peak]
+
+    # Zoom in on peak --- Average over half a scale height
+    half_width = 0.25 * scale_height
+    zoom_start = np.searchsorted(rad, peak_rad - half_width)
+    zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+    density_sliver = density[zoom_start : zoom_end]
+    avg_density_sliver = np.average(density_sliver, axis = 0) # avg over rad
+
+    # Move Minimum to Zero Degrees (vortex cannot cross zero)
+    arg_min = np.argmin(avg_density_sliver)
+    shift_min = int(0 - arg_min)
+    avg_density_sliver = np.roll(avg_density_sliver, shift_min)
+
+    # Spot two threshold crossovers
+    threshold = 0.05 * surface_density_zero
+
+    left_edge = np.searchsorted(avg_density_sliver, threshold, side = "left")
+    right_edge = np.searchsorted(avg_density_sliver, threshold, side = "right")
+
+    center = (left_edge + right_edge) / 2.0
+
+    ### Calculate shift for true center to 180 degrees ###
+    middle = np.searchsorted(theta, np.pi)
+    shift_c = int(middle - (center - shift_min))
+
 ### Task Functions ###
 
 def retrieve_density(frame, sizes):
@@ -139,50 +180,29 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
 def center_vortex(density):
     """ Step 3: center the vortex so that the peak is at 180 degrees """
     if massTaper < 10.1:
-        pass
+        # Shift cm, hcm separately
+        density_hcm = density[:, :, 1]
+        shift_hcm = find_center(density_hcm)
+        density[:, :, 0] = np.roll(density_cm, shift_cm, axis = 1)
+
+        density_hcm = density[:, :, 1]
+        shift_hcm = find_center(density_hcm)
+        density[:, :, 1] = np.roll(density_hcm, shift_hcm, axis = 1)
+
+        # Use mm for the rest
+        density_mm = density[:, :, 2]
+        shift_mm = find_center(density_mm)
+        density[:, :, 2:] = np.roll(density[:, :, 2:], shift_mm, axis = 1)
+
+        return density
+
     elif massTaper > 999.9:
         # Use hcm-size only
         density_hcm = density[:, :, 1]
-
-        ### Identify center using threshold ###
-        # Search outer disk only
-        outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
-        outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
-        density_segment = density_hcm[outer_disk_start : outer_disk_end]
-
-        # Get peak in azimuthal profile
-        avg_density = np.average(density_segment, axis = 1) # avg over theta
-        segment_arg_peak = np.argmax(avg_density)
-        arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
-        peak_rad = rad[arg_peak]
-
-        # Zoom in on peak --- Average over half a scale height
-        half_width = 0.25 * scale_height
-        zoom_start = np.searchsorted(rad, peak_rad - half_width)
-        zoom_end = np.searchsorted(rad, peak_rad + half_width)
-
-        density_sliver = density[zoom_start : zoom_end]
-        avg_density_sliver = np.average(density_sliver, axis = 0) # avg over rad
-
-        # Move Minimum to Zero Degrees (vortex cannot cross zero)
-        arg_min = np.argmin(avg_density_sliver)
-        shift_min = int(0 - arg_min)
-        avg_density_sliver = np.roll(avg_density_sliver, shift_min)
-
-        # Spot two threshold crossovers
-        threshold = 0.05 * surface_density_zero
-
-        left_edge = np.searchsorted(avg_density_sliver, threshold, side = "left")
-        right_edge = np.searchsorted(avg_density_sliver, threshold, side = "right")
-
-        center = (left_edge + right_edge) / 2.0
-
-        ### Calculate shift for true center to 180 degrees ###
-        middle = np.searchsorted(theta, np.pi)
-        shift_c = int(middle - (center - shift_min))
+        shift_hcm = find_center(density_hcm)
 
         ### Return Shifted Density at All Sizes ###
-        density = np.roll(density, shift_c, axis = 1)
+        density = np.roll(density, shift_hcm, axis = 1)
         return density
 
 def resample(density, new_num_rad = 300, new_num_theta = 400):
