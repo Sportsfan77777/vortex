@@ -93,6 +93,7 @@ mass = args.mass # (in solar masses)
 radius = args.radius # radius of planet (in AU)
 
 # Save Parameters
+num_grains = args.num_grains
 new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
 save_directory = args.save_directory
 
@@ -106,7 +107,20 @@ radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 
 ### Helper Functions ###
 
-def find_center(density):
+def find_peak(density):
+    """ return shift needed to shift vortex peak to 180 degrees """
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    density_segment = density[outer_disk_start : outer_disk_end]
+
+    argmax = np.argmax(density_segment)
+    arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
+
+    shift_peak = int(middle - arg_phi)
+
+    return shift_peak
+
+def find_center(density, threshold_value = 0.05):
     """ return shift needed to shift vortex center to 180 degrees """
     ### Identify center using threshold ###
     # Search outer disk only
@@ -134,7 +148,7 @@ def find_center(density):
     avg_density_sliver = np.roll(avg_density_sliver, shift_min)
 
     # Spot two threshold crossovers
-    threshold = 0.05 * surface_density_zero
+    threshold = threshold_value * surface_density_zero
 
     left_edge = np.searchsorted(avg_density_sliver, threshold, side = "left")
     right_edge = np.searchsorted(avg_density_sliver, threshold, side = "right")
@@ -180,19 +194,23 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
 def center_vortex(density):
     """ Step 3: center the vortex so that the peak is at 180 degrees """
     if massTaper < 10.1:
-        # Shift cm, hcm separately
-        density_hcm = density[:, :, 1]
-        shift_hcm = find_center(density_hcm)
+        # Shift cm, hcm, mm separately
+        density_cm = density[:, :, 0]
+        shift_cm = find_peak(density_cm)
         density[:, :, 0] = np.roll(density_cm, shift_cm, axis = 1)
 
         density_hcm = density[:, :, 1]
-        shift_hcm = find_center(density_hcm)
+        shift_hcm = find_peak(density_hcm)
         density[:, :, 1] = np.roll(density_hcm, shift_hcm, axis = 1)
 
-        # Use mm for the rest
         density_mm = density[:, :, 2]
-        shift_mm = find_center(density_mm)
+        shift_mm = find_peak(density_mm)
         density[:, :, 2:] = np.roll(density[:, :, 2:], shift_mm, axis = 1)
+
+        # Use hmm for the rest
+        density_hmm = density[:, :, 3]
+        shift_hmm = find_peak(density_hmm)
+        density[:, :, 3:] = np.roll(density[:, :, 3:], shift_hmm, axis = 1)
 
         return density
 
