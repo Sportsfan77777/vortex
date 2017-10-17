@@ -72,6 +72,10 @@ r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
+massTaper = fargo_par["MassTaper"]
+scale_height = fargo_par["AspectRatio"]
+surface_density_zero = fargo_par["Sigma0"]
+
 ### Get Input Parameters ###
 
 # Frames
@@ -132,11 +136,56 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
 
     return density
 
-def center_vortex(vortex_start = None, vortex_end = 2000):
+def center_vortex(density):
     """ Step 3: center the vortex so that the peak is at 180 degrees """
-    pass
+    if massTaper < 10.1:
+        pass
+    elif massTaper > 999.9:
+        # Use hcm-size only
+        density_hcm = density[:, :, 1]
 
-def resample(new_num_rad = 300, new_num_theta = 400):
+        ### Identify center using threshold ###
+        # Search outer disk only
+        outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+        outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+        density_segment = density_hcm[outer_disk_start : outer_disk_end]
+
+        # Get peak in azimuthal profile
+        avg_density = np.average(density_segment, axis = 1) # avg over theta
+        segment_arg_peak = np.argmax(avg_density)
+        arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+        peak_rad = rad[arg_peak]
+
+        # Zoom in on peak --- Average over half a scale height
+        half_width = 0.25 * scale_height
+        zoom_start = np.searchsorted(rad, peak_rad - half_width)
+        zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+        density_sliver = density[zoom_start : zoom_end]
+        avg_density_sliver = np.average(density_sliver, axis = 0) # avg over rad
+
+        # Move Minimum to Zero Degrees (vortex cannot cross zero)
+        arg_min = np.argmin(avg_density_sliver)
+        shift_min = int(0 - arg_min)
+        avg_density_sliver = np.roll(avg_density_sliver, shift_min)
+
+        # Spot two threshold crossovers
+        threshold = 0.05 * surface_density_zero
+
+        left_edge = np.searchsorted(avg_density_sliver, threshold, side = "left")
+        right_edge = np.searchsorted(avg_density_sliver, threshold, side = "right")
+
+        center = (left_edge + right_edge) / 2.0
+
+        ### Calculate shift for true center to 180 degrees ###
+        middle = np.searchsorted(theta, np.pi)
+        shift_c = int(middle - (center - shift_min))
+
+        ### Return Shifted Density at All Sizes ###
+        density = np.roll(density, shift_c, axis = 1)
+        return density
+
+def resample(density, new_num_rad = 300, new_num_theta = 400):
     """ Step 4: lower resolution (makes txt output smaller) """
 
     new_density = np.zeros((new_num_rad, new_num_theta, len(sizes)))
@@ -206,7 +255,7 @@ def output_density_txt(density, frame):
     """ Step 7: output txt file """
     interleaved_density = density.flatten('F') # interleave to 1-d
 
-    fn = "%s/gasddens%d.dat" % (save_directory, frame)
+    fn = "%s/i_gasddens%d.dat" % (save_directory, frame)
     np.savetxt(fn, interleaved_density)
 
 def output_density_pickle(density, frame):
@@ -214,7 +263,7 @@ def output_density_pickle(density, frame):
     composite_density = np.sum(density, axis = -1)
 
     fn = "%s/gasddens%d.p" % (save_directory, frame)
-    pickle.dump(composite_density, open(fn, 'w'))
+    pickle.dump(composite_density, open(fn, 'wb'))
 
 def full_procedure(frame):
     """ Every Step """
@@ -223,7 +272,7 @@ def full_procedure(frame):
     density = convert_units(density)
     density = polish(density)
     density = center_vortex(density)
-    new_rad, new_theta, density = resample(new_num_rad = new_num_rad, new_num_theta = new_num_theta)
+    new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
     density = interpolate_density(density, num_grains)
     output_density_txt(density, frame)
     output_density_pickle(density, frame)
