@@ -56,8 +56,11 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'number of interpolated grains (default: 100)')
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
+
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
                          help = 're-sample resolution (default: [300, 400])')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
     parser.add_argument('--save', dest = "save_directory", default = ".",
                          help = 'save directory (default: ".")')
 
@@ -99,7 +102,9 @@ radius = args.radius # radius of planet (in AU)
 # Save Parameters
 num_grains = args.num_grains
 number_density_power = -args.number_density_power # Note: negative of input
+
 new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
+id_number = args.id_number
 save_directory = args.save_directory
 
 ### Miscellaneous ###
@@ -305,14 +310,14 @@ def output_density_txt(density, frame):
     """ Step 7: output txt file """
     interleaved_density = density.flatten('F') # interleave to 1-d
 
-    fn = "%s/i_gasddens%d.dat" % (save_directory, frame)
+    fn = "%s/i%04d_gasddens%d.dat" % (save_directory, id_number, frame)
     np.savetxt(fn, interleaved_density)
 
 def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
     composite_density = np.sum(density, axis = -1)
 
-    fn = "%s/gasddens%d.p" % (save_directory, frame)
+    fn = "%s/i%04d_gasddens%d.p" % (save_directory, id_number, frame)
     pickle.dump(composite_density, open(fn, 'wb'))
 
 def full_procedure(frame):
