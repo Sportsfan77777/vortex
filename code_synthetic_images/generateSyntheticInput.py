@@ -191,7 +191,7 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
     density *= scale
     sizes *= scale
 
-    return density
+    return density, sizes
 
 def center_vortex(density):
     """ Step 3: center the vortex so that the peak is at 180 degrees """
@@ -310,7 +310,7 @@ def full_procedure(frame):
     density = retrieve_density(frame, directories)
 
     density = convert_units(density)
-    density = polish(density)
+    density, sizes = polish(density, sizes)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
     density = interpolate_density(density, num_grains)
