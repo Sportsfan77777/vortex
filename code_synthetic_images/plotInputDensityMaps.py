@@ -95,11 +95,12 @@ if len(args.frames) == 1:
 elif len(args.frames) == 3:
     start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
     frame_range = range(start, end + 1, rate)
-
-    run_parallel = args.run_parallel
 else:
     print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
     exit()
+
+# Number of Cores 
+num_cores = args.num_cores
 
 # Files
 save_directory = args.save_directory
