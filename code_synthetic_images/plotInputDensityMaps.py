@@ -144,9 +144,6 @@ def make_plot(frame, show = False):
     density = pickle.load(open(fn, "rb"))
     normalized_density = density / surface_density_zero
 
-    # Convert to CGS
-
-
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
