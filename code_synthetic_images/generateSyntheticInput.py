@@ -320,6 +320,24 @@ def output_density_pickle(density, frame):
     fn = "%s/i%04d_gasddens%d.p" % (save_directory, id_number, frame)
     pickle.dump(composite_density, open(fn, 'wb'))
 
+def save_id_parameters():
+    """ Step 9: Save parameters associated with this id number """
+    id_par = fargo_par
+
+    id_par["id"] = id_number
+
+    id_par["Mass"] = mass # in solar masses
+    id_par["Radius"] = radius # in AU
+    id_par["MassUnit"] = mass_unit
+    id_par["RadiusUnit"] = radius_unit
+
+    id_par["Nrad"] = new_num_rad
+    id_par["Nsec"] = new_num_theta
+    id_par["Sigma0"] *= mass_unit
+
+    dict_name = "id%04d_par.p" % id_number
+    p.dump(id_par, open(dict_name, "wb"))
+
 def full_procedure(frame):
     """ Every Step """
     density, sizes = retrieve_density(frame, directories)
@@ -334,6 +352,7 @@ def full_procedure(frame):
 
     if frame == frame_range[0]:
         generate_secondary_files(new_rad, new_theta, sizes)
+        save_id_parameters()
 
 
 ### Generate Synthetic Input ###
