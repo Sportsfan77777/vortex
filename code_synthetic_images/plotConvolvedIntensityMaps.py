@@ -173,6 +173,10 @@ taper_time = int(float(fargo_par["MassTaper"]))
 
 # Instant Viscous Evolution #
 
+def divide_by_beam():
+    # beam size = (pi / 4 ln2) * (theta)^2
+    pass
+
 def clear_inner_disk(data):
     # get rid of inner disk (r < outer_limit)
     filtered_data = np.copy(data)
