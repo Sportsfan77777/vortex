@@ -336,7 +336,7 @@ def save_id_parameters():
     id_par["Sigma0"] *= mass_unit
 
     dict_name = "id%04d_par.p" % id_number
-    p.dump(id_par, open(dict_name, "wb"))
+    pickle.dump(id_par, open(dict_name, "wb"))
 
 def full_procedure(frame):
     """ Every Step """
