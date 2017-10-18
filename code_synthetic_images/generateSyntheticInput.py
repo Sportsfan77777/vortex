@@ -114,6 +114,7 @@ G = 6.67 * 10**-8; mu = 2.34; mp = 1.67 * 10**-24; kb = 1.38 * 10**-16
 # Units
 mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
+density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
 ### Helper Functions ###
 
@@ -188,8 +189,6 @@ def retrieve_density(frame, directories):
 
 def convert_units(density):
     """ Step 1: convert density from code units to cgs units """
-    density_unit = mass_unit / radius_unit**2 # unit conversion factor
-
     density *= density_unit
     return density
 
