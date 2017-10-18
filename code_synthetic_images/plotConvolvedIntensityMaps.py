@@ -398,41 +398,20 @@ def make_plot(frame, show = False):
     choose_axis(i, "zoom")
 
 
-##### Plot One File or All Files #####
+##### Make Plots! #####
 
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = 125 #util.find_max_frame()
-        sample = np.linspace(0, max_frame, 126) # 100 evenly spaced frames
-        #for i in sample:
-        #    make_plot(i)
+# Iterate through frames
 
-        p = Pool(10)
-        p.map(make_plot, sample)
-        p.terminate()
-
-    else:
-        # Plot Single
-        make_plot(frame_number, show = True)
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
 else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    #p = Pool() # default number of processes is multiprocessing.cpu_count()
-    #p.map(make_plot, range(num_frames))
-    #p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
 
 
 
