@@ -133,8 +133,6 @@ dpi = args.dpi
 ##### PLOTTING #####
 
 def make_plot(frame, show = False):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
