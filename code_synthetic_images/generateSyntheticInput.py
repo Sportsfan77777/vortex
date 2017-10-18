@@ -59,6 +59,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
 
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
                          help = 're-sample resolution (default: [300, 400])')
+    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [1.0, 3.6],
+                         help = 're-sample range (default: [1.0, 3.6])')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
     parser.add_argument('--save', dest = "save_directory", default = ".",
@@ -104,6 +106,7 @@ num_grains = args.num_grains
 number_density_power = -args.number_density_power # Note: negative of input
 
 new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
+new_r_min = args.new_range[0]; new_r_max = args.new_range[1]
 id_number = args.id_number
 save_directory = args.save_directory
 
@@ -133,7 +136,7 @@ def find_peak(density):
 
     return shift_peak
 
-def find_center(density, threshold_value = 0.05):
+def find_center(density, threshold_value = 5.0):
     """ return shift needed to shift vortex center to 180 degrees """
     ### Identify center using threshold ###
     # Search outer disk only
@@ -242,7 +245,7 @@ def resample(density, new_num_rad = 300, new_num_theta = 400):
 
     new_density = np.zeros((new_num_rad, new_num_theta, len(sizes)))
 
-    new_rad = np.linspace(fargo_par["Rmin"], fargo_par["Rmax"], new_num_rad)
+    new_rad = np.linspace(new_r_min, new_r_max["Rmax"], new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
     for i, _ in enumerate(sizes):
@@ -330,6 +333,8 @@ def save_id_parameters():
     id_par["MassUnit"] = mass_unit
     id_par["RadiusUnit"] = radius_unit
 
+    id_par["Rmin"] = new_r_min
+    id_par["Rmax"] = new_r_max
     id_par["Nrad"] = new_num_rad
     id_par["Nsec"] = new_num_theta
     id_par["Sigma0"] *= density_unit
