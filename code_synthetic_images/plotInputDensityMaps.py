@@ -74,8 +74,9 @@ def new_argument_parser(description = "Plot gas density maps."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-### Get FARGO Parameters ###
-fargo_par = util.get_pickled_parameters(directory = "../cm-size") # Retrieve parameters from *.par file
+### Get ID%04d Parameters ###
+fn = "id%04d_par.p" % args.id_number
+fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -142,6 +143,9 @@ def make_plot(frame, show = False):
     fn = "i%04d_gasddens%d.p" % (id_number, frame)
     density = pickle.load(open(fn, "rb"))
     normalized_density = density / surface_density_zero
+
+    # Convert to CGS
+
 
     ### Plot ###
     x = rad
