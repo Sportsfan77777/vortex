@@ -96,6 +96,7 @@ viscosity = fargo_par["Viscosity"]
 ### Get Synthetic Image Parameters ###
 synthetic_par = np.loadtxt("parameters.dat")
 wavelength = int(float(synthetic_par[2]))
+distance = float(synthetic_par[4])
 
 ### Get Input Parameters ###
 
@@ -116,6 +117,10 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Convolution Parameters
+beam_size = 0.5 * args.beam_size # the sigma of the gaussian, not the beam diameter
+beam_diameter = args.beam_size * fargo_par["Radius"]
 
 # Plot Parameters (variable)
 show = args.show
@@ -139,35 +144,9 @@ dpi = args.dpi
 
 ###############################################################################
 
-save_directory = "intensityMaps"
-
-# System Parameters
-radius = 20.0 # radius of planet (in AU)
-radius_unit = radius * (1.496 * 10**13) # (AU / cm)
-
 # Image Parameters
 beam_diameter = 10.0
 beam_size = 0.5 * (beam_diameter / radius) # the sigma of the gaussian, not the beam diameter
-
-### Get FARGO Parameters ###
-# Create param file if it doesn't already exist
-pickled = util.pickle_parameters()
-param_fn = "params.p"
-fargo_par = pickle.load(open(param_fn, "rb"))
-
-rad = np.loadtxt("radial.dat") / radius_unit
-theta = np.loadtxt("azimuthal.dat")
-theta = np.linspace(0, 2.0 * np.pi, len(theta)) # This one is better for plotting
-
-num_rad = len(rad)
-num_theta = len(theta)
-
-surface_density_zero = float(fargo_par["Sigma0"])
-scale_height = float(fargo_par["AspectRatio"])
-viscosity = float(fargo_par["Viscosity"])
-
-planet_mass = float(fargo_par["PlanetMass"])
-taper_time = int(float(fargo_par["MassTaper"]))
 
 ### Helper Functions ###
 
@@ -175,6 +154,9 @@ taper_time = int(float(fargo_par["MassTaper"]))
 
 def divide_by_beam():
     # beam size = (pi / 4 ln2) * (theta)^2
+    beam_angle = beam_size / distance
+
+    beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
     pass
 
 def clear_inner_disk(data):
