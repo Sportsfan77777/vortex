@@ -1,9 +1,32 @@
 """
-plot 2-D density maps
+plot 2-D composite dust density maps (used as an input for the synthetic images)
 
-python plotInputDensityMaps.py
-python plotInputDensityMaps.py frame_number
-python plotInputDensityMaps.py -1 <<<===== Plots a sample
+usage: plotInputDensityMaps.py [-h] [-c NUM_CORES] [--dir SAVE_DIRECTORY]
+                               [--hide] [--id ID_NUMBER] [-s NEW_RES NEW_RES]
+                               [--r_range R_LIM R_LIM] [--cmap CMAP]
+                               [--cmax CMAX] [--fontsize FONTSIZE] [--dpi DPI]
+                               frames [frames ...]
+
+positional arguments:
+  frames                select single frame or range(start, end, rate). error
+                        if nargs != 1 or 3
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c NUM_CORES          number of cores (default: 1)
+  --dir SAVE_DIRECTORY  save directory (default: gasDensityMaps)
+  --hide                for single plot, do not display plot (default: display
+                        plot)
+  --id ID_NUMBER        id number (up to 4 digits) for this set of plot
+                        parameters (default: None)
+  -s NEW_RES NEW_RES    re-sample resolution (default: [300, 400])
+  --r_range R_LIM R_LIM
+                        id number for this set of plot parameters (default:
+                        [r_min, r_max])
+  --cmap CMAP           color map (default: viridis)
+  --cmax CMAX           maximum density in colorbar (default: 2.5)
+  --fontsize FONTSIZE   fontsize of plot annotations (default: 16)
+  --dpi DPI             dpi of plot annotations (default: 100)
 """
 
 import sys, os, subprocess
