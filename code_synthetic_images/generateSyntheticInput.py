@@ -333,7 +333,7 @@ def save_id_parameters():
 
     id_par["Nrad"] = new_num_rad
     id_par["Nsec"] = new_num_theta
-    id_par["Sigma0"] *= mass_unit
+    id_par["Sigma0"] *= density_unit
 
     dict_name = "id%04d_par.p" % id_number
     pickle.dump(id_par, open(dict_name, "wb"))
