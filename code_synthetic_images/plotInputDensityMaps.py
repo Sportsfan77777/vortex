@@ -83,7 +83,7 @@ r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
-surface_density_zero = fargo_par["Sigma0"]
+surface_density_zero = fargo_par["Sigma0"] / 100
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
@@ -161,7 +161,7 @@ def make_plot(frame, show = False):
 
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Gas Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    plot.title("Composite Dust Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     # Axes
     plot.xlim(x_min, x_max)
