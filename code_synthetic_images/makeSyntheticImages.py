@@ -15,6 +15,8 @@ import pickle, glob
 from multiprocessing import Pool
 import argparse
 
+import random
+
 ### Input Parameters ###
 
 def new_argument_parser(description = "Generate input for synthetic images."):
@@ -33,6 +35,23 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'save directory (default: ".")')
 
     return parser
+
+
+###############################################################################
+
+### Task Functions ###
+
+def setup_tmp_directory():
+	""" Step 1: Make tmp directory """
+
+	# Make Directory
+	random_number = random.randint(0, 999999)
+	tmp_dir = "tmp%06d" % random_number
+	os.mkdir(tmp_dir)
+
+	# Fill it with necessary files
+	necessary_files = []
+	os.symlink(target, name)
 
 
 def full_procedure(frame):
