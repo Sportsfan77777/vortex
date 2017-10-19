@@ -67,6 +67,9 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('--save', dest = "save_directory", default = ".",
                          help = 'save directory (default: ".")')
 
+    parser.add_argument('-o', dest = "make_opacities", action = 'store_true', default = False,
+                         help = 'make opacities (default: False)')
+
     return parser
 
 ### Parse Arguments ###
@@ -110,6 +113,8 @@ new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
 new_r_min = args.new_range[0]; new_r_max = args.new_range[1]
 id_number = args.id_number
 save_directory = args.save_directory
+
+make_opacities = args.make_opacities
 
 ### Miscellaneous ###
 # Constants (G, \mu, m_p, k_b)
@@ -294,7 +299,7 @@ def convert_units(density):
     return density
 
 def generate_secondary_files(rad, theta, sizes):
-    """ Step 6: write other *.dat files """
+    """ Step 6: write other *.dat files + make opacities """
 
     def temperature(R):
         """ r """
@@ -312,6 +317,10 @@ def generate_secondary_files(rad, theta, sizes):
     np.savetxt("%s/azimuthal.dat" % save_directory, theta)
     np.savetxt("%s/grain.dat" % save_directory, sizes)
     np.savetxt("%s/temperature.dat" % save_directory, temperatures)
+
+    # Make Opacities
+    if make_opacities:
+        execfile("./makeopacs")
 
 def output_density_txt(density, frame):
     """ Step 7: output txt file """
