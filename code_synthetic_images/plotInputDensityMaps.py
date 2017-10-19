@@ -179,7 +179,7 @@ def make_plot(frame, show = False):
 
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Composite Dust Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    plot.title("Composite Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     # Axes
     plot.xlim(x_min, x_max)
