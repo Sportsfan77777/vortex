@@ -52,7 +52,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
-    parser.add_argument('-h', dest = "num_scale_heights", type = float, default = 0.5,
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 0.5,
                          help = 'number of scale heights (default: 0.5)')
     
     # Plot Parameters (rarely need to change)
@@ -213,11 +213,10 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
-def full_procedure(frame):
+def full_procedure(frame, show = False):
     """ Every Step """
     azimuthal_radii, azimuthal_profiles = get_data(frame_number)
-    make_plot(frame_number, azimuthal_radii, azimuthal_profiles)
-
+    make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
 
