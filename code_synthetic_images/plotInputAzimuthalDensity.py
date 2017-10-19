@@ -60,7 +60,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
-    parser.add_argument('--alpha', dest = "linewidth", type = float, default = 0.65,
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
                          help = 'line transparency in plot (default: 0.65)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -200,11 +200,10 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
+    plot.xlim(0, 360)
+    
     angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+    plot.xticks(angles)
 
     # Save, Show, and Close
     if version is None:
