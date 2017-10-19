@@ -215,8 +215,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
 def full_procedure(frame, show = False):
     """ Every Step """
-    azimuthal_radii, azimuthal_profiles = get_data(frame_number)
-    make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = show)
+    azimuthal_radii, azimuthal_profiles = get_data(frame)
+    make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
 
