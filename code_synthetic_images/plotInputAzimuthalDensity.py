@@ -153,10 +153,13 @@ def find_min(averagedDensity, peak_rad):
 ### Data ###
 
 def get_data(frame):
+    """ Gather azimuthal radii and profiles """
     # Find Peak in Radial Profile (in Outer Disk)
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
-    averagedDensity = np.average(density, axis = 1)
+    fn = "i%04d_gasddens%d.p" % (id_number, frame)
+    density = pickle.load(open(fn, "rb"))
+    normalized_density = density / surface_density_zero
 
+    averagedDensity = np.average(density, axis = 1)
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
