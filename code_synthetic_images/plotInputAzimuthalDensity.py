@@ -37,14 +37,16 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensity",
                          help = 'save directory (default: gasDensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
-                         help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
+                         help = 'id number (up to 4 digits) for this set of synthetic image parameters (default: None)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
@@ -109,6 +111,7 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
+version = args.version
 if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
@@ -159,7 +162,7 @@ def get_data(frame):
 
     # Gather Azimuthal Profiles
     num_profiles = args.num_profiles
-    spread = args.num_scale_heights / 2.0
+    spread = args.num_scale_heights * scale_height / 2.0
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
@@ -180,16 +183,15 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
         plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
-    fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
-
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
 
-    plot.xlabel("Radius", fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Composite Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
+    plot.ylabel("Density", fontsize = fontsize)
+    plot.title("Composite Azimuthal Dust Density\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Axes
     plot.xlim(x_min, x_max)
@@ -198,11 +200,11 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
 
-    # Save, Show,  and Close
-    if id_number is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+    # Save, Show, and Close
+    if version is None:
+        save_fn = "%s/id%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, frame)
     else:
-        save_fn = "%s/id%04d_densityMap_%04d.png" % (save_directory, id_number, frame)
+        save_fn = "%s/id%04d_v%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:

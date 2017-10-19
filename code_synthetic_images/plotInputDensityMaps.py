@@ -71,7 +71,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
-                         help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
+                         help = 'id number (up to 4 digits) for this set of synthetic image parameters (default: None)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
@@ -137,6 +139,7 @@ rad = np.linspace(r_min, r_max, new_num_rad)
 theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
 id_number = args.id_number
+version = args.version
 if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
@@ -186,11 +189,11 @@ def make_plot(frame, show = False):
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
 
-    # Save, Show,  and Close
-    if id_number is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
-    else:
+    # Save, Show, and Close
+    if version is None:
         save_fn = "%s/id%04d_densityMap_%04d.png" % (save_directory, id_number, frame)
+    else:
+        save_fn = "%s/id%04d_v%04d_densityMap_%04d.png" % (save_directory, id_number, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
