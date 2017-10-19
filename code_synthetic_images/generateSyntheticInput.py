@@ -58,8 +58,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
-                         help = 're-sample resolution (default: [300, 400])')
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
+                         help = 're-sample resolution (default: [400, 400])')
     parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [1.0, 3.6],
                          help = 're-sample range (default: [1.0, 3.6])')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
