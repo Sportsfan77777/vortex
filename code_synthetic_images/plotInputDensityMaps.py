@@ -75,7 +75,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
                          help = 're-sample resolution (default: [300, 400])')
-    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
+    parser.add_argument('--r_range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'id number for this set of plot parameters (default: [r_min, r_max])')
     
 

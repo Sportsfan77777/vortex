@@ -3,14 +3,15 @@ Usage:
 python generateSyntheticInput.py
 
 Does
-(1) Convert density distributions from code units to cgs
-(2) Options to carve out inner cavity (default: yes) and scale dust sizes (default: no)
-(3) Centers vortices (using cm, hcm, and mm peaks as a guide -- For T = 1000, center assumed to be fixed)
-(4) Re-samples at a lower resolution
-(5) Interpolates dust to continuous distribution of grain sizes (e.g. 100)
+(1) Options to carve out inner cavity (default: yes) and scale dust sizes (default: no)
+(2) Centers vortices (using cm, hcm, and mm peaks as a guide -- For T = 1000, center assumed to be fixed)
+(3) Re-samples at a lower resolution
+(4) Interpolates dust to continuous distribution of grain sizes (e.g. 100)
+(5) Convert density distributions from code units to cgs
 (6) Generates secondary input: radial.dat, azimuthal.dat, temperature.dat, grain.dat
 (7) Outputs "gasddens%d.dat", a text file input for the synthetic image generator (access with "ln -s gasddens%d.dat" density.dat)
 (8) Output "gassdens%d.p", a pickle file that can be used to look at the overall dust density distribution (such as to look at the gas-to-dust ratio over time)
+(9) Save extra parameters in new dictionary: "id%04d_par.p"
 
 Assumes directory structure with adjacent access to directories containing different grain sizes
 """
@@ -136,7 +137,7 @@ def find_peak(density):
 
     return shift_peak
 
-def find_center(density, threshold_value = 5.0):
+def find_center(density, threshold_value = 0.05):
     """ return shift needed to shift vortex center to 180 degrees """
     ### Identify center using threshold ###
     # Search outer disk only
@@ -190,13 +191,8 @@ def retrieve_density(frame, directories):
 
     return density, starting_sizes
 
-def convert_units(density):
-    """ Step 1: convert density from code units to cgs units """
-    density *= density_unit
-    return density
-
 def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
-    """ Step 2: get rid of inner cavity and scale dust densities to different grain size """
+    """ Step 1: get rid of inner cavity and scale dust densities to different grain size """
     # Cavity
     if cavity_cutoff is not None:
         cavity_cutoff_i = np.searchsorted(rad, cavity_cutoff)
@@ -209,7 +205,7 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
     return density, sizes
 
 def center_vortex(density):
-    """ Step 3: center the vortex so that the peak is at 180 degrees """
+    """ Step 2: center the vortex so that the peak is at 180 degrees """
     if massTaper < 10.1:
         # Shift cm, hcm, mm separately
         density_cm = density[:, :, 0]
@@ -241,7 +237,7 @@ def center_vortex(density):
         return density
 
 def resample(density, new_num_rad = 300, new_num_theta = 400):
-    """ Step 4: lower resolution (makes txt output smaller) """
+    """ Step 3: lower resolution (makes txt output smaller) """
 
     new_density = np.zeros((new_num_rad, new_num_theta, len(sizes)))
 
@@ -255,7 +251,7 @@ def resample(density, new_num_rad = 300, new_num_theta = 400):
     return new_rad, new_theta, new_density
 
 def interpolate_density(density, num_grains):
-    """ Step 5: interpolate to more grain sizes """
+    """ Step 4: interpolate to more grain sizes """
 
     ### New Grain Sizes and Ranges ###
     log_interpolated_sizes = np.linspace(np.log10(min(sizes)), np.log10(max(sizes)), num_grains)
@@ -287,6 +283,11 @@ def interpolate_density(density, num_grains):
     interpolated_density = power_law[None, :] * unweighted_interpolated_density
 
     return interpolated_density
+
+def convert_units(density):
+    """ Step 5: convert density from code units to cgs units """
+    density *= density_unit
+    return density
 
 def generate_secondary_files(rad, theta, sizes):
     """ Step 6: write other *.dat files """
