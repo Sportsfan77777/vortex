@@ -70,22 +70,35 @@ def write_parameters():
 	with open(fn, "w") as f:
 		f.write(txt)
 
-def setup_tmp_directory():
+def setup_tmp_directory(frame):
 	""" Step 1: Make tmp directory """
 	cwd = os.getcwd()
 
 	# Make Directory
 	random_number = random.randint(0, 999999)
-	tmp_dir = "tmp%06d" % random_number
+	tmp_dir = "tmp%04d" % frame
 	os.mkdir(tmp_dir)
 
+	# Files to move
+	necessary_files = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
+	opacity_files = glob.glob("dustkappa_*.inp")
+	density_file = "i%04d_gasddens%d.dat" % (id_number, frame)
+
 	# Fill it with necessary files
-	necessary_files = []
 	os.chdir(tmp_dir)
-	os.symlink(target, name)
+	for necessary_file in necessary_files:
+		os.symlink("../%s" % necessary_file, necessary_file)
+
+	# Fill it with opacity files	
+	for opacity_file in opacity_files:
+		os.symlink("../%s" % opacity_file, opacity_file)
+
+	# Fill it with density file
+	density_name = "sigmadust.dat"
+	os.symlink("../%s" % density_file, density_name)
 
 	os.chdir(cwd)
-
+	return tmp_dir
 
 def full_procedure(frame):
     """ Every Step """
