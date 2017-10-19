@@ -180,6 +180,10 @@ def get_data(frame):
 
 ##### PLOTTING #####
 
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
+          '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
+          '#bcbd22', '#17becf']
+
 def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
@@ -187,8 +191,8 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     ### Plot ###
     x = theta * (180.0 / np.pi)
-    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+    for i, radius, azimuthal_profile in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
