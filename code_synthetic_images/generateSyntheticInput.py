@@ -241,7 +241,7 @@ def resample(density, new_num_rad = 300, new_num_theta = 400):
 
     new_density = np.zeros((new_num_rad, new_num_theta, len(sizes)))
 
-    new_rad = np.linspace(new_r_min, new_r_max["Rmax"], new_num_rad)
+    new_rad = np.linspace(new_r_min, new_r_max, new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
     for i, _ in enumerate(sizes):
