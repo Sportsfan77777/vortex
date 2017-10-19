@@ -60,6 +60,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
+    parser.add_argument('--alpha', dest = "linewidth", type = float, default = 0.65,
+                         help = 'line transparency in plot (default: 0.65)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -120,6 +122,7 @@ else:
 # Plot Parameters (constant)
 fontsize = args.fontsize
 linewidth = args.linewidth
+alpha = args.alpha
 dpi = args.dpi
 
 ### Helper Methods ###
