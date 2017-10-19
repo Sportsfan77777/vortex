@@ -2,20 +2,19 @@
 Generate synthetic images
 
 Does
-(1) Create tmp%06d directory
+(0) Write parameter file
+(1) Create tmp%04d % frame directory
 [1a] Copy necessary files to this directory (use symbolic links)
 [1b] Name files appropriately
 (2) Execute code
 [2a] Copy output to save directory
-(2b) Delete tmp%06d directory
+(2b) Delete tmp%04d % frame directory
 """
 
 import sys, os, subprocess
 import pickle, glob
 from multiprocessing import Pool
 import argparse
-
-import random
 
 ### Input Parameters ###
 
@@ -45,10 +44,35 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
     parser.add_argument('--save', dest = "save_directory", default = None,
-                         help = 'save directory (default: "lambda%d % wavelength")')
+                         help = 'save directory (default: "lambda%04d % wavelength")')
 
     return parser
 
+###############################################################################
+
+### Get Input Parameters ###
+
+# Frames
+if len(args.frames) == 1:
+    frame_range = args.frames
+elif len(args.frames) == 3:
+    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
+    frame_range = range(start, end + 1, rate)
+else:
+    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
+    exit()
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Save Parameters
+id_number = args.id_number
+
+save_directory = args.save_directory
+if save_directory is None:
+	save_directory = "lambda%04d" % args.wavelength # default directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
 
 ###############################################################################
 
@@ -97,28 +121,42 @@ def setup_tmp_directory(frame):
 	density_name = "sigmadust.dat"
 	os.symlink("../%s" % density_file, density_name)
 
+	# Copy executable
+	exe = "disk_mm"
+	shutil.copyfile("../%s" % exe,  exe)
+
 	os.chdir(cwd)
 	return tmp_dir
 
+def make_synthetic_image(tmp_dir):
+	""" Step 2: Execute code, move output, delete tmp directory """
+	cwd = os.getcwd()
+	os.chdir(tmp_dir)
+
+	# Execute
+	exe = "./disk_mm"
+	os.system(exe)
+
+	# Move output
+	output = "intensitymap.out"
+	output_name = "i%04d_intensity%04d.dat" % (id_number, frame)
+	target = "../%s/" % (save_directory, output_name)
+
+    # Delete tmp dir
+	os.chdir(cwd)
+	shutil.rmtree(tmp_dir)
+
 def full_procedure(frame):
     """ Every Step """
-    density, sizes = retrieve_density(frame, directories)
-
-    density = convert_units(density)
-    density, sizes = polish(density, sizes)
-    density = center_vortex(density)
-    new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
-    density = interpolate_density(density, num_grains)
-    output_density_txt(density, frame)
-    output_density_pickle(density, frame)
-
-    if frame == frame_range[0]:
-        generate_secondary_files(new_rad, new_theta, sizes)
-        save_id_parameters()
+    
+    tmp_directory = setup_tmp_directory(frame)
+    make_synthetic_image(tmp_directory)
 
 ### Make Synthetic Images ###
 
 # Iterate through frames
+
+write_parameters()
 
 if len(frame_range) == 1:
     full_procedure(frame_range[0])
@@ -130,3 +168,4 @@ else:
     else:
         for frame in frame_range:
             full_procedure(frame)
+
