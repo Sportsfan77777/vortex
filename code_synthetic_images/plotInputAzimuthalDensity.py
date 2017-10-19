@@ -191,7 +191,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     ### Plot ###
     x = theta * (180.0 / np.pi)
-    for i, radius, azimuthal_profile in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
+    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
 
     # Annotate Axes
