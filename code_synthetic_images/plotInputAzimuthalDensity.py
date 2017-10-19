@@ -186,8 +186,9 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     ax = fig.add_subplot(111)
 
     ### Plot ###
+    x = theta * (180.0 / np.pi)
     for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -201,7 +202,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     # Axes
     plot.xlim(0, 360)
-    
+
     angles = np.linspace(0, 360, 7)
     plot.xticks(angles)
 
