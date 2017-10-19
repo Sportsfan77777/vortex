@@ -120,6 +120,8 @@ mass_unit = mass * (1.988425 * 10**33) # (solar mass / g)
 radius_unit = radius * (1.496 * 10**13) # (AU / cm)
 density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
+###############################################################################
+
 ### Helper Functions ###
 
 def find_peak(density):
@@ -177,6 +179,8 @@ def find_center(density, threshold_value = 0.05):
     shift_c = int(middle - (center - shift_min))
 
     return shift_c
+
+###############################################################################
 
 ### Task Functions ###
 
@@ -359,6 +363,7 @@ def full_procedure(frame):
         generate_secondary_files(new_rad, new_theta, sizes)
         save_id_parameters()
 
+###############################################################################
 
 ### Generate Synthetic Input ###
 
