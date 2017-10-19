@@ -46,20 +46,18 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
-                         help = 're-sample resolution (default: [300, 400])')
-    parser.add_argument('--r_range', dest = "r_lim", type = float, nargs = 2, default = None,
-                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
+    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
+                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
+                         help = 'number of profiles (default: 5)')
+    parser.add_argument('-h', dest = "num_scale_heights", type = float, default = 0.5,
+                         help = 'number of scale heights (default: 0.5)')
     
-
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 2.5,
-                         help = 'maximum density in colorbar (default: 2.5)')
-
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'linewidths in plot (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -107,9 +105,8 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
-rad = np.linspace(r_min, r_max, new_num_rad)
-theta = np.linspace(0, 2 * np.pi, new_num_theta)
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 if args.r_lim is None:
@@ -118,30 +115,70 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 
 # Plot Parameters (constant)
-cmap = args.cmap
-clim = [0, args.cmax]
-
 fontsize = args.fontsize
+linewidth = args.linewidth
 dpi = args.dpi
+
+### Helper Methods ###
+
+def find_peak(averagedDensity):
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
+    peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start:])
+
+    peak_index = outer_disk_start + peak_rad_outer_index
+    peak_rad = rad[peak_index]
+    peak_density = averagedDensity[peak_index]
+
+    return peak_rad, peak_density
+
+def find_min(averagedDensity, peak_rad):
+    try:
+        outer_disk_start = np.searchsorted(rad, 1.0) # look for max radial density beyond r = 1.1
+        outer_disk_end = np.searchsorted(rad, peak_rad)
+        min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : outer_disk_end])
+
+        min_index = outer_disk_start + min_rad_outer_index
+        min_rad = rad[min_index]
+        min_density = averagedDensity[min_index]
+
+        #print "Min", min_rad, min_density
+        return min_rad, min_density
+    except:
+        # No Gap Yet
+        return peak_rad, 0
+
+### Data ###
+
+def get_data(frame):
+    # Find Peak in Radial Profile (in Outer Disk)
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
+    averagedDensity = np.average(density, axis = 1)
+
+    peak_rad, peak_density = find_peak(averagedDensity)
+    min_rad, min_density = find_min(averagedDensity, peak_rad)
+
+    # Gather Azimuthal Profiles
+    num_profiles = args.num_profiles
+    spread = args.num_scale_heights / 2.0
+
+    azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
+    azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
+    azimuthal_profiles = [density[azimuthal_index, :] for azimuthal_index in azimuthal_indices]
+
+    return azimuthal_radii, azimuthal_profiles
 
 ###############################################################################
 
 ##### PLOTTING #####
 
-def make_plot(frame, show = False):
+def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
-    # Data
-    fn = "i%04d_gasddens%d.p" % (id_number, frame)
-    density = pickle.load(open(fn, "rb"))
-    normalized_density = density / surface_density_zero
-
     ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
+        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -174,18 +211,24 @@ def make_plot(frame, show = False):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
+def full_procedure(frame):
+    """ Every Step """
+    azimuthal_radii, azimuthal_profiles = get_data(frame_number)
+    make_plot(frame_number, azimuthal_radii, azimuthal_profiles)
+
+
 ##### Make Plots! #####
 
 # Iterate through frames
 
 if len(frame_range) == 1:
-    make_plot(frame_range[0], show = show)
+    full_procedure(frame_range[0], show = show)
 else:
     if num_cores > 1:
         p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-        p.map(make_plot, frame_range)
+        p.map(full_procedure, frame_range)
         p.terminate()
     else:
         for frame in frame_range:
-            make_plot(frame)
+            full_procedure(frame)
 
