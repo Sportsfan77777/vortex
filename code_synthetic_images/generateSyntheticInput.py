@@ -167,8 +167,8 @@ def find_center(density, threshold_value = 0.05):
     # Spot two threshold crossovers
     threshold = threshold_value * surface_density_zero
 
-    left_edge = np.searchsorted(avg_density_sliver, threshold, side = "left")
-    right_edge = np.searchsorted(avg_density_sliver, threshold, side = "right")
+    left_edge = np.searchsorted(avg_density_sliver, threshold)
+    right_edge = len(theta) - np.searchsorted(avg_density_sliver[::-1], threshold) - 1
 
     center = (left_edge + right_edge) / 2.0
 
@@ -347,11 +347,11 @@ def full_procedure(frame):
     """ Every Step """
     density, sizes = retrieve_density(frame, directories)
 
-    density = convert_units(density)
     density, sizes = polish(density, sizes)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
     density = interpolate_density(density, num_grains)
+    density = convert_units(density)
     output_density_txt(density, frame)
     output_density_pickle(density, frame)
 
