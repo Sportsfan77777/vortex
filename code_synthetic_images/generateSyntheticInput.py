@@ -320,7 +320,7 @@ def generate_secondary_files(rad, theta, sizes):
 
     # Make Opacities
     if make_opacities:
-        execfile("./makeopacs")
+        execfile("./makeopac")
 
 def output_density_txt(density, frame):
     """ Step 7: output txt file """
