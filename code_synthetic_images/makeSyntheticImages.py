@@ -3,11 +3,11 @@ Generate synthetic images
 
 Does
 (1) Create tmp%06d directory
-(2) Copy necessary files to this directory (use symbolic links)
-(3) Name files appropriately
-(4) Execute code
-(5) Copy output back to original (or target) directory
-(6) Delete tmp%06d directory
+[1a] Copy necessary files to this directory (use symbolic links)
+[1b] Name files appropriately
+(2) Execute code
+[2a] Copy output to save directory
+(2b) Delete tmp%06d directory
 """
 
 import sys, os, subprocess
