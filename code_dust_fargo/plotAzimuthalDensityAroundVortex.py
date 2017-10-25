@@ -45,8 +45,6 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'for single plot, do not display plot (default: display plot)')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of synthetic image parameters (default: None)')
-    parser.add_argument('-v', dest = "version", type = int, default = None,
-                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
@@ -113,7 +111,6 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
-version = args.version
 if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
@@ -210,10 +207,10 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.xticks(angles)
 
     # Save, Show, and Close
-    if version is None:
-        save_fn = "%s/id%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, frame)
+    if id_number is None:
+        save_fn = "%s/azimuthalDustDensityProfiles_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/id%04d_v%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, version, frame)
+        save_fn = "%s/id%04d_azimuthalDustDensityProfiles_%04d.png" % (save_directory, id_number, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:

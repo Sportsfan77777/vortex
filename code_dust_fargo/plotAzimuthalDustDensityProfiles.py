@@ -158,7 +158,7 @@ def find_min(averagedDensity, peak_rad):
 def get_data(frame):
     """ Gather azimuthal radii and profiles """
     # Find Peak in Radial Profile (in Outer Disk)
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
     averagedDensity = np.average(density, axis = 1)
@@ -210,10 +210,10 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.xticks(angles)
 
     # Save, Show, and Close
-    if version is None:
-        save_fn = "%s/id%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, frame)
+    if id_number is None:
+        save_fn = "%s/azimuthalDensityProfiles_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/id%04d_v%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, version, frame)
+        save_fn = "%s/id%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, id_number, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
