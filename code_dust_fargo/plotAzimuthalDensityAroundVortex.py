@@ -1,47 +1,132 @@
 """
-plots "consecutive" (w/ rate) azithumal profiles around the peak radial density
-
-Usage:
-python plotAzimuthalDensity.py
+plot azimuthal density profiles
 """
 
-import sys
-import os
-import subprocess
-import glob
-import pickle
+import sys, os, subprocess
+import pickle, glob
 from multiprocessing import Pool
+import argparse
 
 import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('Agg')
-from matplotlib import rc
+from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
-from pylab import rcParams # replace with rc ???
+from pylab import rcParams
 from pylab import fromfile
 
 import util
-from readTitle import readTitle
 
-### Get FARGO Parameters ###
-# Create param file if it doesn't already exist
-pickled = util.pickle_parameters()
-param_fn = "params.p"
-fargo_par = pickle.load(open(param_fn, "rb"))
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+###############################################################################
 
-rad = np.loadtxt("used_rad.dat")[:-1, 0]
+### Input Parameters ###
+
+def new_argument_parser(description = "Plot gas density maps."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensity",
+                         help = 'save directory (default: gasDensityMaps)')
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of synthetic image parameters (default: None)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
+                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
+                         help = 'number of profiles (default: 5)')
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 0.5,
+                         help = 'number of scale heights (default: 0.5)')
+    
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'linewidths in plot (default: 3)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
+                         help = 'line transparency in plot (default: 0.65)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get ID%04d Parameters ###
+fn = "id%04d_par.p" % args.id_number
+fargo_par = pickle.load(open(fn, "rb"))
+
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+surface_density_zero = fargo_par["Sigma0"] / 100
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+
+### Get Input Parameters ###
+
+# Frames
+if len(args.frames) == 1:
+    frame_range = args.frames
+elif len(args.frames) == 3:
+    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
+    frame_range = range(start, end + 1, rate)
+else:
+    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
+    exit()
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+
+rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density = float(fargo_par["Sigma0"])
-scale_height = float(fargo_par["AspectRatio"])
+id_number = args.id_number
+version = args.version
+if args.r_lim is None:
+    x_min = r_min; x_max = r_max
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+
+# Plot Parameters (constant)
+fontsize = args.fontsize
+linewidth = args.linewidth
+alpha = args.alpha
+dpi = args.dpi
 
 ### Helper Methods ###
+
 def find_peak(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
     peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start:])
@@ -68,19 +153,21 @@ def find_min(averagedDensity, peak_rad):
         # No Gap Yet
         return peak_rad, 0
 
-#### Data ####
+### Data ###
 
 def get_data(frame):
+    """ Gather azimuthal radii and profiles """
     # Find Peak in Radial Profile (in Outer Disk)
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density
-    averagedDensity = np.average(density, axis = 1)
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    normalized_density = density / surface_density_zero
 
+    averagedDensity = np.average(density, axis = 1)
     peak_rad, peak_density = find_peak(averagedDensity)
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
     # Gather Azimuthal Profiles
-    num_profiles = 5
-    spread = 2.0 * scale_height # half-width
+    num_profiles = args.num_profiles
+    spread = args.num_scale_heights * scale_height / 2.0
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]
@@ -88,85 +175,70 @@ def get_data(frame):
 
     return azimuthal_radii, azimuthal_profiles
 
+###############################################################################
+
 ##### PLOTTING #####
 
-# Make Directory
-directory = "azimuthalDensity"
-try:
-    os.mkdir(directory)
-except:
-    print "Directory Already Exists"
-
-# Plot Parameters
-rcParams['figure.figsize'] = 5, 10
-my_dpi = 100
-
-alpha = 0.65
-fontsize = 14
-linewidth = 4
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
+          '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
+          '#bcbd22', '#17becf']
 
 def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
-    # Orbit Number
-    time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-    orbit = int(round(time / (2 * np.pi), 0)) * frame
-
     # Set up figure
-    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
 
     ### Plot ###
-    for radius, azimuthal_profile in zip(azimuthal_radii, azimuthal_profiles):
-        plot.plot(theta, azimuthal_profile, linewidth = linewidth, alpha = alpha, label = "%.3f" % radius)
+    x = theta * (180.0 / np.pi)
+    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
 
-    # Axis
-    angles = np.linspace(0, 2 * np.pi, 7)
-    degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
 
-    plot.xlim(0, 2 * np.pi)
-    plot.xticks(angles, degree_angles)
-
-    # Annotate
-    this_title = readTitle()
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Density", fontsize = fontsize)
-    plot.title("Orbit %d: %s" % (orbit, this_title), fontsize = fontsize + 1)
+    plot.ylabel("Density", fontsize = fontsize)
+    plot.title("Composite Azimuthal Dust Density\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
-    # Save and Close
-    plot.savefig("%s/azimuthal_density_%04d.png" % (directory, frame), bbox_inches = 'tight', dpi = my_dpi)
+    # Axes
+    plot.xlim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.xticks(angles)
+
+    # Save, Show, and Close
+    if version is None:
+        save_fn = "%s/id%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, frame)
+    else:
+        save_fn = "%s/id%04d_v%04d_azimuthalDensityMap_%04d.png" % (save_directory, id_number, version, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
     if show:
         plot.show()
+
     plot.close(fig) # Close Figure (to avoid too many figures)
 
-##### Plot One File or All Files #####
 
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            azimuthal_radii, azimuthal_profiles = get_data(i)
-            make_plot(i, azimuthal_radii, azimuthal_profiles)
-    else:
-        # Plot Single
-        azimuthal_radii, azimuthal_profiles = get_data(frame_number)
-        make_plot(frame_number, azimuthal_radii, azimuthal_profiles, show = True)
+def full_procedure(frame, show = False):
+    """ Every Step """
+    azimuthal_radii, azimuthal_profiles = get_data(frame)
+    make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
+
+##### Make Plots! #####
+
+# Iterate through frames
+
+if len(frame_range) == 1:
+    full_procedure(frame_range[0], show = show)
 else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(full_procedure, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            full_procedure(frame)
 
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    #p = Pool() # default number of processes is multiprocessing.cpu_count()
-    #p.map(make_plot, range(num_frames))
-    #p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
