@@ -2,6 +2,9 @@
 utility module for azimuthal-related plots
 """
 
+import numpy as np
+from scipy.signal import gaussian
+
 import util
 
 ###############################################################################
@@ -73,7 +76,9 @@ def find_center(density, fargo_par, threshold_value = 0.05):
     zoom_end = np.searchsorted(rad, peak_rad + half_width)
 
     density_sliver = density[zoom_start : zoom_end]
-    avg_density_sliver = np.average(density_sliver, axis = 0) # avg over rad
+    length = len(density_sliver); std = length / 3.0
+    weights = gaussian(length, std)
+    avg_density_sliver = np.average(density_sliver, weights = weights, axis = 0) # avg over rad
 
     # Move Minimum to Zero Degrees (vortex cannot cross zero)
     arg_min = np.argmin(avg_density_sliver)
