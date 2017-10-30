@@ -73,7 +73,7 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
     rad = fargo_par["rad"]
     theta = fargo_par["theta"]
 
-    scale_height = fargo_par["scale_height"]
+    scale_height = fargo_par["AspectRatio"]
     surface_density_zero = fargo_par["Sigma0"]
 
     ########### Method ##############
