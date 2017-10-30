@@ -47,7 +47,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--max_y', dest = "max_density", type = float, default = None,
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'radial range in plot (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
@@ -108,15 +108,12 @@ if not os.path.isdir(save_directory):
 
 # Plot Parameters (variable)
 show = args.show
+max_y = args.max_y
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -169,6 +166,9 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     angles = np.linspace(0, 360, 7)
     plot.xticks(angles)
+
+    if max_y is not None:
+        plot.ylim(0, max_y)
 
     # Save, Show, and Close
     if version is None:
