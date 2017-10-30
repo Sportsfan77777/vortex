@@ -194,7 +194,7 @@ def find_center(density, threshold_value = 0.05):
 
 ### Data ###
 
-def get_data(frame, density):
+def get_data(frame):
     """ Gather azimuthal radii and profiles """
     # Find Peak in Radial Profile (in Outer Disk)
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
@@ -205,7 +205,7 @@ def get_data(frame, density):
     min_rad, min_density = find_min(averagedDensity, peak_rad)
 
     # Shift to Center
-    shift_c = find_center(density, threshold = 5)
+    shift_c = find_center(density, threshold_value = 5)
     density = np.roll(density, shift_c)
 
     # Gather Azimuthal Profiles
