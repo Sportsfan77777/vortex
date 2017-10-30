@@ -185,8 +185,15 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
 def full_procedure(frame, show = False):
     """ Every Step """
+
+    # Choose shift option
+    if fargo_par["MassTaper"] < 10.1:
+        shift_method = 'peak'
+    else:
+        shift_method = 'center'
+
     density = read_data(frame)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method)
     make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
