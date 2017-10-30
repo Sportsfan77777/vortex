@@ -11,7 +11,7 @@ import util
 
 ### Helper Methods ###
 
-def find_peak(averagedDensity, fargo_par):
+def get_radial_peak(averagedDensity, fargo_par):
     """ find peak in azimuthally-averaged density in the outer disk (i.e. the vortex) """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
@@ -26,7 +26,7 @@ def find_peak(averagedDensity, fargo_par):
 
     return peak_rad, peak_density
 
-def find_min(averagedDensity, peak_rad, fargo_par):
+def get_radial_min(averagedDensity, peak_rad, fargo_par):
     """ find minimum in azimuthally-averaged density in the outer disk (i.e. the gap edge) """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
@@ -47,7 +47,27 @@ def find_min(averagedDensity, peak_rad, fargo_par):
         # No Gap Yet
         return peak_rad, 0
 
-def find_center(density, fargo_par, threshold_value = 0.05):
+def get_azimuthal_peak(density):
+    """ return shift needed to shift vortex peak to 180 degrees """
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    ########### Method ##############
+    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    density_segment = density[outer_disk_start : outer_disk_end]
+
+    argmax = np.argmax(density_segment)
+    arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
+
+    ### Calculate shift for true center to 180 degrees ###
+    middle = np.searchsorted(theta, np.pi)
+    shift_peak = int(middle - arg_phi)
+
+    return shift_peak
+
+def get_azimuthal_center(density, fargo_par, threshold = 0.05):
     """ return shift needed to shift vortex center to 180 degrees """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
@@ -86,7 +106,6 @@ def find_center(density, fargo_par, threshold_value = 0.05):
     avg_density_sliver = np.roll(avg_density_sliver, shift_min)
 
     # Spot two threshold crossovers
-    threshold = threshold_value * surface_density_zero
 
     left_edge = np.searchsorted(avg_density_sliver, threshold)
     right_edge = len(theta) - np.searchsorted(avg_density_sliver[::-1], threshold) - 1
@@ -101,7 +120,7 @@ def find_center(density, fargo_par, threshold_value = 0.05):
 
 ### Data ###
 
-def get_profiles(density, fargo_par, args, normalize = True, shift_threshold = None):
+def get_profiles(density, fargo_par, args, normalize = True, shift_method = None, threshold = 5):
     """ Gather azimuthal radii and profiles """
     
     ######## Get Parameters #########
@@ -116,14 +135,18 @@ def get_profiles(density, fargo_par, args, normalize = True, shift_threshold = N
     if normalize:
         density /= surface_density_zero
 
-    if shift_threshold is not None:
-        shift_c = find_center(density, threshold_value = 5)
+    if shift_method is not None:
+        if shift_method == 'center':
+            # Use middle of the vortex as the center
+            shift_c = get_azimuthal_center(density, fargo_par, threshold = 5)
+        else:
+            # Use density peak of the vortex as the center
+            shift_c = get_azimuthal_peak(density, fargo_par)
         density = np.roll(density, shift_c)
 
     # Find Peak in Radial Profile (in Outer Disk)
     averagedDensity = np.average(density, axis = 1)
-    peak_rad, peak_density = find_peak(averagedDensity)
-    min_rad, min_density = find_min(averagedDensity, peak_rad)
+    peak_rad, peak_density = get_radial_peak(averagedDensity)
 
     # Gather Azimuthal Profiles
     num_profiles = args.num_profiles
