@@ -47,7 +47,7 @@ def get_radial_min(averagedDensity, peak_rad, fargo_par):
         # No Gap Yet
         return peak_rad, 0
 
-def get_azimuthal_peak(density):
+def get_azimuthal_peak(density, fargo_par):
     """ return shift needed to shift vortex peak to 180 degrees """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
