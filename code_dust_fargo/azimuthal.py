@@ -146,7 +146,7 @@ def get_profiles(density, fargo_par, args, normalize = True, shift_method = None
 
     # Find Peak in Radial Profile (in Outer Disk)
     averagedDensity = np.average(density, axis = 1)
-    peak_rad, peak_density = get_radial_peak(averagedDensity)
+    peak_rad, peak_density = get_radial_peak(averagedDensity, fargo_par)
 
     # Gather Azimuthal Profiles
     num_profiles = args.num_profiles
