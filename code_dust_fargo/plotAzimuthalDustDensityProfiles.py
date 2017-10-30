@@ -73,8 +73,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % args.id_number
-fargo_par = pickle.load(open(fn, "rb"))
+fargo_par = util.get_pickled_parameters()
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
