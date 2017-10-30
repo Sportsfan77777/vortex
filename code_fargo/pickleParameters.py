@@ -2,61 +2,98 @@
 save parameters from a single *.par file into a pickled dictionary
 """
 
+import os
 import pickle as p
 import glob
 
-# Find *.par file (assume there is only one *.par file)
+def parse_parameters(par_dictionary):
+    """ stores parameters in *.par file """
 
-par = {}
+    def store(line):
+        """ For a line 'a b', stores 'b' under 'a' in the dictionary """
+        line_sp = line.split()
 
-files = glob.glob("*.par")
-par_file = files[0]
+        if len(line_sp) < 2:
+            # Empty
+            pass
+        elif line_sp[0][0] == "#":
+            # Comment
+            pass
+        else:
+            # Parse
+            name = line_sp[0]
+            entry = line_sp[1]
 
-def store(line):
-    """ For a line 'a b', stores 'b' under 'a' in the dictionary """
-    line_sp = line.split()
+            # Convert to Proper Type (Integer, Float, or String?)
+            is_int = False
+            try:
+                entry = int(entry) # Integer?
+                is_int = True
+            except ValueError:
+                pass
 
-    if len(line_sp) < 2:
-        # Empty
-        pass
-    elif line_sp[0][0] == "#":
-        # Comment
-        pass
-    else:
-        # Parse
-        name = line_sp[0]
-        entry = line_sp[1]
+            if not is_int:
+                try:
+                    entry = float(entry) # Float?
+                except ValueError:
+                    pass # String!
 
-        # Store
-        par[name] = entry
+            # Store
+            par_dictionary[name] = entry
 
-def store_planet_mass(line):
-    """ stores only the planet's mass """
-    line_sp = line.split()
+    # Find *.par file (assume there is only one *.par file)
+    files = glob.glob("*.par")
+    par_file = files[0]
 
-    if len(line_sp) < 1:
-        # Empty
-        pass
-    else:
-        # Parse
-        planet_name = line_sp[0]
-        if planet_name == "Jupiter":
-            par["PlanetMass"] = line_sp[2]
+    # Read file line by line
+    with open(par_file, "r") as f:
+        for line in f:
+            store(line)
 
-# Read file line by line
-with open(par_file, "r") as f:
-    for line in f:
-        store(line)
+def parse_planet_mass(par_dictionary):
+    """ parse planet's mass """
 
-### NEW: Add planet mass too ###
-files = glob.glob("*.cfg") # usually Jup.cfg
-cfg_file = files[0]
+    def store(line):
+        """ stores only the planet's mass """
+        line_sp = line.split()
 
-# Read file line by line
-with open(cfg_file, "r") as f:
-    for line in f:
-        store_planet_mass(line) 
+        if len(line_sp) < 1:
+            # Empty
+            pass
+        else:
+            # Parse
+            planet_name = line_sp[0]
+            if planet_name == "Jupiter":
+                par_dictionary["PlanetMass"] = float(line_sp[2])
 
-dict_name = "params.p"
-p.dump(par, open(dict_name, "wb"))
+    # Find *.cfg file (assume there is only one *.cfg file)
+    files = glob.glob("*.cfg") # usually Jup.cfg
+    cfg_file = files[0]
 
+    # Read file line by line
+    with open(cfg_file, "r") as f:
+        for line in f:
+            store(line)
+
+
+def pickle_parameter_dictionary(directory = "."):
+    """ dump all parameters into a pickle file """
+
+    cwd = os.getcwd()
+    if directory is not ".":
+        os.chdir(directory)
+
+    parameter_dictionary = {}
+
+    parse_parameters(parameter_dictionary)
+    parse_planet_mass(parameter_dictionary)
+
+    dict_name = "params.p"
+    p.dump(parameter_dictionary, open(dict_name, "wb"))
+
+    if directory is not ".":
+        os.chdir(cwd)
+
+# Main
+if __name__ == "__main__":
+    pickle_parameter_dictionary()
