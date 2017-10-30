@@ -47,8 +47,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
-                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--max_y', dest = "max_density", type = float, default = None,
+                         help = 'radial range in plot (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 0.5,
@@ -133,7 +133,7 @@ fargo_par["theta"] = theta
 ### Helper Methods ###
 
 def read_data(frame):
-    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta)) * 100 # scale to gas density
     return density
 
 ###############################################################################
@@ -193,7 +193,7 @@ def full_procedure(frame, show = False):
         shift_method = 'center'
 
     density = read_data(frame)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method, threshold = 5)
     make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
