@@ -49,7 +49,7 @@ scale_height = float(fargo_par["AspectRatio"])
 ##### PLOTTING #####
 
 # Make Directory
-directory = "averagedThetaVelocity"
+directory = "bothAveragedThetaVelocities"
 try:
     os.mkdir(directory)
 except:

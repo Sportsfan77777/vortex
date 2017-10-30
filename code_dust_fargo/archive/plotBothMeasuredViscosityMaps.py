@@ -50,6 +50,11 @@ scale_height = float(fargo_par["AspectRatio"])
 vtheta0 = (fromfile("gasvtheta0.dat").reshape(num_rad, num_theta))
 dust_vtheta0 = (fromfile("gasdvtheta0.dat").reshape(num_rad, num_theta))
 
+### Calculate Measured Viscosity ###
+
+def calculate_measured_viscosity(vrad, vtheta, density):
+    return density * np.abs(vrad) * np.abs(vtheta)
+
 ##### PLOTTING #####
 
 # Make Directory
@@ -106,7 +111,7 @@ def make_plot(frame, show = False):
         vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta)) - vtheta0
 
         # Calculate Viscosity Parameter ()
-        measured_viscosity = np.abs(vrad) * np.abs(vtheta)
+        measured_viscosity = calculate_measured_viscosity(vrad, vtheta, density)
         log_measured_viscosity = np.log10(measured_viscosity)
 
         ### Plot ###
@@ -148,7 +153,7 @@ def make_plot(frame, show = False):
         dust_vtheta = (fromfile("gasdvtheta%d.dat" % i).reshape(num_rad, num_theta)) - dust_vtheta0
 
         # Calculate Viscosity Parameter ()
-        measured_dust_viscosity = np.abs(dust_vrad) * np.abs(dust_vtheta)
+        measured_dust_viscosity = calculate_measured_viscosity(dust_vrad, dust_vtheta, 100.0 * dust_density)
         log_measured_dust_viscosity = np.log10(measured_dust_viscosity)
 
         ### Plot ###
