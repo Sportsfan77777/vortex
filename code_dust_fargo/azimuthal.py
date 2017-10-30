@@ -127,7 +127,7 @@ def get_profiles(density, fargo_par, args, normalize = True, shift_method = None
     rad = fargo_par["rad"]
     theta = fargo_par["theta"]
 
-    scale_height = fargo_par["scale_height"]
+    scale_height = fargo_par["AspectRatio"]
     surface_density_zero = fargo_par["Sigma0"]
 
     ########### Method ##############
@@ -138,7 +138,7 @@ def get_profiles(density, fargo_par, args, normalize = True, shift_method = None
     if shift_method is not None:
         if shift_method == 'center':
             # Use middle of the vortex as the center
-            shift_c = get_azimuthal_center(density, fargo_par, threshold = 5)
+            shift_c = get_azimuthal_center(density, fargo_par, threshold = threshold)
         else:
             # Use density peak of the vortex as the center
             shift_c = get_azimuthal_peak(density, fargo_par)
