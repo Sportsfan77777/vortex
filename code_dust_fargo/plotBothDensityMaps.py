@@ -174,18 +174,22 @@ def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (1400 / my_dpi, 600 / my_dpi), dpi = my_dpi)
 
+    # Data
+    gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    if center:
+        if taper < 10.1:
+            shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
+        else:
+            shift_c = az.get_azimuthal_center(dust_density, fargo_par)
+        gas_density = np.roll(density, shift_c)
+        dust_density = np.roll(density, shift_c)
+
     ############################ Gas Density ##################################
     plot.subplot(1, 2, 1)
 
     # Data
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    if center:
-        if taper < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
-        else:
-            shift_c = az.get_azimuthal_center(density, fargo_par)
-        density = np.roll(density, shift_c)
-    normalized_density = density / surface_density_zero
+    normalized_density = gas_density / surface_density_zero
 
     ### Plot ###
     x = rad
@@ -220,14 +224,7 @@ def make_plot(frame, show = False):
     plot.subplot(1, 2, 2)
 
     # Data
-    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
-    if center:
-        if taper < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
-        else:
-            shift_c = az.get_azimuthal_center(density, fargo_par)
-        density = np.roll(density, shift_c)
-    normalized_density = density / (surface_density_zero / 100.0)
+    normalized_density = dust_density / (surface_density_zero / 100.0)
 
     ### Plot ###
     x = rad
