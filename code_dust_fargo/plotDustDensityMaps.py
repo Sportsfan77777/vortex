@@ -45,7 +45,7 @@ def new_argument_parser(description = "Plot dust density maps."):
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+                         help = 'save directory (default: dustDensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -61,7 +61,7 @@ def new_argument_parser(description = "Plot dust density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -174,7 +174,7 @@ def make_plot(frame, show = False):
     plot.ylabel(r"$\phi$", fontsize = fontsize)
 
     if title is None:
-        plot.title("Dust Density Map\n\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+        plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
     else:
         plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 

@@ -58,7 +58,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 2,
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
                          help = 'maximum density in colorbar (default: 2)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -156,7 +156,7 @@ def make_plot(frame, show = False):
     plot.ylabel(r"$\phi$", fontsize = fontsize)
 
     if title is None:
-        plot.title("Gas Density Map\n\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+        plot.title("Gas Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
     else:
         plot.title("Gas Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
