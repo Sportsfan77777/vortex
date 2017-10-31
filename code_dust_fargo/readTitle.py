@@ -11,11 +11,14 @@ title is stored in 'title.p'
 import pickle
 
 def readTitle():
-	fn = "title.p"
-	title = pickle.load(open(fn, "rb"))
-	return "[%s]" % title
+    fn = "title.p"
+    try:
+        title = pickle.load(open(fn, "rb"))
+        return "[%s]" % title
+    except:
+        return None
 
 
 if __name__ == "__main__":
-	title = readTitle()
-	print "Title: [%s]" % title
+    title = readTitle()
+    print "Title: [%s]" % title
