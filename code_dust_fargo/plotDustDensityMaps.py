@@ -178,7 +178,7 @@ def make_plot(frame, show = False):
         if taper < 10.1:
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
-            shift_c = az.get_azimuthal_center(density, fargo_par)
+            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = 0.05)
         density = np.roll(density, shift_c)
     normalized_density = density / surface_density_zero
 

@@ -186,7 +186,7 @@ def make_plot(frame, show = False):
         if taper < 10.1:
             shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
         else:
-            shift_c = az.get_azimuthal_center(dust_density, fargo_par)
+            shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = 0.05 * surface_density_zero)
         gas_density = np.roll(gas_density, shift_c)
         dust_density = np.roll(dust_density, shift_c)
 
