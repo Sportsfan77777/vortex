@@ -124,7 +124,7 @@ else:
 cmap = args.cmap
 cmax = args.cmax
 if cmax is None:
-    if PSIZE > 0.2:
+    if size > 0.2:
         cmax = 10
     else:
         cmax = 2.5
