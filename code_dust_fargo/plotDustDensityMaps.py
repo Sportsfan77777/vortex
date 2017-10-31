@@ -159,6 +159,10 @@ clim = [0, cmax]
 fontsize = args.fontsize
 dpi = args.dpi
 
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -218,7 +222,6 @@ def make_plot(frame, show = False):
         plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
-
 
 ##### Make Plots! #####
 
