@@ -187,8 +187,8 @@ def make_plot(frame, show = False):
             shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
         else:
             shift_c = az.get_azimuthal_center(dust_density, fargo_par)
-        gas_density = np.roll(density, shift_c)
-        dust_density = np.roll(density, shift_c)
+        gas_density = np.roll(gas_density, shift_c)
+        dust_density = np.roll(dust_density, shift_c)
 
     ############################ Gas Density ##################################
     plot.subplot(1, 2, 1)
