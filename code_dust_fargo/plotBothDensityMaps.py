@@ -1,3 +1,37 @@
+"""
+plot 2-D gas and dust density maps side-by-side
+
+usage: plotBothDensityMaps.py [-h] [-c NUM_CORES] [--dir SAVE_DIRECTORY]
+                              [--hide] [-v VERSION] [--range R_LIM R_LIM]
+                              [--shift] [--cmap CMAP] [--cmaxGas GAS_CMAX]
+                              [--cmaxDust DUST_CMAX] [--fontsize FONTSIZE]
+                              [--dpi DPI]
+                              frames [frames ...]
+
+positional arguments:
+  frames                select single frame or range(start, end, rate). error
+                        if nargs != 1 or 3
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c NUM_CORES          number of cores (default: 1)
+  --dir SAVE_DIRECTORY  save directory (default: bothDensityMaps)
+  --hide                for single plot, do not display plot (default: display
+                        plot)
+  -v VERSION            version number (up to 4 digits) for this set of plot
+                        parameters (default: None)
+  --range R_LIM R_LIM   radial range in plot (default: [r_min, r_max])
+  --shift               center frame on vortex peak or middle (default: do not
+                        center)
+  --cmap CMAP           color map (default: viridis)
+  --cmaxGas GAS_CMAX    maximum density in colorbar (default: 10 for hcm+, 2.5
+                        otherwise)
+  --cmaxDust DUST_CMAX  maximum density in colorbar (default: 10 for hcm+, 2.5
+                        otherwise)
+  --fontsize FONTSIZE   fontsize of plot annotations (default: 16)
+  --dpi DPI             dpi of plot annotations (default: 100)
+"""
+
 import sys, os, subprocess
 import pickle, glob
 from multiprocessing import Pool
