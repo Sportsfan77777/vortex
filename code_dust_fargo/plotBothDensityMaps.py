@@ -86,8 +86,8 @@ def new_argument_parser(description = "Plot dust density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmaxGas', dest = "gas_cmax", type = float, default = None,
-                         help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
+    parser.add_argument('--cmaxGas', dest = "gas_cmax", type = float, default = 2,
+                         help = 'maximum density in colorbar (default: 2)')
     parser.add_argument('--cmaxDust', dest = "dust_cmax", type = float, default = None,
                          help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
 
@@ -172,7 +172,7 @@ dpi = args.dpi
 
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (1400 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig = plot.figure(figsize = (1400 / dpi, 600 / dpi), dpi = dpi)
 
     # Data
     gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
