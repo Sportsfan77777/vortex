@@ -106,13 +106,10 @@ def make_movies():
 ### Make Movies ###
 
 # Re-number to consecutive frames
-base_path = directory
-base_name = name
+base_path = directory; base_name = name
+new_range = range(len(frame_range))
 
-old_range = range(start_frame, end_frame + 1, rate)
-new_range = range(len(old_range))
-
-renumber(old_range, new_range, base_path, base_name)
+renumber(frame_range, new_range, base_path, base_name)
 
 # Make Movies!
 make_movies()
