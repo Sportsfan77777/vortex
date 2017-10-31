@@ -109,8 +109,8 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-rad = np.linspace(r_min, r_max, new_num_rad)
-theta = np.linspace(0, 2 * np.pi, new_num_theta)
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
