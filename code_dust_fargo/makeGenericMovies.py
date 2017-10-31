@@ -24,6 +24,7 @@ import argparse
 movie_dictionary = {}
 movie_dictionary["density"] = "densityMap_"
 movie_dictionary["polarDensity"] = "polarDensityMap_"
+movie_dictionary["azimuthalDensity"] = "azimuthalDensityProfiles_"
 
 ###############################################################################
 
@@ -32,6 +33,10 @@ movie_dictionary["polarDensity"] = "polarDensityMap_"
 def new_argument_parser(description = "Manage movie input parameters."):
     parser = argparse.ArgumentParser()
 
+    # Frames
+    parser.add_argument('frames', type = int, nargs = 3,
+                         help = 'select frame range(start, end, rate)')
+
     # Files
     parser.add_argument('--dir', dest = "directory", default = ".",
                          help = 'location of files and output (default: current)')
@@ -39,12 +44,10 @@ def new_argument_parser(description = "Manage movie input parameters."):
                          help = 'select file prefix (choices: density (default), polarDensity)')
     parser.add_argument('--id', dest = "name_id", type = int, default = None,
                          help = 'id number for files -- useful for varying plot parameters (default: None)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number for files -- useful for varying plot parameters (default: None)')
     parser.add_argument('--save_name', dest = "movie_name", default = "movie",
                          help = 'select movie suffix (default: movie)')
-
-    # File Range
-    parser.add_argument('--range', dest = "file_range", type = int, nargs = 3, default = [0, 100, 1],
-                         help = 'range(start, end, rate) (default: [0, 100, 1])')
 
     # Movie Parameters
     parser.add_argument('--fps', dest = "fps", type = int, default = 5,
@@ -55,17 +58,19 @@ def new_argument_parser(description = "Manage movie input parameters."):
 ## Parse Arguments ##
 args = new_argument_parser().parse_args()
 
+# Frames
+start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
+frame_range = range(start, end + 1, rate)
+
 # Files
 directory = args.directory
 name = movie_dictionary[args.movie_choice]
-if args.name_id is not None:
-   name += "id%d_" % args.name_id
-movie_name = name + args.movie_name
+if args.version is not None:
+   name += "v%04d_" % args.version
 
-# File Range
-start_frame = args.file_range[0]
-end_frame = args.file_range[1]
-rate = args.file_range[2]
+if args.name_id is not None:
+   name += "id%04d_" % args.name_id
+movie_name = name + args.movie_name
 
 # Movie Parameters
 fps = args.fps
