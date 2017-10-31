@@ -66,10 +66,10 @@ frame_range = range(start, end + 1, rate)
 directory = args.directory
 name = movie_dictionary[args.movie_choice]
 if args.version is not None:
-   name += "v%04d_" % args.version
+   name = "v%04d_%s" % (args.version, name)
 
 if args.name_id is not None:
-   name += "id%04d_" % args.name_id
+   name += "id%04d_%s" % (args.name_id, name)
 movie_name = name + args.movie_name
 
 # Movie Parameters
