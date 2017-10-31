@@ -23,7 +23,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
-import readTitle
+from readTitle import readTitle
 
 from colormaps import cmaps
 for key in cmaps:
