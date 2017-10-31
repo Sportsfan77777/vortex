@@ -23,6 +23,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import azimuthal as az
 from readTitle import readTitle
 
 from colormaps import cmaps
@@ -54,6 +55,8 @@ def new_argument_parser(description = "Plot dust density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
+                         help = 'center frame on vortex peak or middle (default: do not center)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
@@ -119,6 +122,7 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
+center = args.center
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -144,6 +148,12 @@ def make_plot(frame, show = False):
 
     # Data
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    if center:
+        if taper < 10.1:
+            shift_c = az.get_azimuthal_peak(density, fargo_par)
+        else:
+            shift_c = az.get_azimuthal_center(density, fargo_par)
+        density = np.roll(density, shift_c)
     normalized_density = density / surface_density_zero
 
     ### Plot ###
