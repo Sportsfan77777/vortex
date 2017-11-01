@@ -13,7 +13,7 @@ import util
 def my_searchsorted(array, target):
     """ np.searchsorted, but it works all the time """
     for i, x in enumerate(array):
-        if x > target:
+        if target > x:
             pass
         else:
             return i
