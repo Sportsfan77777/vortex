@@ -8,6 +8,8 @@ not to be called
 import os
 import pickle
 
+import numpy as np
+
 from pickleParameters import pickle_parameter_dictionary
 
 #### Miscellaneous ####
