@@ -182,13 +182,13 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     left1 = r"$M_p = %d$ $M_{Jup}$" % (planet_mass)
     left2 = r"$\nu_{disk} = 10^{%d}$" % (np.log10(viscosity))
-    plot.text(line_x, line_y * plot.get_ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
-    plot.text(line_x, (line_y - linebreak) * plot.get_ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
+    plot.text(line_x, line_y * plot.ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
+    plot.text(line_x, (line_y - linebreak) * plot.ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
 
     right1 = r"$T_{growth} = %d$ $\rm{orbits}$" % (taper)
     right2 = r"$s = %s$" % (size_label)
-    plot.text(360 - line_x, line_y * plot.get_ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
-    plot.text(360 - line_x, line_y * plot.get_ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
+    plot.text(360 - line_x, line_y * plot.ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
+    plot.text(360 - line_x, line_y * plot.ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
