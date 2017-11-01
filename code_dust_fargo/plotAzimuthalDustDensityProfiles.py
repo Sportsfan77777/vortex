@@ -86,6 +86,7 @@ surface_density_zero = fargo_par["Sigma0"] / 100
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
+taper = fargo_par["MassTaper"]
 
 size = fargo_par["PSIZE"]
 size_label = util.get_size_label(size)
@@ -172,7 +173,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
     plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
 
-    title1 = r"$T_{growth} = %d$ $\rm{orbits,}$ %s" % (taper_time, size_label)
+    title1 = r"$T_{growth} = %d$ $\rm{orbits,}$ %s" % (taper, size_label)
     title2 = r"$t = %d$ $\rm{orbits}$" % (orbit)
     plot.text(0.0, 1.25 * plot.get_ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
     plot.title("%s" % (title2), y = 1.01, fontsize = fontsize)
