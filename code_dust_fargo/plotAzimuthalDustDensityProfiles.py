@@ -211,6 +211,8 @@ if len(frame_range) == 1:
     full_procedure(frame_range[0], show = show)
 else:
     if num_cores > 1:
+        matplotlib.use('Agg')
+        
         p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
         p.map(full_procedure, frame_range)
         p.terminate()
