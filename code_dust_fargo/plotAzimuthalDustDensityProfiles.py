@@ -88,6 +88,7 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 
 size = fargo_par["PSIZE"]
+size_label = util.get_label(size)
 
 ### Get Input Parameters ###
 
@@ -155,16 +156,6 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
 
-    # Annotate Axes
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-
-    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Density", fontsize = fontsize)
-    plot.title("Azimuthal Dust Density [%f cm] \n(t = %.1f)" % (size, orbit), fontsize = fontsize + 1)
-
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
-
     # Axes
     plot.xlim(0, 360)
 
@@ -173,6 +164,21 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
 
     if max_y is not None:
         plot.ylim(0, max_y)
+
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
+
+    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
+    plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
+
+    title1 = r"$T_{growth} = %d$ $\rm{orbits,}$ %s" % (taper_time, size_label)
+    title2 = r"$t = %d$ $\rm{orbits}$" % (orbit)
+    plot.text(0.0, 1.25 * plot.get_ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    plot.title("%s" % (title2), y = 1.01, fontsize = fontsize)
+    plot.title("(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
 
     # Save, Show, and Close
     if version is None:
