@@ -10,6 +10,14 @@ import util
 ###############################################################################
 
 ### Helper Methods ###
+def my_searchsorted(array, target):
+    """ np.searchsorted, but it works all the time """
+    for i, x in enumerate(array):
+        if x > target:
+            pass
+        else:
+            return i
+    return len(array)
 
 def get_radial_peak(averagedDensity, fargo_par):
     """ find peak in azimuthally-averaged density in the outer disk (i.e. the vortex) """
@@ -107,8 +115,8 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
 
     # Spot two threshold crossovers
 
-    left_edge = np.searchsorted(avg_density_sliver, threshold)
-    right_edge = len(theta) - np.searchsorted(avg_density_sliver[::-1], threshold) - 1
+    left_edge = my_searchsorted(avg_density_sliver, threshold)
+    right_edge = len(theta) - my_searchsorted(avg_density_sliver[::-1], threshold) - 1
 
     center = (left_edge + right_edge) / 2.0
 
