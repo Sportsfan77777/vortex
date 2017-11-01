@@ -88,7 +88,7 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 
 size = fargo_par["PSIZE"]
-size_label = util.get_label(size)
+size_label = util.get_size_label(size)
 
 ### Get Input Parameters ###
 
