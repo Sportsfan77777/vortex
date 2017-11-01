@@ -28,7 +28,7 @@ for key in cmaps:
 
 ### Input Parameters ###
 
-def new_argument_parser(description = "Plot gas density maps."):
+def new_argument_parser(description = "Plot azimuthal density profiles."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
