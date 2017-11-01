@@ -1,18 +1,27 @@
 """
-usage: makeGenericMovies.py [-h] [--dir DIRECTORY] [--type MOVIE_CHOICE]
-                            [--save_name MOVIE_NAME]
-                            [--range FILE_RANGE FILE_RANGE FILE_RANGE]
-                            [--fps FPS]
+usage: makeGenericMovies.py [-h] [--dir DIRECTORY]
+                            [--type {polarDensity,azimuthalDensity,density}]
+                            [--id NAME_ID] [-v VERSION]
+                            [--save_dir SAVE_DIRECTORY]
+                            [--save_name MOVIE_NAME] [--fps FPS]
+                            frames frames frames
+
+positional arguments:
+  frames                select frame range(start, end, rate)
 
 optional arguments:
   -h, --help            show this help message and exit
   --dir DIRECTORY       location of files and output (default: current)
-  --type MOVIE_CHOICE   select file prefix (choices: density (default),
-                        polarDensity)
+  --type {polarDensity,azimuthalDensity,density}
+                        select file prefix (default: density)
+  --id NAME_ID          id number for files -- useful for varying plot
+                        parameters (default: None)
+  -v VERSION            version number for files -- useful for varying plot
+                        parameters (default: None)
+  --save_dir SAVE_DIRECTORY
+                        location of files and output (default: current)
   --save_name MOVIE_NAME
                         select movie suffix (default: movie)
-  --range START_FRAME END_FRAME RATE
-                        range(start, end, rate) (default: [0, 100, 1])
   --fps FPS             movie frames per second (default: 5)
 """
 
@@ -41,11 +50,14 @@ def new_argument_parser(description = "Manage movie input parameters."):
     parser.add_argument('--dir', dest = "directory", default = ".",
                          help = 'location of files and output (default: current)')
     parser.add_argument('--type', dest = "movie_choice", default = "density", choices = movie_dictionary.keys(),
-                         help = 'select file prefix (choices: density (default), polarDensity)')
+                         help = 'select file prefix (default: density)')
     parser.add_argument('--id', dest = "name_id", type = int, default = None,
                          help = 'id number for files -- useful for varying plot parameters (default: None)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number for files -- useful for varying plot parameters (default: None)')
+
+    parser.add_argument('--save_dir', dest = "save_directory", default = ".",
+                         help = 'location of files and output (default: current)')
     parser.add_argument('--save_name', dest = "movie_name", default = "movie",
                          help = 'select movie suffix (default: movie)')
 
@@ -64,6 +76,8 @@ frame_range = range(start, end + 1, rate)
 
 # Files
 directory = args.directory
+save_directory = args.save_directory
+
 name = movie_dictionary[args.movie_choice]
 if args.version is not None:
    name = "v%04d_%s" % (args.version, name)
@@ -96,7 +110,7 @@ def make_movies():
     """ terminal ffmpeg command """
     ### Make Movie Command (Input: frames per second; path; output_name) ###
     path = "%s/tmp_%s%s.png" % (directory, base_name, "%04d")
-    output = "%s/%s.mp4" % (directory, movie_name)
+    output = "%s/%s.mp4" % (save_directory, movie_name)
 
     command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
     subprocess.Popen(command.split())
