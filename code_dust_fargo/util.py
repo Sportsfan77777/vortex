@@ -22,6 +22,14 @@ def get_pickled_parameters(directory = "."):
 
     return pickle.load(open(param_fn, "rb"))
 
+def get_size_label(size):
+    """ return label corresponding to size """
+    sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
+    size_labels = [r"$1$ $\rm{cm}$", r"$3$ $\rm{mm}$", r"$1$ $\rm{mm}$", r"$0.3$ $\rm{mm}$", r"$100$ $\rm{\mu m}$", r"$1$ $\rm{\mu m}$"]
+
+    arg_size = np.abs(sizes - size).argmin() # find closest size
+    return size_labels[arg_size]
+
 def find_max_frame():
     """ Get last orbit """
     fargo_fn = "fargo2D1D"
