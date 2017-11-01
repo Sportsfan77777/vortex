@@ -53,6 +53,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of profiles (default: 5)')
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 0.5,
                          help = 'number of scale heights (default: 0.5)')
+
+    parser.add_argument('--shift_off', dest = "center", action = 'store_false', default = True,
+                         help = 'do not center frame on vortex peak or middle (default: shift to center)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -114,6 +117,7 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
+center = args.center
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -187,10 +191,13 @@ def full_procedure(frame, show = False):
     """ Every Step """
 
     # Choose shift option
-    if fargo_par["MassTaper"] < 10.1:
-        shift_method = 'peak'
+    if center:
+        if fargo_par["MassTaper"] < 10.1:
+            shift_method = 'peak'
+        else:
+            shift_method = 'center'
     else:
-        shift_method = 'center'
+        shift_method = None
 
     density = read_data(frame)
     azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method, threshold = 5)
