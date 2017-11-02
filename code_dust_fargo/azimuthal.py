@@ -26,7 +26,8 @@ def get_radial_peak(averagedDensity, fargo_par):
 
     ########### Method ##############
     outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
-    peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start:])
+    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start : outer_disk_end])
 
     peak_index = outer_disk_start + peak_rad_outer_index
     peak_rad = rad[peak_index]
