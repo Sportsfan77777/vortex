@@ -159,7 +159,7 @@ def get_profiles(density, fargo_par, args, normalize = True, shift_method = None
 
     # Gather Azimuthal Profiles
     num_profiles = args.num_profiles
-    spread = args.num_scale_heights * (scale_height / 2.0)
+    spread = (args.num_scale_heights / 2.0) * scale_height
 
     azimuthal_radii = np.linspace(peak_rad - spread, peak_rad + spread, num_profiles)
     azimuthal_indices = [np.searchsorted(rad, this_radius) for this_radius in azimuthal_radii]

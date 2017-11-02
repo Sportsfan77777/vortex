@@ -51,8 +51,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
                          help = 'radial range in plot (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
-    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 0.5,
-                         help = 'number of scale heights (default: 0.5)')
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 1.0,
+                         help = 'number of scale heights (default: 1.0)')
 
     parser.add_argument('--shift_off', dest = "center", action = 'store_false', default = True,
                          help = 'do not center frame on vortex peak or middle (default: shift to center)')
