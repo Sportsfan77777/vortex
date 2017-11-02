@@ -26,7 +26,6 @@ optional arguments:
 """
 
 import os, shutil, subprocess
-import time
 import argparse
 
 ### Movie Options ###
@@ -113,7 +112,8 @@ def make_movies():
     output = "%s/%s.mp4" % (save_directory, movie_name)
 
     command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
-    subprocess.Popen(command.split())
+    process = subprocess.Popen(command.split())
+    process.wait()
 
 ###############################################################################
 
@@ -129,6 +129,5 @@ renumber(frame_range, new_range, base_path, base_name)
 make_movies()
 
 # Delete temporary files
-time.sleep(3) # 3 seconds --- (don't delete files before movie is created)
 delete_tmp_files(new_range, base_path, base_name)
 
