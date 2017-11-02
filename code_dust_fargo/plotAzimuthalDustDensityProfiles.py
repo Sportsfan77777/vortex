@@ -56,6 +56,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 
     parser.add_argument('--shift_off', dest = "center", action = 'store_false', default = True,
                          help = 'do not center frame on vortex peak or middle (default: shift to center)')
+    parser.add_argument('-t', dest = "threshold", type = float, default = 5,
+                         help = 'threshold for centering vortex with its center (default: 5)')
+
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -120,7 +123,9 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
+
 center = args.center
+threshold = args.threshold
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -218,7 +223,7 @@ def full_procedure(frame, show = False):
         shift_method = None
 
     density = read_data(frame)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method, threshold = 5)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method, threshold = threshold)
     make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
