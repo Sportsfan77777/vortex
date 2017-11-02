@@ -175,7 +175,7 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
 
     title = r"(t = %.1f orbits)" % (orbit)
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize)
+    plot.title("%s" % (title), fontsize = fontsize + 1)
 
     # Annotate Parameters
     line_x = 15.0; line_y = 0.93; linebreak = 0.07
