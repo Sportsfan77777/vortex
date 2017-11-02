@@ -178,14 +178,14 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     plot.title("%s" % (title), y = 1.01, fontsize = fontsize)
 
     # Annotate Parameters
-    line_x = 20.0; line_y = 0.92; linebreak = 0.06
+    line_x = 15.0; line_y = 0.93; linebreak = 0.07
 
     left1 = r"$M_p = %d$ $M_{Jup}$" % (planet_mass)
-    left2 = r"$\nu_{disk} = 10^{%d}$" % (np.log10(viscosity))
+    left2 = r"$\nu = 10^{%d}$" % (np.log10(viscosity))
     plot.text(line_x, line_y * plot.ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
     plot.text(line_x, (line_y - linebreak) * plot.ylim()[-1], left2, horizontalalignment = 'left', fontsize = fontsize)
 
-    right1 = r"$T_{growth} = %d$" % (taper)
+    right1 = r"$T_{growth} = %d$ $\rm{orbits}$" % (taper)
     right2 = r"$s$ = %s" % (size_label)
     plot.text(360 - line_x, line_y * plot.ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
     plot.text(360 - line_x, (line_y - linebreak) * plot.ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
