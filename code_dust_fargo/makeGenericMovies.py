@@ -64,6 +64,10 @@ def new_argument_parser(description = "Manage movie input parameters."):
     parser.add_argument('--fps', dest = "fps", type = int, default = 5,
                          help = 'movie frames per second (default: 5)')
 
+    # Speed up on El Gato
+    parser.add_argument('--fast_off', dest = "speed_up", action = 'store_false', default = True,
+                         help = 'speed up on elgato w/ x264 architecture (default: do it!)')
+
     return parser
 
 ## Parse Arguments ##
@@ -91,6 +95,9 @@ movie_name = name + args.movie_name
 # Movie Parameters
 fps = args.fps
 
+# Speed Parameter
+speed_up = args.speed_up
+
 ###############################################################################
 
 ### Helper Functions ###
@@ -115,6 +122,8 @@ def make_movies():
     output = "%s/%s.mp4" % (save_directory, movie_name)
 
     command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
+    if speed_up:
+       command += ' -c:v libx264 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"'
     process = subprocess.Popen(command.split())
     process.wait()
 
