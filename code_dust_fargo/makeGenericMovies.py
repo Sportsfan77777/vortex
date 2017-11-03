@@ -55,8 +55,8 @@ def new_argument_parser(description = "Manage movie input parameters."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number for files -- useful for varying plot parameters (default: None)')
 
-    parser.add_argument('--save_dir', dest = "save_directory", default = ".",
-                         help = 'location of files and output (default: current)')
+    parser.add_argument('--save_dir', dest = "save_directory", default = None,
+                         help = 'location of files and output (default: file directory)')
     parser.add_argument('--save_name', dest = "movie_name", default = "movie",
                          help = 'select movie suffix (default: movie)')
 
@@ -75,7 +75,10 @@ frame_range = range(start, end + 1, rate)
 
 # Files
 directory = args.directory
-save_directory = args.save_directory
+if args.save_directory is not None:
+   save_directory = args.save_directory
+else:
+   save_directory = directory
 
 name = movie_dictionary[args.movie_choice]
 if args.version is not None:
