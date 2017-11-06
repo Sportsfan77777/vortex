@@ -29,8 +29,8 @@ def get_pickled_parameters(directory = "."):
 def read_data(frame, fn, fargo_par, directory = "."):
     """ read data"""
     ######## Get Parameters #########
-    rad = fargo_par["rad"]
-    theta = fargo_par["theta"]
+    num_rad = fargo_par["Nrad"]
+    num_theta = fargo_par["Nsec"]
 
     ########### Method ##############
     # Dictionary
