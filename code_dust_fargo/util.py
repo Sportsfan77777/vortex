@@ -26,8 +26,13 @@ def get_pickled_parameters(directory = "."):
 
     return pickle.load(open(param_fn, "rb"))
 
-def read_data(frame, fn, directory = "."):
+def read_data(frame, fn, fargo_par, directory = "."):
     """ read data"""
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    ########### Method ##############
     # Dictionary
     basenames = {}
     basenames['gas'] = "gasdens%d.dat"; basenames['dust'] = "gasddens%d.dat"

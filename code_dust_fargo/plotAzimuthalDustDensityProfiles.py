@@ -215,7 +215,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 def full_procedure(frame, show = False):
     """ Every Step """
     # Read Data
-    density = util.read_data(frame, 'dust')
+    density = util.read_data(frame, 'dust', fargo_par)
 
     # Choose shift option
     if center:
@@ -225,7 +225,7 @@ def full_procedure(frame, show = False):
             src_density = np.copy(density)
         else:
             # smaller than mm-size
-            src_density = util.read_data(frame, 'dust', directory = "../mm-size")
+            src_density = util.read_data(frame, 'dust', fargo_par, directory = "../mm-size")
 
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
