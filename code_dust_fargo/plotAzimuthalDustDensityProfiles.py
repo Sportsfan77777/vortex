@@ -149,7 +149,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
+def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
@@ -158,6 +158,13 @@ def make_plot(frame, azimuthal_radii, azimuthal_profiles, show = False):
     x = theta * (180.0 / np.pi)
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
+
+    # Mark Planet
+    if shift is None:
+        planet_loc = theta[0]
+    else:
+        planet_loc = theta[shift]
+    plot.scatter(planet_loc, 0, c = "k", s = 100, marker = "D") # planet
 
     # Axes
     plot.xlim(0, 360)
@@ -229,7 +236,7 @@ def full_procedure(frame, show = False):
 
     density = util.read_data(frame, 'dust')
     azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
-    make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
+    make_plot(frame, shift_c, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
 

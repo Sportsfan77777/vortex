@@ -115,7 +115,6 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
     avg_density_sliver = np.roll(avg_density_sliver, shift_min)
 
     # Spot two threshold crossovers
-
     left_edge = my_searchsorted(avg_density_sliver, threshold)
     right_edge = len(theta) - my_searchsorted(avg_density_sliver[::-1], threshold) - 1
 
