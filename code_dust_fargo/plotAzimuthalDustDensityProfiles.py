@@ -15,7 +15,6 @@ from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
 from pylab import rcParams
-from pylab import fromfile
 
 import util
 import azimuthal as az

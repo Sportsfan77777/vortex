@@ -10,6 +10,8 @@ import pickle
 
 import numpy as np
 
+from pylab import fromfile
+
 from pickleParameters import pickle_parameter_dictionary
 
 #### Miscellaneous ####
