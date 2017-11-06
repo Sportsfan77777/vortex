@@ -56,8 +56,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 
     parser.add_argument('--shift_off', dest = "center", action = 'store_false', default = True,
                          help = 'do not center frame on vortex peak or middle (default: shift to center)')
-    parser.add_argument('-t', dest = "threshold", type = float, default = 5,
-                         help = 'threshold for centering vortex with its center (default: 5)')
+    parser.add_argument('-t', dest = "threshold", type = float, default = None,
+                         help = 'threshold for centering vortex with its center (default: varies with size)')
 
     
     # Plot Parameters (rarely need to change)
@@ -126,6 +126,8 @@ version = args.version
 
 center = args.center
 threshold = args.threshold
+if threshold is None:
+    util.get_threshold(size)
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -138,12 +140,6 @@ dpi = args.dpi
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
-
-### Helper Methods ###
-
-def read_data(frame):
-    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta)) * 100 # scale to gas density
-    return density
 
 ###############################################################################
 
@@ -215,15 +211,24 @@ def full_procedure(frame, show = False):
 
     # Choose shift option
     if center:
-        if fargo_par["MassTaper"] < 10.1:
-            shift_method = 'peak'
+        # Choose source
+        if size >= 0.01:
+            # mm-size or larger
+            src_density = np.copy(density)
         else:
-            shift_method = 'center'
-    else:
-        shift_method = None
+            # smaller than mm-size
+            src_density = util.read_data(frame, 'dust', directory = "../mm-size")
 
-    density = read_data(frame)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift_method = shift_method, threshold = threshold)
+        # Center vortex
+        if fargo_par["MassTaper"] < 10.1:
+            shift_c = az.get_azimuthal_peak(src_density, fargo_par)
+        else:
+            shift_c = az.get_azimuthal_center(src_density, fargo_par, threshold = threshold)
+    else:
+        shift_c = None
+
+    density = util.read_data(frame, 'dust')
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
     make_plot(frame, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####

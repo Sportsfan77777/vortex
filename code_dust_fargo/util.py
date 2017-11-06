@@ -24,9 +24,15 @@ def get_pickled_parameters(directory = "."):
 
     return pickle.load(open(param_fn, "rb"))
 
-def read_data(frame, directory = "."):
+def read_data(frame, fn, directory = "."):
     """ read data"""
-    density = (fromfile("%s/gasddens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) * 100 # scale to gas density
+    # Dictionary
+    basenames = {}
+    basenames['gas'] = "gasdens%d.dat"; basenames['dust'] = "gasddens%d.dat"
+
+    # Specific Data
+    basename = basenames[fn] % frame
+    density = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta)) * 100 # scale to gas density
     return density
 
 def get_size_label(size):
