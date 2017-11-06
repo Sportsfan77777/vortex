@@ -162,8 +162,8 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     if shift is None:
         planet_loc = theta[0]
     else:
-        planet_loc = theta[shift]
-    plot.scatter(planet_loc, 0, c = "k", s = 100, marker = "D") # planet
+        planet_loc = theta[shift] * (180.0 / np.pi)
+    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
 
     # Axes
     plot.xlim(0, 360)
@@ -173,6 +173,8 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 
     if max_y is not None:
         plot.ylim(0, max_y)
+    else:
+        plot.ylim(0, plot.ylim()[-1])
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
