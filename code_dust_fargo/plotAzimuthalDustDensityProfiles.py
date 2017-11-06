@@ -215,6 +215,8 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 
 def full_procedure(frame, show = False):
     """ Every Step """
+    # Read Data
+    density = util.read_data(frame, 'dust')
 
     # Choose shift option
     if center:
@@ -234,7 +236,7 @@ def full_procedure(frame, show = False):
     else:
         shift_c = None
 
-    density = util.read_data(frame, 'dust')
+    # Get and plot profiles
     azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
     make_plot(frame, shift_c, azimuthal_radii, azimuthal_profiles, show = show)
 
