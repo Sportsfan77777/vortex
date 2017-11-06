@@ -129,7 +129,7 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
 
 ### Data ###
 
-def get_profiles(density, fargo_par, args, normalize = True, shift_method = None, threshold = 5):
+def get_profiles(density, fargo_par, args, normalize = True, shift = None):
     """ Gather azimuthal radii and profiles """
     
     ######## Get Parameters #########
@@ -144,13 +144,7 @@ def get_profiles(density, fargo_par, args, normalize = True, shift_method = None
     if normalize:
         density /= surface_density_zero
 
-    if shift_method is not None:
-        if shift_method == 'center':
-            # Use middle of the vortex as the center
-            shift_c = get_azimuthal_center(density, fargo_par, threshold = threshold)
-        else:
-            # Use density peak of the vortex as the center
-            shift_c = get_azimuthal_peak(density, fargo_par)
+    if shift is not None:
         density = np.roll(density, shift_c)
 
     # Find Peak in Radial Profile (in Outer Disk)
