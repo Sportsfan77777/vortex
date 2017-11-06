@@ -24,6 +24,11 @@ def get_pickled_parameters(directory = "."):
 
     return pickle.load(open(param_fn, "rb"))
 
+def read_data(frame, directory = "."):
+    """ read data"""
+    density = (fromfile("%s/gasddens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) * 100 # scale to gas density
+    return density
+
 def get_size_label(size):
     """ return label corresponding to size """
     sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
@@ -31,6 +36,15 @@ def get_size_label(size):
 
     arg_size = np.abs(sizes - size).argmin() # find closest size
     return size_labels[arg_size]
+
+def get_threshold(size):
+    """ return label corresponding to size """
+    ######## abstract this into a new method that takes an array as input!!!!!! ############
+    sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001]) 
+    thresholds = [5, 5, 2.5, 2, 2, 2]
+
+    arg_size = np.abs(sizes - size).argmin() # find closest size
+    return thresholds[arg_size]
 
 def find_max_frame():
     """ Get last orbit """
