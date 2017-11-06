@@ -31,8 +31,9 @@ import argparse
 from pylab import fromfile
 
 import util
+import azimuthal
 
-directories = ["cm", "hcm", "mm", "hmm", "hum", "um"]
+size_names = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
 
 ### Input Parameters ###
@@ -127,76 +128,25 @@ density_unit = mass_unit / radius_unit**2 # unit conversion factor
 
 ###############################################################################
 
-### Helper Functions ###
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
-def find_peak(density):
-    """ return shift needed to shift vortex peak to 180 degrees """
-    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
-    density_segment = density[outer_disk_start : outer_disk_end]
-
-    argmax = np.argmax(density_segment)
-    arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
-
-    ### Calculate shift for true center to 180 degrees ###
-    middle = np.searchsorted(theta, np.pi)
-    shift_peak = int(middle - arg_phi)
-
-    return shift_peak
-
-def find_center(density, threshold_value = 0.05):
-    """ return shift needed to shift vortex center to 180 degrees """
-    ### Identify center using threshold ###
-    # Search outer disk only
-    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
-    density_segment = density[outer_disk_start : outer_disk_end]
-
-    # Get peak in azimuthal profile
-    avg_density = np.average(density_segment, axis = 1) # avg over theta
-    segment_arg_peak = np.argmax(avg_density)
-    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
-    peak_rad = rad[arg_peak]
-
-    # Zoom in on peak --- Average over half a scale height
-    half_width = 0.25 * scale_height
-    zoom_start = np.searchsorted(rad, peak_rad - half_width)
-    zoom_end = np.searchsorted(rad, peak_rad + half_width)
-
-    density_sliver = density[zoom_start : zoom_end]
-    avg_density_sliver = np.average(density_sliver, axis = 0) # avg over rad
-
-    # Move Minimum to Zero Degrees (vortex cannot cross zero)
-    arg_min = np.argmin(avg_density_sliver)
-    shift_min = int(0 - arg_min)
-    avg_density_sliver = np.roll(avg_density_sliver, shift_min)
-
-    # Spot two threshold crossovers
-    threshold = threshold_value * surface_density_zero
-
-    left_edge = np.searchsorted(avg_density_sliver, threshold)
-    right_edge = len(theta) - np.searchsorted(avg_density_sliver[::-1], threshold) - 1
-
-    center = (left_edge + right_edge) / 2.0
-
-    ### Calculate shift for true center to 180 degrees ###
-    middle = np.searchsorted(theta, np.pi)
-    shift_c = int(middle - (center - shift_min))
-
-    return shift_c
+fargo_par["new_num_rad"] = new_num_rad; fargo_par["new_num_theta"] = new_num_theta
+fargo_par["new_r_min"] = new_r_min; fargo_par["new_r_max"] = new_r_max
 
 ###############################################################################
 
 ### Task Functions ###
 
-def retrieve_density(frame, directories):
+def retrieve_density(frame, size_names):
     """ Step 0: Retrieve density """
     density = np.zeros((num_rad, num_theta, len(sizes)))
     starting_sizes = sizes
 
-    for i, directory in enumerate(directories):
-        fn_i = "../%s-size/gasddens%d.dat" % (directory, frame)
-        density[:, :, i] = fromfile(fn_i).reshape(num_rad, num_theta)
+    for i, size_name in enumerate(size_names):
+        directory = "../%s-size/" % size_name
+        density[:, :, i] = util.read_data(frame, 'dust', fargo_par, directory = directory)
 
     return density, starting_sizes
 
@@ -218,20 +168,20 @@ def center_vortex(density):
     if massTaper < 10.1:
         # Shift cm, hcm, mm separately
         density_cm = density[:, :, 0]
-        shift_cm = find_peak(density_cm)
+        shift_cm = az.find_peak(density_cm)
         density[:, :, 0] = np.roll(density_cm, shift_cm, axis = 1)
 
         density_hcm = density[:, :, 1]
-        shift_hcm = find_peak(density_hcm)
+        shift_hcm = az.find_peak(density_hcm)
         density[:, :, 1] = np.roll(density_hcm, shift_hcm, axis = 1)
 
         density_mm = density[:, :, 2]
-        shift_mm = find_peak(density_mm)
+        shift_mm = az.find_peak(density_mm)
         density[:, :, 2:] = np.roll(density[:, :, 2:], shift_mm, axis = 1)
 
         # Use hmm for the rest
         density_hmm = density[:, :, 3]
-        shift_hmm = find_peak(density_hmm)
+        shift_hmm = az.find_peak(density_hmm)
         density[:, :, 3:] = np.roll(density[:, :, 3:], shift_hmm, axis = 1)
 
         return density
@@ -358,7 +308,7 @@ def save_id_parameters():
 
 def full_procedure(frame):
     """ Every Step """
-    density, sizes = retrieve_density(frame, directories)
+    density, sizes = retrieve_density(frame, size_names)
 
     density, sizes = polish(density, sizes)
     density = center_vortex(density)
