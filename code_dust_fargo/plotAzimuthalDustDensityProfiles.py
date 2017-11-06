@@ -223,11 +223,12 @@ def full_procedure(frame, show = False):
     if center:
         # Choose source
         if size >= 0.01:
-            # mm-size or larger
+            # hum-size or larger
             src_density = np.copy(density)
         else:
-            # smaller than mm-size
-            src_density = util.read_data(frame, 'dust', fargo_par, directory = "../mm-size")
+            # smaller than hmm-size (right now micron only)
+            hmm_directory = "/rsgrps/kkratterstudents/mhammer/fargo_tests/fargoDUST/one_jupiter_old/half-mm-size/no_diffusion/taper%d" % taper
+            src_density = util.read_data(frame, 'dust', fargo_par, directory = hmm_directory)
 
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
