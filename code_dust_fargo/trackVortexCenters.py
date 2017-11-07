@@ -134,7 +134,7 @@ def angle_difference(angles1, angles2):
 
     # Correct for angle pairs on opposite sides of zero
     angle_diff[angle_diff > 180] -= 360
-    angle_diff[angle_diff < 180] += 360
+    angle_diff[angle_diff < -180] += 360
 
     return angle_diff
 
