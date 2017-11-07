@@ -128,6 +128,16 @@ def get_center(density, fargo_par, size):
     
     return theta_c
 
+def angle_difference(angles1, angles2):
+    """ return difference between two arrays of angles """
+    angle_diff = angles1 - angles2
+
+    # Correct for angle pairs on opposite sides of zero
+    angle_diff[angle_diff > 180] -= 360
+    angle_diff[angle_diff < 180] += 360
+
+    return angle_diff
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -136,7 +146,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-def make_plot():
+def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
@@ -144,9 +154,9 @@ def make_plot():
     ### Line Plot ###
     reference = np.array(center_arrays["hcm"])
 
-    for i, size_name in enumerate(size_name):
+    for i, size_name in enumerate(size_names):
         x = frame_range
-        y = np.array(center_arrays[size_name]) - reference
+        y = angle_difference(np.array(center_arrays[size_name]), reference)
         plot.plot(x, y, c = colors[i], linewidth = linewidth, label = util.get_label(sizes[i]))
 
     # Annotate Axes
@@ -181,7 +191,7 @@ def start():
     for i, size_name in enumerate(size_names):
         center_arrays[size_name] = mp_array('d', len(frame_range))
 
-def full_procedure(frame, show = False):
+def full_procedure(frame):
     """ Every Step """
 
     for i, size_name in enumerate(size_names):
