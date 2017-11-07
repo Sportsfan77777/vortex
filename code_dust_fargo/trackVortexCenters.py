@@ -157,7 +157,7 @@ def make_plot(show = False):
     for i, size_name in enumerate(size_names):
         x = frame_range
         y = angle_difference(np.array(center_arrays[size_name]), reference)
-        plot.plot(x, y, c = colors[i], linewidth = linewidth, label = util.get_label(sizes[i]))
+        plot.plot(x, y, c = colors[i], linewidth = linewidth, label = util.get_size_label(sizes[i]))
 
     # Annotate Axes
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
