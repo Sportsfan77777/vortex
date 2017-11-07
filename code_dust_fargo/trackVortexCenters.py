@@ -164,7 +164,7 @@ def make_plot(show = False):
     plot.ylabel(r"$\phi$", fontsize = fontsize)
     plot.title("Vortex Centers")
 
-    plot.legend(loc = "upper right")
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
     # Axes
     plot.xlim(frame_range[0], frame_range[-1])

@@ -11,6 +11,7 @@ import math
 import numpy as np
 
 import matplotlib
+#matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -38,7 +39,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensity",
-                         help = 'save directory (default: gasDensityMaps)')
+                         help = 'save directory (default: azimuthalDensity)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -126,7 +127,7 @@ version = args.version
 center = args.center
 threshold = args.threshold
 if threshold is None:
-    util.get_threshold(size)
+    threshold = util.get_threshold(size)
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -199,7 +200,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     plot.text(360 - line_x, line_y * plot.ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
     plot.text(360 - line_x, (line_y - linebreak) * plot.ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot)
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
     # Save, Show, and Close
     if version is None:
@@ -213,6 +214,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 
     plot.close(fig) # Close Figure (to avoid too many figures)
 
+###############################################################################
 
 def full_procedure(frame, show = False):
     """ Every Step """
@@ -222,13 +224,18 @@ def full_procedure(frame, show = False):
     # Choose shift option
     if center:
         # Choose source
-        if size >= 0.01:
+        if taper < 10.1:
+            src_density = np.copy(density)
+        elif size >= 0.01:
             # hum-size or larger
             src_density = np.copy(density)
         else:
             # smaller than hmm-size (right now micron only)
             hmm_directory = "/rsgrps/kkratterstudents/mhammer/fargo_tests/fargoDUST/one_jupiter_old/half-mm-size/no_diffusion/taper%d" % taper
             src_density = util.read_data(frame, 'dust', fargo_par, directory = hmm_directory)
+
+            ##### Set threshold here!!!! ####
+            threshold = util.get_threshold(0.01)
 
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
