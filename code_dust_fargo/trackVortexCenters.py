@@ -74,14 +74,8 @@ args = new_argument_parser().parse_args()
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
+frame_range = range(start, end + 1, rate)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -120,10 +114,14 @@ def get_fargo_par(directory):
 
 def get_frame_index(frame):
     """ return array index corresponding to frame """
-    return np.searchshorted(frame_range, frame)
+    return np.searchsorted(frame_range, frame)
 
 def get_center(density, fargo_par, size):
-    """ return theta for vortex center (in degrees) """ 
+    """ return theta for vortex center (in degrees) """
+    ######## Get Parameters #########
+    theta = fargo_par["theta"]
+
+    ########### Method ############## 
     threshold = util.get_threshold(size)
     shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
     theta_c = theta[shift_c] * (180.0 / np.pi)
@@ -194,7 +192,7 @@ def full_procedure(frame, show = False):
         density = util.read_data(frame, 'dust', fargo_par_i, directory = directory)
 
         frame_i = get_frame_index(frame)
-        (center_arrays[size_name])[frame_i] = get_center(density, fargo_par, sizes[i])
+        (center_arrays[size_name])[frame_i] = get_center(density, fargo_par_i, sizes[i])
 
 ##### Gather Data! #####
 
