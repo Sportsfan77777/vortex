@@ -226,22 +226,24 @@ def full_procedure(frame, show = False):
         # Choose source
         if taper < 10.1:
             src_density = np.copy(density)
+            this_threshold = threshold
         elif size >= 0.01:
             # hum-size or larger
             src_density = np.copy(density)
+            this_threshold = threshold
         else:
             # smaller than hmm-size (right now micron only)
             hmm_directory = "/rsgrps/kkratterstudents/mhammer/fargo_tests/fargoDUST/one_jupiter_old/half-mm-size/no_diffusion/taper%d" % taper
             src_density = util.read_data(frame, 'dust', fargo_par, directory = hmm_directory)
 
             ##### Set threshold here!!!! ####
-            threshold = util.get_threshold(0.01)
+            this_threshold = util.get_threshold(0.01)
 
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
             shift_c = az.get_azimuthal_peak(src_density, fargo_par)
         else:
-            shift_c = az.get_azimuthal_center(src_density, fargo_par, threshold = threshold)
+            shift_c = az.get_azimuthal_center(src_density, fargo_par, threshold = this_threshold)
     else:
         shift_c = None
 
