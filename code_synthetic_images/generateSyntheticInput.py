@@ -146,7 +146,7 @@ def retrieve_density(frame, size_names):
 
     for i, size_name in enumerate(size_names):
         directory = "../%s-size/" % size_name
-        density[:, :, i] = util.read_dust_data(frame, fargo_par, directory = directory)
+        density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory)
 
     return density, starting_sizes
 
@@ -172,8 +172,9 @@ def center_vortex(density):
         return density
 
     elif massTaper > 999.9:
-        for i, size_name in enumerate(size_names):
-            shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par)
+        for i, size in enumerate(sizes):
+            threshold = util.get_threshold(size) * surface_density_zero
+            shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par, threshold = threshold)
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
