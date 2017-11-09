@@ -42,7 +42,7 @@ def read_data(frame, fn, fargo_par, directory = "."):
     density = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta))
     return density
 
-def read_gas_data(frame, fargo_par, normalize = True, directory = None):
+def read_gas_data(frame, fargo_par, normalize = True, directory = "."):
     """ read dust data """
     ######## Get Parameters #########
     surface_density_zero = fargo_par["Sigma0"]
@@ -53,7 +53,7 @@ def read_gas_data(frame, fargo_par, normalize = True, directory = None):
         data /= surface_density_zero
     return data
 
-def read_dust_data(frame, fargo_par, normalize = True, directory = None):
+def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
     """ read dust data """
     ######## Get Parameters #########
     surface_density_zero = fargo_par["Sigma0"]
