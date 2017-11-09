@@ -128,7 +128,7 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
 
 ### Data ###
 
-def get_profiles(density, fargo_par, args, normalize = True, shift = None):
+def get_profiles(density, fargo_par, args, normalize = False, shift = None):
     """ Gather azimuthal radii and profiles """
     
     ######## Get Parameters #########
@@ -144,7 +144,7 @@ def get_profiles(density, fargo_par, args, normalize = True, shift = None):
         density /= surface_density_zero
 
     if shift is not None:
-        density = np.roll(density, shift)
+        density = np.roll(density, shift, axis = -1)
 
     # Find Peak in Radial Profile (in Outer Disk)
     averagedDensity = np.average(density, axis = 1)

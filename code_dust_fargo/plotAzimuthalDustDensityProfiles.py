@@ -223,6 +223,7 @@ def full_procedure(frame, show = False):
 
     # Choose shift option
     if center:
+        """
         # Choose source
         if taper < 10.1:
             src_density = np.copy(density)
@@ -238,12 +239,13 @@ def full_procedure(frame, show = False):
 
             ##### Set threshold here!!!! ####
             this_threshold = util.get_threshold(0.01)
+        """
 
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
-            shift_c = az.get_azimuthal_peak(src_density, fargo_par)
+            shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
-            shift_c = az.get_azimuthal_center(src_density, fargo_par, threshold = this_threshold)
+            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
     else:
         shift_c = None
 
