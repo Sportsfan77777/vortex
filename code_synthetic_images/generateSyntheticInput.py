@@ -77,7 +77,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
 args = new_argument_parser().parse_args()
 
 ### Get FARGO Parameters ###
-directory = "../%s-size" % directories[0]
+directory = "../%s-size" % size_names[0]
 fargo_par = util.get_pickled_parameters(directory = directory) # Retrieve parameters from *.par file
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
