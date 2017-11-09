@@ -146,7 +146,7 @@ def retrieve_density(frame, size_names):
 
     for i, size_name in enumerate(size_names):
         directory = "../%s-size/" % size_name
-        density[:, :, i] = util.read_data(frame, 'dust', fargo_par, directory = directory)
+        density[:, :, i] = util.read_dust_data(frame, fargo_par, directory = directory)
 
     return density, starting_sizes
 
@@ -177,7 +177,7 @@ def center_vortex(density):
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
-def resample(density, new_num_rad = 300, new_num_theta = 400):
+def resample(density, new_num_rad = 400, new_num_theta = 400):
     """ Step 3: lower resolution (makes txt output smaller) """
 
     new_density = np.zeros((new_num_rad, new_num_theta, len(sizes)))
