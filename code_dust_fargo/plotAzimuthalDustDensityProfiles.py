@@ -219,7 +219,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 def full_procedure(frame, show = False):
     """ Every Step """
     # Read Data
-    density = util.read_data(frame, 'dust', fargo_par)
+    density = util.read_dust_data(frame, fargo_par)
 
     # Choose shift option
     if center:
@@ -227,14 +227,14 @@ def full_procedure(frame, show = False):
         if taper < 10.1:
             src_density = np.copy(density)
             this_threshold = threshold
-        elif size >= 0.01:
-            # hum-size or larger
+        elif taper > 999.9:
+            # hum-size or larger (for now, T = 1000)
             src_density = np.copy(density)
             this_threshold = threshold
         else:
             # smaller than hmm-size (right now micron only)
             hmm_directory = "/rsgrps/kkratterstudents/mhammer/fargo_tests/fargoDUST/one_jupiter_old/half-mm-size/no_diffusion/taper%d" % taper
-            src_density = util.read_data(frame, 'dust', fargo_par, directory = hmm_directory)
+            src_density = util.read_dust_data(frame, fargo_par, directory = hmm_directory)
 
             ##### Set threshold here!!!! ####
             this_threshold = util.get_threshold(0.01)

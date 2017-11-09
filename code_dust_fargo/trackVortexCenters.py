@@ -199,7 +199,7 @@ def full_procedure(frame):
         fargo_par_i = get_fargo_par(directory)
 
         util.get_pickled_parameters(directory = directory)
-        density = util.read_data(frame, 'dust', fargo_par_i, directory = directory)
+        density = util.read_dust_data(frame, fargo_par_i, directory = directory)
 
         frame_i = get_frame_index(frame)
         (center_arrays[size_name])[frame_i] = get_center(density, fargo_par_i, sizes[i])
