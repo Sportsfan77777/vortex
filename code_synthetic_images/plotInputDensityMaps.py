@@ -64,8 +64,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "inputDensityMaps",
+                         help = 'save directory (default: inputDensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -75,6 +75,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
+                         help = 're-sample resolution (default: [400, 400])')
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
     
