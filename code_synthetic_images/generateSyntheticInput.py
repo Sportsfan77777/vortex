@@ -88,7 +88,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 massTaper = fargo_par["MassTaper"]
 scale_height = fargo_par["AspectRatio"]
-surface_density_zero = fargo_par["Sigma0"]
+surface_density_zero = fargo_par["Sigma0"] / 100.0
 
 ### Get Input Parameters ###
 
