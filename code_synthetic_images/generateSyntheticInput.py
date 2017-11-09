@@ -166,24 +166,9 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
 def center_vortex(density):
     """ Step 2: center the vortex so that the peak is at 180 degrees """
     if massTaper < 10.1:
-        # Shift cm, hcm, mm separately
-        density_cm = density[:, :, 0]
-        shift_cm = az.find_peak(density_cm)
-        density[:, :, 0] = np.roll(density_cm, shift_cm, axis = 1)
-
-        density_hcm = density[:, :, 1]
-        shift_hcm = az.find_peak(density_hcm)
-        density[:, :, 1] = np.roll(density_hcm, shift_hcm, axis = 1)
-
-        density_mm = density[:, :, 2]
-        shift_mm = az.find_peak(density_mm)
-        density[:, :, 2:] = np.roll(density[:, :, 2:], shift_mm, axis = 1)
-
-        # Use hmm for the rest
-        density_hmm = density[:, :, 3]
-        shift_hmm = az.find_peak(density_hmm)
-        density[:, :, 3:] = np.roll(density[:, :, 3:], shift_hmm, axis = 1)
-
+        for i in len(sizes):
+            shift_i = az.find_peak(density[:, :, i])
+            density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
     elif massTaper > 999.9:
@@ -191,8 +176,9 @@ def center_vortex(density):
         density_hcm = density[:, :, 1]
         shift_hcm = find_center(density_hcm)
 
-        ### Return Shifted Density at All Sizes ###
-        density = np.roll(density, shift_hcm, axis = 1)
+        for i, size_name in enumerate(size_names):
+            shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par)
+            density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
 def resample(density, new_num_rad = 300, new_num_theta = 400):
