@@ -31,7 +31,7 @@ import argparse
 from pylab import fromfile
 
 import util
-import azimuthal
+import azimuthal as az
 
 size_names = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
