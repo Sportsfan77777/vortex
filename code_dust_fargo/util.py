@@ -76,7 +76,7 @@ def get_threshold(size):
     """ return label corresponding to size """
     ######## abstract this into a new method that takes an array as input!!!!!! ############
     sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001]) 
-    thresholds = [5.0, 5.0, 2.0, 1.5, 1.5, 1.3]
+    thresholds = [10.0, 5.0, 2.0, 1.5, 1.5, 1.3]
 
     arg_size = np.abs(sizes - size).argmin() # find closest size
     return thresholds[arg_size]
