@@ -163,6 +163,8 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     if shift is None:
         planet_loc = theta[0]
     else:
+        if shift < -len(theta):
+            shift += len(theta)
         planet_loc = theta[shift] * (180.0 / np.pi)
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
 
