@@ -172,10 +172,6 @@ def center_vortex(density):
         return density
 
     elif massTaper > 999.9:
-        # Use hcm-size only
-        density_hcm = density[:, :, 1]
-        shift_hcm = find_center(density_hcm)
-
         for i, size_name in enumerate(size_names):
             shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par)
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
