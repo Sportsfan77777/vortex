@@ -224,14 +224,14 @@ def interpolate_density(density, num_grains):
 
     interpolated_density = power_law[None, :] * unweighted_interpolated_density
 
-    return interpolated_density
+    return interpolated_density, interpolated_sizes
 
 def convert_units(density):
     """ Step 5: convert density from code units to cgs units """
     density *= density_unit
     return density
 
-def generate_secondary_files(rad, theta, sizes):
+def generate_secondary_files(rad, theta, new_sizes):
     """ Step 6: write other *.dat files + make opacities """
 
     def temperature(R):
@@ -248,7 +248,7 @@ def generate_secondary_files(rad, theta, sizes):
     # Save Files
     np.savetxt("%s/radial.dat" % save_directory, rad * radius_unit)
     np.savetxt("%s/azimuthal.dat" % save_directory, theta)
-    np.savetxt("%s/grain.dat" % save_directory, sizes)
+    np.savetxt("%s/grain.dat" % save_directory, new_sizes)
     np.savetxt("%s/temperature.dat" % save_directory, temperatures)
 
     # Make Opacities
@@ -296,13 +296,13 @@ def full_procedure(frame):
     density, sizes = polish(density, sizes)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
-    density = interpolate_density(density, num_grains)
+    density, new_sizes = interpolate_density(density, num_grains)
     density = convert_units(density)
     output_density_txt(density, frame)
     output_density_pickle(density, frame)
 
     if frame == frame_range[0]:
-        generate_secondary_files(new_rad, new_theta, sizes)
+        generate_secondary_files(new_rad, new_theta, new_sizes)
         save_id_parameters()
 
 ###############################################################################
