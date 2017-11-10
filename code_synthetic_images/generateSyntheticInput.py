@@ -271,7 +271,7 @@ def output_density_pickle(density, frame):
 
 def save_id_parameters():
     """ Step 9: Save parameters associated with this id number """
-    id_par = fargo_par
+    id_par = fargo_par.copy()
 
     id_par["id"] = id_number
 
