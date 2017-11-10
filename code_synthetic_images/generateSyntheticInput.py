@@ -145,7 +145,7 @@ def retrieve_density(frame, size_names):
     starting_sizes = sizes
 
     for i, size_name in enumerate(size_names):
-        directory = "../%s-size/" % size_name
+        directory = "../%s-size" % size_name
         density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory)
 
     return density, starting_sizes
