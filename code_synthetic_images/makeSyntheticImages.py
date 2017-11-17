@@ -11,7 +11,7 @@ Does
 (2b) Delete tmp%04d % frame directory
 """
 
-import sys, os, subprocess
+import sys, os, subprocess, shutil
 import pickle, glob
 from multiprocessing import Pool
 import argparse
@@ -103,7 +103,8 @@ def setup_tmp_directory(frame):
 
     # Make Directory
     tmp_dir = "tmp%04d" % frame
-    os.mkdir(tmp_dir)
+    if not os.path.isdir(tmp_dir):
+        os.mkdir(tmp_dir)
 
     # Files to move
     necessary_files = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
