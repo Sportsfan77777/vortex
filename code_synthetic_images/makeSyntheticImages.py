@@ -140,7 +140,7 @@ def make_synthetic_image(tmp_dir, frame):
 
     # Chmod + Execute
     exe = "./disk_mm"
-    os.chmod(exe, os.stat('somefile').st_mode | stat.S_IEXEC) # make executable
+    os.chmod(exe, os.stat(exe).st_mode | stat.S_IEXEC) # make executable
     os.system(exe)
 
     # Move output
