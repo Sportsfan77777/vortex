@@ -11,7 +11,7 @@ Does
 (2b) Delete tmp%04d % frame directory
 """
 
-import sys, os, subprocess, shutil
+import sys, os, stat, subprocess, shutil
 import pickle, glob
 from multiprocessing import Pool
 import argparse
@@ -138,8 +138,9 @@ def make_synthetic_image(tmp_dir, frame):
     cwd = os.getcwd()
     os.chdir(tmp_dir)
 
-    # Execute
+    # Chmod + Execute
     exe = "./disk_mm"
+    os.chmod(exe, os.stat('somefile').st_mode | stat.S_IEXEC) # make executable
     os.system(exe)
 
     # Move output
