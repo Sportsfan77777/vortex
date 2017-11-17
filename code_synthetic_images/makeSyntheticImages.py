@@ -73,7 +73,7 @@ id_number = args.id_number
 
 save_directory = args.save_directory
 if save_directory is None:
-	save_directory = "lambda%04d" % args.wavelength # default directory
+    save_directory = "lambda%04d" % args.wavelength # default directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
@@ -82,72 +82,71 @@ if not os.path.isdir(save_directory):
 ### Task Functions ###
 
 def write_parameters():
-	""" Step 0: Write synthetic image parameters to file """
+    """ Step 0: Write synthetic image parameters to file """
 
-	# Five Parameters
-	stellar_radius = args.radius # in cm
-	stellar_temperature = args.temperature # in K
-	wavelength = args.wavelength # in um
-	inclination = args.inclination
-	distance = args.distance # in pc
+    # Five Parameters
+    stellar_radius = args.radius # in cm
+    stellar_temperature = args.temperature # in K
+    wavelength = args.wavelength # in um
+    inclination = args.inclination
+    distance = args.distance # in pc
 
-	# Write to File
-	txt = "%.1e\n%d\n%.1f\n%1.f\n%d" % (stellar_radius, stellar_temperature, wavelength, inclination, distance)
-	fn = "parameters.dat"
-	with open(fn, "w") as f:
-		f.write(txt)
+    # Write to File
+    txt = "%.1e\n%d\n%.1f\n%1.f\n%d" % (stellar_radius, stellar_temperature, wavelength, inclination, distance)
+    fn = "parameters.dat"
+    with open(fn, "w") as f:
+        f.write(txt)
 
 def setup_tmp_directory(frame):
-	""" Step 1: Make tmp directory """
-	cwd = os.getcwd()
+    """ Step 1: Make tmp directory """
+    cwd = os.getcwd()
 
-	# Make Directory
-	random_number = random.randint(0, 999999)
-	tmp_dir = "tmp%04d" % frame
-	os.mkdir(tmp_dir)
+    # Make Directory
+    tmp_dir = "tmp%04d" % frame
+    os.mkdir(tmp_dir)
 
-	# Files to move
-	necessary_files = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
-	opacity_files = glob.glob("dustkappa_*.inp")
-	density_file = "i%04d_gasddens%d.dat" % (id_number, frame)
+    # Files to move
+    necessary_files = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
+    opacity_files = glob.glob("dustkappa_*.inp")
+    density_file = "i%04d_gasddens%d.dat" % (id_number, frame)
 
-	# Fill it with necessary files
-	os.chdir(tmp_dir)
-	for necessary_file in necessary_files:
-		os.symlink("../%s" % necessary_file, necessary_file)
+    # Fill it with necessary files
+    os.chdir(tmp_dir)
+    for necessary_file in necessary_files:
+        os.symlink("../%s" % necessary_file, necessary_file)
 
-	# Fill it with opacity files	
-	for opacity_file in opacity_files:
-		os.symlink("../%s" % opacity_file, opacity_file)
+    # Fill it with opacity files    
+    for opacity_file in opacity_files:
+        os.symlink("../%s" % opacity_file, opacity_file)
 
-	# Fill it with density file
-	density_name = "sigmadust.dat"
-	os.symlink("../%s" % density_file, density_name)
+    # Fill it with density file
+    density_name = "sigmadust.dat"
+    os.symlink("../%s" % density_file, density_name)
 
-	# Copy executable
-	exe = "disk_mm"
-	shutil.copyfile("../%s" % exe, exe)
+    # Copy executable
+    exe = "disk_mm"
+    shutil.copyfile("../%s" % exe, exe)
 
-	os.chdir(cwd)
-	return tmp_dir
+    os.chdir(cwd)
+    return tmp_dir
 
 def make_synthetic_image(tmp_dir):
-	""" Step 2: Execute code, move output, delete tmp directory """
-	cwd = os.getcwd()
-	os.chdir(tmp_dir)
+    """ Step 2: Execute code, move output, delete tmp directory """
+    cwd = os.getcwd()
+    os.chdir(tmp_dir)
 
-	# Execute
-	exe = "./disk_mm"
-	os.system(exe)
+    # Execute
+    exe = "./disk_mm"
+    os.system(exe)
 
-	# Move output
-	output = "intensitymap.out"
-	output_name = "i%04d_intensity%04d.dat" % (id_number, frame)
-	target = "../%s/" % (save_directory, output_name)
+    # Move output
+    output = "intensitymap.out"
+    output_name = "i%04d_intensity%04d.dat" % (id_number, frame)
+    target = "../%s/" % (save_directory, output_name)
 
     # Delete tmp dir
-	os.chdir(cwd)
-	shutil.rmtree(tmp_dir)
+    os.chdir(cwd)
+    shutil.rmtree(tmp_dir)
 
 def full_procedure(frame):
     """ Every Step """
