@@ -103,8 +103,10 @@ def setup_tmp_directory(frame):
 
     # Make Directory
     tmp_dir = "tmp%04d" % frame
-    if not os.path.isdir(tmp_dir):
-        os.mkdir(tmp_dir)
+    if os.path.isdir(tmp_dir):
+        # make sure tmp_dir doesn't exist
+        shutil.rmtree(tmp_dir)
+    os.mkdir(tmp_dir)
 
     # Files to move
     necessary_files = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
