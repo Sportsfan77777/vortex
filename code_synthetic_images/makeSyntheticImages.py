@@ -147,6 +147,7 @@ def make_synthetic_image(tmp_dir, frame):
     output = "intensitymap.out"
     output_name = "i%04d_intensity%04d.dat" % (id_number, frame)
     target = "../%s/%s" % (save_directory, output_name)
+    shutil.move(output, target)
 
     # Delete tmp dir
     os.chdir(cwd)
