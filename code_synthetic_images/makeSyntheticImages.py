@@ -133,7 +133,7 @@ def setup_tmp_directory(frame):
     os.chdir(cwd)
     return tmp_dir
 
-def make_synthetic_image(tmp_dir):
+def make_synthetic_image(tmp_dir, frame):
     """ Step 2: Execute code, move output, delete tmp directory """
     cwd = os.getcwd()
     os.chdir(tmp_dir)
@@ -155,7 +155,7 @@ def full_procedure(frame):
     """ Every Step """
     
     tmp_directory = setup_tmp_directory(frame)
-    make_synthetic_image(tmp_directory)
+    make_synthetic_image(tmp_directory, frame)
 
 ### Make Synthetic Images ###
 
