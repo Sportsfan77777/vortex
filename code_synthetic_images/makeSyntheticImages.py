@@ -50,6 +50,9 @@ def new_argument_parser(description = "Generate input for synthetic images."):
 
 ###############################################################################
 
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
 ### Get Input Parameters ###
 
 # Frames
@@ -123,7 +126,7 @@ def setup_tmp_directory(frame):
 
 	# Copy executable
 	exe = "disk_mm"
-	shutil.copyfile("../%s" % exe,  exe)
+	shutil.copyfile("../%s" % exe, exe)
 
 	os.chdir(cwd)
 	return tmp_dir
