@@ -32,6 +32,7 @@ from pylab import fromfile
 
 import util
 import azimuthal as az
+from labelOpacities import label_opacities
 
 size_names = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
@@ -246,14 +247,17 @@ def generate_secondary_files(rad, theta, new_sizes):
     temperatures = np.array([temperature(r) for r in rad])
 
     # Save Files
-    np.savetxt("%s/radial.dat" % save_directory, rad * radius_unit)
-    np.savetxt("%s/azimuthal.dat" % save_directory, theta)
-    np.savetxt("%s/grain.dat" % save_directory, new_sizes)
-    np.savetxt("%s/temperature.dat" % save_directory, temperatures)
+    np.savetxt("%s/id%04d_radial.dat" % (save_directory, id_number), rad * radius_unit)
+    np.savetxt("%s/id%04d_azimuthal.dat" % (save_directory, id_number), theta)
+    np.savetxt("%s/id%04d_grain.dat" % (save_directory, id_number), new_sizes)
+    np.savetxt("%s/id%04d_temperature.dat" % (save_directory, id_number), temperatures)
 
     # Make Opacities
     if make_opacities:
         os.system("./makeopac")
+
+    # Label Opacities
+    label_opacities(id_number)
 
 def output_density_txt(density, frame):
     """ Step 7: output txt file """
