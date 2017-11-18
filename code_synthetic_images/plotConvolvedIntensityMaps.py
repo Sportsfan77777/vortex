@@ -1,7 +1,7 @@
 """
 convolves intensity map to make it look like an alma image
 
-python convolveIntensityMap.py intensitymap.dat
+python convolveIntensityMap.py frame
 """
 
 import sys, os, subprocess
@@ -50,7 +50,9 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
-                         help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
+                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
                          help = 're-sample resolution (default: [300, 400])')
@@ -130,6 +132,7 @@ rad = np.linspace(r_min, r_max, new_num_rad)
 theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
 id_number = args.id_number
+version = args.version
 if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
@@ -150,17 +153,8 @@ beam_size = 0.5 * (beam_diameter / radius) # the sigma of the gaussian, not the 
 
 ### Helper Functions ###
 
-# Instant Viscous Evolution #
-
-def divide_by_beam():
-    # beam size = (pi / 4 ln2) * (theta)^2
-    beam_angle = beam_size / distance
-
-    beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
-    pass
-
 def clear_inner_disk(data):
-    # get rid of inner disk (r < outer_limit)
+    """ Step 1: get rid of inner disk (r < outer_limit) """
     filtered_data = np.copy(data)
 
     outer_limit = np.searchsorted(rad, 1.05)
@@ -168,9 +162,8 @@ def clear_inner_disk(data):
 
     return filtered_data
 
-# Converter #
-
 def polar_to_cartesian(data, rs, thetas, order = 3):
+    """ Step 2: convert to cartesian """
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
     # Set up xy-grid
     max_r = rs[-1]
@@ -208,6 +201,7 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
 # Convolver #
 
 def convolve_intensity(intensity):
+    """ Step 3: Convolve cartesian intensity with 2-D Gaussian """
     # Source: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve
 
     # Determine Gaussian Parameters
@@ -221,6 +215,12 @@ def convolve_intensity(intensity):
 
     convolved_intensity = signal.fftconvolve(intensity, kernel, mode = 'same')
     return convolved_intensity
+
+def divide_by_beam(intensity):
+    """ Step 4: divide by beam """
+    # beam size = (pi / 4 ln2) * (theta)^2
+    beam_angle = beam_diameter / distance
+    beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
 
 # Contraster #
 
@@ -247,8 +247,6 @@ def record_contrast(intensity, xs, ys):
     contrast = maximum / opposite
 
     return contrast, maximum, opposite
-
-# Saver #
 
 def save_in_polar(intensity_cart, xs, ys, order = 3):
     ### Convert to Polar ###
@@ -298,8 +296,59 @@ fontsize = 14
 my_dpi = 100
 
 def make_plot(frame, show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
+
+    # Data
+    fn = "i%04d_gasddens%d.p" % (id_number, frame)
+    density = pickle.load(open(fn, "rb"))
+    normalized_density = density / surface_density_zero
+
+    ### Plot ###
+    x = rad
+    y = theta * (180.0 / np.pi)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
+
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
+
+    plot.xlabel("Radius", fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.title("Intensity Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
+
+    # Axes
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
+
+    # Save, Show,  and Close
+    if version is None:
+        save_fn = "%s/id%04d_intensityMap_%04d.png" % (save_directory, id_number, frame)
+    else:
+        save_fn = "%s/v%04d_id%04d_intensityMap_%04d.png" % (save_directory, version, id_number, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+
+###############################################################################
+
+def make_plot(frame, show = False):
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     print frame
+
+    ##### Get rid of choose_axis (just do one axis!) #####
+
     def choose_axis(i, axis):
         # Orbit Number
         time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
@@ -315,7 +364,7 @@ def make_plot(frame, show = False):
         fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
         ax = fig.add_subplot(111)
 
-        # Data
+        # Data  <<<---- Read in data outside of this function.
         data = np.loadtxt("intensitymap.out")
         intensity = data[:, -1].reshape(num_rad, num_theta)
         intensity = clear_inner_disk(intensity)
