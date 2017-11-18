@@ -31,12 +31,12 @@ if __name__ == "__main__":
     ### Main ###
     if len(sys.argv) == 2:
         # Usage: python labelOpacities.py id_number
-        id_number = sys.argv[1] # int
+        id_number = int(sys.argv[1]) # int
         label_opacities(id_number)
     elif len(sys.argv) == 3:
         # Usage: python labelOpacities.py id_number previous_id
-        id_number = sys.argv[1] # int
-        previous_id = sys.argv[2] # int
+        id_number = int(sys.argv[1]) # int
+        previous_id = int(sys.argv[2]) # int
         label_opacities(id_number, previous_id = previous_id)
     else:
         print "Must supply 1 or 2 args\nUsage: python labelOpacities.py id_number (previous_id)"
