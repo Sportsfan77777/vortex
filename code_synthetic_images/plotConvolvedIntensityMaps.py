@@ -42,10 +42,6 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('--dir', dest = "save_directory", default = "intensityMaps",
                          help = 'save directory (default: intensityMaps)')
 
-    # Convolution Parameters
-    parser.add_argument('-b', dest = "beam_size", type = float, default = 0.5,
-                         help = 'beam size (in planet radii) (default: 0.5)')
-
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -95,10 +91,9 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
-### Get Synthetic Image Parameters ###
-synthetic_par = np.loadtxt("parameters.dat")
-wavelength = int(float(synthetic_par[2]))
-distance = float(synthetic_par[4])
+beam = fargo_par["Beam"]
+wavelength = fargo_par["Wavelength"]
+distance = fargo_par["Distance"]
 
 ### Get Input Parameters ###
 
@@ -119,10 +114,6 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
-
-# Convolution Parameters
-beam_size = 0.5 * args.beam_size # the sigma of the gaussian, not the beam diameter
-beam_diameter = args.beam_size * fargo_par["Radius"]
 
 # Plot Parameters (variable)
 show = args.show
@@ -146,143 +137,6 @@ fontsize = args.fontsize
 dpi = args.dpi
 
 ###############################################################################
-
-# Image Parameters
-beam_diameter = 10.0
-beam_size = 0.5 * (beam_diameter / radius) # the sigma of the gaussian, not the beam diameter
-
-### Helper Functions ###
-
-def read_data(frame):
-    intensity = util.read_data(frame, 'intensity', fargo_par, id_number = id_number)
-    return intensity
-
-def clear_inner_disk(intensity):
-    """ Step 1: get rid of inner disk (r < outer_limit) """
-    filtered_intensity = np.copy(intensity)
-
-    outer_limit = np.searchsorted(rad, 1.05)
-    filtered_data[:outer_limit] = 0
-
-    return filtered_intensity
-
-def polar_to_cartesian(intensity, rs, thetas, order = 3):
-    """ Step 2: convert to cartesian """
-    # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
-    # Set up xy-grid
-    max_r = rs[-1]
-    resolution = 2 * len(rad)
-
-    xs = np.linspace(-max_r, max_r, resolution)
-    ys = np.linspace(-max_r, max_r, resolution)
-
-    xs_grid, ys_grid = np.meshgrid(xs, ys)
-
-    # Interpolate rt-grid
-
-    interpolated_rs = interpolate(rs, np.arange(len(rs)), bounds_error = False)
-    interpolated_thetas = interpolate(thetas, np.arange(len(thetas)), bounds_error = False)
-
-    # Match up xy-grid with rt-grid
-
-    new_rs = np.sqrt(np.power(xs_grid, 2) + np.power(ys_grid, 2))
-    new_thetas = np.arctan2(ys_grid, xs_grid)
-
-    # Convert from [-pi, pi] to [0, 2 * pi]
-    new_thetas[new_thetas < 0] = new_thetas[new_thetas < 0] + 2 * np.pi
-
-    new_interpolated_rs = interpolated_rs(new_rs.ravel())
-    new_interpolated_thetas = interpolated_thetas(new_thetas.ravel())
-
-    # Fix Bounds (outside of polar image, but inside cartesian image)
-    new_interpolated_rs[new_rs.ravel() > max(rs)] = len(rs) - 1
-    new_interpolated_rs[new_rs.ravel() < min(rs)] = 0
-
-    cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
-
-    return xs, ys, xs_grid, ys_grid, cart_data
-
-# Convolver #
-
-def convolve_intensity(intensity):
-    """ Step 3: Convolve cartesian intensity with 2-D Gaussian """
-    # Source: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve
-
-    # Determine Gaussian Parameters
-    dr = rad[1] - rad[0]
-    sigma = int(beam_size / dr)
-    window = signal.gaussian(5 * sigma, std = sigma)
-
-    # Construct 2-D Gaussian Kernel
-    normed_window = window / np.sum(window)
-    kernel = np.outer(normed_window, normed_window)
-
-    convolved_intensity = signal.fftconvolve(intensity, kernel, mode = 'same')
-    return convolved_intensity
-
-def divide_by_beam(intensity):
-    """ Step 4: divide by beam """
-    # beam size = (pi / 4 ln2) * (theta)^2
-    beam_angle = beam_diameter / distance
-    beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
-
-    return intensity / beam
-
-# Contraster #
-
-def record_contrast(intensity, xs, ys):
-    # Get intensity along x = 0
-    zero_i = np.searchsorted(xs, 0)
-    two_sliver = intensity[zero_i - 1 : zero_i + 1, :] # two columns around x = 0
-    sliver = np.average(two_sliver, axis = 0)
-
-    # Mask inner disk
-    lower_i = np.searchsorted(ys, -1)
-    upper_i = np.searchsorted(ys, 1)
-    sliver[lower_i : upper_i] = 0.0
-
-    # Find argmax (y-coor, and opposite y-coor)
-    max_yi = np.argmax(sliver)
-    max_y = ys[max_yi]
-
-    opposite_i = np.searchsorted(ys, -max_y)
-
-    # Mark contrast, max, opposite
-    maximum = np.max(sliver)
-    opposite = sliver[opposite_i]
-    contrast = maximum / opposite
-
-    return contrast, maximum, opposite
-
-def save_in_polar(intensity_cart, xs, ys, order = 3):
-    ### Convert to Polar ###
-
-    # Set up rt-grid
-    old_rs = rad
-    old_thetas = theta
-
-    rs_grid, thetas_grid = np.meshgrid(old_rs, old_thetas)
-
-    # Interpolate xy-grid
-    interpolated_xs = interpolate(xs, np.arange(len(xs)), bounds_error = False)
-    interpolated_ys = interpolate(ys, np.arange(len(ys)), bounds_error = False)
-
-    # Match up rt-grid with xy-grid
-    new_xs = rs_grid * np.cos(thetas_grid)
-    new_ys = rs_grid * np.sin(thetas_grid)
-
-    new_interpolated_xs = interpolated_xs(new_xs.ravel())
-    new_interpolated_ys = interpolated_ys(new_ys.ravel())
-
-    # Convert (Interpolate)
-    polar_data = map_coordinates(intensity_cart, np.array([new_interpolated_xs, new_interpolated_ys]), order = order).reshape(new_xs.shape)
-
-    # Save in pickle
-    if version is None:
-        save_fn = "%s/id%04d_intensityMap_%04d.png" % (save_directory, id_number, frame)
-    else:
-        save_fn = "%s/v%04d_id%04d_intensityMap_%04d.png" % (save_directory, version, id_number, frame)
-    pickle.dump(polar_data, open(save_fn, 'wb'))
 
 ##### PLOTTING #####
 
@@ -310,14 +164,12 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    fn = "i%04d_gasddens%d.p" % (id_number, frame)
-    density = pickle.load(open(fn, "rb"))
-    normalized_density = density / surface_density_zero
+    intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -328,7 +180,7 @@ def make_plot(frame, show = False):
 
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Intensity Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     # Axes
     plot.xlim(x_min, x_max)
@@ -352,7 +204,8 @@ def make_plot(frame, show = False):
 
 ###############################################################################
 
-def make_plot(frame, show = False):
+def old_make_plot(frame, show = False):
+    """
     # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
     print frame
 
@@ -443,13 +296,7 @@ def make_plot(frame, show = False):
     i = frame
     #choose_axis(i, "normal")
     choose_axis(i, "zoom")
-
-def full_procedure(frame):
-    """ Every Step """
-
-    intensity = read_data(frame)
-    intensity = convolve_intensity(intensity)
-    intensity = divide_by_beam(intensity)
+    """
 
 
 ##### Make Plots! #####
@@ -457,15 +304,15 @@ def full_procedure(frame):
 # Iterate through frames
 
 if len(frame_range) == 1:
-    full_procedure(frame_range[0])
+    make_plot(frame_range[0])
 else:
     if num_cores > 1:
         p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-        p.map(full_procedure, frame_range)
+        p.map(make_plot, frame_range)
         p.terminate()
     else:
         for frame in frame_range:
-            full_procedure(frame)
+            make_plot(frame)
 
 
 
