@@ -189,7 +189,7 @@ def divide_by_beam(intensity):
 
     return intensity / beam
 
-def save_in_polar(intensity_cart, xs, ys, order = 3):
+def save_in_polar(intensity_cart, frame, xs, ys, order = 3):
     """ Step 5: save in polar coordinates """
 
     # Set up rt-grid
@@ -236,7 +236,7 @@ def full_procedure(frame):
 
     intensity_cartesian = convolve_intensity(intensity_cartesian)
     intensity_cartesian = divide_by_beam(intensity_cartesian)
-    save_in_polar(intensity_cartesian, xs, ys) # Also save fargo par???
+    save_in_polar(intensity_cartesian, frame, xs, ys) # Also save fargo par???
 
 
 ##### Make Plots! #####
