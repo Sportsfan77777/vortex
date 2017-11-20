@@ -109,18 +109,25 @@ def setup_tmp_directory(frame):
     os.mkdir(tmp_dir)
 
     # Files to move
-    necessary_files = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
+    id_prefix = "id%04d_" % id_number
+    necessary_names = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
+    necessary_files = necessary_names.copy()
+    for i, _ in enumerate(necessary_files):
+        necessary_files[i] = id_prefix + necessary_files[i]
+
     opacity_files = glob.glob("dustkappa_*.inp")
     density_file = "i%04d_gasddens%d.dat" % (id_number, frame)
 
     # Fill it with necessary files
     os.chdir(tmp_dir)
-    for necessary_file in necessary_files:
-        os.symlink("../%s" % necessary_file, necessary_file)
+    for (necessary_file, necessary_name) in zip(necessary_files, necessary_names):
+        os.symlink("../%s" % necessary_file, necessary_name)
 
     # Fill it with opacity files    
+    start = opacity_files[0].find("dustkappa")
     for opacity_file in opacity_files:
-        os.symlink("../%s" % opacity_file, opacity_file)
+        opacity_name = opacity_file[start:]
+        os.symlink("../%s" % opacity_file, opacity_name)
 
     # Fill it with density file
     density_name = "sigmadust.dat"
@@ -145,7 +152,7 @@ def make_synthetic_image(tmp_dir, frame):
 
     # Move output
     output = "intensitymap.out"
-    output_name = "i%04d_intensity%04d.dat" % (id_number, frame)
+    output_name = "id%04d_intensity%04d.dat" % (id_number, frame)
     target = "../%s/%s" % (save_directory, output_name)
     shutil.move(output, target)
 

@@ -60,7 +60,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % args.id_number
+fn = "../id%04d_par.p" % args.id_number
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -80,7 +80,7 @@ scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
 ### Get Synthetic Image Parameters ###
-synthetic_par = np.loadtxt("parameters.dat")
+synthetic_par = np.loadtxt("../parameters.dat")
 wavelength = int(float(synthetic_par[2]))
 distance = float(synthetic_par[4])
 
@@ -229,7 +229,7 @@ def full_procedure(frame):
     intensity = read_data(frame)
     intensity = clear_inner_disk(intensity) # not neccessary if inner disk was never sampled
     xs, ys, intensity_cartesian = polar_to_cartesian(intensity)
-    
+
     intensity_cartesian = convolve_intensity(intensity_cartesian)
     intensity_cartesian = divide_by_beam(intensity_cartesian)
     save_in_polar(intensity_cartesian, xs, ys) # Also save fargo par???
