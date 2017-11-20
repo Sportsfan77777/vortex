@@ -12,6 +12,7 @@ import argparse
 import math
 import numpy as np
 from scipy.interpolate import interp1d as interpolate
+from scipy.ndimage import map_coordinates
 
 import matplotlib
 from matplotlib import rcParams as rc
