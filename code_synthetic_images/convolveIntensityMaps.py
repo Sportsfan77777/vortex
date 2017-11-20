@@ -39,7 +39,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "None",
+    parser.add_argument('--dir', dest = "save_directory", default = None,
                          help = 'save directory (default: beam%03d % beam_size in AU)')
 
     # Convolution Parameters
