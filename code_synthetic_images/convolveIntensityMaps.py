@@ -11,6 +11,7 @@ import argparse
 
 import math
 import numpy as np
+from scipy.interpolate import interp1d as interpolate
 
 import matplotlib
 from matplotlib import rcParams as rc
@@ -121,7 +122,7 @@ def clear_inner_disk(intensity):
     filtered_intensity = np.copy(intensity)
 
     outer_limit = np.searchsorted(rad, 1.05)
-    filtered_data[:outer_limit] = 0
+    filtered_intensity[:outer_limit] = 0
 
     return filtered_intensity
 

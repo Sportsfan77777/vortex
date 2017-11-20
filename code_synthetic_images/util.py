@@ -69,7 +69,7 @@ def read_data(frame, fn, fargo_par, id_number = None, version = None, directory 
     # Load properly based on extension
     ext = basename[basename.find("."):]
     if fn == 'intensity':
-        data = (fromfile("%s/%s" % (directory, basename))[:, -1]).reshape(num_rad, num_theta)
+        data = (np.loadtxt("%s/%s" % (directory, basename))[:, -1]).reshape(num_rad, num_theta)
     elif ext == ".dat":
         data = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta))
     elif ext == ".p":
