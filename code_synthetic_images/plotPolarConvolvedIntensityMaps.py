@@ -184,9 +184,9 @@ def make_plot(frame, show = False):
     plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     # Axes
-    sq = 2.5
-    plot.xlim(-sq, sq)
-    plot.ylim(-sq, sq)
+    box_size = 2.5
+    plot.xlim(-box_size, box_size)
+    plot.ylim(-box_size, box_size)
     plot.axes().set_aspect('equal')
 
     # Save, Show,  and Close
