@@ -111,12 +111,12 @@ def setup_tmp_directory(frame):
     # Files to move
     id_prefix = "id%04d_" % id_number
     necessary_names = ["temperature.dat", "radial.dat", "grain.dat", "azimuthal.dat", "parameters.dat"]
-    necessary_files = necessary_names.copy()
+    necessary_files = list(necessary_names)
     for i, _ in enumerate(necessary_files):
         necessary_files[i] = id_prefix + necessary_files[i]
 
-    opacity_files = glob.glob("dustkappa_*.inp")
-    density_file = "i%04d_gasddens%d.dat" % (id_number, frame)
+    opacity_files = glob.glob("id%04d_dustkappa_*.inp" % id_number)
+    density_file = "id%04d_gasddens%d.dat" % (id_number, frame)
 
     # Fill it with necessary files
     os.chdir(tmp_dir)
