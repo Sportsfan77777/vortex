@@ -165,7 +165,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    fn = "i%04d_gasddens%d.p" % (id_number, frame)
+    fn = "id%04d_gasddens%d.p" % (id_number, frame)
     density = pickle.load(open(fn, "rb"))
     normalized_density = density / surface_density_zero
 
