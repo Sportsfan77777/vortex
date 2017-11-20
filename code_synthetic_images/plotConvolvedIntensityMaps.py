@@ -305,7 +305,7 @@ def old_make_plot(frame, show = False):
 # Iterate through frames
 
 if len(frame_range) == 1:
-    make_plot(frame_range[0])
+    make_plot(frame_range[0], show = show)
 else:
     if num_cores > 1:
         p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
