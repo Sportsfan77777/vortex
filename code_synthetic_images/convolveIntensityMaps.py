@@ -64,7 +64,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-fn = "../id%04d_par.p" % args.id_number
+fn = "id%04d_par.p" % args.id_number
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -97,8 +97,9 @@ frame_range = util.get_frame_range(args.frames)
 num_cores = args.num_cores
 
 # Convolution Parameters
-beam_size = 0.5 * args.beam_size # the sigma of the gaussian, not the beam diameter
-beam_diameter = args.beam_size * fargo_par["Radius"]
+beam_size = args.beam_size
+beam_radius = 0.5 * beam_size # the sigma of the gaussian, not the beam diameter
+beam_diameter = beam_size * fargo_par["Radius"]
 
 # Files
 save_directory = args.save_directory
@@ -171,7 +172,7 @@ def convolve_intensity(intensity):
 
     # Determine Gaussian Parameters
     dr = rad[1] - rad[0]
-    sigma = int(beam_size / dr)
+    sigma = int(beam_radius / dr)
     window = signal.gaussian(5 * sigma, std = sigma)
 
     # Construct 2-D Gaussian Kernel
@@ -219,6 +220,12 @@ def save_in_polar(intensity_cart, frame, xs, ys, order = 3):
         save_fn = "%s/v%04d_id%04d_intensityMap_%04d.p" % (save_directory, version, id_number, frame)
     pickle.dump(polar_data, open(save_fn, 'wb'))
 
+    # Add beam size to fargo_par (and save!)
+    fargo_par["Beam"] = beam_size
+
+    dict_name = "id%04d_par.p" % id_number
+    pickle.dump(fargo_par, open(dict_name, "wb"))
+
 ##### PLOTTING #####
 
 # Make Directory
@@ -236,7 +243,7 @@ def full_procedure(frame):
 
     intensity_cartesian = convolve_intensity(intensity_cartesian)
     intensity_cartesian = divide_by_beam(intensity_cartesian)
-    save_in_polar(intensity_cartesian, frame, xs, ys) # Also save fargo par???
+    save_in_polar(intensity_cartesian, frame, xs, ys)
 
 
 ##### Make Plots! #####

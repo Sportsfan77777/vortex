@@ -156,6 +156,11 @@ def make_synthetic_image(tmp_dir, frame):
     target = "../%s/%s" % (save_directory, output_name)
     shutil.move(output, target)
 
+    # Copy fargo_par to save directory
+    if save_directory is not "."
+        dict_name = "id%04d_par.p" % id_number
+        shutil.copy("../%s" % dict_name, dict_name)
+
     # Delete tmp dir
     os.chdir(cwd)
     shutil.rmtree(tmp_dir)
