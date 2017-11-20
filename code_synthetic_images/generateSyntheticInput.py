@@ -240,7 +240,7 @@ def generate_secondary_files(rad, theta, new_sizes):
         R *= radius_unit # convert to cgs
 
         # (mu * mp) (h**2 \omega **2) / (k_b)
-        omega_sq = (R * mass_unit) / (R**3)
+        omega_sq = (G * mass_unit) / (R**3)
         scale_height_cgs = scale_height * (R)
         return (mu * mp) * (scale_height_cgs**2 * omega_sq) / (kb) 
         
@@ -263,14 +263,14 @@ def output_density_txt(density, frame):
     """ Step 7: output txt file """
     interleaved_density = density.flatten('F') # interleave to 1-d
 
-    fn = "%s/i%04d_gasddens%d.dat" % (save_directory, id_number, frame)
+    fn = "%s/id%04d_gasddens%d.dat" % (save_directory, id_number, frame)
     np.savetxt(fn, interleaved_density)
 
 def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
     composite_density = np.sum(density, axis = -1)
 
-    fn = "%s/i%04d_gasddens%d.p" % (save_directory, id_number, frame)
+    fn = "%s/id%04d_gasddens%d.p" % (save_directory, id_number, frame)
     pickle.dump(composite_density, open(fn, 'wb'))
 
 def save_id_parameters():
