@@ -12,10 +12,12 @@ from scipy.interpolate import interp1d as interpolate
 from scipy.ndimage import map_coordinates
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
+    """ Input: Data, Radial array for Data, Azimuthal array for Data"""
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
+
     # Set up xy-grid
     max_r = rs[-1]
-    resolution = 2 * len(rad)
+    resolution = 2 * len(rs)
 
     xs = np.linspace(-max_r, max_r, resolution)
     ys = np.linspace(-max_r, max_r, resolution)
@@ -44,5 +46,5 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
 
     cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
 
-    return xs_grid, ys_grid, cart_data
+    return xs, ys, xs_grid, ys_grid, cart_data
 
