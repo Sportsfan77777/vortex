@@ -148,7 +148,7 @@ def make_plot(frame, show = False):
 
     # Data
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
-    _, _, xs_grid, ys_grid, density_cart = util.polar_to_cartesian(intensity, rad, theta)
+    _, _, xs_grid, ys_grid, density_cart = sq.polar_to_cartesian(intensity, rad, theta)
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
