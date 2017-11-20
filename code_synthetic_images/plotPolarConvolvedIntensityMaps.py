@@ -21,6 +21,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import square as sq
 
 from colormaps import cmaps
 for key in cmaps:
