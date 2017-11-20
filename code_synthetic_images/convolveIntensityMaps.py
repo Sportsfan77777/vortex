@@ -39,8 +39,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = ".",
-                         help = 'save directory (default: .)')
+    parser.add_argument('--dir', dest = "save_directory", default = "None",
+                         help = 'save directory (default: beam%03d % beam_size in AU)')
 
     # Convolution Parameters
     parser.add_argument('-b', dest = "beam_size", type = float, default = 0.5,
@@ -92,17 +92,18 @@ frame_range = util.get_frame_range(args.frames)
 # Number of Cores 
 num_cores = args.num_cores
 
-# Files
-save_directory = args.save_directory
-if not os.path.isdir(save_directory):
-    os.mkdir(save_directory) # make save directory if it does not already exist
-
 # Convolution Parameters
 beam_size = 0.5 * args.beam_size # the sigma of the gaussian, not the beam diameter
 beam_diameter = args.beam_size * fargo_par["Radius"]
 
-# Identification
+# Files
+save_directory = args.save_directory
+if save_directory is None:
+    save_directory = "beam%03d" % (beam_diameter)
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
 
+# Identification
 id_number = args.id_number
 version = args.version
 
@@ -124,11 +125,11 @@ def clear_inner_disk(intensity):
 
     return filtered_intensity
 
-def polar_to_cartesian(intensity, rs, thetas, order = 3):
+def polar_to_cartesian(intensity, order = 3):
     """ Step 2: convert to cartesian """
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
     # Set up xy-grid
-    max_r = rs[-1]
+    max_r = rad[-1]
     resolution = 2 * len(rad)
 
     xs = np.linspace(-max_r, max_r, resolution)
@@ -138,8 +139,8 @@ def polar_to_cartesian(intensity, rs, thetas, order = 3):
 
     # Interpolate rt-grid
 
-    interpolated_rs = interpolate(rs, np.arange(len(rs)), bounds_error = False)
-    interpolated_thetas = interpolate(thetas, np.arange(len(thetas)), bounds_error = False)
+    interpolated_rs = interpolate(rad, np.arange(len(rad)), bounds_error = False)
+    interpolated_thetas = interpolate(theta, np.arange(len(theta)), bounds_error = False)
 
     # Match up xy-grid with rt-grid
 
@@ -153,12 +154,12 @@ def polar_to_cartesian(intensity, rs, thetas, order = 3):
     new_interpolated_thetas = interpolated_thetas(new_thetas.ravel())
 
     # Fix Bounds (outside of polar image, but inside cartesian image)
-    new_interpolated_rs[new_rs.ravel() > max(rs)] = len(rs) - 1
-    new_interpolated_rs[new_rs.ravel() < min(rs)] = 0
+    new_interpolated_rs[new_rs.ravel() > max(rad)] = len(rad) - 1
+    new_interpolated_rs[new_rs.ravel() < min(rad)] = 0
 
     cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
 
-    return xs, ys, xs_grid, ys_grid, cart_data
+    return xs, ys, cart_data
 
 def convolve_intensity(intensity):
     """ Step 3: Convolve cartesian intensity with 2-D Gaussian """
@@ -227,10 +228,11 @@ def full_procedure(frame):
 
     intensity = read_data(frame)
     intensity = clear_inner_disk(intensity) # not neccessary if inner disk was never sampled
-    xs, ys, intensity_cartesian = polar_to_cartesian(intensity, rs, thetas)
+    xs, ys, intensity_cartesian = polar_to_cartesian(intensity)
+    
     intensity_cartesian = convolve_intensity(intensity_cartesian)
     intensity_cartesian = divide_by_beam(intensity_cartesian)
-    save_in_polar(intensity_cart, xs, ys) # Also save fargo par???
+    save_in_polar(intensity_cartesian, xs, ys) # Also save fargo par???
 
 
 ##### Make Plots! #####
