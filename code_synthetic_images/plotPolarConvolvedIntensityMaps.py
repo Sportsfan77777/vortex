@@ -92,7 +92,7 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
-beam = fargo_par["Beam"]
+beam_size = fargo_par["Beam"]
 wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
@@ -148,14 +148,32 @@ def make_plot(frame, show = False):
 
     # Data
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
+    _, _, xs_grid, ys_grid, density_cart = polar_to_cartesian(intensity, rad, theta)
+
 
     ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
+    cbar = fig.colorbar(result)
 
-    fig.colorbar(result)
     #result.set_clim(clim[0], clim[1])
+
+    # Get rid of interior
+    circle = plot.Circle((0, 0), min(rad), color = "black")
+    fig.gca().add_artist(circle)
+
+    # Add beam size
+    beam = plot.Circle((-2, -2), beam_size / 2, color = "white")
+    fig.gca().add_artist(beam)
+
+    # Label star and planet
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+    planet_size = current_mass / planet_mass
+    plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
+    plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -166,11 +184,10 @@ def make_plot(frame, show = False):
     plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+    sq = 2.5
+    plot.xlim(-sq, sq)
+    plot.ylim(-sq, sq)
+    plot.axes().set_aspect('equal')
 
     # Save, Show,  and Close
     if version is None:
@@ -189,96 +206,86 @@ def make_plot(frame, show = False):
 
 def old_make_plot(frame, show = False):
     """
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    print frame
+    # Orbit Number
+    time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
+    orbit = int(round(time / (2 * np.pi), 0)) * i
 
-    ##### Get rid of choose_axis (just do one axis!) #####
+    # Mass
+    if orbit >= taper_time:
+        current_mass = planet_mass / 0.001
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
 
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
+    # Set up figure
+    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    ax = fig.add_subplot(111)
 
-        # Mass
-        if orbit >= taper_time:
-            current_mass = planet_mass / 0.001
-        else:
-            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
+    # Data  <<<---- Read in data outside of this function.
+    data = np.loadtxt("intensitymap.out")
+    intensity = data[:, -1].reshape(num_rad, num_theta)
+    intensity = clear_inner_disk(intensity)
+    xs, ys, xs_grid, ys_grid, intensity_cart = polar_to_cartesian(intensity, rad, theta)
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+    # Convolve Data
+    convolved_intensity = convolve_intensity(intensity_cart)
+    contrast, maximum, opposite = record_contrast(convolved_intensity, xs, ys)
 
-        # Data  <<<---- Read in data outside of this function.
-        data = np.loadtxt("intensitymap.out")
-        intensity = data[:, -1].reshape(num_rad, num_theta)
-        intensity = clear_inner_disk(intensity)
-        xs, ys, xs_grid, ys_grid, intensity_cart = polar_to_cartesian(intensity, rad, theta)
+    if axis == "zoom":
+        prefix = "zoom_"
+        sq = 2.5
+    else:
+        prefix = ""
+        sq = np.max(xs_grid)
 
-        # Convolve Data
-        convolved_intensity = convolve_intensity(intensity_cart)
-        contrast, maximum, opposite = record_contrast(convolved_intensity, xs, ys)
+    plot.xlim(-sq, sq)
+    plot.ylim(-sq, sq)
+    plot.axes().set_aspect('equal')
 
-        if axis == "zoom":
-            prefix = "zoom_"
-            sq = 2.5
-        else:
-            prefix = ""
-            sq = np.max(xs_grid)
+    ### Plot ###
+    result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(convolved_intensity), cmap = cmap)
+    cbar = fig.colorbar(result)
 
-        plot.xlim(-sq, sq)
-        plot.ylim(-sq, sq)
-        plot.axes().set_aspect('equal')
+    clim = [np.percentile(intensity[clim_in : clim_out, :], clim_low), np.percentile(intensity[clim_in : clim_out, :], clim_high)]
+    result.set_clim(clim[0], clim[1])
 
-        ### Plot ###
-        result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(convolved_intensity), cmap = cmap)
-        cbar = fig.colorbar(result)
+    cbar.set_label(r"Intensity", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
 
-        clim = [np.percentile(intensity[clim_in : clim_out, :], clim_low), np.percentile(intensity[clim_in : clim_out, :], clim_high)]
-        result.set_clim(clim[0], clim[1])
+    # Get rid of interior
+    circle = plot.Circle((0, 0), min(rad), color = "black")
+    fig.gca().add_artist(circle)
 
-        cbar.set_label(r"Intensity", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
+    # Add beam size
+    beam = plot.Circle((-2, -2), beam_size, color = "white")
+    fig.gca().add_artist(beam)
 
-        # Get rid of interior
-        circle = plot.Circle((0, 0), min(rad), color = "black")
-        fig.gca().add_artist(circle)
+    # Label star and planet
+    planet_size = (current_mass / (planet_mass / 0.001))
+    plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
+    plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
 
-        # Add beam size
-        beam = plot.Circle((-2, -2), beam_size, color = "white")
-        fig.gca().add_artist(beam)
+    # Add minor grid lines
+    alpha = 0.2
+    dashes = [1, 5]
+    #plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
+    #plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
+    plot.minorticks_on()
 
-        # Label star and planet
-        planet_size = (current_mass / (planet_mass / 0.001))
-        plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-        plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
+    # Annotate
+    title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
+    title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$ | $r = %d$ $\rm{AU}$, $\lambda = %d$ $\rm{\mu m}$" % (orbit, current_mass, int(radius), wavelength)
+    #plot.xlabel("x", fontsize = fontsize)
+    #plot.ylabel("y", fontsize = fontsize)
+    plot.title("%s" % (title2), y = 1.01, fontsize = fontsize)
+    plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-        # Add minor grid lines
-        alpha = 0.2
-        dashes = [1, 5]
-        #plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
-        #plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
-        plot.minorticks_on()
+    # Write contrast
+    plot.text(-2, 2, "Contrast: %.2f = %.2e / %.2e" % (contrast, maximum, opposite), color = "white", fontsize = fontsize)
 
-        # Annotate
-        title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-        title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$ | $r = %d$ $\rm{AU}$, $\lambda = %d$ $\rm{\mu m}$" % (orbit, current_mass, int(radius), wavelength)
-        #plot.xlabel("x", fontsize = fontsize)
-        #plot.ylabel("y", fontsize = fontsize)
-        plot.title("%s" % (title2), y = 1.01, fontsize = fontsize)
-        plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
-
-        # Write contrast
-        plot.text(-2, 2, "Contrast: %.2f = %.2e / %.2e" % (contrast, maximum, opposite), color = "white", fontsize = fontsize)
-
-        # Save and Close
-        plot.savefig("%sconvolvedIntensityMap%04d_r%d_at%d.png" % (prefix, i, int(radius), wavelength), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
-
-    i = frame
-    #choose_axis(i, "normal")
-    choose_axis(i, "zoom")
+    # Save and Close
+    plot.savefig("%sconvolvedIntensityMap%04d_r%d_at%d.png" % (prefix, i, int(radius), wavelength), bbox_inches = 'tight', dpi = my_dpi)
+    if show:
+        plot.show()
+    plot.close(fig) # Close Figure (to avoid too many figures)
     """
 
 
