@@ -92,8 +92,8 @@ def write_parameters():
     distance = args.distance # in pc
 
     # Write to File
-    txt = "%.1e\n%d\n%.1f\n%1.f\n%d" % (stellar_radius, stellar_temperature, wavelength, inclination, distance)
-    fn = "parameters.dat"
+    txt = "%.2e\n%d\n%.1f\n%1.f\n%d" % (stellar_radius, stellar_temperature, wavelength, inclination, distance)
+    fn = "id%04d_parameters.dat" % id_number
     with open(fn, "w") as f:
         f.write(txt)
 
