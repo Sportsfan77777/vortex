@@ -222,6 +222,8 @@ def divide_by_beam(intensity):
     beam_angle = beam_diameter / distance
     beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
 
+    return intensity / beam
+
 # Contraster #
 
 def record_contrast(intensity, xs, ys):
@@ -271,9 +273,12 @@ def save_in_polar(intensity_cart, xs, ys, order = 3):
     # Convert (Interpolate)
     polar_data = map_coordinates(intensity_cart, np.array([new_interpolated_xs, new_interpolated_ys]), order = order).reshape(new_xs.shape)
 
-    # Save
-    save_fn = "convolved_polar_intensity.npy"
-    np.save(save_fn, intensity_polar)
+    # Save in pickle
+    if version is None:
+        save_fn = "%s/id%04d_intensityMap_%04d.png" % (save_directory, id_number, frame)
+    else:
+        save_fn = "%s/v%04d_id%04d_intensityMap_%04d.png" % (save_directory, version, id_number, frame)
+    pickle.dump(polar_data, open(save_fn, 'wb'))
 
 ##### PLOTTING #####
 
