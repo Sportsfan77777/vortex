@@ -29,7 +29,7 @@ def get_pickled_parameters(directory = "."):
 def get_frame_range(frame_selection):
     """ return array of selected frames"""
     if len(frame_selection) == 1:
-        frame_range = args.frames
+        frame_range = frame_selection
     elif len(frame_selection) == 2:
         start = frame_selection[0]; end = frame_selection[1]
         frame_range = range(start, end + 1)
