@@ -51,7 +51,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     # System Parameters
     parser.add_argument('-m', dest = "mass", type = float, default = 1.0,
                          help = 'mass of star in solar masses (default: 1.0)')
-    parser.add_argument('-r', dest = "radius", type = float, default = 1.0,
+    parser.add_argument('-r', dest = "radius", type = float, default = 20.0,
                          help = 'radius of planet in AU (default: 20.0)')
 
     # Save Parameters
@@ -234,11 +234,10 @@ def convert_units(density):
 
 def generate_secondary_files(rad, theta, new_sizes):
     """ Step 6: write other *.dat files + make opacities """
-    radius_conversion = radius * radius_unit
 
     def temperature(R):
         """ r """
-        R *= radius_conversion # convert to cgs
+        R *= radius_unit # convert to cgs
 
         # (mu * mp) (h**2 \omega **2) / (k_b)
         omega_sq = (G * mass_unit) / (R**3)
@@ -248,7 +247,7 @@ def generate_secondary_files(rad, theta, new_sizes):
     temperatures = np.array([temperature(r) for r in rad])
 
     # Save Files
-    np.savetxt("%s/id%04d_radial.dat" % (save_directory, id_number), rad * radius_conversion)
+    np.savetxt("%s/id%04d_radial.dat" % (save_directory, id_number), rad * radius_unit)
     np.savetxt("%s/id%04d_azimuthal.dat" % (save_directory, id_number), theta)
     np.savetxt("%s/id%04d_grain.dat" % (save_directory, id_number), new_sizes)
     np.savetxt("%s/id%04d_temperature.dat" % (save_directory, id_number), temperatures)
