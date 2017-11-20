@@ -54,8 +54,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [300, 400],
-                         help = 're-sample resolution (default: [300, 400])')
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
+                         help = 're-sample resolution (default: [400, 400])')
     parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
                          help = 'id number for this set of plot parameters (default: [r_min, r_max])')
     
@@ -153,16 +153,20 @@ beam_size = 0.5 * (beam_diameter / radius) # the sigma of the gaussian, not the 
 
 ### Helper Functions ###
 
-def clear_inner_disk(data):
+def read_data(frame):
+    intensity = util.read_data(frame, 'intensity', fargo_par, id_number = id_number)
+    return intensity
+
+def clear_inner_disk(intensity):
     """ Step 1: get rid of inner disk (r < outer_limit) """
-    filtered_data = np.copy(data)
+    filtered_intensity = np.copy(intensity)
 
     outer_limit = np.searchsorted(rad, 1.05)
     filtered_data[:outer_limit] = 0
 
-    return filtered_data
+    return filtered_intensity
 
-def polar_to_cartesian(data, rs, thetas, order = 3):
+def polar_to_cartesian(intensity, rs, thetas, order = 3):
     """ Step 2: convert to cartesian """
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
     # Set up xy-grid
@@ -379,17 +383,6 @@ def make_plot(frame, show = False):
         convolved_intensity = convolve_intensity(intensity_cart)
         contrast, maximum, opposite = record_contrast(convolved_intensity, xs, ys)
 
-        # Axis
-        #if axis == "zoom":
-        #    x = (rad - 1) / scale_height
-        #    prefix = "zoom_"
-        #    plot.xlim(0, 40) # to match the ApJL paper
-        #    xlabel = r"($r - r_p$) $/$ $h$"
-        #else:
-        #    x = rad
-        #    prefix = ""
-        #    plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-        #    xlabel = "Radius"
         if axis == "zoom":
             prefix = "zoom_"
             sq = 2.5
@@ -451,21 +444,28 @@ def make_plot(frame, show = False):
     #choose_axis(i, "normal")
     choose_axis(i, "zoom")
 
+def full_procedure(frame):
+    """ Every Step """
+
+    intensity = read_data(frame)
+    intensity = convolve_intensity(intensity)
+    intensity = divide_by_beam(intensity)
+
 
 ##### Make Plots! #####
 
 # Iterate through frames
 
 if len(frame_range) == 1:
-    make_plot(frame_range[0], show = show)
+    full_procedure(frame_range[0])
 else:
     if num_cores > 1:
         p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-        p.map(make_plot, frame_range)
+        p.map(full_procedure, frame_range)
         p.terminate()
     else:
         for frame in frame_range:
-            make_plot(frame)
+            full_procedure(frame)
 
 
 
