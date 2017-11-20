@@ -159,9 +159,9 @@ def polar_to_cartesian(intensity, order = 3):
     new_interpolated_rs[new_rs.ravel() > max(rad)] = len(rad) - 1
     new_interpolated_rs[new_rs.ravel() < min(rad)] = 0
 
-    cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
+    cartesian_intensity = map_coordinates(intensity, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
 
-    return xs, ys, cart_data
+    return xs, ys, cartesian_intensity
 
 def convolve_intensity(intensity):
     """ Step 3: Convolve cartesian intensity with 2-D Gaussian """
