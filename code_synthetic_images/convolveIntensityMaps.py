@@ -114,6 +114,13 @@ version = args.version
 
 ###############################################################################
 
+### Add new parameters to dictionary ###
+fargo_par["Beam"] = beam_size
+fargo_par["Wavelength"] = wavelength
+fargo_par["Distance"] = distance
+
+###############################################################################
+
 ### Helper Functions ###
 
 def read_data(frame):
@@ -220,9 +227,7 @@ def save_in_polar(intensity_cart, frame, xs, ys, order = 3):
         save_fn = "%s/v%04d_id%04d_intensityMap_%04d.p" % (save_directory, version, id_number, frame)
     pickle.dump(polar_data, open(save_fn, 'wb'))
 
-    # Add beam size to fargo_par (and save!)
-    fargo_par["Beam"] = beam_size
-
+    # Save fargo_par
     dict_name = "%s/id%04d_par.p" % (save_directory, id_number)
     pickle.dump(fargo_par, open(dict_name, "wb"))
 
