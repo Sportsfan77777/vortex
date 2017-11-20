@@ -173,7 +173,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
 
     fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    #result.set_clim(clim[0], clim[1])
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
