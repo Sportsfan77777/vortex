@@ -223,7 +223,7 @@ def save_in_polar(intensity_cart, frame, xs, ys, order = 3):
     # Add beam size to fargo_par (and save!)
     fargo_par["Beam"] = beam_size
 
-    dict_name = "id%04d_par.p" % id_number
+    dict_name = "%s/id%04d_par.p" % (save_directory, id_number)
     pickle.dump(fargo_par, open(dict_name, "wb"))
 
 ##### PLOTTING #####
