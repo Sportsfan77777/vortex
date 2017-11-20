@@ -252,12 +252,10 @@ def generate_secondary_files(rad, theta, new_sizes):
     np.savetxt("%s/id%04d_grain.dat" % (save_directory, id_number), new_sizes)
     np.savetxt("%s/id%04d_temperature.dat" % (save_directory, id_number), temperatures)
 
-    # Make Opacities
+    # Make and Label Opacities
     if make_opacities:
         os.system("./makeopac")
-
-    # Label Opacities
-    label_opacities(id_number)
+        label_opacities(id_number)
 
 def output_density_txt(density, frame):
     """ Step 7: output txt file """
