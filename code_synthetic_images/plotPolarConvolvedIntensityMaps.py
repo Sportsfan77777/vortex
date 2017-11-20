@@ -149,10 +149,10 @@ def make_plot(frame, show = False):
 
     # Data
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
-    _, _, xs_grid, ys_grid, density_cart = sq.polar_to_cartesian(intensity, rad, theta)
+    _, _, xs_grid, ys_grid, intensity_cart = sq.polar_to_cartesian(intensity, rad, theta)
 
     ### Plot ###
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
     cbar = fig.colorbar(result)
 
     #result.set_clim(clim[0], clim[1])
@@ -166,6 +166,8 @@ def make_plot(frame, show = False):
     fig.gca().add_artist(beam)
 
     # Label star and planet
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
     if orbit >= taper_time:
         current_mass = planet_mass
     else:
@@ -176,9 +178,6 @@ def make_plot(frame, show = False):
     plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
 
     # Annotate Axes
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-
     plot.xlabel("Radius", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
     plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
