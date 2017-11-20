@@ -39,37 +39,18 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "intensityMaps",
-                         help = 'save directory (default: intensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = ".",
+                         help = 'save directory (default: .)')
 
     # Convolution Parameters
     parser.add_argument('-b', dest = "beam_size", type = float, default = 0.5,
                          help = 'beam size (in planet radii) (default: 0.5)')
 
-    # Plot Parameters (variable)
-    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
-                         help = 'for single plot, do not display plot (default: display plot)')
+    # Identification
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
-
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
-                         help = 're-sample resolution (default: [400, 400])')
-    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
-                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
-    
-
-    # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 2.5,
-                         help = 'maximum density in colorbar (default: 2.5)')
-
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
-    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
-                         help = 'dpi of plot annotations (default: 100)')
 
     return parser
 
@@ -84,6 +65,9 @@ fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
@@ -103,14 +87,7 @@ distance = float(synthetic_par[4])
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -124,36 +101,17 @@ if not os.path.isdir(save_directory):
 beam_size = 0.5 * args.beam_size # the sigma of the gaussian, not the beam diameter
 beam_diameter = args.beam_size * fargo_par["Radius"]
 
-# Plot Parameters (variable)
-show = args.show
-
-new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
-rad = np.linspace(r_min, r_max, new_num_rad)
-theta = np.linspace(0, 2 * np.pi, new_num_theta)
+# Identification
 
 id_number = args.id_number
 version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
-
-# Plot Parameters (constant)
-cmap = args.cmap
-clim = [0, args.cmax]
-
-fontsize = args.fontsize
-dpi = args.dpi
 
 ###############################################################################
-
-# Image Parameters
-beam_diameter = 10.0
-beam_size = 0.5 * (beam_diameter / radius) # the sigma of the gaussian, not the beam diameter
 
 ### Helper Functions ###
 
 def read_data(frame):
+    """ Step 0: read intensity data """
     intensity = util.read_data(frame, 'intensity', fargo_par, id_number = id_number)
     return intensity
 
@@ -202,8 +160,6 @@ def polar_to_cartesian(intensity, rs, thetas, order = 3):
 
     return xs, ys, xs_grid, ys_grid, cart_data
 
-# Convolver #
-
 def convolve_intensity(intensity):
     """ Step 3: Convolve cartesian intensity with 2-D Gaussian """
     # Source: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve
@@ -228,34 +184,8 @@ def divide_by_beam(intensity):
 
     return intensity / beam
 
-# Contraster #
-
-def record_contrast(intensity, xs, ys):
-    # Get intensity along x = 0
-    zero_i = np.searchsorted(xs, 0)
-    two_sliver = intensity[zero_i - 1 : zero_i + 1, :] # two columns around x = 0
-    sliver = np.average(two_sliver, axis = 0)
-
-    # Mask inner disk
-    lower_i = np.searchsorted(ys, -1)
-    upper_i = np.searchsorted(ys, 1)
-    sliver[lower_i : upper_i] = 0.0
-
-    # Find argmax (y-coor, and opposite y-coor)
-    max_yi = np.argmax(sliver)
-    max_y = ys[max_yi]
-
-    opposite_i = np.searchsorted(ys, -max_y)
-
-    # Mark contrast, max, opposite
-    maximum = np.max(sliver)
-    opposite = sliver[opposite_i]
-    contrast = maximum / opposite
-
-    return contrast, maximum, opposite
-
 def save_in_polar(intensity_cart, xs, ys, order = 3):
-    ### Convert to Polar ###
+    """ Step 5: save in polar coordinates """
 
     # Set up rt-grid
     old_rs = rad
@@ -279,9 +209,9 @@ def save_in_polar(intensity_cart, xs, ys, order = 3):
 
     # Save in pickle
     if version is None:
-        save_fn = "%s/id%04d_intensityMap_%04d.png" % (save_directory, id_number, frame)
+        save_fn = "%s/id%04d_intensityMap_%04d.p" % (save_directory, id_number, frame)
     else:
-        save_fn = "%s/v%04d_id%04d_intensityMap_%04d.png" % (save_directory, version, id_number, frame)
+        save_fn = "%s/v%04d_id%04d_intensityMap_%04d.p" % (save_directory, version, id_number, frame)
     pickle.dump(polar_data, open(save_fn, 'wb'))
 
 ##### PLOTTING #####
@@ -296,8 +226,11 @@ def full_procedure(frame):
     """ Every Step """
 
     intensity = read_data(frame)
-    intensity = convolve_intensity(intensity)
-    intensity = divide_by_beam(intensity)
+    intensity = clear_inner_disk(intensity) # not neccessary if inner disk was never sampled
+    xs, ys, intensity_cartesian = polar_to_cartesian(intensity, rs, thetas)
+    intensity_cartesian = convolve_intensity(intensity_cartesian)
+    intensity_cartesian = divide_by_beam(intensity_cartesian)
+    save_in_polar(intensity_cart, xs, ys) # Also save fargo par???
 
 
 ##### Make Plots! #####
