@@ -222,9 +222,9 @@ def save_in_polar(intensity_cart, frame, xs, ys, order = 3):
 
     # Save in pickle
     if version is None:
-        save_fn = "%s/id%04d_intensityMap_%04d.p" % (save_directory, id_number, frame)
+        save_fn = "%s/id%04d_intensityMap%04d.p" % (save_directory, id_number, frame)
     else:
-        save_fn = "%s/v%04d_id%04d_intensityMap_%04d.p" % (save_directory, version, id_number, frame)
+        save_fn = "%s/v%04d_id%04d_intensityMap%04d.p" % (save_directory, version, id_number, frame)
     pickle.dump(polar_data, open(save_fn, 'wb'))
 
     # Save fargo_par
