@@ -157,7 +157,7 @@ def make_synthetic_image(tmp_dir, frame):
     shutil.move(output, target)
 
     # Copy fargo_par to save directory
-    if save_directory is not "."
+    if save_directory is not ".":
         dict_name = "id%04d_par.p" % id_number
         shutil.copy("../%s" % dict_name, dict_name)
 
