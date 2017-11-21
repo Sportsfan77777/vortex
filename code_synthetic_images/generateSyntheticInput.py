@@ -188,7 +188,7 @@ def resample(density, new_num_rad = 400, new_num_theta = 400):
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
     for i, _ in enumerate(sizes):
-        interpolator = sp_int.interp2d(theta, rad, np.transpose(density[:, :, i])) # Careful: z is flattened!
+        interpolator = sp_int.interp2d(theta, rad, density[:, :, i]) # Careful: z is flattened!
         new_density[:, :, i] = (interpolator(new_theta, new_rad)).T # Note: result needs to be transposed
     
     return new_rad, new_theta, new_density
