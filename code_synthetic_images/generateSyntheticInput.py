@@ -266,6 +266,11 @@ def output_density_txt(density, frame):
 
 def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
+    # Save Separated Density
+    fn = "%s/id%04d_seperated_gasddens%d.p" % (save_directory, id_number, frame)
+    pickle.dump(density, open(fn, 'wb'))
+
+    # Save Composite Density
     composite_density = np.sum(density, axis = -1)
 
     fn = "%s/id%04d_gasddens%d.p" % (save_directory, id_number, frame)
