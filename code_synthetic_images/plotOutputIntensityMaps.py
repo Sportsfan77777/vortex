@@ -145,7 +145,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, intensity, cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
 
     fig.colorbar(result)
     #result.set_clim(clim[0], clim[1])
