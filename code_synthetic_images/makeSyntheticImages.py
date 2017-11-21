@@ -159,7 +159,7 @@ def make_synthetic_image(tmp_dir, frame):
     # Copy fargo_par to save directory
     if save_directory is not ".":
         dict_name = "id%04d_par.p" % id_number
-        shutil.copy(dict_name, "%s/%s" (save_directory, dict_name))
+        shutil.copy(dict_name, "%s/%s" % (save_directory, dict_name))
 
     # Delete tmp dir
     os.chdir(cwd)
