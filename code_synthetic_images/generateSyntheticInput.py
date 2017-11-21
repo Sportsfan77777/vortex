@@ -182,16 +182,14 @@ def center_vortex(density):
 def resample(density, new_num_rad = 400, new_num_theta = 400):
     """ Step 3: lower resolution (makes txt output smaller) """
 
-    new_density = np.zeros((len(sizes), new_num_rad, new_num_theta))
+    new_density = np.zeros((new_num_theta, new_num_rad, len(sizes)))
 
     new_rad = np.linspace(new_r_min, new_r_max, new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
     for i, _ in enumerate(sizes):
-        interpolator = sp_int.interp2d(theta, rad, (density[:, :, i])) # Careful: z is flattened!
-        new_density[i, :, :] = (interpolator(new_theta, new_rad)) # Note: result needs to be transposed
-        #interpolator = sp_int.interp2d(rad, theta, np.transpose(density[:, :, i])) # Careful: z is flattened!
-        #new_density[:, :, i] = (interpolator(new_rad, new_theta)).T # Note: result needs to be transposed
+        interpolator = sp_int.interp2d(theta, rad, np.transpose(density[:, :, i])) # Careful: z is flattened!
+        new_density[:, :, i] = (interpolator(new_theta, new_rad)).T # Note: result needs to be transposed
     
     return new_rad, new_theta, new_density
 
@@ -208,8 +206,7 @@ def interpolate_density(density, num_grains):
     interpolated_ranges = np.power(10.0, log_interpolated_ranges)
 
     ### Interpolate ### 
-    size_interpolator = sp_int.interp1d(sizes, density, axis = 0)
-    #size_interpolator = sp_int.interp1d(sizes, density, axis = -1)
+    size_interpolator = sp_int.interp1d(sizes, density, axis = -1)
     unweighted_interpolated_density = size_interpolator(interpolated_sizes)
 
     # Scale to a Power Law Distribution
@@ -262,8 +259,7 @@ def generate_secondary_files(rad, theta, new_sizes):
 
 def output_density_txt(density, frame):
     """ Step 7: output txt file """
-    interleaved_density = density.flatten() # interleave to 1-d
-    #interleaved_density = density.flatten('F') # interleave to 1-d
+    interleaved_density = density.flatten('F') # interleave to 1-d
 
     fn = "%s/id%04d_gasddens%d.dat" % (save_directory, id_number, frame)
     np.savetxt(fn, interleaved_density)
