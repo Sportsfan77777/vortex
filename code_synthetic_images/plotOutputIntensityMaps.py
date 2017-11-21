@@ -51,8 +51,6 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
-                         help = 're-sample resolution (default: [400, 400])')
     parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
                          help = 'id number for this set of plot parameters (default: [r_min, r_max])')
     
@@ -92,10 +90,6 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
-beam = fargo_par["Beam"]
-wavelength = fargo_par["Wavelength"]
-distance = fargo_par["Distance"]
-
 ### Get Input Parameters ###
 
 # Frames
@@ -119,9 +113,8 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
-rad = np.linspace(r_min, r_max, new_num_rad)
-theta = np.linspace(0, 2 * np.pi, new_num_theta)
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
@@ -152,7 +145,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
+    result = ax.pcolormesh(x, y, intensity, cmap = cmap)
 
     fig.colorbar(result)
     #result.set_clim(clim[0], clim[1])
