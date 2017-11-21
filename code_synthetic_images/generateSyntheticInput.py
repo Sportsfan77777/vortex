@@ -60,7 +60,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 420],
                          help = 're-sample resolution (default: [400, 400])')
     parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [1.0, 3.6],
                          help = 're-sample range (default: [1.0, 3.6])')
@@ -267,7 +267,7 @@ def output_density_txt(density, frame):
 def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
     # Save Separated Density
-    fn = "%s/id%04d_seperated_gasddens%d.p" % (save_directory, id_number, frame)
+    fn = "%s/id%04d_separated_gasddens%d.p" % (save_directory, id_number, frame)
     pickle.dump(density, open(fn, 'wb'))
 
     # Save Composite Density
