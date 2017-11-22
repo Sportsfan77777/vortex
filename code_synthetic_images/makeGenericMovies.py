@@ -33,6 +33,9 @@ movie_dictionary = {}
 movie_dictionary["density"] = "densityMap_"
 movie_dictionary["polarDensity"] = "polarDensityMap_"
 movie_dictionary["azimuthalDensity"] = "azimuthalDensityProfiles_"
+movie_dictionary["intensity"] = "intensityMap"
+movie_dictionary["polarIntensity"] = "intensityMap"
+movie_dictionary["cartesianIntensity"] = "intensityCartGrid"
 
 ###############################################################################
 
