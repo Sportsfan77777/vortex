@@ -50,6 +50,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'radial range in plot (default: None)')
@@ -113,10 +117,6 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -136,6 +136,13 @@ def get_contrast(intensity):
     contrast, _, _ = az.get_contrast(intensity, fargo_par) # returns contrast, max, opposite
     
     return contrast
+
+def save_contrasts():
+    """ save array of contrasts """
+    contrast_array = np.array(contrasts)
+
+    save_fn = "%s/id%04d_contrasts_lambda%04d_beam%03d.p" % (save_directory, id_number, wavelength, beam_size)
+    pickle.dump(contrast_array, open(save_fn, "wb"))
 
 ###############################################################################
 
