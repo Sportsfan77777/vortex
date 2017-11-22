@@ -165,6 +165,10 @@ def make_plot(frame, show = False):
     beam = plot.Circle((-2, -2), beam_size / 2, color = "white")
     fig.gca().add_artist(beam)
 
+    # Add planet orbit
+    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False)
+    fig.gca.add_artist(planet_orbit)
+
     # Label star and planet
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
