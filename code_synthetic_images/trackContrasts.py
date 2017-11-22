@@ -119,11 +119,9 @@ id_number = args.id_number
 version = args.version
 
 # Plot Parameters (constant)
-cmap = args.cmap
-clim = [0, args.cmax]
-
 fontsize = args.fontsize
 linewidth = args.linewidth
+
 alpha = args.alpha
 dpi = args.dpi
 
