@@ -199,6 +199,10 @@ def save_data(intensity_cart, frame, xs, ys, order = 3):
     # Convert (Interpolate)
     polar_data = map_coordinates(intensity_cart, np.array([new_interpolated_xs, new_interpolated_ys]), order = order).reshape(new_xs.shape)
 
+    # Rotate 90 degrees! (artifact of method?)
+    quarter_turn = -np.searchsorted(theta, np.pi / 4.0)
+    polar_data = np.roll(polar_data, quarter_turn, axis = -1)
+
     # Save in pickle
     if version is None:
         save_fn = "%s/id%04d_intensityMap%04d.p" % (save_directory, id_number, frame)
