@@ -123,6 +123,8 @@ cmap = args.cmap
 clim = [0, args.cmax]
 
 fontsize = args.fontsize
+linewidth = args.linewidth
+alpha = args.alpha
 dpi = args.dpi
 
 ###############################################################################
