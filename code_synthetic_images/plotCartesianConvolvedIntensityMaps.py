@@ -52,8 +52,6 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
-                         help = 're-sample resolution (default: [400, 400])')
     parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
                          help = 'id number for this set of plot parameters (default: [r_min, r_max])')
     
@@ -120,9 +118,8 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
-rad = np.linspace(r_min, r_max, new_num_rad)
-theta = np.linspace(0, 2 * np.pi, new_num_theta)
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
