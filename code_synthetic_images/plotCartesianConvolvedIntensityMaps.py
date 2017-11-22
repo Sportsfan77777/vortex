@@ -41,8 +41,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "intensityMaps",
-                         help = 'save directory (default: intensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMaps",
+                         help = 'save directory (default: cartesianIntensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
