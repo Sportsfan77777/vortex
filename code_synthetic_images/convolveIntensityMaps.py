@@ -167,9 +167,18 @@ def divide_by_beam(intensity):
 
     return intensity / beam
 
-def save_in_polar(intensity_cart, frame, xs, ys, order = 3):
-    """ Step 5: save in polar coordinates """
+def save_data(intensity_cart, frame, xs, ys, order = 3):
+    """ Step 5: save in cartesian and polar coordinates """
 
+    ################### Save cartesian output ###################
+    # Save in pickle
+    if version is None:
+        save_fn = "%s/id%04d_intensityCartGrid%04d.p" % (save_directory, id_number, frame)
+    else:
+        save_fn = "%s/v%04d_id%04d_intensityCartGrid%04d.p" % (save_directory, version, id_number, frame)
+    pickle.dump(intensity_cart, open(save_fn, 'wb'))
+
+    ##################### Save polar output #####################
     # Set up rt-grid
     old_rs = rad
     old_thetas = theta
@@ -218,7 +227,7 @@ def full_procedure(frame):
 
     intensity_cartesian = convolve_intensity(intensity_cartesian)
     intensity_cartesian = divide_by_beam(intensity_cartesian)
-    save_in_polar(intensity_cartesian, frame, xs, ys)
+    save_data(intensity_cartesian, frame, xs, ys)
 
 
 ##### Make Plots! #####
