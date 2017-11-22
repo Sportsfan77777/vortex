@@ -68,6 +68,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
     parser.add_argument('--save', dest = "save_directory", default = ".",
                          help = 'save directory (default: ".")')
+    parser.add_argument('--separate', dest = "save_separate", action = 'store_true', default = False,
+                         help = 'save density for num_grains grain sizes (default: False)')
 
     parser.add_argument('-o', dest = "make_opacities", action = 'store_true', default = False,
                          help = 'make opacities (default: False)')
@@ -115,6 +117,7 @@ new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
 new_r_min = args.new_range[0]; new_r_max = args.new_range[1]
 id_number = args.id_number
 save_directory = args.save_directory
+save_separate = args.save_separate
 
 make_opacities = args.make_opacities
 
@@ -267,8 +270,9 @@ def output_density_txt(density, frame):
 def output_density_pickle(density, frame):
     """ Step 8: output pickle file """
     # Save Separated Density
-    fn = "%s/id%04d_separated_gasddens%d.p" % (save_directory, id_number, frame)
-    pickle.dump(density, open(fn, 'wb'))
+    if save_separate:
+        fn = "%s/id%04d_separated_gasddens%d.p" % (save_directory, id_number, frame)
+        pickle.dump(density, open(fn, 'wb'))
 
     # Save Composite Density
     composite_density = np.sum(density, axis = -1)
