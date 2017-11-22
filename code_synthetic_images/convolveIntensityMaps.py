@@ -133,10 +133,12 @@ def clear_inner_disk(intensity):
     """ Step 1: get rid of inner disk (r < outer_limit) """
     filtered_intensity = np.copy(intensity)
 
-    outer_limit = np.searchsorted(rad, 1.05)
+    outer_limit = np.searchsorted(rad, 0.75) # make outer limit a parameter
     filtered_intensity[:outer_limit] = 0
 
     return filtered_intensity
+
+######## Add zeroed-out inner disk!!!!!! #########
 
 def polar_to_cartesian(intensity, order = 3):
     """ Step 2: convert to cartesian """

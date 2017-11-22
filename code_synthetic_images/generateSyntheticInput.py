@@ -62,8 +62,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
 
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 420],
                          help = 're-sample resolution (default: [400, 400])')
-    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [1.0, 3.6],
-                         help = 're-sample range (default: [1.0, 3.6])')
+    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [0.6, 3.6],
+                         help = 're-sample range (default: [0.6, 3.6])')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
     parser.add_argument('--save', dest = "save_directory", default = ".",
