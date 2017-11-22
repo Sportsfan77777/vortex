@@ -56,8 +56,8 @@ def get_radial_min(averagedDensity, peak_rad, fargo_par):
         # No Gap Yet
         return peak_rad, 0
 
-def get_azimuthal_peak(density, fargo_par):
-    """ return shift needed to shift vortex peak to 180 degrees """
+def get_peak(density, fargo_par):
+    """ return location of peak in data in outer disk """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
     theta = fargo_par["theta"]
@@ -69,6 +69,19 @@ def get_azimuthal_peak(density, fargo_par):
 
     argmax = np.argmax(density_segment)
     arg_r, arg_phi = np.unravel_index(argmax, np.shape(density_segment))
+
+    arg_r += outer_disk_start
+
+    return arg_r, arg_phi
+
+def get_azimuthal_peak(density, fargo_par):
+    """ return shift needed to shift vortex peak to 180 degrees """
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    ########### Method ##############
+    arg_r, arg_phi = get_peak(density, fargo_par)
 
     ### Calculate shift for true center to 180 degrees ###
     middle = np.searchsorted(theta, np.pi)
@@ -125,6 +138,30 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
     shift_c = int(middle - (center - shift_min))
 
     return shift_c
+
+
+def get_contrast(data):
+    """ for polar data, returns contrast between peak and opposite point """
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    ########### Method ##############
+    # Get indices
+    arg_r, arg_phi = get_peak(data)
+
+    # Get index of opposite
+    phi = theta[arg_phi]
+    opposite_phi = (phi + np.pi) % (2 * np.pi)
+    arg_opposite = np.searchsorted(theta, opposite_phi)
+
+    # Get target values
+    data_peak = data[arg_r, arg_phi]
+    data_opposite = data[arg_phi, arg_opposite]
+
+    contrast = data_peak / data_opposite
+
+    return contrast, data_peak, data_opposite
 
 ### Data ###
 

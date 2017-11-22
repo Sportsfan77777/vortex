@@ -108,8 +108,8 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-rad = np.linspace(r_min, r_max, new_num_rad)
-theta = np.linspace(0, 2 * np.pi, new_num_theta)
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
@@ -127,46 +127,15 @@ dpi = args.dpi
 
 ###############################################################################
 
-### Helper Methods ###
-def get_fargo_par(directory):
-    """ return fargo parameter dictionary """
-    fargo_par = util.get_pickled_parameters(directory = directory)
-
-    ### Create new parameters ###
-    rad = np.linspace(fargo_par["Rmin"], fargo_par["Rmax"], fargo_par["Nrad"])
-    theta = np.linspace(0, 2 * np.pi, fargo_par["Nsec"])
-
-    ### Add new parameters to dictionary ###
-    fargo_par["rad"] = rad
-    fargo_par["theta"] = theta
-
-    return fargo_par
-
 def get_frame_index(frame):
     """ return array index corresponding to frame """
     return np.searchsorted(frame_range, frame)
 
-def get_center(density, fargo_par, size):
-    """ return theta for vortex center (in degrees) """
-    ######## Get Parameters #########
-    theta = fargo_par["theta"]
-
-    ########### Method ############## 
-    threshold = util.get_threshold(size)
-    shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
-    theta_c = theta[shift_c] * (180.0 / np.pi)
+def get_contrast(intensity):
+    """ return contrast """
+    contrast, _, _ = az.get_contrast(intensity, fargo_par) # returns contrast, max, opposite
     
-    return theta_c
-
-def angle_difference(angles1, angles2):
-    """ return difference between two arrays of angles """
-    angle_diff = angles1 - angles2
-
-    # Correct for angle pairs on opposite sides of zero
-    angle_diff[angle_diff > 180] -= 360
-    angle_diff[angle_diff < -180] += 360
-
-    return angle_diff
+    return contrast
 
 ###############################################################################
 
@@ -182,28 +151,27 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     ### Line Plot ###
-    reference = np.array(center_arrays["hcm"])
 
-    for i, size_name in enumerate(size_names):
-        x = frame_range
-        y = angle_difference(np.array(center_arrays[size_name]), reference)
-        plot.plot(x, y, c = colors[i], linewidth = linewidth, label = util.get_size_label(sizes[i]))
+    x = frame_range
+    y = np.array(contrasts)
+    plot.plot(x, y, linewidth = linewidth)
 
     # Annotate Axes
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Vortex Centers")
-
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+    plot.ylabel("Contrasts", fontsize = fontsize)
+    #plot.title("")
 
     # Axes
     plot.xlim(frame_range[0], frame_range[-1])
     if max_y is not None:
-        plot.ylim(-max_y, max_y)
+        plot.ylim(0, max_y)
 
     # Save, Show, and Close
-    save_fn = "vortexCenters.png"
-    plot.savefig(save_fn, bbox_inches = 'tight')
+    if version is None:
+        save_fn = "%s/id%04d_contrasts_lambda%04d_beam%03d.png" % (save_directory, id_number, wavelength, beam_size)
+    else:
+        save_fn = "%s/v%04d_id%04d_contrasts_lambda%04d_beam%03d.png" % (save_directory, version, id_number, wavelength, beam_size)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
         plot.show()
@@ -222,17 +190,10 @@ def full_procedure(frame):
     """ Every Step """
 
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
-    get_contrast(intensity)
+    contrast_i = get_contrast(intensity)
 
-    for i, size_name in enumerate(size_names):
-        directory = "../%s-size/" % size_name
-        fargo_par_i = get_fargo_par(directory)
-
-        util.get_pickled_parameters(directory = directory)
-        density = util.read_dust_data(frame, fargo_par_i, directory = directory)
-
-        frame_i = get_frame_index(frame)
-        (center_arrays[size_name])[frame_i] = get_center(density, fargo_par_i, sizes[i])
+    frame_i = get_frame_index(frame)
+    contrasts[frame_i] = contrast_i
 
 ##### Gather Data! #####
 
