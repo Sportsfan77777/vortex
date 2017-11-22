@@ -167,7 +167,7 @@ def make_plot(frame, show = False):
 
     # Add planet orbit
     planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False)
-    fig.gca.add_artist(planet_orbit)
+    fig.gca().add_artist(planet_orbit)
 
     # Label star and planet
     time = fargo_par["Ninterm"] * fargo_par["DT"]
