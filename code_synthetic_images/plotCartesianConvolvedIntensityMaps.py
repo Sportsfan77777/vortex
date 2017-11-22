@@ -166,7 +166,7 @@ def make_plot(frame, show = False):
     fig.gca().add_artist(beam)
 
     # Add planet orbit
-    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False)
+    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
     fig.gca().add_artist(planet_orbit)
 
     # Label star and planet
