@@ -156,7 +156,7 @@ def get_contrast(data, fargo_par):
 
     # Get target values
     data_peak = data[arg_r, arg_phi]
-    data_opposite = data[arg_phi, arg_opposite]
+    data_opposite = data[arg_r, arg_opposite]
 
     contrast = data_peak / data_opposite
 

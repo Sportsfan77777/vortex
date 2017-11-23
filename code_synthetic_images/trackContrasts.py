@@ -99,7 +99,7 @@ distance = fargo_par["Distance"]
 ### Get Input Parameters ###
 
 # Frames
-frames = util.get_frame_range(args.frames)
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -124,6 +124,15 @@ linewidth = args.linewidth
 
 alpha = args.alpha
 dpi = args.dpi
+
+###############################################################################
+
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
+
+fargo_par["new_num_rad"] = new_num_rad; fargo_par["new_num_theta"] = new_num_theta
+fargo_par["new_r_min"] = new_r_min; fargo_par["new_r_max"] = new_r_max
 
 ###############################################################################
 
