@@ -139,8 +139,7 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
 
     return shift_c
 
-
-def get_contrast(data):
+def get_contrast(data, fargo_par):
     """ for polar data, returns contrast between peak and opposite point """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
