@@ -1,6 +1,5 @@
 """
-tracks vortex centers
-(intended use: For T = 1000, compare each center to 'hcm-size center')
+tracks contrasts for individual beam sizes
 """
 
 import sys, os, subprocess
@@ -118,6 +117,8 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
+max_y = args.max_y
+
 # Plot Parameters (constant)
 fontsize = args.fontsize
 linewidth = args.linewidth
@@ -130,9 +131,6 @@ dpi = args.dpi
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
-
-fargo_par["new_num_rad"] = new_num_rad; fargo_par["new_num_theta"] = new_num_theta
-fargo_par["new_r_min"] = new_r_min; fargo_par["new_r_max"] = new_r_max
 
 ###############################################################################
 
