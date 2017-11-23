@@ -147,7 +147,7 @@ def get_contrast(data, fargo_par):
 
     ########### Method ##############
     # Get indices
-    arg_r, arg_phi = get_peak(data)
+    arg_r, arg_phi = get_peak(data, fargo_par)
 
     # Get index of opposite
     phi = theta[arg_phi]
