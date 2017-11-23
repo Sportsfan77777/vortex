@@ -91,7 +91,7 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
-beam_size = fargo_par["Beam"]
+beam_size = fargo_par["Beam"] * fargo_par["Radius"]
 wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
@@ -223,6 +223,7 @@ else:
     for frame in frame_range:
         full_procedure(frame)
 
-##### Make Plots! #####
+##### Save Data and Make Plots! #####
 
+save_contrasts()
 make_plot(show = show)
