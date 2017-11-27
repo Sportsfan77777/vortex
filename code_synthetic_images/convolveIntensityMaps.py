@@ -133,7 +133,7 @@ def clear_inner_disk(intensity):
     """ Step 1: get rid of inner disk (r < outer_limit) """
     filtered_intensity = np.copy(intensity)
 
-    outer_limit = np.searchsorted(rad, 0.75) # make outer limit a parameter
+    outer_limit = np.searchsorted(rad, 0.6) # make outer limit a parameter
     filtered_intensity[:outer_limit] = 0
 
     return filtered_intensity
@@ -162,12 +162,14 @@ def convolve_intensity(intensity):
     return convolved_intensity
 
 def divide_by_beam(intensity):
-    """ Step 4: divide by beam """
+    """ Step 4: divide by beam (and convert to Janskys) """
     # beam size = (pi / 4 ln2) * (theta)^2
-    beam_angle = beam_diameter / distance
+    beam_angle = (beam_diameter / distance) * (np.pi / (180 * 3600))
     beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
 
-    return intensity / beam
+    intensity /= (10**(-23))
+
+    return intensity * beam
 
 def save_data(intensity_cart, frame, xs, ys, order = 3):
     """ Step 5: save in cartesian and polar coordinates """
