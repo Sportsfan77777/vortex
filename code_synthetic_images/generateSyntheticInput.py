@@ -59,9 +59,11 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'number of interpolated grains (default: 100)')
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
+    parser.add_argument('--scale', dest = "scale", type = int, default = 1,
+                         help = 'scaling of grain size distribution (default: 1)')
 
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 420],
-                         help = 're-sample resolution (default: [400, 400])')
+                         help = 're-sample resolution (default: [400, 420])')
     parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [0.6, 3.6],
                          help = 're-sample range (default: [0.6, 3.6])')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
@@ -112,6 +114,7 @@ radius = args.radius # radius of planet (in AU)
 # Save Parameters
 num_grains = args.num_grains
 number_density_power = -args.number_density_power # Note: negative of input
+scale = args.scale
 
 new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
 new_r_min = args.new_range[0]; new_r_max = args.new_range[1]
@@ -228,6 +231,8 @@ def interpolate_density(density, num_grains):
 
     interpolated_density = power_law[None, :] * unweighted_interpolated_density
 
+    # Normalize to initial total gas mass
+
     return interpolated_density, interpolated_sizes
 
 def convert_units(density):
@@ -304,7 +309,7 @@ def full_procedure(frame):
     """ Every Step """
     density, sizes = retrieve_density(frame, size_names)
 
-    density, sizes = polish(density, sizes)
+    density, sizes = polish(density, sizes, scale = scale)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
     density, new_sizes = interpolate_density(density, num_grains)
