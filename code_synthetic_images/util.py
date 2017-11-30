@@ -136,4 +136,4 @@ def find_max_frame():
 
 def smooth(array, kernel_size):
     """ smoothing function """
-    return lambda array, kernel_size : ff.gaussian_filter(array, kernel_size)
+    return ff.gaussian_filter(array, kernel_size)
