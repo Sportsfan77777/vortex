@@ -9,6 +9,7 @@ import os
 import pickle
 
 import numpy as np
+from scipy.ndimage import filters as ff
 
 from pylab import fromfile
 
@@ -132,3 +133,7 @@ def find_max_frame():
         if frame_number > max_frame:
             max_frame = frame_number
     return max_frame
+
+def smooth(array, kernel_size):
+    """ smoothing function """
+    return lambda array, kernel_size : ff.gaussian_filter(array, kernel_size)
