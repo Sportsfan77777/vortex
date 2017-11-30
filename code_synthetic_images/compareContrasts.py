@@ -179,7 +179,7 @@ def make_plot(show = False):
     if version is None:
         save_fn = "%s/id%04d_comparing_contrasts_lambda%04d.png" % (save_directory, id_number, wavelength)
     else:
-        save_fn = "%s/v%04d_id%04d_comparing_contrasts_lambda%04d_beam%03d.png" % (save_directory, version, id_number, wavelength)
+        save_fn = "%s/v%04d_id%04d_comparing_contrasts_lambda%04d.png" % (save_directory, version, id_number, wavelength)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
