@@ -218,6 +218,8 @@ def make_plot(frame, show = False):
 
     ############################# Right Panel #################################
 
+    plot.subplot(1, 2, 2)
+
     os.chdir(cwd)
     os.chdir(dir2)
 
