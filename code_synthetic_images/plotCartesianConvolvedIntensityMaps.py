@@ -54,12 +54,13 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 
     parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
                          help = 'id number for this set of plot parameters (default: [r_min, r_max])')
-    
+    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
+                         help = 'normalize by max (default: normalize)')
 
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 2.5,
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
                          help = 'maximum density in colorbar (default: 2.5)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -127,10 +128,16 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
+normalize = args.normalize
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+cmax = args.cmax
+if cmax is not None:
+    clim = [0, args.cmax]
+elif normalize:
+    cmax = 1
+    clim = [0, 1]
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -145,14 +152,19 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
+    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, beam = beam)
     _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
+
+    # Normalize
+    if normalize:
+        intensity_cart /= np.max(intensity_cart)
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
     cbar = fig.colorbar(result)
 
-    #result.set_clim(clim[0], clim[1])
+    if cmax is not None:
+        result.set_clim(clim[0], clim[1])
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
