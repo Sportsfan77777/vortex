@@ -152,7 +152,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, beam = beam)
+    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
     _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Normalize
