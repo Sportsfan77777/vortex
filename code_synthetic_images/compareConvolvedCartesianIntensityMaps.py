@@ -47,7 +47,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMComparisons",
+    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityComparisons",
                          help = 'save directory (default: cartesianIntensityMaps)')
 
     # Plot Parameters (variable)
@@ -272,6 +272,8 @@ def make_plot(frame, show = False):
     plot.axes().set_aspect('equal')
 
     ################################# End #####################################
+
+    os.chdir(cwd)
 
     # Save, Show,  and Close
     if version is None:
