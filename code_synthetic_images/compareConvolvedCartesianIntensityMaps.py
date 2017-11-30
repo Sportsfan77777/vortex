@@ -161,7 +161,7 @@ def make_plot(frame, show = False):
 
     ############################## Left Panel #################################
 
-    plot.subplot(1, 2, 1)
+    plot.subplot(1, 2, 1, aspect = 'equal')
 
     cwd = os.getcwd()
     os.chdir(dir1)
@@ -214,11 +214,10 @@ def make_plot(frame, show = False):
     box_size = 2.5
     plot.xlim(-box_size, box_size)
     plot.ylim(-box_size, box_size)
-    plot.axes().set_aspect('equal')
 
     ############################# Right Panel #################################
 
-    plot.subplot(1, 2, 2)
+    plot.subplot(1, 2, 2, aspect = 'equal')
 
     os.chdir(cwd)
     os.chdir(dir2)
@@ -271,7 +270,6 @@ def make_plot(frame, show = False):
     box_size = 2.5
     plot.xlim(-box_size, box_size)
     plot.ylim(-box_size, box_size)
-    plot.axes().set_aspect('equal')
 
     ################################# End #####################################
 
