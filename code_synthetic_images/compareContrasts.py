@@ -60,7 +60,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
-    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
+    parser.add_argument('-k', dest = "kernel", type = float, default = 5.0,
+                         help = 'kernel for smoothing function (default: 5.0)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.35,
                          help = 'line transparency in plot (default: 0.65)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -89,7 +91,6 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
-beam_size = fargo_par["Beam"] * fargo_par["Radius"]
 wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
@@ -121,6 +122,8 @@ max_y = args.max_y
 fontsize = args.fontsize
 linewidth = args.linewidth
 
+kernel = args.kernel
+
 alpha = args.alpha
 dpi = args.dpi
 
@@ -130,8 +133,8 @@ def load_data(beam):
     """ load contrasts for a particular beam size """
     directory = "beam%03d/%s" % (beam, save_directory)
 
-    save_fn = "%s/id%04d_contrasts_lambda%04d_beam%03d.p" % (save_directory, id_number, wavelength, beam)
-    contrasts = pickle.load(open(save_fn, "wb"))
+    save_fn = "%s/id%04d_contrasts_lambda%04d_beam%03d.p" % (directory, id_number, wavelength, beam)
+    contrasts = pickle.load(open(save_fn, "rb"))
 
     return contrasts
 
@@ -156,7 +159,9 @@ def make_plot(show = False):
 
         x = frame_range
         y = np.array(contrasts)
-        plot.plot(x, y, c = colors[i], linewidth = linewidth, label = r"$%d$ $\mathrm{AU}$" % beam)
+        y2 = util.smooth(y, kernel)
+        plot.plot(x, y, c = colors[i], linewidth = linewidth, alpha = alpha)
+        plot.plot(x, y2, c = colors[i], linewidth = linewidth, label = r"$%d$ $\mathrm{AU}$" % beam)
 
     # Annotate
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
