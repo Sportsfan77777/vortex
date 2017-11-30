@@ -47,7 +47,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMComparisons",
                          help = 'save directory (default: cartesianIntensityMaps)')
 
     # Plot Parameters (variable)
@@ -167,7 +167,7 @@ def make_plot(frame, show = False):
     os.chdir(dir1)
 
     # Data
-    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, beam = beam)
+    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
     _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Normalize
