@@ -161,13 +161,15 @@ def convolve_intensity(intensity):
     convolved_intensity = signal.fftconvolve(intensity, kernel, mode = 'same')
     return convolved_intensity
 
-def divide_by_beam(intensity):
-    """ Step 4: divide by beam (and convert to Janskys) """
+def convert_units(intensity):
+    """ Step 4: convert to Janskys / beam """
+    ### (1) Convert to Janskys
+    intensity /= (10**(-23))
+
+    ### (2) Multiply by beam ###
     # beam size = (pi / 4 ln2) * (theta)^2
     beam_angle = (beam_diameter / distance) * (np.pi / (180 * 3600))
     beam = np.pi * (beam_angle)**2 / (4 * np.log(2))
-
-    intensity /= (10**(-23))
 
     return intensity * beam
 
@@ -235,7 +237,7 @@ def full_procedure(frame):
     xs, ys, intensity_cartesian = polar_to_cartesian(intensity)
 
     intensity_cartesian = convolve_intensity(intensity_cartesian)
-    intensity_cartesian = divide_by_beam(intensity_cartesian)
+    intensity_cartesian = convert_units(intensity_cartesian)
     save_data(intensity_cartesian, frame, xs, ys)
 
 
