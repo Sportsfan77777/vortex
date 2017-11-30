@@ -156,14 +156,23 @@ def make_synthetic_image(tmp_dir, frame):
     target = "../%s/%s" % (save_directory, output_name)
     shutil.move(output, target)
 
-    # Copy fargo_par to save directory
-    if save_directory is not ".":
-        dict_name = "id%04d_par.p" % id_number
-        shutil.copy("../%s" % dict_name, "../%s/%s" % (save_directory, dict_name))
-
     # Delete tmp dir
     os.chdir(cwd)
     shutil.rmtree(tmp_dir)
+
+def add_parameters_to_dictionary():
+    """ add new parameters to fargo dictionary """
+    ### Get ID%04d Parameters ###
+    fn = "id%04d_par.p" % args.id_number
+    fargo_par = pickle.load(open(fn, "rb"))
+
+    ### Add New Parameters ###
+    fargo_par["Wavelength"] = args.wavelength
+    fargo_par["Distance"] = args.distance
+
+    ### Save Dictionary ###
+    dict_name = "%s/id%04d_par.p" % (save_directory, id_number)
+    pickle.dump(fargo_par, open(dict_name, "wb"))
 
 def full_procedure(frame):
     """ Every Step """
@@ -187,4 +196,6 @@ else:
     else:
         for frame in frame_range:
             full_procedure(frame)
+
+add_parameters_to_dictionary()
 
