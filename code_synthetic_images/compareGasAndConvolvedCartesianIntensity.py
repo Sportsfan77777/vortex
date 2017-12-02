@@ -168,11 +168,12 @@ def make_plot(frame, show = False):
     os.chdir(dir1)
 
     # Data
-    gas_density = util.read_data(frame, 'gas', fargo_par, id_number = id_number) / surface_density_zero
-    dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number)
+    gas_fargo_par = util.get_pickled_parameters(directory = dir1)
+    gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / surface_density_zero
+    dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
 
     # Shift gas density with center of dust density
-    shift = az.get_azimuthal_center(dust_density, fargo_par, threshold = 10.0 * dust_surface_density_zero)
+    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
     gas_density = np.roll(gas_density, shift)
 
     # Locate Planet
