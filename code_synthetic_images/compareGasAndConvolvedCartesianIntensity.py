@@ -168,7 +168,7 @@ def make_plot(frame, show = False):
     os.chdir(dir1)
 
     # Data
-    gas_fargo_par = util.get_pickled_parameters(directory = dir1)
+    gas_fargo_par = util.get_pickled_parameters()
     gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / surface_density_zero
     dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
 
