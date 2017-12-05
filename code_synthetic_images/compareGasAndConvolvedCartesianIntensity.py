@@ -169,8 +169,14 @@ def make_plot(frame, show = False):
     os.chdir(dir1)
 
     # Data
-    gas_fargo_par = util.get_pickled_parameters()
-    gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / surface_density_zero
+    gas_fargo_par = util.get_pickled_parameters() ## shorten name?
+    ######## Need to extract parameters, and add 'rad' and 'theta' ########
+
+    gas_fargo_par['rad'] = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
+    gas_fargo_par['theta'] = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
+    gas_surface_density_zero = gas_fargo_par['Sigma0']
+
+    gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / gas_surface_density_zero
     dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
 
     # Shift gas density with center of dust density
@@ -189,18 +195,14 @@ def make_plot(frame, show = False):
     _, _, xs_grid, ys_grid, gas_density = sq.polar_to_cartesian(gas_density, rad, theta)
 
     ### Plot ###
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(gas_density), cmap = cmap)
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(gas_density), cmap = "viridis")
     cbar = fig.colorbar(result)
 
-    result.set_clim(0, 2)
+    result.set_clim(0, 1.5)
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
     fig.gca().add_artist(circle)
-
-    # Add beam size
-    beam = plot.Circle((-2, -2), beam_size / 2, color = "white")
-    fig.gca().add_artist(beam)
 
     # Add planet orbit
     planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
