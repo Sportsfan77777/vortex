@@ -171,9 +171,9 @@ def make_plot(frame, show = False):
     # Data
     gas_fargo_par = util.get_pickled_parameters() ## shorten name?
     ######## Need to extract parameters, and add 'rad' and 'theta' ########
-
-    gas_fargo_par['rad'] = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
-    gas_fargo_par['theta'] = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
+    gas_rad = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
+    gas_theta = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
+    gas_fargo_par['rad'] = gas_rad; gas_fargo_par['theta'] = gas_theta
     gas_surface_density_zero = gas_fargo_par['Sigma0']
 
     gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / gas_surface_density_zero
