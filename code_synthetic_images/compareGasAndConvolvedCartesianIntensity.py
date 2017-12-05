@@ -184,6 +184,8 @@ def make_plot(frame, show = False):
     gas_density = np.roll(gas_density, shift)
 
     # Locate Planet
+    if shift < -len(theta):
+        shift += len(theta)
     planet_theta = theta[shift]
     planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
     planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
