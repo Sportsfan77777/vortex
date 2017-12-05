@@ -28,6 +28,9 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     """ Input: Data, Radial array for Data, Azimuthal array for Data"""
     # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
 
+    # Note: Reversing thetas is necessary to maintain counter-clockwise rotation
+    thetas = thetas[::-1]
+
     # Set up xy-grid
     xs, ys, xs_grid, ys_grid = get_cartesian_grid(rs)
 
