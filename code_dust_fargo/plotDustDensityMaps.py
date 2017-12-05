@@ -179,7 +179,8 @@ def make_plot(frame, show = False):
         if taper < 10.1:
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = 0.05)
+            threshold = util.get_threshold(size)
+            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
         density = np.roll(density, shift_c)
     normalized_density = density / surface_density_zero
 
@@ -190,6 +191,13 @@ def make_plot(frame, show = False):
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
+
+    # Axes
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -204,13 +212,6 @@ def make_plot(frame, show = False):
         plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
     else:
         plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
-
-    # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
 
     # Save, Show, and Close
     if version is None:

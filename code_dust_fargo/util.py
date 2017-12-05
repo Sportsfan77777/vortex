@@ -9,6 +9,7 @@ import os
 import pickle
 
 import numpy as np
+from scipy.ndimage import filters as ff
 
 from pylab import fromfile
 
@@ -26,7 +27,23 @@ def get_pickled_parameters(directory = "."):
 
     return pickle.load(open(param_fn, "rb"))
 
-def read_data(frame, fn, fargo_par, directory = "."):
+def get_frame_range(frame_selection):
+    """ return array of selected frames"""
+    if len(frame_selection) == 1:
+        frame_range = frame_selection
+    elif len(frame_selection) == 2:
+        start = frame_selection[0]; end = frame_selection[1]
+        frame_range = range(start, end + 1)
+    elif len(frame_selection) == 3:
+        start = frame_selection[0]; end = frame_selection[1]; rate = frame_selection[2]
+        frame_range = range(start, end + 1, rate)
+    else:
+        print "Error: Must supply 1, 2, or 3 frame arguments\nWith one argument, plots single frame\nWith two arguments, plots range(start, end + 1)\nWith three arguments, plots range(start, end + 1, rate)"
+        exit()
+
+    return frame_range
+
+def read_data(frame, fn, fargo_par, id_number = None, version = None, directory = "."):
     """ read data"""
     ######## Get Parameters #########
     num_rad = fargo_par["Nrad"]
@@ -36,11 +53,29 @@ def read_data(frame, fn, fargo_par, directory = "."):
     # Dictionary
     basenames = {}
     basenames['gas'] = "gasdens%d.dat"; basenames['dust'] = "gasddens%d.dat"
+    basenames['intensity'] = "id%04d_intensity%04d.dat"; basenames['polar_intensity'] = "id%04d_intensityMap%04d.p"; basenames['cartesian_intensity'] = "id%04d_intensityCartGrid%04d.p"
 
     # Specific Data
-    basename = basenames[fn] % frame
-    density = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta))
-    return density
+    basename = basenames[fn]
+
+    if "id" in basename:
+        basename = basename % (id_number, frame)
+    else:
+        basename = basename % frame
+
+    # Add Version
+    if version is not None:
+        basename = "v%04d_%s" % (version, basename)
+
+    # Load properly based on extension
+    ext = basename[basename.find("."):]
+    if fn == 'intensity':
+        data = (np.loadtxt("%s/%s" % (directory, basename))[:, -1]).reshape(num_rad, num_theta)
+    elif ext == ".dat":
+        data = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta))
+    elif ext == ".p":
+        data = pickle.load(open(basename, "rb"))
+    return data
 
 def read_gas_data(frame, fargo_par, normalize = True, directory = "."):
     """ read dust data """
@@ -98,3 +133,7 @@ def find_max_frame():
         if frame_number > max_frame:
             max_frame = frame_number
     return max_frame
+
+def smooth(array, kernel_size):
+    """ smoothing function """
+    return ff.gaussian_filter(array, kernel_size)
