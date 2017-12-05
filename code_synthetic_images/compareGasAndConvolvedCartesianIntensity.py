@@ -194,7 +194,7 @@ def make_plot(frame, show = False):
     planet_y = np.sin(planet_theta)
 
     # Convert gas density to cartesian
-    _, _, xs_grid, ys_grid, gas_density = sq.polar_to_cartesian(gas_density, rad, theta)
+    _, _, xs_grid, ys_grid, gas_density = sq.polar_to_cartesian(gas_density, gas_rad, gas_theta)
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(gas_density), cmap = "viridis")
