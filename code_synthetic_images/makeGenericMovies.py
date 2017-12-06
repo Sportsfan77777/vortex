@@ -88,11 +88,11 @@ else:
    save_directory = directory
 
 name = movie_dictionary[args.movie_choice]
-if args.version is not None:
-   name = "v%04d_%s" % (args.version, name)
-
 if args.name_id is not None:
    name = "id%04d_%s" % (args.name_id, name)
+
+if args.version is not None:
+   name = "v%04d_%s" % (args.version, name)
 movie_name = name + args.movie_name
 
 # Movie Parameters
