@@ -146,31 +146,19 @@ def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (14, 6), dpi = dpi)
 
-    ############################## Left Panel #################################
-
-    plot.subplot(1, 2, 1, aspect = 'equal')
-
-    cwd = os.getcwd()
-    os.chdir(dir1)
-
     # Data
-    gas_fargo_par = util.get_pickled_parameters() ## shorten name?
-    ######## Need to extract parameters, and add 'rad' and 'theta' ########
-    gas_rad = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
-    gas_theta = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
-    gas_fargo_par['rad'] = gas_rad; gas_fargo_par['theta'] = gas_theta
-    gas_surface_density_zero = gas_fargo_par['Sigma0']
-
     gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / gas_surface_density_zero
     dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
 
     # Shift gas density with center of dust density
-    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
+    threshold = util.get_threshold(size)
+    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = threshold * dust_surface_density_zero)
     gas_density = np.roll(gas_density, shift)
+    dust_density = np.roll(dust_density, shift)
 
     # Locate Planet
-    if shift < -len(gas_theta):
-        shift += len(gas_theta)
+    if shift < -len(theta):
+        shift += len(theta)
     planet_theta = gas_theta[shift]
     planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
     planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
@@ -178,14 +166,19 @@ def make_plot(frame, show = False):
     planet_x = np.cos(planet_theta)
     planet_y = np.sin(planet_theta)
 
-    # Convert gas density to cartesian
-    _, _, xs_grid, ys_grid, gas_density = sq.polar_to_cartesian(gas_density, gas_rad, gas_theta)
+    # Convert density to cartesian
+    _, _, xs_grid, ys_grid, gas_density = sq.polar_to_cartesian(gas_density, rad, theta)
+    _, _, _, _, dust_density = sq.polar_to_cartesian(dust_density, rad, theta)
+
+    ############################## Left Panel #################################
+
+    plot.subplot(1, 2, 1, aspect = 'equal')
 
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(gas_density), cmap = "viridis")
     cbar = fig.colorbar(result)
 
-    result.set_clim(0, 1.5)
+    result.set_clim(dust_clim[0], dust_clim[1])
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -198,10 +191,14 @@ def make_plot(frame, show = False):
     # Label star and planet
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
+    #orbit = 550 + (time / (2 * np.pi)) * (frame - 550)
     if orbit >= taper_time:
         current_mass = planet_mass
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+    # Use Fixed Mass
+    #current_mass = np.power(np.sin((np.pi / 2) * (550.0 / taper_time)), 2) * planet_mass
 
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
@@ -221,23 +218,11 @@ def make_plot(frame, show = False):
 
     plot.subplot(1, 2, 2, aspect = 'equal')
 
-    os.chdir(cwd)
-    os.chdir(dir2)
-
-    # Data
-    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
-    _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
-
-    # Normalize
-    if normalize:
-        intensity_cart /= np.max(intensity_cart)
-
     ### Plot ###
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
     cbar = fig.colorbar(result)
 
-    if cmax is not None:
-        result.set_clim(clim[0], clim[1])
+    result.set_clim(gas_clim[0], gas_clim[1])
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -252,13 +237,6 @@ def make_plot(frame, show = False):
     fig.gca().add_artist(planet_orbit)
 
     # Label star and planet
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-    if orbit >= taper_time:
-        current_mass = planet_mass
-    else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
-
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
     plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
@@ -266,7 +244,7 @@ def make_plot(frame, show = False):
     # Annotate Axes
     plot.xlabel("x", fontsize = fontsize)
     plot.ylabel("y", fontsize = fontsize)
-    plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    plot.title("Dust Density Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     # Axes
     box_size = 2.5
@@ -279,9 +257,9 @@ def make_plot(frame, show = False):
 
     # Save, Show,  and Close
     if version is None:
-        save_fn = "%s/id%04d_intensityCartGrid_%04d.png" % (save_directory, id_number, frame)
+        save_fn = "%s/bothDensityMaps_%04d.png" % (save_directory, id_number, frame)
     else:
-        save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d.png" % (save_directory, version, id_number, frame)
+        save_fn = "%s/v%04d_bothDensityMaps_%04d.png" % (save_directory, version, id_number, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
