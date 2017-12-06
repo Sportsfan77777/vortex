@@ -32,14 +32,8 @@ for key in cmaps:
 
 ### Input Parameters ###
 
-def new_argument_parser(description = "Plot convolved intensity maps."):
+def new_argument_parser(description = "Plot dust density maps."):
     parser = argparse.ArgumentParser()
-
-    # Directory Selection
-    parser.add_argument('--dir1', dest = "directory1", default = None,
-                         help = 'data directory for gas (default: None)')
-    parser.add_argument('--dir2', dest = "directory2", default = None,
-                         help = 'data directory for convolved cartesian intensity (default: None)')
 
     # Frame Selection
     parser.add_argument('frames', type = int, nargs = '+',
@@ -48,27 +42,27 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "sidebysideGasAndIntensity",
-                         help = 'save directory (default: cartesianIntensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "bothDensityMaps",
+                         help = 'save directory (default: bothDensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
-    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
-                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
-                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
-    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
-                         help = 'normalize by max (default: normalize)')
-
+    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
+                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
+                         help = 'center frame on vortex peak or middle (default: do not center)')
+    
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
-                         help = 'color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
-                         help = 'maximum density in colorbar (default: 2.5)')
+    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmaxGas', dest = "gas_cmax", type = float, default = 2,
+                         help = 'maximum density in colorbar (default: 2)')
+    parser.add_argument('--cmaxDust', dest = "dust_cmax", type = float, default = None,
+                         help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -82,12 +76,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-dir1 = args.directory1
-dir2 = args.directory2
-
-### Get ID%04d Parameters ###
-fn = "%s/id%04d_par.p" % (dir2, args.id_number)
-fargo_par = pickle.load(open(fn, "rb"))
+### Get Fargo Parameters ###
+fargo_par = util.get_pickled_parameters()
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -103,21 +93,10 @@ disk_mass = 2 * np.pi * dust_surface_density_zero * (r_max - r_min) / jupiter_ma
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
-beam_size = fargo_par["Beam"]
-wavelength = fargo_par["Wavelength"]
-distance = fargo_par["Distance"]
-
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -133,25 +112,31 @@ show = args.show
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-id_number = args.id_number
 version = args.version
 if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-normalize = args.normalize
+center = args.center
 
 # Plot Parameters (constant)
 cmap = args.cmap
-cmax = args.cmax
-if cmax is not None:
-    clim = [0, args.cmax]
-elif normalize:
-    cmax = 1
-    clim = [0, 1]
+gas_cmax = args.gas_cmax
+dust_cmax = args.dust_cmax
+if dust_cmax is None:
+    if size > 0.2:
+        dust_cmax = 10
+    else:
+        dust_cmax = 2.5
+gas_clim = [0, gas_cmax]
+dust_clim = [0, dust_cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
+
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
 ###############################################################################
 
