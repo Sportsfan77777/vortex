@@ -93,6 +93,8 @@ disk_mass = 2 * np.pi * dust_surface_density_zero * (r_max - r_min) / jupiter_ma
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
+size = fargo_par["PSIZE"]
+
 ### Get Input Parameters ###
 
 # Frames
