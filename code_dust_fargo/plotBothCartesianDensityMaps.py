@@ -149,7 +149,7 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (14, 6), dpi = dpi)
 
     # Data
-    gas_density = util.read_data(frame, 'gas', fargo_par) / gas_surface_density_zero
+    gas_density = util.read_data(frame, 'gas', fargo_par) / surface_density_zero
     dust_density = util.read_data(frame, 'dust', fargo_par) / dust_surface_density_zero
 
     # Shift gas density with center of dust density
