@@ -6,6 +6,8 @@ import sys, os, shutil
 import pickle, glob
 import argparse
 
+import util
+
 base_files = ["fargo", "Jup.cfg", "this.par", "this.sh"]
 gas_files = ["gasdens%d.dat", "gasvrad%d.dat", "gasvtheta%d.dat"]
 dust_files = ["gasddens%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat"]
