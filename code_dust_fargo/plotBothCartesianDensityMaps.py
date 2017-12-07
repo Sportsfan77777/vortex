@@ -180,7 +180,7 @@ def make_plot(frame, show = False):
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(gas_density), cmap = "viridis")
     cbar = fig.colorbar(result)
 
-    result.set_clim(dust_clim[0], dust_clim[1])
+    result.set_clim(gas_clim[0], gas_clim[1])
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -224,7 +224,7 @@ def make_plot(frame, show = False):
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(dust_density), cmap = cmap)
     cbar = fig.colorbar(result)
 
-    result.set_clim(gas_clim[0], gas_clim[1])
+    result.set_clim(dust_clim[0], dust_clim[1])
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
