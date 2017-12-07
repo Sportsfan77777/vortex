@@ -253,9 +253,9 @@ def make_plot(frame, show = False):
 
     # Save, Show,  and Close
     if version is None:
-        save_fn = "%s/bothDensityMaps_%04d.png" % (save_directory, id_number, frame)
+        save_fn = "%s/bothDensityMaps_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_bothDensityMaps_%04d.png" % (save_directory, version, id_number, frame)
+        save_fn = "%s/v%04d_bothDensityMaps_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
