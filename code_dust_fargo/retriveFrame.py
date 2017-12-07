@@ -2,9 +2,8 @@
 retrieve all data related to a particular frame
 """
 
-import sys, os, subprocess
+import sys, os, shutil
 import pickle, glob
-from multiprocessing import Pool
 import argparse
 
 base_files = ["fargo", "Jup.cfg", "this.par", "this.sh"]
@@ -23,7 +22,7 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
 
     # Directory Selection
-    parser.add_argument('--dir', dest = "directory", default = "None",
+    parser.add_argument('--dir', dest = "directory", default = None,
                          help = 'source directory -- required (default: None)')
 
     # Dust Files
@@ -37,9 +36,13 @@ def new_argument_parser(description = "Plot dust density maps."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-frames = util.get_frame_range(args.frames)
+frame_range = util.get_frame_range(args.frames)
 directory = args.directory
 dust = args.dust
+
+if directory is None:
+	print "Error: --dir directory is required!"
+	exit()
 
 ###############################################################################
 
