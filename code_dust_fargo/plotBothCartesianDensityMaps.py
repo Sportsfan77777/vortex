@@ -147,19 +147,19 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (14, 6), dpi = dpi)
 
     # Data
-    gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / gas_surface_density_zero
-    dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
+    gas_density = util.read_data(frame, 'gas', fargo_par) / gas_surface_density_zero
+    dust_density = util.read_data(frame, 'dust', fargo_par) / dust_surface_density_zero
 
     # Shift gas density with center of dust density
     threshold = util.get_threshold(size)
-    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = threshold * dust_surface_density_zero)
+    shift = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold)
     gas_density = np.roll(gas_density, shift)
     dust_density = np.roll(dust_density, shift)
 
     # Locate Planet
     if shift < -len(theta):
         shift += len(theta)
-    planet_theta = gas_theta[shift]
+    planet_theta = theta[shift]
     planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
     planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
 
@@ -191,14 +191,14 @@ def make_plot(frame, show = False):
     # Label star and planet
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
-    #orbit = 550 + (time / (2 * np.pi)) * (frame - 550)
+    orbit = 550 + (time / (2 * np.pi)) * (frame - 550)
     if orbit >= taper_time:
         current_mass = planet_mass
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
     # Use Fixed Mass
-    #current_mass = np.power(np.sin((np.pi / 2) * (550.0 / taper_time)), 2) * planet_mass
+    current_mass = np.power(np.sin((np.pi / 2) * (550.0 / taper_time)), 2) * planet_mass
 
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
@@ -219,7 +219,7 @@ def make_plot(frame, show = False):
     plot.subplot(1, 2, 2, aspect = 'equal')
 
     ### Plot ###
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(dust_density), cmap = cmap)
     cbar = fig.colorbar(result)
 
     result.set_clim(gas_clim[0], gas_clim[1])
@@ -227,10 +227,6 @@ def make_plot(frame, show = False):
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
     fig.gca().add_artist(circle)
-
-    # Add beam size
-    beam = plot.Circle((-2, -2), beam_size / 2, color = "white")
-    fig.gca().add_artist(beam)
 
     # Add planet orbit
     planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
@@ -252,8 +248,6 @@ def make_plot(frame, show = False):
     plot.ylim(-box_size, box_size)
 
     ################################# End #####################################
-
-    os.chdir(cwd)
 
     # Save, Show,  and Close
     if version is None:
