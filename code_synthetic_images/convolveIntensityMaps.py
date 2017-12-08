@@ -85,7 +85,7 @@ scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
 ### Get Synthetic Image Parameters ###
-synthetic_par = np.loadtxt("../parameters.dat")
+synthetic_par = np.loadtxt("../id%04d_parameters.dat" % args.id_number)
 wavelength = int(float(synthetic_par[2]))
 distance = float(synthetic_par[4])
 
