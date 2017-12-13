@@ -6,6 +6,8 @@ python switchAgg.py on fn
 python switchAgg.py off fn
 """
 
+import sys
+
 off = "#matplotlib.use('Agg')"
 on = "matplotlib.use('Agg')"
 
