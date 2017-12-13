@@ -61,9 +61,6 @@ frame_range = util.get_frame_range(args.frames)
 
 ###############################################################################
 
-global test_count
-global delete_count
-
 test_count = 0
 delete_count = 0
 
