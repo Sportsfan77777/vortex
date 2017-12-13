@@ -27,10 +27,10 @@ def find_replace(old, new, fn):
 switch = sys.argv[1]
 fn = sys.argv[2] # Argument is fn
 
-if switch is "on":
+if switch == "on":
     # Turn on
     find_replace(off, on, fn)
-elif switch is "off":
+elif switch == "off":
     # Turn off
     find_replace(on, off, fn)
 
