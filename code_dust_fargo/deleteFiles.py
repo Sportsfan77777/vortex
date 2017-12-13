@@ -73,6 +73,7 @@ def trash(fns, delete):
             if os.path.exists(fn):
                 existing_fns += [fn]
         print existing_fns
+        print len(existing_fns)
 
 def gather_files(fn):
     """ gathers all such files in frame range """
