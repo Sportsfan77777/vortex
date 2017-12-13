@@ -61,19 +61,31 @@ frame_range = util.get_frame_range(args.frames)
 
 ###############################################################################
 
+global test_count
+global delete_count
+
+test_count = 0
+delete_count = 0
+
+###############################################################################
+
 def trash(fns, delete):
     """ if delete, delete. else print. """
     if delete:
         for fn in fns:
             if os.path.exists(fn):
                 os.remove(fn)
+                delete_count += 1
+        print delete_count
     else:
         existing_fns = []
         for fn in fns:
             if os.path.exists(fn):
                 existing_fns += [fn]
         print existing_fns
-        print len(existing_fns)
+        
+        test_count += len(existing_fns)
+        print test_count
 
 def gather_files(fn):
     """ gathers all such files in frame range """
