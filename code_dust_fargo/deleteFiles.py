@@ -46,7 +46,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'delete all files (default: do not delete)')
 
     # Test out
-    arser.add_argument('-d', dest = "delete", action = 'store_true', default = False,
+    parser.add_argument('-d', dest = "delete", action = 'store_true', default = False,
                          help = 'delete, instead of just test out (default: do not delete)')
 
     return parser
