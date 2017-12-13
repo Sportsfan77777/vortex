@@ -14,6 +14,11 @@ import util
 gas_files = ["gasdens%d.dat", "gasvrad%d.dat", "gasvtheta%d.dat"]
 dust_files = ["gasddens%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat", "gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat", "gasTStop%d.dat"]
 
+gas_density_files = ["gasdens%d.dat"]
+dust_density_files = ["gasddens%d.dat"]
+gas_velocity_files = ["gasvrad%d.dat", "gasvtheta%d.dat"]
+dust_velocity_files = ["gasdvrad%d.dat", "gasdvtheta%d.dat"]
+
 density_files = ["gasdens%d.dat, gasddens%d.dat"]
 velocity_files = ["gasvrad%d.dat", "gasvtheta%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat"]
 diag_files = ["gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat", "gasTStop%d.dat"]
@@ -34,6 +39,15 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'delete gas-related (default: do not delete)')
     parser.add_argument('--dust', dest = "dust", action = 'store_true', default = False,
                          help = 'delete dust-related (default: do not delete)')
+
+    parser.add_argument('--gas_density', dest = "gas_density", action = 'store_true', default = False,
+                         help = 'delete gas density (default: do not delete)')
+    parser.add_argument('--dust_density', dest = "dust_density", action = 'store_true', default = False,
+                         help = 'delete dust density (default: do not delete)')
+    parser.add_argument('--gas_velocity', dest = "gas_velocity", action = 'store_true', default = False,
+                         help = 'delete gas velocity (default: do not delete)')
+    parser.add_argument('--dust_velocity', dest = "dust_velocity", action = 'store_true', default = False,
+                         help = 'delete dust velocity (default: do not delete)')
 
     parser.add_argument('--density', dest = "density", action = 'store_true', default = False,
                          help = 'delete density (default: do not delete)')
@@ -82,7 +96,7 @@ def trash(fns, delete):
         for fn in fns:
             if os.path.exists(fn):
                 existing_fns += [fn]
-        print existing_fns
+        print existing_fns[0], existing_fns[len(existing_fns) / 2], existing_fns[-1]
         
         test_count += len(existing_fns)
         print "Test Count: %d" % test_count
@@ -102,6 +116,24 @@ def delete_files():
 
     if args.dust:
         for fn in dust_files:
+            trash(gather_files(fn), args.delete)
+
+    ###############################
+
+    if args.gas_density:
+        for fn in gas_density_files:
+            trash(gather_files(fn), args.delete)
+
+    if args.dust_density:
+        for fn in dust_density_files:
+            trash(gather_files(fn), args.delete)
+
+    if args.gas_velocity:
+        for fn in gas_velocity_files:
+            trash(gather_files(fn), args.delete)
+
+    if args.dust_velocity:
+        for fn in dust_velocity_files:
             trash(gather_files(fn), args.delete)
 
     ###############################
