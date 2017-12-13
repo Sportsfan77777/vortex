@@ -96,8 +96,10 @@ def trash(fns, delete):
         for fn in fns:
             if os.path.exists(fn):
                 existing_fns += [fn]
-        if len(existing_fns) > 0:
-            print existing_fns[0], existing_fns[len(existing_fns) / 2], existing_fns[-1]
+        if len(existing_fns) > 1:
+            print existing_fns[0], existing_fns[1], existing_fns[-1]
+        elif len(existing_fns) == 0:
+            print existing_fns[0]
         
         test_count += len(existing_fns)
         print "Test Count: %d" % test_count
