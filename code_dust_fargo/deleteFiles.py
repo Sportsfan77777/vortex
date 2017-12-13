@@ -2,8 +2,9 @@
 deletes specified files
 """
 
-import sys, os, shutil, subprocess
+import sys, os, shutil
 import glob, pickle
+import argparse
 
 import numpy as np
 import util
@@ -16,6 +17,8 @@ dust_files = ["gasddens%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat", "gasDiag1%
 density_files = ["gasdens%d.dat, gasddens%d.dat"]
 velocity_files = ["gasvrad%d.dat", "gasvtheta%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat"]
 diag_files = ["gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat", "gasTStop%d.dat"]
+
+all_files = ["gasdens%d.dat", "gasvrad%d.dat", "gasvtheta%d.dat", "gasddens%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat", "gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat", "gasTStop%d.dat"]
 
 ### Input Parameters ###
 
@@ -61,19 +64,49 @@ frame_range = util.get_frame_range(args.frames)
 def trash(fns, delete):
 	""" if delete, delete. else print. """
 	if delete:
-		pass
+		for fn in fns:
+			if os.path.exists(fn):
+            	os.remove(fn)
 	else:
 		print fns
 
 def gather_files(fn):
-	"""gathers all such files in frame range"""
+	""" gathers all such files in frame range """
 	fns = np.array(len(frame_range))
 	for i, frame in enumerate(frame_range):
 		fns[i] = fn % frame
 	return fns
 
 def delete_files():
-	"""delete selected files"""
-	pass
+	""" delete selected files """
+	if args.gas:
+		for fn in gas_files:
+			trash(gather_files(fn), args.delete)
+
+	if args.dust:
+		for fn in dust_files:
+			trash(gather_files(fn), args.delete)
+
+	###############################
+
+	if args.density:
+		for fn in density_files:
+			trash(gather_files(fn), args.delete)
+
+	if args.velocity:
+		for fn in velocity_files:
+			trash(gather_files(fn), args.delete)
+
+	if args.diag:
+		for fn in diag_files:
+			trash(gather_files(fn), args.delete)
+
+	###############################
+
+	if args.all:
+		for fn in all_files:
+			trash(gather_files(fn), args.delete)
+
+
 
 
