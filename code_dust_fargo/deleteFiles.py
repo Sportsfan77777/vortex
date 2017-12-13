@@ -68,6 +68,9 @@ delete_count = 0
 
 def trash(fns, delete):
     """ if delete, delete. else print. """
+    global test_count
+    global delete_count
+
     if delete:
         for fn in fns:
             if os.path.exists(fn):
