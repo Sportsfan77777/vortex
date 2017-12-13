@@ -76,7 +76,7 @@ def trash(fns, delete):
             if os.path.exists(fn):
                 os.remove(fn)
                 delete_count += 1
-        print delete_count
+        print "Delete Count: %d" % delete_count
     else:
         existing_fns = []
         for fn in fns:
@@ -85,7 +85,7 @@ def trash(fns, delete):
         print existing_fns
         
         test_count += len(existing_fns)
-        print test_count
+        print "Test Count: %d" % test_count
 
 def gather_files(fn):
     """ gathers all such files in frame range """
