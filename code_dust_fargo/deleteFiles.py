@@ -72,9 +72,9 @@ def trash(fns, delete):
 
 def gather_files(fn):
     """ gathers all such files in frame range """
-    fns = np.empty(len(frame_range), dtype = np.dtype.str)
+    fns = []
     for i, frame in enumerate(frame_range):
-        fns[i] = fn % frame
+        fns += [fn % frame]
     return fns
 
 def delete_files():
