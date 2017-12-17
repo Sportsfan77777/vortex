@@ -38,8 +38,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensity",
-                         help = 'save directory (default: azimuthalDensity)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalInputDensity",
+                         help = 'save directory (default: azimuthalInputDensity)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
