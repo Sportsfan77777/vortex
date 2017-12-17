@@ -195,7 +195,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     plot.text(line_x, (line_y - linebreak) * plot.ylim()[-1], left2, horizontalalignment = 'left', fontsize = fontsize)
 
     right1 = r"$T_{growth} = %d$ $\rm{orbits}$" % (taper)
-    right2 = r"$s$ = %s" % (size_label)
+    right2 = r"$n$ = $-3.5$" #% (size_label)
     plot.text(360 - line_x, line_y * plot.ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
     plot.text(360 - line_x, (line_y - linebreak) * plot.ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
 
