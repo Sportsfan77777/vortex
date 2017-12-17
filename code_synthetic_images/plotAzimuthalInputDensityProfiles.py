@@ -44,6 +44,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of synthetic image parameters (default: None)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
@@ -77,8 +79,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-### Get Fargo Parameters ###
-fargo_par = util.get_pickled_parameters()
+### Get ID%04d Parameters ###
+fn = "id%04d_par.p" % args.id_number
+fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -98,14 +101,7 @@ size_label = util.get_size_label(size)
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -122,6 +118,7 @@ max_y = args.max_y
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
+id_number = args.id_number
 version = args.version
 
 center = args.center
@@ -221,7 +218,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 def full_procedure(frame, show = False):
     """ Every Step """
     # Read Data
-    density = util.read_dust_data(frame, fargo_par)
+    density = util.read_data(frame, 'input_density', fargo_par, id_number = id_number)
 
     # Choose shift option
     if center:
@@ -245,7 +242,7 @@ def full_procedure(frame, show = False):
 
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
-            
+
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
             shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
