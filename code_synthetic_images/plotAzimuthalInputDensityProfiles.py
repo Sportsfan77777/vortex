@@ -181,7 +181,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     orbit = (time / (2 * np.pi)) * frame
 
     plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
+    plot.ylabel("Composite Dust Density", fontsize = fontsize)
 
     title = r"(t = %.1f orbits)" % (orbit)
     plot.title("%s" % (title), fontsize = fontsize + 1)
@@ -218,7 +218,7 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 def full_procedure(frame, show = False):
     """ Every Step """
     # Read Data
-    density = util.read_data(frame, 'input_density', fargo_par, id_number = id_number)
+    density = util.read_data(frame, 'input_density', fargo_par, id_number = id_number).T # Note: Transpose!!!!
 
     # Choose shift option
     if center:
