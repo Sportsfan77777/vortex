@@ -160,9 +160,11 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     if shift is None:
         planet_loc = theta[0]
     else:
-        if shift < -len(theta):
-            shift += len(theta)
-        planet_loc = theta[shift] * (180.0 / np.pi)
+        gas_fargo_par = util.get_pickled_parameters(directory = "../cm-size") ## shorten name?
+        gas_theta = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
+        if shift < -len(gas_theta):
+            shift += len(gas_theta)
+        planet_loc = gas_theta[shift] * (180.0 / np.pi)
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
 
     # Axes
@@ -222,35 +224,29 @@ def full_procedure(frame, show = False):
 
     # Choose shift option
     if center:
-        """
-        # Choose source
-        if taper < 10.1:
-            src_density = np.copy(density)
-            this_threshold = threshold
-        elif taper > 999.9:
-            # hum-size or larger (for now, T = 1000)
-            src_density = np.copy(density)
-            this_threshold = threshold
-        else:
-            # smaller than hmm-size (right now micron only)
-            hmm_directory = "/rsgrps/kkratterstudents/mhammer/fargo_tests/fargoDUST/one_jupiter_old/half-mm-size/no_diffusion/taper%d" % taper
-            src_density = util.read_dust_data(frame, fargo_par, directory = hmm_directory)
-
-            ##### Set threshold here!!!! ####
-            this_threshold = util.get_threshold(0.01)
-        """
-
+        #### Note: Re-work this section! The input density is already centered, but you still need the shift for the plot
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
-
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
+            gas_fargo_par = util.get_pickled_parameters(directory = "../cm-size") ## shorten name?
+
+            ######## Need to extract parameters, and add 'rad' and 'theta' ########
+            gas_rad = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
+            gas_theta = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
+            gas_fargo_par['rad'] = gas_rad; gas_fargo_par['theta'] = gas_theta
+            gas_surface_density_zero = gas_fargo_par['Sigma0']
+            dust_surface_density_zero = gas_surface_density_zero / 100.0
+
+            dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
+
+            # Shift input density with center of dust density
+            shift_c = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
     else:
         shift_c = None
 
     # Get and plot profiles
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = None)
     make_plot(frame, shift_c, azimuthal_radii, azimuthal_profiles, show = show)
 
 ##### Make Plots! #####
