@@ -203,9 +203,9 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/azimuthalDensityProfiles_%04d.png" % (save_directory, frame)
+        save_fn = "%s/id%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, id_number, frame)
     else:
-        save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_id%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, version, id_number, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
