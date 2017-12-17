@@ -238,7 +238,7 @@ def full_procedure(frame, show = False):
             gas_surface_density_zero = gas_fargo_par['Sigma0']
             dust_surface_density_zero = gas_surface_density_zero / 100.0
 
-            dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
+            dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number, directory = "../cm-size")
 
             # Shift input density with center of dust density
             shift_c = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
