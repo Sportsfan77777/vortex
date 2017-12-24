@@ -177,7 +177,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     gas_surface_density_zero = gas_fargo_par['Sigma0']
     dust_surface_density_zero = gas_surface_density_zero / 100.0
 
-    dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number, directory = "../cm-size")
+    dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number, directory = "../../../cm-size")
 
     # Find shift with center of dust density
     shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
