@@ -54,7 +54,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--box', dest = "box_size", type = float, default = 2.5,
+    parser.add_argument('--box', dest = "box", type = float, default = 2.5,
                          help = 'width of box (in r_p) (default: 2.5)')
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
@@ -105,6 +105,8 @@ beam_size = fargo_par["Beam"]
 wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
+arc_beam = beam_size * planet_radius / distance
+
 ### Get Input Parameters ###
 
 # Frames
@@ -126,7 +128,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
-box_size = args.box_size
+box = args.box
 normalize = args.normalize
 colorbar = args.colorbar
 
@@ -197,10 +199,10 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     ax.set_xlabel("x [AU]", fontsize = fontsize)
     if frame_i == 1:
         ax.set_ylabel("y [AU]", fontsize = fontsize)
-    ax.set_title(r"($t$ $=$ $%.1f$), ($m_p(t)$ $=$ $%.2f$ $M_J$)" % (orbit, current_mass), fontsize = fontsize + 1)
+    ax.set_title(r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass), fontsize = fontsize + 1)
 
     # Axes
-    box_size *= planet_radius
+    box_size = box * planet_radius
     ax.set_xlim(-box_size, box_size)
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
@@ -225,7 +227,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     
 def make_plot(frame_range):
     # Set up figure
-    fig = plot.figure(figsize = (15, 6), dpi = my_dpi)
+    fig = plot.figure(figsize = (15, 6), dpi = dpi)
     gs = gridspec.GridSpec(1, len(frame_range))
 
     for i, frame in enumerate(frame_range):
@@ -235,8 +237,8 @@ def make_plot(frame_range):
     #### Finish Plot ####
 
     # Title
-    #title = r"$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time)
-    title = "Intensity Evolution"
+    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$, $b = %.02f"$' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, arc_beam)
+    #title = "Intensity Evolution"
     fig.suptitle(title, y = 0.96, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
