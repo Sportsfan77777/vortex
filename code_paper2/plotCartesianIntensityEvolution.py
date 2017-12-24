@@ -237,7 +237,7 @@ def make_plot(frame_range):
     #### Finish Plot ####
 
     # Title
-    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$, $b = %.02f"$' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, arc_beam)
+    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$, $b = %.02f^{\prime\prime} \times %.02f^{\prime\prime}$' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, arc_beam, arc_beam)
     #title = "Intensity Evolution"
     fig.suptitle(title, y = 0.96, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
