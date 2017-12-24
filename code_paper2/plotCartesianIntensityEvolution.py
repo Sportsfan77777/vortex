@@ -167,7 +167,33 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     # Re-scale to planet_radius
     xs_grid *= planet_radius; ys_grid *= planet_radius
 
-    ### Plot ###
+    ### Get Shift ###
+    gas_fargo_par = util.get_pickled_parameters(directory = "../cm-size") ## shorten name?
+
+    ## Need to extract parameters, and add 'rad' and 'theta' ##
+    gas_rad = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
+    gas_theta = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
+    gas_fargo_par['rad'] = gas_rad; gas_fargo_par['theta'] = gas_theta
+    gas_surface_density_zero = gas_fargo_par['Sigma0']
+    dust_surface_density_zero = gas_surface_density_zero / 100.0
+
+    dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number, directory = "../cm-size")
+
+    # Find shift with center of dust density
+    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
+    gas_density = np.roll(gas_density, shift)
+
+    # Locate Planet
+    if shift < -len(gas_theta):
+        shift += len(gas_theta)
+    planet_theta = gas_theta[shift]
+    planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
+    planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
+
+    planet_x = np.cos(planet_theta)
+    planet_y = np.sin(planet_theta)
+
+    ##### Plot #####
     result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
     result.set_clim(clim[0], clim[1])
 
@@ -193,7 +219,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-    plot.scatter(0, 1 * planet_radius, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+    plot.scatter(planet_x * planet_radius, planet_y * planet_radius, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
     ax.set_xlabel("x [AU]", fontsize = fontsize)
