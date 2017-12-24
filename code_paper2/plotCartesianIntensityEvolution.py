@@ -168,7 +168,7 @@ def add_to_plot(ax, frame, num_frames, frame_i):
     xs_grid *= planet_radius; ys_grid *= planet_radius
 
     ### Get Shift ###
-    gas_fargo_par = util.get_pickled_parameters(directory = "../cm-size") ## shorten name?
+    gas_fargo_par = util.get_pickled_parameters(directory = "../../../cm-size") ## shorten name?
 
     ## Need to extract parameters, and add 'rad' and 'theta' ##
     gas_rad = np.linspace(gas_fargo_par['Rmin'], gas_fargo_par['Rmax'], gas_fargo_par['Nrad'])
