@@ -255,26 +255,6 @@ def make_plot(frame_range):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
-##### Plot Files #####
-
-widths = [700, 1100, 1500, 1900, 1900]
-
-if len(sys.argv) > 1:
-    frame_range = [int(frame) for frame in sys.argv[1:]]
-
-    # Set up figure
-    fig = plot.figure(figsize = (widths[len(frame_range) - 1] / my_dpi, 600 / my_dpi), dpi = my_dpi)
-    #fig = plot.figure(dpi = my_dpi)
-    gs = gridspec.GridSpec(1, len(frame_range))
-
-    for i, frame in enumerate(frame_range):
-        if i == 0:
-            ax = fig.add_subplot(gs[0])
-        else:
-            ax = fig.add_subplot(gs[i])
-
-        add_to_plot(ax, frame, len(frame_range), i + 1)
-
-    finish_plot(frame_range)
+##### Make Plot! #####
 
 make_plot(frame_range)
