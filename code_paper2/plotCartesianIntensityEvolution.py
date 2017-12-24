@@ -182,7 +182,6 @@ def add_to_plot(ax, frame, num_frames, frame_i):
 
     # Find shift with center of dust density
     shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
-    gas_density = np.roll(gas_density, shift)
 
     # Locate Planet
     if shift < -len(gas_theta):
