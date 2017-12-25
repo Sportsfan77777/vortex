@@ -175,12 +175,13 @@ def make_plot(frame, show = False):
     gas_theta = np.linspace(0, 2 * np.pi, gas_fargo_par['Nsec'])
     gas_fargo_par['rad'] = gas_rad; gas_fargo_par['theta'] = gas_theta
     gas_surface_density_zero = gas_fargo_par['Sigma0']
+    dust_surface_density_zero
 
     gas_density = util.read_data(frame, 'gas', gas_fargo_par, id_number = id_number) / gas_surface_density_zero
     dust_density = util.read_data(frame, 'dust', gas_fargo_par, id_number = id_number)
 
     # Shift gas density with center of dust density
-    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * dust_surface_density_zero)
+    shift = az.get_azimuthal_center(dust_density, gas_fargo_par, threshold = 10.0 * gas_surface_density_zero / 100.0)
     gas_density = np.roll(gas_density, shift)
 
     # Locate Planet
