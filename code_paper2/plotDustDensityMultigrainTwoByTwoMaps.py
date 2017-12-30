@@ -282,7 +282,7 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-    frame_title = r"$t$ $=$ $%.1f$\n[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
+    frame_title = r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
 
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
