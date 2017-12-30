@@ -34,7 +34,7 @@ from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
-def new_argument_parser(description = "Plot convolved intensity maps."):
+def new_argument_parser(description = "Plot dust density maps for four grain sizes in two by two grid."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
@@ -44,12 +44,12 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Size Selection
-    parser.add_argument('sizes', nargs = 3, default = ["cm", "mm", "um"],
-                         help = 'select 3 sizes (default: [cm, mm, um])')
+    parser.add_argument('sizes', nargs = 3, default = ["cm", "hcm", "mm", "um"],
+                         help = 'select 3 sizes (default: [cm, hcm, mm, um])')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityEvolution",
-                         help = 'save directory (default: cartesianIntensityEvolution)')
+    parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMultigrainTwoByTwoMaps",
+                         help = 'save directory (default: dustDensityMultigrainTwoByTwoMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -70,8 +70,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
-                         help = 'maximum density in colorbar (default: 2.5)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = 20,
+                         help = 'maximum density in colorbar (default: 20), except for um (fixed: 2)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -145,9 +145,6 @@ cmap = args.cmap
 cmax = args.cmax
 if cmax is not None:
     clim = [0, args.cmax]
-elif normalize:
-    cmax = 1
-    clim = [0, 1]
 
 fontsize = args.fontsize
 labelsize = args.labelsize
@@ -185,7 +182,12 @@ def add_to_plot(frame, ax, size, num_sizes, frame_i):
     if size == "um":
         cmap = "viridis"
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = cmap)
-    result.set_clim(clim[0], clim[1])
+
+    fig.colorbar(result)
+    if size == "um":
+        result.set_clim(0, 2)
+    else:
+        result.set_clim(clim[0], clim[1])
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -254,8 +256,8 @@ def add_to_plot(frame, ax, size, num_sizes, frame_i):
     
 def make_plot(frame, sizes):
     # Set up figure
-    fig = plot.figure(figsize = (19, 6), dpi = dpi)
-    gs = gridspec.GridSpec(1, len(frame_range))
+    fig = plot.figure(figsize = (12, 12), dpi = dpi)
+    gs = gridspec.GridSpec(2, 2)
 
     size_str = ""
     for i, size_i in enumerate(sizes):
@@ -275,9 +277,9 @@ def make_plot(frame, sizes):
 
     # Save, Show,  and Close
     if version is None:
-        save_fn = "%s/id%04d_intensityCartGrid_%04d_%s.png" % (save_directory, id_number, frame, size_str)
+        save_fn = "%s/id%04d_densityMaps_%04d.png" % (save_directory, id_number, frame, size_str)
     else:
-        save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d_%s.png" % (save_directory, version, id_number, frame, size_str)
+        save_fn = "%s/v%04d_id%04d_densityMaps_%04d.png" % (save_directory, version, id_number, frame, size_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
