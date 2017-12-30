@@ -44,8 +44,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'number of cores (default: 1)')
 
     # Size Selection
-    parser.add_argument('sizes', nargs = 3, default = ["cm", "hcm", "mm", "um"],
-                         help = 'select 3 sizes (default: [cm, hcm, mm, um])')
+    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["cm", "hcm", "mm", "um"],
+                         help = 'select 4 sizes (default: [cm, hcm, mm, um])')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMultigrainTwoByTwoMaps",
