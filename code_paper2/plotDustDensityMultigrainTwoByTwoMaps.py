@@ -144,6 +144,10 @@ dpi = args.dpi
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
+
 ###############################################################################
 
 def add_to_plot(frame, ax, size_name, num_sizes, frame_i):
