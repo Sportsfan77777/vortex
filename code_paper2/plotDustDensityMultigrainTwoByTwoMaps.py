@@ -230,12 +230,16 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Label
     size_label = util.get_size_label(size)
+    stokes_number = util.get_stokes_number(size)
+
     title = r"%s$\mathrm{-size}$" % size_label
+    stokes = r"$\mathrm{St}_\mathrm{r=1}$ $=$ %.03f$" % stokes_number
     if size_name == "um":
-        title = r"$\mathrm{Gas}$"
+        title = r"$\mathrm{Gas Density}$"
         plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     else:
         plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+        plot.text(-0.9 * box_size, 2, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
     #ax.set_title(title)
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
@@ -258,7 +262,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         #if frame_i != num_frames:
         #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
-    return ax, frame_title
+    return ax
     
 def make_plot(frame, show = False):
     # Set up figure
@@ -268,15 +272,21 @@ def make_plot(frame, show = False):
     size_str = ""
     for i, size_i in enumerate(sizes):
         ax = fig.add_subplot(gs[i])
-        ax, frame_title = add_to_plot(frame, fig, ax, size_i, len(frame_range), i + 1)
+        ax = add_to_plot(frame, fig, ax, size_i, len(frame_range), i + 1)
         size_str += "size_i_"
     size_str = size_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
 
     # Title
-    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
-    fig.suptitle(title, y = 1.02, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
+    current_mass = util.current_mass(orbit, taper_time, planet_mass = planet_mass)
+    frame_title = r"$t$ $=$ $%.1f$\n[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
+
+    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
+    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
+    fig.suptitle(frame_title, y = 1.02, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
