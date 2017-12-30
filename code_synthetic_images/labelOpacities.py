@@ -12,7 +12,7 @@ def label_opacities(id_number, previous_id = None):
     # Find all opacity files
     default = "dustkappa_*.inp"
     if previous_id is not None:
-        basename = "id%04d_%s" % (default, previous_id)
+        basename = "id%04d_%s" % (previous_id, default)
     else:
         basename = "%s" % default
 
