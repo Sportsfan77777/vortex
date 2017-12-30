@@ -252,7 +252,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         plot.text(line_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize)
     else:
         line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
-        plot.text(line_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize)
+        plot.text(-line_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize)
 
     #if frame_i != 1:
     #    # Remove unless 1st frame
