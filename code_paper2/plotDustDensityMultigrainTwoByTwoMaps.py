@@ -188,7 +188,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        if frame == 1:
+        if frame_i == 1:
             cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
         else:
             cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
@@ -257,7 +257,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 12), dpi = dpi)
+    fig = plot.figure(figsize = (12, 8), dpi = dpi)
     gs = gridspec.GridSpec(2, 2)
 
     size_str = ""
@@ -271,7 +271,7 @@ def make_plot(frame, show = False):
 
     # Title
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$ | %s' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
-    fig.suptitle(title, y = 0.96, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 1.06, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
