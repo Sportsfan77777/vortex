@@ -281,4 +281,4 @@ def make_plot(frame, sizes):
 
 ##### Make Plot! #####
 
-make_plot(frame_range)
+make_plot(frame_range, sizes)
