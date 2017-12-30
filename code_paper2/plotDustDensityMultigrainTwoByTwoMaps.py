@@ -252,8 +252,8 @@ def make_plot(frame, sizes):
 
     size_str = ""
     for i, size_i in enumerate(sizes):
-        ax, frame_title = fig.add_subplot(gs[i])
-        add_to_plot(frame, ax, size_i, len(frame_range), i + 1)
+        ax = fig.add_subplot(gs[i])
+        ax, frame_title = add_to_plot(frame, ax, size_i, len(frame_range), i + 1)
         size_str += "size_i_"
     size_str = size_str[:-1] # Trim last '_'
 
