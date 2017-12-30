@@ -244,7 +244,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
     # Title
-    line_x = -0.9 * box_size; line_y = 1.1 * box_size; linebreak = 0.15 * box_size
+    line_x = -0.8 * box_size; line_y = 1.1 * box_size; linebreak = 0.15 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
         line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
