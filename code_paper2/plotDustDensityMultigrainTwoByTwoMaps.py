@@ -146,9 +146,9 @@ rc['ytick.labelsize'] = labelsize
 
 ###############################################################################
 
-def add_to_plot(frame, ax, size, num_sizes, frame_i):
+def add_to_plot(frame, ax, size_name, num_sizes, frame_i):
     # Convert size to number
-    size = util.get_size(size)
+    size = util.get_size(size_name)
 
     # Declare Subplot
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
@@ -157,7 +157,7 @@ def add_to_plot(frame, ax, size, num_sizes, frame_i):
     this_fargo_par = fargo_par.copy()
     this_fargo_par["PSIZE"] = size
 
-    density = util.read_data(frame, 'dust', this_fargo_par, id_number = id_number, directory = "../%s-size" % size)
+    density = util.read_data(frame, 'dust', this_fargo_par, id_number = id_number, directory = "../%s-size" % size_name)
     if center:
         if taper_time < 10.1:
             shift = az.get_azimuthal_peak(density, fargo_par)
@@ -171,12 +171,12 @@ def add_to_plot(frame, ax, size, num_sizes, frame_i):
     _, _, xs_grid, ys_grid, normalized_density = sq.polar_to_cartesian(normalized_density, rad, theta)
 
     ### Plot ###
-    if size == "um":
+    if size_name == "um":
         cmap = "viridis"
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = cmap)
 
     fig.colorbar(result)
-    if size == "um":
+    if size_name == "um":
         result.set_clim(0, 2)
     else:
         result.set_clim(clim[0], clim[1])
