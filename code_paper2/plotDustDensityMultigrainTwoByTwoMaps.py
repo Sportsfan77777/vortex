@@ -68,7 +68,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'include colorbar (default: no colorbar)')
 
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "magma",
+    parser.add_argument('--cmap', dest = "cmap", default = "plasma",
                          help = 'color map (default: magma)')
     parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
                          help = 'maximum density in colorbar (default: 15), except for um (fixed: 1.5)')
@@ -233,9 +233,9 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     title = r"%s$\mathrm{-size}$" % size_label
     if size_name == "um":
         title = "Gas"
-        plot.text(2, -0.95 * box_size, title, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+        plot.text(-0.95 * box_size, 2, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     else:
-        plot.text(2, -0.95 * box_size, title, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+        plot.text(-0.95 * box_size, 2, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
     #ax.set_title(title)
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
