@@ -244,8 +244,8 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
     # Title
-    left_x = -0.8 * box_size; line_y = 1.1 * box_size; linebreak = 0.25 * box_size
-    right_x = 1.2 * box_size
+    left_x = -0.8 * box_size; line_y = 1.1 * box_size; linebreak = 0.2 * box_size
+    right_x = 1.4 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
         line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
@@ -294,7 +294,7 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-    frame_title = r"\n" + "$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
 
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
