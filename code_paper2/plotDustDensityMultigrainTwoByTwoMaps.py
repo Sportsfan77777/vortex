@@ -245,7 +245,7 @@ def add_to_plot(frame, ax, size, num_sizes, frame_i):
 
     return ax, frame_title
     
-def make_plot(frame, sizes):
+def make_plot(frame, sizes, show = False):
     # Set up figure
     fig = plot.figure(figsize = (12, 12), dpi = dpi)
     gs = gridspec.GridSpec(2, 2)
