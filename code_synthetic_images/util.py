@@ -111,7 +111,7 @@ def get_size_name(size):
     """ return size name corresponding to size number """
     size_names = {}
     size_names[1.0] = "cm"; size_names[0.3] = "hcm"; size_names[0.1] = "mm"
-    size_names[0.03] = "hmm"; size_names[0.01] = "hum"; size_names[0.001] = "um"
+    size_names[0.03] = "hmm"; size_names[0.01] = "hum"; size_names[0.0001] = "um"
 
     return size_names[size]
 
@@ -125,11 +125,8 @@ def get_size_label(size):
 
 def get_stokes_number(size):
     """ return size name corresponding to size number """
-    stokes = {}
-    stokes[1.0] = 0.02; stokes[0.3] = 0.0; stokes[0.1] = 0.002
-    stokes[0.03] = 0.0; stokes[0.01] = "hum"; stokes[0.001] = "um"
-
-    return stokes[size]
+    cm_ref = 0.076 # assumes r_p = 5 AU!
+    return cm_ref * size
 
 def get_threshold(size):
     """ return label corresponding to size """
