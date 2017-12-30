@@ -44,7 +44,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'number of cores (default: 1)')
 
     # Size Selection
-    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["um", "cm", "hcm", "mm", "um"],
+    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["um", "cm", "hcm", "mm"],
                          help = 'select 4 sizes (default: [cm, hcm, mm, um])')
 
     # Files
