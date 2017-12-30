@@ -123,6 +123,14 @@ def get_size_label(size):
     arg_size = np.abs(sizes - size).argmin() # find closest size
     return size_labels[arg_size]
 
+def get_stokes_number(size):
+    """ return size name corresponding to size number """
+    stokes = {}
+    stokes[1.0] = 0.02; stokes[0.3] = 0.0; stokes[0.1] = 0.002
+    stokes[0.03] = 0.0; stokes[0.01] = "hum"; stokes[0.001] = "um"
+
+    return stokes[size]
+
 def get_threshold(size):
     """ return label corresponding to size """
     ######## abstract this into a new method that takes an array as input!!!!!! ############
@@ -131,6 +139,14 @@ def get_threshold(size):
 
     arg_size = np.abs(sizes - size).argmin() # find closest size
     return thresholds[arg_size]
+
+def get_current_mass(orbit, taper_time, planet_mass = 1.0):
+    """ calculate mass at a particular orbit given a growth time up to a planet mass """
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+    return current_mass
 
 def find_max_frame():
     """ Get last orbit """
