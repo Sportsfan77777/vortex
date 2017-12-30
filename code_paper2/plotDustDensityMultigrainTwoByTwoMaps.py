@@ -245,7 +245,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Title
     left_x = -0.8 * box_size; line_y = 1.1 * box_size; linebreak = 0.2 * box_size
-    right_x = 1.4 * box_size
+    right_x = 1.3 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
         line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
@@ -294,20 +294,21 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-    frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
-
-    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
-    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
-    fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    if orbit >= taper_time:
+        frame_title = r"$t$ $=$ $%.1f$" % (orbit)
+        fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    else:
+        frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+        fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
 
     # Save, Show,  and Close
     if version is None:
-        save_fn = "%s/id%04d_densityMaps_%04d.png" % (save_directory, id_number, frame)
+        save_fn = "%s/id%04d_densityMap_%04d.png" % (save_directory, id_number, frame)
     else:
-        save_fn = "%s/v%04d_id%04d_densityMaps_%04d.png" % (save_directory, version, id_number, frame)
+        save_fn = "%s/v%04d_id%04d_densityMap_%04d.png" % (save_directory, version, id_number, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
