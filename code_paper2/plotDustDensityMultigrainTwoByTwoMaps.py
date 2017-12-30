@@ -147,7 +147,8 @@ rc['ytick.labelsize'] = labelsize
 ###############################################################################
 
 def add_to_plot(frame, ax, size, num_sizes, frame_i):
-    #print frame, num_frames, frame_i
+    # Convert size to number
+    size = util.get_size(size)
 
     # Declare Subplot
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
