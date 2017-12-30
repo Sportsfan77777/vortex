@@ -73,8 +73,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
                          help = 'maximum density in colorbar (default: 15), except for um (fixed: 1.5)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 18)')
     parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
                          help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -244,15 +244,15 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
     # Title
-    line_x = -0.9 * box_size; line_y = 1.1 * box_size; linebreak = 0.07 * box_size
+    line_x = -0.9 * box_size; line_y = 1.1 * box_size; linebreak = 0.15 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
         line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
-        plot.text(line_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize)
-        plot.text(line_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize)
-    else:
+        plot.text(line_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
+        plot.text(line_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
+    elif frame_i == 2 :
         line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
-        plot.text(-line_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize)
+        plot.text(-line_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
 
     #if frame_i != 1:
     #    # Remove unless 1st frame
