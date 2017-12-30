@@ -107,9 +107,17 @@ def get_size(size_name):
 
     return sizes[size_name]
 
+def get_size_name(size):
+    """ return size name corresponding to size number """
+    size_names = {}
+    sizes[1.0] = "cm"; sizes[0.3] = "hcm"; sizes[0.1] = "mm"
+    sizes[0.03] = "hmm"; sizes[0.01] = "hum"; sizes[0.001] = "um"
+
+    return size_names[size]
+
 def get_size_label(size):
     """ return label corresponding to size """
-    sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
+    sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001]) ### <<<==== switch to dictionary!
     size_labels = [r"$1$ $\rm{cm}$", r"$0.3$ $\rm{cm}$", r"$1$ $\rm{mm}$", r"$0.3$ $\rm{mm}$", r"$100$ $\rm{\mu m}$", r"$1$ $\rm{\mu m}$"]
 
     arg_size = np.abs(sizes - size).argmin() # find closest size
