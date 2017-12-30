@@ -150,7 +150,7 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-def add_to_plot(frame, ax, size_name, num_sizes, frame_i):
+def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
 
@@ -260,7 +260,7 @@ def make_plot(frame, show = False):
     size_str = ""
     for i, size_i in enumerate(sizes):
         ax = fig.add_subplot(gs[i])
-        ax, frame_title = add_to_plot(frame, ax, size_i, len(frame_range), i + 1)
+        ax, frame_title = add_to_plot(frame, fig, ax, size_i, len(frame_range), i + 1)
         size_str += "size_i_"
     size_str = size_str[:-1] # Trim last '_'
 
