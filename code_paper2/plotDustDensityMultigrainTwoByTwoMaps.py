@@ -61,8 +61,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 
     parser.add_argument('--box', dest = "box", type = float, default = 2.5,
                          help = 'width of box (in r_p) (default: 2.5)')
-    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
-                         help = 'normalize by max (default: normalize)')
+    parser.add_argument('--shift', dest = "center", action = 'store_false', default = True,
+                         help = 'center frame on vortex peak or middle (default: center)')
 
     parser.add_argument('--cbar', dest = "colorbar", action = 'store_false', default = False,
                          help = 'include colorbar (default: no colorbar)')
@@ -128,7 +128,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 box = args.box
-normalize = args.normalize
+center = args.center
 colorbar = args.colorbar
 
 # Plot Parameters (constant)
