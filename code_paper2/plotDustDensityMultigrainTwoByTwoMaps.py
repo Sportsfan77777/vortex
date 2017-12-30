@@ -44,7 +44,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'number of cores (default: 1)')
 
     # Size Selection
-    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["cm", "hcm", "mm", "um"],
+    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["um", "cm", "hcm", "mm", "um"],
                          help = 'select 4 sizes (default: [cm, hcm, mm, um])')
 
     # Files
@@ -64,14 +64,14 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('--shift', dest = "center", action = 'store_false', default = True,
                          help = 'center frame on vortex peak or middle (default: center)')
 
-    parser.add_argument('--cbar', dest = "colorbar", action = 'store_false', default = False,
+    parser.add_argument('--cbar', dest = "colorbar", action = 'store_false', default = True,
                          help = 'include colorbar (default: no colorbar)')
 
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 20,
-                         help = 'maximum density in colorbar (default: 20), except for um (fixed: 2)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
+                         help = 'maximum density in colorbar (default: 15), except for um (fixed: 2)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -181,7 +181,21 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         colormap = cmap
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = colormap)
 
-    fig.colorbar(result)
+    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
+    if colorbar:
+        # Only for last frame
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        cbar = fig.colorbar(result, cax = cax)
+        if frame == 1:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        else:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
+        #if frame_i != num_frames:
+        #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
+
     if size_name == "um":
         result.set_clim(0, 2)
     else:
@@ -218,12 +232,13 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
-    ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
-    if frame_i == 1:
+    if frame_i > 2:
+        ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
+    if frame_i % 2 == 1:
         ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
 
     title = "Dust (%s-size) Density" % size
-    if size == "um":
+    if size_name == "um":
         title = "Gas Density"
     ax.set_title(title)
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
@@ -237,18 +252,6 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     if frame_i != 1:
         # Remove unless 1st frame
         ax.set_yticklabels([])
-
-    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if colorbar:
-        # Only for last frame
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
-
-        if frame_i != num_frames:
-            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     return ax, frame_title
     
