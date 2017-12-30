@@ -168,7 +168,7 @@ def add_to_plot(frame, ax, size_name, num_sizes, frame_i):
         else:
             threshold = util.get_threshold(size)
             shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
-        density = np.roll(density, shift_c)
+        density = np.roll(density, shift)
     normalized_density = density / surface_density_zero
 
     # Convert gas density to cartesian
