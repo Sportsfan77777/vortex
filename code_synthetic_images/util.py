@@ -110,8 +110,8 @@ def get_size(size_name):
 def get_size_name(size):
     """ return size name corresponding to size number """
     size_names = {}
-    sizes[1.0] = "cm"; sizes[0.3] = "hcm"; sizes[0.1] = "mm"
-    sizes[0.03] = "hmm"; sizes[0.01] = "hum"; sizes[0.001] = "um"
+    size_names[1.0] = "cm"; size_names[0.3] = "hcm"; size_names[0.1] = "mm"
+    size_names[0.03] = "hmm"; size_names[0.01] = "hum"; size_names[0.001] = "um"
 
     return size_names[size]
 
