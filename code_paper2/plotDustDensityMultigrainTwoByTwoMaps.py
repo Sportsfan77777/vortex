@@ -158,7 +158,7 @@ def add_to_plot(frame, ax, size, num_sizes, frame_i):
 
     density = util.read_data(frame, 'dust', this_fargo_par, id_number = id_number, directory = "../%s-size" % size)
     if center:
-        if taper < 10.1:
+        if taper_time < 10.1:
             shift = az.get_azimuthal_peak(density, fargo_par)
         else:
             threshold = util.get_threshold(size)
