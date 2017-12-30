@@ -68,10 +68,10 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'include colorbar (default: no colorbar)')
 
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
-                         help = 'color map (default: inferno)')
+    parser.add_argument('--cmap', dest = "cmap", default = "magma",
+                         help = 'color map (default: magma)')
     parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
-                         help = 'maximum density in colorbar (default: 15), except for um (fixed: 2)')
+                         help = 'maximum density in colorbar (default: 15), except for um (fixed: 1.5)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -182,7 +182,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = colormap)
 
     if size_name == "um":
-        result.set_clim(0, 2)
+        result.set_clim(0, 1.5)
     else:
         result.set_clim(clim[0], clim[1])
 
@@ -222,17 +222,22 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     if frame_i % 2 == 1:
         ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
 
-    title = "Dust (%s-size) Density" % size
-    if size_name == "um":
-        title = "Gas Density"
-    ax.set_title(title)
-    frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-
     # Axes
     box_size = 2.5
     ax.set_xlim(-box_size, box_size)
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
+
+    # Label
+    size_label = util.get_size_label(size)
+    title = r"%s$\mathrm{-size}$" % size_label
+    if size_name == "um":
+        title = "Gas"
+        plot.text(2, -0.95 * box_size, title, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    else:
+        plot.text(2, -0.95 * box_size, title, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+    #ax.set_title(title)
+    frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
     #if frame_i != 1:
     #    # Remove unless 1st frame
@@ -270,8 +275,8 @@ def make_plot(frame, show = False):
     #### Finish Plot ####
 
     # Title
-    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$ | %s' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
-    fig.suptitle(title, y = 1.06, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass / 0.001), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
+    fig.suptitle(title, y = 1.02, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
