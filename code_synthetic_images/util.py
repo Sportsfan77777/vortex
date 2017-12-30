@@ -99,6 +99,14 @@ def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
         data /= (surface_density_zero / 100.0)
     return data
 
+def get_size(size_name):
+    """ return number corresponding to size name """
+    sizes = {}
+    sizes["cm"] = 1.0; sizes["hcm"] = 0.3; sizes["mm"] = 0.1
+    sizes["hmm"] = 0.03; sizes["hum"] = 0.01; sizes["um"] = 0.0001
+
+    return sizes[size_name]
+
 def get_size_label(size):
     """ return label corresponding to size """
     sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
