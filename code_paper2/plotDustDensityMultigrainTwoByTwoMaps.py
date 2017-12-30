@@ -176,8 +176,10 @@ def add_to_plot(frame, ax, size_name, num_sizes, frame_i):
 
     ### Plot ###
     if size_name == "um":
-        cmap = "viridis"
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = cmap)
+        colormap = "viridis"
+    else:
+        colormap = cmap
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = colormap)
 
     fig.colorbar(result)
     if size_name == "um":
