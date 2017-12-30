@@ -233,15 +233,26 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     stokes_number = util.get_stokes_number(size)
 
     title = r"%s$\mathrm{-size}$" % size_label
-    stokes = r"$\mathrm{St}_\mathrm{r=1}$ $=$ $%.03f$" % stokes_number
+    stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
     if size_name == "um":
         title = r"$\mathrm{Gas\ Density}$"
         plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     else:
         plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-        plot.text(0.9 * box_size, 2, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+        plot.text(0.9 * box_size, 2, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right')
     #ax.set_title(title)
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
+
+    # Title
+    line_x = -0.9 * box_size; line_y = 1.1 * box_size; linebreak = 0.07 * box_size
+    if frame_i == 1:
+        line1 = r'$M_p = %d$ $M_J$' % planet_mass
+        line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
+        plot.text(line_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize)
+        plot.text(line_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize)
+    else:
+        line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
+        plot.text(line_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize)
 
     #if frame_i != 1:
     #    # Remove unless 1st frame
@@ -282,11 +293,11 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-    frame_title = r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    frame_title = r"\n $t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
 
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
     title = r'$M_p = %d$ $M_J$, $\nu = 10^{%d}$, $T_\mathrm{growth} = %d$ $\rm{orbits}$    |    %s' % (int(planet_mass), round(np.log(viscosity) / np.log(10), 0), taper_time, frame_title)
-    fig.suptitle(frame_title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 2.0, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
