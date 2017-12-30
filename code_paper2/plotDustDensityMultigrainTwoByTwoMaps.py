@@ -88,8 +88,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % args.id_number
-fargo_par = pickle.load(open(fn, "rb"))
+fargo_par = util.get_pickled_parameters(directory = "../cm-size")
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -103,14 +102,6 @@ disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # 
 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
-
-planet_radius = fargo_par["Radius"]
-
-beam_size = fargo_par["Beam"]
-wavelength = fargo_par["Wavelength"]
-distance = fargo_par["Distance"]
-
-arc_beam = beam_size * planet_radius / distance
 
 ### Get Input Parameters ###
 
