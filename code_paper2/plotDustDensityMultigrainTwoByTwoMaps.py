@@ -181,21 +181,6 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         colormap = cmap
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = colormap)
 
-    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if colorbar:
-        # Only for last frame
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        if frame_i == 1:
-            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
-        else:
-            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
-
-        #if frame_i != num_frames:
-        #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
-
     if size_name == "um":
         result.set_clim(0, 2)
     else:
@@ -249,15 +234,30 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
 
-    if frame_i != 1:
-        # Remove unless 1st frame
-        ax.set_yticklabels([])
+    #if frame_i != 1:
+    #    # Remove unless 1st frame
+    #    ax.set_yticklabels([])
+
+    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
+    if colorbar:
+        # Only for last frame
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        cbar = fig.colorbar(result, cax = cax)
+        if frame_i == 1:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        else:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
+        #if frame_i != num_frames:
+        #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     return ax, frame_title
     
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 8), dpi = dpi)
+    fig = plot.figure(figsize = (12, 10), dpi = dpi)
     gs = gridspec.GridSpec(2, 2)
 
     size_str = ""
