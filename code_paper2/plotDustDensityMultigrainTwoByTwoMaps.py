@@ -196,9 +196,9 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     ax.add_artist(planet_orbit)
 
     # Locate Planet
-    if shift < -len(gas_theta):
-        shift += len(gas_theta)
-    planet_theta = gas_theta[shift]
+    if shift < -len(theta):
+        shift += len(theta)
+    planet_theta = theta[shift]
     planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
     planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
 
