@@ -233,13 +233,13 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     stokes_number = util.get_stokes_number(size)
 
     title = r"%s$\mathrm{-size}$" % size_label
-    stokes = r"$\mathrm{St}_\mathrm{r=1}$ $=$ %.03f$" % stokes_number
+    stokes = r"$\mathrm{St}_\mathrm{r=1}$ $=$ $%.03f$" % stokes_number
     if size_name == "um":
-        title = r"$\mathrm{Gas Density}$"
+        title = r"$\mathrm{Gas\ Density}$"
         plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     else:
         plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-        plot.text(-0.9 * box_size, 2, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+        plot.text(-0.9 * box_size, 2, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
     #ax.set_title(title)
     frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
 
