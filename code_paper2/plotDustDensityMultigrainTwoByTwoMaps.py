@@ -172,7 +172,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         if taper_time < 10.1:
             shift = az.get_azimuthal_peak(density, fargo_par)
         else:
-            threshold = util.get_threshold(size)
+            if size_name == "um":
+                threshold = util.get_threshold(1.0) # get cm-size threshold instead
+            else:
+                threshold = util.get_threshold(size)
             shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
 
         # Shift! (Handle gas case separately)
