@@ -161,14 +161,25 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     this_fargo_par = fargo_par.copy()
     this_fargo_par["PSIZE"] = size
 
-    density = util.read_data(frame, 'dust', this_fargo_par, id_number = id_number, directory = "../%s-size" % size_name)
+    if size_name == "um":
+        # Gas case is separate!
+        density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = "../cm-size")
+        gas_density = util.read_data(frame, 'gas', fargo_par, id_number = id_number, directory = "../cm-size")
+    else:
+        density = util.read_data(frame, 'dust', this_fargo_par, id_number = id_number, directory = "../%s-size" % size_name)
+
     if center:
         if taper_time < 10.1:
             shift = az.get_azimuthal_peak(density, fargo_par)
         else:
             threshold = util.get_threshold(size)
             shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
-        density = np.roll(density, shift)
+
+        # Shift! (Handle gas case separately)
+        if size_name == "um":
+            density = np.roll(gas_density, shift) / 100.0
+        else:
+            density = np.roll(density, shift)
     normalized_density = density / surface_density_zero
 
     # Convert gas density to cartesian
