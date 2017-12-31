@@ -34,6 +34,51 @@ from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
+
+def new_argument_parser(description = "Plot azimuthal density profiles."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensity",
+                         help = 'save directory (default: azimuthalDensity)')
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+                         help = 'radial range in plot (default: None)')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
+                         help = 'number of profiles (default: 5)')
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 1.0,
+                         help = 'number of scale heights (default: 1.0)')
+
+    parser.add_argument('--shift_off', dest = "center", action = 'store_false', default = True,
+                         help = 'do not center frame on vortex peak or middle (default: shift to center)')
+    parser.add_argument('-t', dest = "threshold", type = float, default = None,
+                         help = 'threshold for centering vortex with its center (default: varies with size)')
+
+    
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'linewidths in plot (default: 3)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
+                         help = 'line transparency in plot (default: 0.65)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
 def new_argument_parser(description = "Plot dust density maps for four grain sizes in two by two grid."):
     parser = argparse.ArgumentParser()
 
@@ -151,141 +196,42 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
 
-    # Declare Subplot
-    #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
-
-    # Data
-    this_fargo_par = fargo_par.copy()
-    this_fargo_par["PSIZE"] = size
-
-    if size_name == "um":
-        # Gas case is separate!
-        density = util.read_data(frame, 'dust', fargo_par, directory = "../cm-size")
-        gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../cm-size")
-    else:
-        density = util.read_data(frame, 'dust', this_fargo_par, directory = "../%s-size" % size_name)
-
-    if center:
-        if taper_time < 10.1:
-            shift = az.get_azimuthal_peak(density, fargo_par)
-        else:
-            if size_name == "um":
-                threshold = util.get_threshold(1.0) # get cm-size threshold instead
-            else:
-                threshold = util.get_threshold(size)
-            shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
-
-        # Shift! (Handle gas case separately)
-        if size_name == "um":
-            density = np.roll(gas_density, shift) / 100.0
-        else:
-            density = np.roll(density, shift)
-    normalized_density = density / surface_density_zero
-
-    # Convert gas density to cartesian
-    _, _, xs_grid, ys_grid, normalized_density = sq.polar_to_cartesian(normalized_density, rad, theta)
-
     ### Plot ###
-    if size_name == "um":
-        colormap = "viridis"
+    x = theta * (180.0 / np.pi)
+    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
+
+    # Mark Planet
+    if shift is None:
+        planet_loc = theta[0]
     else:
-        colormap = cmap
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(normalized_density), cmap = colormap)
-
-    if size_name == "um":
-        result.set_clim(0, 1.5)
-    else:
-        result.set_clim(clim[0], clim[1])
-
-    # Get rid of interior
-    circle = plot.Circle((0, 0), min(rad), color = "black")
-    ax.add_artist(circle)
-
-    # Add planet orbit
-    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
-    ax.add_artist(planet_orbit)
-
-    # Locate Planet
-    if shift < -len(theta):
-        shift += len(theta)
-    planet_theta = theta[shift]
-    planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
-    planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
-
-    planet_x = np.cos(planet_theta)
-    planet_y = np.sin(planet_theta)
-
-    # Label star and planet
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-    if orbit >= taper_time:
-        current_mass = planet_mass
-    else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
-
-    planet_size = current_mass / planet_mass
-    plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-    plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
-
-    # Annotate Axes
-    if frame_i > 2:
-        ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
-    if frame_i % 2 == 1:
-        ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
+        if shift < -len(theta):
+            shift += len(theta)
+        planet_loc = theta[shift] * (180.0 / np.pi)
+    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
 
     # Axes
-    box_size = 2.5
-    ax.set_xlim(-box_size, box_size)
-    ax.set_ylim(-box_size, box_size)
-    ax.set_aspect('equal')
+    plot.xlim(0, 360)
 
-    # Label
-    size_label = util.get_size_label(size)
-    stokes_number = util.get_stokes_number(size)
+    angles = np.linspace(0, 360, 7)
+    plot.xticks(angles)
 
-    title = r"%s$\mathrm{-size}$" % size_label
-    stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
-    if size_name == "um":
-        title = r"$\mathrm{Gas\ Density}$"
-        plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    if max_y is not None:
+        plot.ylim(0, max_y)
     else:
-        plot.text(-0.9 * box_size, 2, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-        plot.text(0.9 * box_size, 2, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right')
-    #ax.set_title(title)
-    frame_title = r"$t$ $=$ $%.1f$ [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
+        plot.ylim(0, plot.ylim()[-1])
 
-    # Title
-    left_x = -0.8 * box_size; line_y = 1.1 * box_size; linebreak = 0.2 * box_size
-    right_x = 1.3 * box_size
-    if frame_i == 1:
-        line1 = r'$M_p = %d$ $M_J$' % planet_mass
-        line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
-        plot.text(left_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
-        plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
-    elif frame_i == 2 :
-        line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
-        plot.text(right_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
 
-    #if frame_i != 1:
-    #    # Remove unless 1st frame
-    #    ax.set_yticklabels([])
+    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
+    plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
 
-    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if colorbar:
-        # Only for last frame
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        if frame_i == 1:
-            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
-        else:
-            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+    title = r"(t = %.1f orbits)" % (orbit)
+    plot.title("%s" % (title), fontsize = fontsize + 1)
 
-        #if frame_i != num_frames:
-        #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
-    return ax
     
 def make_plot(frame, show = False):
     # Set up figure
@@ -315,15 +261,12 @@ def make_plot(frame, show = False):
     # Save and Close
     plot.tight_layout()
 
-    # Save, Show,  and Close
+    # Save, Show, and Close
     if version is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/azimuthalDensityProfiles_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
-
-    if show:
-        plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
 
