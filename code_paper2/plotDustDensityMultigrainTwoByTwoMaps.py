@@ -54,8 +54,6 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
-    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
-                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
@@ -125,7 +123,6 @@ show = args.show
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-id_number = args.id_number
 version = args.version
 box = args.box
 center = args.center
@@ -163,10 +160,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     if size_name == "um":
         # Gas case is separate!
-        density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = "../cm-size")
-        gas_density = util.read_data(frame, 'gas', fargo_par, id_number = id_number, directory = "../cm-size")
+        density = util.read_data(frame, 'dust', fargo_par, directory = "../cm-size")
+        gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../cm-size")
     else:
-        density = util.read_data(frame, 'dust', this_fargo_par, id_number = id_number, directory = "../%s-size" % size_name)
+        density = util.read_data(frame, 'dust', this_fargo_par, directory = "../%s-size" % size_name)
 
     if center:
         if taper_time < 10.1:
@@ -320,9 +317,9 @@ def make_plot(frame, show = False):
 
     # Save, Show,  and Close
     if version is None:
-        save_fn = "%s/id%04d_densityMap_%04d.png" % (save_directory, id_number, frame)
+        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_id%04d_densityMap_%04d.png" % (save_directory, version, id_number, frame)
+        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
