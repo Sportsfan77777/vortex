@@ -226,11 +226,11 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Extra Annotation
     center_x = 1.1 * plot.xlim()[-1]
-    max_y = plot.ylim()[-1]
+    top_y = plot.ylim()[-1]
 
     line1 = "Radii"; line2 = "Analytic"
-    plot.text(center_x, 0.95 * max_y, line1, fontsize = fontsize, horizontalalignment = 'center')
-    plot.text(center_x, 0.35 * max_y, line2, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(center_x, 0.35 * top_y, line2, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     size_label = util.get_size_label(size)
