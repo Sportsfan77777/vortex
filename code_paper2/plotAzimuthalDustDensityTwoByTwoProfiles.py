@@ -222,7 +222,16 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Legend
     if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 0.8)) # outside of plot
+
+    # Extra Annotation
+    center_x = 1.1 * plot.xlim()[-1]
+    max_y = plot.ylim()[-1]
+
+    line1 = "Radii"
+    line2 = "Analytic"
+    plot.text(center_x, 0.95 * max_y, line1, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(center_x, 0.35 * max_y, line2, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     size_label = util.get_size_label(size)
@@ -236,7 +245,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 8), dpi = dpi)
+    fig = plot.figure(figsize = (12, 7), dpi = dpi)
     gs = gridspec.GridSpec(2, 2)
 
     size_str = ""
