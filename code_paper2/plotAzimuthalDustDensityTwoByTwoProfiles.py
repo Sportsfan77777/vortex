@@ -171,13 +171,13 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     if center:
         # Center vortex
         if fargo_par["MassTaper"] < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
+            shift = az.get_azimuthal_peak(density, fargo_par)
         else:
             threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
+            shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
     else:
-        shift_c = None
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
+        shift = None
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
 
     ### Plot ###
     x = theta * (180.0 / np.pi) - 180.0
