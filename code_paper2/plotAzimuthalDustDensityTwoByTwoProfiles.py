@@ -220,6 +220,8 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     else:
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
 
+    # Title
+    size_label = util.get_size_label(size)
     title = r"%s$\mathrm{-size}$" % size_label
     plot.title("%s" % (title), fontsize = fontsize + 1)
 
