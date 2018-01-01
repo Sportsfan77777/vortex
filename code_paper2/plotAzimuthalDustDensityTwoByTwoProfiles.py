@@ -226,7 +226,9 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Title
     size_label = util.get_size_label(size)
-    title = r"%s$\mathrm{-size}$" % size_label
+    stokes_number = util.get_stokes_number(size)
+
+    title = r"%s$\mathrm{-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (size_label, )
     if frame_i == 1:
         title = r"$\mathrm{Gas\ Density}$"
     plot.title("%s" % (title), fontsize = fontsize + 1)
