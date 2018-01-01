@@ -123,23 +123,25 @@ if not os.path.isdir(save_directory):
 
 # Plot Parameters (variable)
 show = args.show
+max_y = args.max_y
+
+num_profiles = args.num_profiles
+num_scale_heights = args.num_scale_heights
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
-box = args.box
+
 center = args.center
-colorbar = args.colorbar
+threshold = args.threshold
+if threshold is None:
+    threshold = util.get_threshold(size)
 
 # Plot Parameters (constant)
-cmap = args.cmap
-cmax = args.cmax
-if cmax is not None:
-    clim = [0, args.cmax]
-
 fontsize = args.fontsize
-labelsize = args.labelsize
+linewidth = args.linewidth
+alpha = args.alpha
 dpi = args.dpi
 
 rc['xtick.labelsize'] = labelsize
