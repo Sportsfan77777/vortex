@@ -222,11 +222,11 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Legend
     if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.2, 0.8)) # outside of plot
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.32, 0.95)) # outside of plot
 
     # Extra Annotation
     if frame_i == 2:    
-        center_x = 1.1 * plot.xlim()[-1]
+        center_x = 1.18 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         line1 = "Radii"; line2 = "Analytic"
