@@ -158,11 +158,22 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density = util.read_dust_data(frame, fargo_par)
+    density = util.read_data(frame, 'dust', this_fargo_par, directory = "../%s-size" % size_name)
+
+    # Choose shift option
+    if center:
+        # Center vortex
+        if fargo_par["MassTaper"] < 10.1:
+            shift_c = az.get_azimuthal_peak(density, fargo_par)
+        else:
+            threshold = util.get_threshold(size)
+            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
+    else:
+        shift_c = None
     azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
 
     ### Plot ###
-    x = theta * (180.0 / np.pi)
+    x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
 
@@ -172,13 +183,13 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     else:
         if shift < -len(theta):
             shift += len(theta)
-        planet_loc = theta[shift] * (180.0 / np.pi)
+        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
 
     # Axes
-    plot.xlim(0, 360)
+    plot.xlim(-180, 180)
 
-    angles = np.linspace(0, 360, 7)
+    angles = np.linspace(-180, 180, 7)
     plot.xticks(angles)
 
     if max_y is not None:
