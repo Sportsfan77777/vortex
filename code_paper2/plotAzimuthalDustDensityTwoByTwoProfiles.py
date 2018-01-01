@@ -140,6 +140,7 @@ threshold = args.threshold
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
+labelsize = args.labelsize
 linewidth = args.linewidth
 alpha = args.alpha
 dpi = args.dpi
