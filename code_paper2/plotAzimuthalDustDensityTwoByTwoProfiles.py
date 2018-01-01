@@ -135,8 +135,8 @@ version = args.version
 
 center = args.center
 threshold = args.threshold
-if threshold is None:
-    threshold = util.get_threshold(size)
+#if threshold is None:
+#    threshold = util.get_threshold(size)
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
