@@ -35,7 +35,7 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 
-def new_argument_parser(description = "Plot azimuthal density profiles."):
+def new_argument_parser(description = "Plot azimuthal density profiles in two by two grid."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
@@ -44,9 +44,13 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
 
+    # Size Selection
+    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["um", "cm", "hcm", "mm"],
+                         help = 'select 4 sizes (default: [um, cm, hcm, mm])')
+
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensity",
-                         help = 'save directory (default: azimuthalDensity)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensityTwoByTwo",
+                         help = 'save directory (default: azimuthalDensityTwoByTwo)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -65,61 +69,16 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
                          help = 'do not center frame on vortex peak or middle (default: shift to center)')
     parser.add_argument('-t', dest = "threshold", type = float, default = None,
                          help = 'threshold for centering vortex with its center (default: varies with size)')
-
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 18)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
+                         help = 'labelsize of plot annotations (default: 15)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
     parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
                          help = 'line transparency in plot (default: 0.65)')
-    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
-                         help = 'dpi of plot annotations (default: 100)')
-
-    return parser
-
-def new_argument_parser(description = "Plot dust density maps for four grain sizes in two by two grid."):
-    parser = argparse.ArgumentParser()
-
-    # Frame Selection
-    parser.add_argument('frames', type = int, nargs = '+',
-                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
-    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
-                         help = 'number of cores (default: 1)')
-
-    # Size Selection
-    parser.add_argument('--sizes', dest = "sizes", nargs = 4, default = ["um", "cm", "hcm", "mm"],
-                         help = 'select 4 sizes (default: [cm, hcm, mm, um])')
-
-    # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMultigrainTwoByTwoMaps",
-                         help = 'save directory (default: dustDensityMultigrainTwoByTwoMaps)')
-
-    # Plot Parameters (variable)
-    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
-                         help = 'for single plot, do not display plot (default: display plot)')
-    parser.add_argument('-v', dest = "version", type = int, default = None,
-                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
-
-    parser.add_argument('--box', dest = "box", type = float, default = 2.5,
-                         help = 'width of box (in r_p) (default: 2.5)')
-    parser.add_argument('--shift', dest = "center", action = 'store_false', default = True,
-                         help = 'center frame on vortex peak or middle (default: center)')
-
-    parser.add_argument('--cbar', dest = "colorbar", action = 'store_false', default = True,
-                         help = 'include colorbar (default: no colorbar)')
-
-    # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
-                         help = 'color map (default: magma)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
-                         help = 'maximum density in colorbar (default: 15), except for um (fixed: 1.5)')
-
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
