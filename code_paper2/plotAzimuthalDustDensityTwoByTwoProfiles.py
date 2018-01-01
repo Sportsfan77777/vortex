@@ -165,7 +165,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name)
+    density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name) / surface_density_zero
 
     # Choose shift option
     if center:
@@ -208,8 +208,13 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
 
-    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
+    if frame_i > 2:
+        plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+
+    if frame_i == 1:
+        plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize)
+    else:
+        plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
 
     title = r"(t = %.1f orbits)" % (orbit)
     plot.title("%s" % (title), fontsize = fontsize + 1)
