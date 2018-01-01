@@ -159,7 +159,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density = util.read_data(frame, 'dust', this_fargo_par, directory = "../%s-size" % size_name)
+    density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name)
 
     # Choose shift option
     if center:
