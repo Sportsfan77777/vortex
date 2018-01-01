@@ -250,6 +250,9 @@ def make_plot(frame, show = False):
         save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
+    if show:
+        plot.show()
+
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
