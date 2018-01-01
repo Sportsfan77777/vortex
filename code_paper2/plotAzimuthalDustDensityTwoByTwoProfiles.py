@@ -89,7 +89,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-### Get ID%04d Parameters ###
+### Get FARGO Parameters ###
 fargo_par = util.get_pickled_parameters(directory = "../cm-size")
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -157,6 +157,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
 
+    ### Data ###
+    density = util.read_dust_data(frame, fargo_par)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift_c)
+
     ### Plot ###
     x = theta * (180.0 / np.pi)
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
@@ -191,7 +195,6 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     title = r"(t = %.1f orbits)" % (orbit)
     plot.title("%s" % (title), fontsize = fontsize + 1)
-
 
     
 def make_plot(frame, show = False):
