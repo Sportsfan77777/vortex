@@ -217,12 +217,18 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     if frame_i == 1:
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize)
-    else:
+    elif frame_i == 3:
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
+
+    # Legend
+    if frame_i == 2:
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
     # Title
     size_label = util.get_size_label(size)
     title = r"%s$\mathrm{-size}$" % size_label
+    if frame_i == 1:
+        title = r"$\mathrm{Gas\ Density}$"
     plot.title("%s" % (title), fontsize = fontsize + 1)
 
     
@@ -244,7 +250,7 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-    if orbit >= taper_time:
+    if orbit >= 1: # taper_time:
         frame_title = r"$t$ $=$ $%.1f$" % (orbit)
         fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
     else:
