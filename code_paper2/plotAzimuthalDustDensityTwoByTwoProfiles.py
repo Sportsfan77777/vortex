@@ -204,6 +204,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     else:
         plot.ylim(0, plot.ylim()[-1])
 
+    if frame_i <= 2:
+        # Remove unless bottom
+        ax.set_xticklabels([])
+
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
@@ -216,7 +220,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     else:
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
 
-    title = r"(t = %.1f orbits)" % (orbit)
+    title = r"%s$\mathrm{-size}$" % size_label
     plot.title("%s" % (title), fontsize = fontsize + 1)
 
     
