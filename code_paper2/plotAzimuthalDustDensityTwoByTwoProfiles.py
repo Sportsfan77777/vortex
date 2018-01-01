@@ -222,16 +222,19 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Legend
     if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.32, 0.95)) # outside of plot
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.3, 0.95)) # outside of plot
 
     # Extra Annotation
-    if frame_i == 2:    
-        center_x = 1.18 * plot.xlim()[-1]
+    if frame_i % 2 == 0:    
+        center_x = 1.3 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
-        line1 = "Radii"; line2 = "Analytic"
-        plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(center_x, 0.35 * top_y, line2, fontsize = fontsize, horizontalalignment = 'center')
+        if frame_i == 2:
+            line1 = "Radii"
+        elif frame_i == 4:
+            line2 = "Analytic"
+        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     size_label = util.get_size_label(size)
