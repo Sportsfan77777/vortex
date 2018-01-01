@@ -228,8 +228,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     center_x = 1.1 * plot.xlim()[-1]
     max_y = plot.ylim()[-1]
 
-    line1 = "Radii"
-    line2 = "Analytic"
+    line1 = "Radii"; line2 = "Analytic"
     plot.text(center_x, 0.95 * max_y, line1, fontsize = fontsize, horizontalalignment = 'center')
     plot.text(center_x, 0.35 * max_y, line2, fontsize = fontsize, horizontalalignment = 'center')
 
