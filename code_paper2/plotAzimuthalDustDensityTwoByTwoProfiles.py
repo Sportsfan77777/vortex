@@ -230,9 +230,9 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         top_y = plot.ylim()[-1]
 
         if frame_i == 2:
-            line1 = "Radii"
+            line = "Radii"
         elif frame_i == 4:
-            line2 = "Analytic"
+            line = "Analytic"
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
 
