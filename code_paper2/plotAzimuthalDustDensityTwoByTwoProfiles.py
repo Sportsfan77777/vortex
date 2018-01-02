@@ -222,7 +222,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Legend
     if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.3, 0.95)) # outside of plot
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.3, 0.94)) # outside of plot
 
     # Extra Annotation
     if frame_i % 2 == 0:    
@@ -237,8 +237,8 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
 
         if frame_i == 4:
-            half_width = 0.05 * plot.xlim()[-1]
-            analytic_legend_y0 = 0.8 * top_y
+            half_width = 0.1 * plot.xlim()[-1]
+            analytic_legend_y0 = 0.85 * top_y
 
             analytic_legend_x = [center_x - half_width, center_x + half_width]
             analytic_legend_y = [analytic_legend_y0, analytic_legend_y0]
