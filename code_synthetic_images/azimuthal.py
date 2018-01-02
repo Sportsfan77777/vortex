@@ -197,3 +197,23 @@ def get_profiles(density, fargo_par, args, normalize = False, shift = None):
     return azimuthal_radii, azimuthal_profiles
 
 ###############################################################################
+
+### Analytic ###
+
+def get_analytic_profile(x, aspect_ratio, S, max_density = 1):
+    """ Calculates analytic azimuthal dust density profile for a given aspect ratio and S = St / \delta """
+
+    def scale_function_sq(aspect_ratio):
+        xi = 1 + aspect_ratio**(-2); vorticity = 1.5 / (aspect_ratio - 1)
+
+        first_term = 2.0 * vorticity * aspect_ratio
+        second_term = xi**(-1) * (2 * (vorticity)**2 + 3)
+
+        return first_term - second_term
+
+    f_sq = scale_function_sq(aspect_ratio)
+
+    coeff = max_density * (S + 1)**(1.5)
+    exp = np.exp(-(S + 1) * x**2 * f_sq / 2.0)
+
+    return coeff * exp
