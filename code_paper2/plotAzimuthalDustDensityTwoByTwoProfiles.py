@@ -209,7 +209,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
         max_density = np.max(azimuthal_profiles[middle_i])
 
-        aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
+        #aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
         aspect_ratio = (1.5 / 0.25) * (240 * np.pi / 180.0) # (r / dr) * d\theta
         S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
 
@@ -217,7 +217,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
         # Mask outside vortex and plot
-        masked_i = x[np.abs(x) < 120]
+        masked_i = np.abs(x) < 120
         masked_x = x[masked_i]; masked_y = analytic[masked_i]
         plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
 
