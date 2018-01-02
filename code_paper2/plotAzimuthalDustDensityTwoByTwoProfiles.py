@@ -192,9 +192,9 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         shift = None
 
     if size_name == "um":
-        azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
-    else:
         azimuthal_radii, azimuthal_profiles = az.get_profiles(gas_density, fargo_par, args, shift = shift)
+    else:
+        azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
 
     ### Plot ###
     # Profiles
