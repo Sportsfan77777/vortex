@@ -82,6 +82,14 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
+    # Analytic Profile Parameters
+    parser.add_argument('-r', dest = "r_a", type = float, default = None,
+                         help = 'aspect ratio r (default:  [10], 1.5 [1000])')
+    parser.add_argument('--dr', dest = "dr_a", type = float, default = None,
+                         help = 'aspect ratio dr (default:  [10], 0.25 [1000])')
+    parser.add_argument('--dtheta', dest = "dtheta_a", type = float, default = None,
+                         help = 'aspect ratio d/theta (default:  [10], 240 [1000])')
+
     return parser
 
 ###############################################################################
@@ -189,14 +197,16 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     if frame_i != 1:
         middle_i = (num_profiles - 1) / 2
         radius = azimuthal_radii[middle_i] # middle
-        center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
+        #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
+        max_density = np.max(azimuthal_profiles[middle_i])
 
+        aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
         aspect_ratio = (1.5 / 0.25) * (240 * np.pi / 180.0) # (r / dr) * d\theta
         S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
 
         analytic = np.array([az.get_analytic_profile(angle, aspect_ratio, S, radius) for angle in x])
-        analytic = analytic / np.max(analytic) * center_density # Normalize and re-scale to density at the center
-        plot.plot(x, analytic, linewidth = linewidth, alpha = alpha, linestyle = "--", c = "k")
+        analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
+        plot.plot(x, analytic, linewidth = linewidth, linestyle = "--", c = "k")
 
     # Mark Planet
     if shift is None:
