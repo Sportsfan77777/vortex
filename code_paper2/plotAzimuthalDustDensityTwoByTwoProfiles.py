@@ -206,7 +206,11 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
         analytic = np.array([az.get_analytic_profile(angle, aspect_ratio, S, radius) for angle in x])
         analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
-        plot.plot(x, analytic, linewidth = linewidth, linestyle = "--", c = "k")
+
+        # Mask outside vortex and plot
+        masked_i = x[np.abs(x) < 120]
+        masked_x = x[masked_i]; masked_y = analytic[masked_i]
+        plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
 
     # Mark Planet
     if shift is None:
