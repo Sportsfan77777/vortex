@@ -226,7 +226,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Extra Annotation
     if frame_i % 2 == 0:    
-        center_x = 1.3 * plot.xlim()[-1]
+        center_x = 1.32 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         if frame_i == 2:
@@ -235,6 +235,14 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
             line = "Analytic"
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
+
+        if frame_i == 4:
+            half_width = 0.05 * plot.xlim()[-1]
+            analytic_legend_y0 = 0.8 * top_y
+
+            analytic_legend_x = [center_x - half_width, center_x + half_width]
+            analytic_legend_y = [analytic_legend_y0, analytic_legend_y0]
+            plot.plot(analytic_legend_x, analytic_legend_y, linewidth = linewidth, c = 'k', linestyle = "--", clip_on = False)
 
     # Title
     size_label = util.get_size_label(size)
