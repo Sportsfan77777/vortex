@@ -173,7 +173,12 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name) / surface_density_zero
+    if size_name == "um":
+        # Gas case is separate!
+        density = util.read_data(frame, 'dust', fargo_par, directory = "../cm-size") / surface_density_zero
+        gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../cm-size") / (100 * surface_density_zero)
+    else:
+        density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name) / surface_density_zero
 
     # Choose shift option
     if center:
@@ -185,7 +190,11 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
             shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
     else:
         shift = None
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
+
+    if size_name == "um":
+        azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
+    else:
+        azimuthal_radii, azimuthal_profiles = az.get_profiles(gas_density, fargo_par, args, shift = shift)
 
     ### Plot ###
     # Profiles
