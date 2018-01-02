@@ -186,16 +186,17 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
 
     # Analytic
-    middle_i = (num_profiles - 1) / 2
-    radius = azimuthal_radii[middle_i] # middle
-    center_density = azimuthal_profile[middle_i][(len(azimuthal_profile[middle_i]) - 1) / 2]
+    if frame_i != 1:
+        middle_i = (num_profiles - 1) / 2
+        radius = azimuthal_radii[middle_i] # middle
+        center_density = azimuthal_profile[middle_i][(len(azimuthal_profile[middle_i]) - 1) / 2]
 
-    aspect_ratio = (1.5 / 0.25) * (240 * np.pi / 180.0) # (r / dr) * d\theta
-    S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
+        aspect_ratio = (1.5 / 0.25) * (240 * np.pi / 180.0) # (r / dr) * d\theta
+        S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
 
-    analytic = np.array([az.get_analytic_profile(angle, aspect_ratio, S, radius) for angle in x])
-    analytic = analytic / np.max(analytic) * center_density # Normalize and re-scale to density at the center
-    plot.plot(x, analytic, linewidth = linewidth, alpha = alpha, linestyle = "--", c = "k")
+        analytic = np.array([az.get_analytic_profile(angle, aspect_ratio, S, radius) for angle in x])
+        analytic = analytic / np.max(analytic) * center_density # Normalize and re-scale to density at the center
+        plot.plot(x, analytic, linewidth = linewidth, alpha = alpha, linestyle = "--", c = "k")
 
     # Mark Planet
     if shift is None:
