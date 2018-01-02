@@ -189,7 +189,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     if frame_i != 1:
         middle_i = (num_profiles - 1) / 2
         radius = azimuthal_radii[middle_i] # middle
-        center_density = azimuthal_profile[middle_i][(len(azimuthal_profile[middle_i]) - 1) / 2]
+        center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
 
         aspect_ratio = (1.5 / 0.25) * (240 * np.pi / 180.0) # (r / dr) * d\theta
         S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
