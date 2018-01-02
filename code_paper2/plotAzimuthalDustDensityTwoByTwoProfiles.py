@@ -240,7 +240,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
             half_width = 0.12 * plot.xlim()[-1]
             analytic_legend_y0 = 0.85 * top_y
 
-            analytic_legend_x = [center_x - half_width, center_x + half_width]
+            analytic_legend_x = [1.01 * center_x - half_width, 1.01 * center_x + half_width]
             analytic_legend_y = [analytic_legend_y0, analytic_legend_y0]
             plot.plot(analytic_legend_x, analytic_legend_y, linewidth = linewidth, c = 'k', linestyle = "--", clip_on = False)
 
