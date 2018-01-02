@@ -237,7 +237,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
 
         if frame_i == 4:
-            half_width = 0.1 * plot.xlim()[-1]
+            half_width = 0.12 * plot.xlim()[-1]
             analytic_legend_y0 = 0.85 * top_y
 
             analytic_legend_x = [center_x - half_width, center_x + half_width]
