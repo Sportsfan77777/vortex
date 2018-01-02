@@ -186,7 +186,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         if fargo_par["MassTaper"] < 10.1:
             shift = az.get_azimuthal_peak(density, fargo_par)
         else:
-            threshold = util.get_threshold(size)
+            if size_name == "um":
+                threshold = util.get_threshold(1.0) # cm-size
+            else:
+                threshold = util.get_threshold(size)
             shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
     else:
         shift = None
@@ -217,7 +220,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
         # Mask outside vortex and plot
-        masked_i = np.abs(x) < 120
+        masked_i = np.abs(x) <= 120
         masked_x = x[masked_i]; masked_y = analytic[masked_i]
         plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
 
