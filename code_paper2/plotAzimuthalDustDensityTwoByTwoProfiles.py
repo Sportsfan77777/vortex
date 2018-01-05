@@ -268,7 +268,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         plot.ylim(0, max_y[frame_i - 1])
     else:
         #plot.ylim(0, plot.ylim()[-1])
-        plot.ylim(0, util.get_max_y(size))
+        plot.ylim(0, util.get_max_y(size, taper_time))
 
     if frame_i <= 2:
         # Remove unless bottom
