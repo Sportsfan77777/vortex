@@ -176,9 +176,9 @@ else:
 # Vortex azimuthal width
 if args.dtheta_a is None:
     if taper_time < 10.1:
-        dtheta_a = 120
+        dtheta_a = 120.0
     else:
-        dtheta_a = 240
+        dtheta_a = 240.0
 else:
     dtheta_a = args.dtheta_a
 
