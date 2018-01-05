@@ -58,7 +58,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+    parser.add_argument('--max_y', dest = "max_y", nargs = 4, type = float, default = None,
                          help = 'radial range in plot (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
@@ -265,9 +265,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     plot.xticks(angles)
 
     if max_y is not None:
-        plot.ylim(0, max_y)
+        plot.ylim(0, max_y[frame_i - 1])
     else:
-        plot.ylim(0, plot.ylim()[-1])
+        #plot.ylim(0, plot.ylim()[-1])
+        plot.ylim(0, util.get_max_y(size))
 
     if frame_i <= 2:
         # Remove unless bottom
