@@ -83,6 +83,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'dpi of plot annotations (default: 100)')
 
     # Analytic Profile Parameters
+    parser.add_argument('--diff', dest = "diffusion_factor", type = float, default = 10,
+                         help = 'aspect ratio r (default: 10)')
     parser.add_argument('-r', dest = "r_a", type = float, default = None,
                          help = 'aspect ratio r (default: 1.7 [10], 1.5 [1000])')
     parser.add_argument('--dr', dest = "dr_a", type = float, default = None,
@@ -157,6 +159,8 @@ rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
 ### Analytic Parameters ###
+diffusion_factor = args.diffusion_factor
+
 # Vortex radius
 if args.r_a is None:
     if taper_time < 10.1:
@@ -239,7 +243,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         max_density = np.max(azimuthal_profiles[middle_i])
 
         aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
-        S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
+        S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
 
         analytic = np.array([az.get_analytic_profile(angle, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
         analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
@@ -261,7 +265,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Axes
     if taper_time < 10.1:
         # T = 10
-        max_x = 180
+        max_x = 60
     else:
         # T = 1000
         max_x = 180
