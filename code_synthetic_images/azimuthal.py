@@ -198,6 +198,24 @@ def get_profiles(density, fargo_par, args, normalize = False, shift = None):
 
 ###############################################################################
 
+### Plotting ###
+
+def get_max_y(size, taper_time):
+    """ return size name corresponding to size number """
+    max_ys = {}
+    if taper_time < 10.1:
+        max_ys[1.0] = 1500; max_ys[0.3] = 400; max_ys[0.1] = 100
+        max_ys[0.03] = 40; max_ys[0.01] = 20; max_ys[0.0001] = 3.0
+
+        return max_ys[size]
+    else:
+        max_ys[1.0] = 600; max_ys[0.3] = 125; max_ys[0.1] = 30
+        max_ys[0.03] = 20; max_ys[0.01] = 10; max_ys[0.0001] = 2.5
+
+        return max_ys[size]
+
+###############################################################################
+
 ### Analytic ###
 
 def get_analytic_profile(angle, dr, dtheta, aspect_ratio, S, max_density = 1, scale_height = 0.06):
