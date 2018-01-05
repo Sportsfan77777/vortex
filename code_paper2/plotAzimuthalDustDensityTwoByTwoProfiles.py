@@ -259,16 +259,21 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
-    plot.xlim(-180, 180)
-
-    angles = np.linspace(-180, 180, 7)
+    if taper_time < 10.1:
+        # T = 10
+        max_x = 180
+    else:
+        # T = 1000
+        max_x = 180
+    plot.xlim(-max_x, max_x)
+    angles = np.linspace(-max_x, max_x, 7)
     plot.xticks(angles)
 
     if max_y is not None:
         plot.ylim(0, max_y[frame_i - 1])
     else:
         #plot.ylim(0, plot.ylim()[-1])
-        plot.ylim(0, util.get_max_y(size, taper_time))
+        plot.ylim(0, az.get_max_y(size, taper_time))
 
     if frame_i <= 2:
         # Remove unless bottom
