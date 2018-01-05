@@ -84,11 +84,11 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     # Analytic Profile Parameters
     parser.add_argument('-r', dest = "r_a", type = float, default = None,
-                         help = 'aspect ratio r (default:  [10], 1.5 [1000])')
+                         help = 'aspect ratio r (default: 1.7 [10], 1.5 [1000])')
     parser.add_argument('--dr', dest = "dr_a", type = float, default = None,
-                         help = 'aspect ratio dr (default:  [10], 0.25 [1000])')
+                         help = 'aspect ratio dr (default: 0.30 [10], 0.25 [1000])')
     parser.add_argument('--dtheta', dest = "dtheta_a", type = float, default = None,
-                         help = 'aspect ratio d/theta (default:  [10], 240 [1000])')
+                         help = 'aspect ratio d/theta (default: 120 [10], 240 [1000])')
 
     return parser
 
@@ -156,6 +156,32 @@ dpi = args.dpi
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+### Analytic Parameters ###
+# Vortex radius
+if args.r_a is None:
+    if taper_time < 10.1:
+        r_a = 1.7
+    else:
+        r_a = 1.5
+else:
+    r_a = args.r_a
+# Vortex radial width
+if args.dr_a is None:
+    if taper_time < 10.1:
+        dr_a = 0.3
+    else:
+        dr_a = 0.25
+else:
+    dr_a = args.dr_a
+# Vortex azimuthal width
+if args.dtheta_a is None:
+    if taper_time < 10.1:
+        dtheta_a = 120
+    else:
+        dtheta_a = 240
+else:
+    dtheta_a = args.dtheta_a
+
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
@@ -212,11 +238,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
         max_density = np.max(azimuthal_profiles[middle_i])
 
-        #aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
-        aspect_ratio = (1.5 / 0.25) * (240 * np.pi / 180.0) # (r / dr) * d\theta
+        aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
         S = util.get_stokes_number(size) / (viscosity / scale_height**2) # St / \alpha
 
-        analytic = np.array([az.get_analytic_profile(angle, aspect_ratio, S, radius) for angle in x])
+        analytic = np.array([az.get_analytic_profile(angle, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
         analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
         # Mask outside vortex and plot
