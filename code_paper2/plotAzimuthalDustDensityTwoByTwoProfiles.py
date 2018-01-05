@@ -256,7 +256,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         if shift < -len(theta):
             shift += len(theta)
         planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
-    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
+    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
     plot.xlim(-180, 180)
