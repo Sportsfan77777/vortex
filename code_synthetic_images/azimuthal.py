@@ -200,14 +200,13 @@ def get_profiles(density, fargo_par, args, normalize = False, shift = None):
 
 ### Analytic ###
 
-def get_analytic_profile(angle, aspect_ratio, S, r_over_dr, max_density = 1, scale_height = 0.06):
+def get_analytic_profile(angle, dr, dtheta, aspect_ratio, S, max_density = 1, scale_height = 0.06):
     """ Calculates analytic azimuthal dust density profile for a given aspect ratio and S = St / \delta """
 
-    def semiminor_axis(dtheta, r_over_dr):
+    def semiminor_axis(angle, dr, dtheta):
         """ maps angle in vortex to semiminor axis input to dust distribution (Eq. 65 from Lyra + Lin 13) """
-        # Note: It is necessary to multiply by the scale_height to normalize the dr in r_over_dr
-        # Note: It is necessary to multiply by two because the azimuthal edge of the vortex corresponds to the aspect_ratio even though the angle at the edge is half the azimuthal width
-        return r_over_dr * (dtheta * (np.pi / 180.0)) * scale_height * 2 # aspect_ratio
+        # Note: The azimuthal edge of the vortex should map to the radial half-width (in units of the scale height)
+        return (dr / scale_height) * (angle / dtheta)
 
     def scale_function_sq(aspect_ratio):
         xi = 1 + aspect_ratio**(-2); vorticity = 1.5 / (aspect_ratio - 1)
@@ -217,7 +216,7 @@ def get_analytic_profile(angle, aspect_ratio, S, r_over_dr, max_density = 1, sca
 
         return first_term - second_term
 
-    x = semiminor_axis(angle, r_over_dr)
+    x = semiminor_axis(angle, dr, dtheta)
     f_sq = scale_function_sq(aspect_ratio)
 
     coeff = max_density * (S + 1)**(1.5)
