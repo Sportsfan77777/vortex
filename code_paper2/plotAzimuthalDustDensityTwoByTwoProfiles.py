@@ -58,6 +58,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
+    parser.add_argument('--no_max_y', dest = "no_max_y", action = 'store_true', default = False,
+                         help = 'use default max_y based on plot range, not stored values (default: use stored values)')
     parser.add_argument('--max_y', dest = "max_y", nargs = 4, type = float, default = None,
                          help = 'radial range in plot (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
@@ -133,6 +135,7 @@ if not os.path.isdir(save_directory):
 
 # Plot Parameters (variable)
 show = args.show
+no_max_y = args.no_max_y
 max_y = args.max_y
 
 num_profiles = args.num_profiles
@@ -273,11 +276,12 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     angles = np.linspace(-max_x, max_x, 7)
     plot.xticks(angles)
 
-    if max_y is not None:
-        plot.ylim(0, max_y[frame_i - 1])
+    if no_max_y:
+        plot.ylim(0, plot.ylim()[-1]) # No Input
+    elif max_y is None:
+        plot.ylim(0, az.get_max_y(size, taper_time)) # Default
     else:
-        #plot.ylim(0, plot.ylim()[-1])
-        plot.ylim(0, az.get_max_y(size, taper_time))
+        plot.ylim(0, max_y[frame_i - 1]) # Input
 
     if frame_i <= 2:
         # Remove unless bottom
