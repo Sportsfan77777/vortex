@@ -205,7 +205,7 @@ def get_max_y(size, taper_time):
     max_ys = {}
     if taper_time < 10.1:
         max_ys[1.0] = 1500; max_ys[0.3] = 400; max_ys[0.1] = 100
-        max_ys[0.03] = 40; max_ys[0.01] = 20; max_ys[0.0001] = 3.0
+        max_ys[0.03] = 40; max_ys[0.01] = 20; max_ys[0.0001] = 4.0
 
         return max_ys[size]
     else:
@@ -218,13 +218,17 @@ def get_max_y(size, taper_time):
 
 ### Analytic ###
 
-def get_analytic_profile(angle, dr, dtheta, aspect_ratio, S, max_density = 1, scale_height = 0.06):
+def get_analytic_profile(angle, r, dr, dtheta, aspect_ratio, S, max_density = 1, scale_height = 0.06):
     """ Calculates analytic azimuthal dust density profile for a given aspect ratio and S = St / \delta """
 
     def semiminor_axis(angle, dr, dtheta):
         """ maps angle in vortex to semiminor axis input to dust distribution (Eq. 65 from Lyra + Lin 13) """
         # Note: The azimuthal edge of the vortex should map to the radial half-width (in units of the scale height)
         return (dr / scale_height) * (angle / dtheta)
+
+    def semiminor_axis2(angle, dr, dtheta):
+        r_over_dr = r / dr
+        return r_over_dr * (angle * (np.pi / 180.0)) * 0.06 * 2
 
     def scale_function_sq(aspect_ratio):
         xi = 1 + aspect_ratio**(-2); vorticity = 1.5 / (aspect_ratio - 1)
@@ -234,7 +238,7 @@ def get_analytic_profile(angle, dr, dtheta, aspect_ratio, S, max_density = 1, sc
 
         return first_term - second_term
 
-    x = semiminor_axis(angle, dr, dtheta)
+    x = semiminor_axis2(angle, dr, dtheta)
     f_sq = scale_function_sq(aspect_ratio)
 
     coeff = max_density * (S + 1)**(1.5)
