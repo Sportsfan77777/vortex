@@ -83,7 +83,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'dpi of plot annotations (default: 100)')
 
     # Analytic Profile Parameters
-    parser.add_argument('--diff', dest = "diffusion_factor", type = float, default = 10,
+    parser.add_argument('--diff', dest = "diffusion_factor", type = float, default = 1,
                          help = 'aspect ratio r (default: 10)')
     parser.add_argument('-r', dest = "r_a", type = float, default = None,
                          help = 'aspect ratio r (default: 1.7 [10], 1.5 [1000])')
@@ -245,7 +245,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
         S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
 
-        analytic = np.array([az.get_analytic_profile(angle, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
+        analytic = np.array([az.get_analytic_profile(angle, r_a, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
         analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
         # Mask outside vortex and plot
