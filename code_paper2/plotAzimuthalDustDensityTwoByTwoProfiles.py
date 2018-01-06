@@ -83,7 +83,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'dpi of plot annotations (default: 100)')
 
     # Analytic Profile Parameters
-    parser.add_argument('--diff', dest = "diffusion_factor", type = float, default = 1,
+    parser.add_argument('--diff', dest = "diffusion_factor", type = float, default = 10,
                          help = 'aspect ratio r (default: 10)')
     parser.add_argument('-r', dest = "r_a", type = float, default = None,
                          help = 'aspect ratio r (default: 1.7 [10], 1.5 [1000])')
