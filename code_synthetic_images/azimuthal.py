@@ -226,9 +226,10 @@ def get_analytic_profile(angle, r, dr, dtheta, aspect_ratio, S, max_density = 1,
         # Note: The azimuthal edge of the vortex should map to the radial half-width (in units of the scale height)
         return (dr / scale_height) * (angle / dtheta)
 
-    def semiminor_axis2(angle, dr, dtheta):
-        r_over_dr = r / dr
-        return r_over_dr * (angle * (np.pi / 180.0)) * 0.06 * 2
+    #def semiminor_axis2(angle, dr, dtheta):
+    #    """ old method: incorrect probably??? """
+    #    r_over_dr = r / dr
+    #    return r_over_dr * (angle * (np.pi / 180.0)) * 0.06 * 2
 
     def scale_function_sq(aspect_ratio):
         xi = 1 + aspect_ratio**(-2); vorticity = 1.5 / (aspect_ratio - 1)
@@ -238,7 +239,7 @@ def get_analytic_profile(angle, r, dr, dtheta, aspect_ratio, S, max_density = 1,
 
         return first_term - second_term
 
-    x = semiminor_axis2(angle, dr, dtheta)
+    x = semiminor_axis(angle, dr, dtheta)
     f_sq = scale_function_sq(aspect_ratio)
 
     coeff = max_density * (S + 1)**(1.5)
