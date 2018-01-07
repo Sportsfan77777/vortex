@@ -302,12 +302,8 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
             plot.plot(analytic_legend_x, analytic_legend_y, linewidth = linewidth, c = 'k', linestyle = "--", clip_on = False)
 
     # Title
-    size_label = util.get_size_label(size)
-    stokes_number = util.get_stokes_number(size)
-
-    title = r"%s$\mathrm{-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (size_label, stokes_number)
+    title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
     plot.title("%s" % (title), fontsize = fontsize + 1)
-
     
 def make_plot(show = False):
     # Set up figure
