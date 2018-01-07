@@ -325,15 +325,15 @@ def make_plot(show = False):
     #### Finish Plot ####
 
     # Title
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-    current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-    if orbit >= 1: # taper_time:
-        frame_title = r"$t$ $=$ $%.1f$" % (orbit)
-        #fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
-    else:
-        frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
-        #fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    #time = fargo_par["Ninterm"] * fargo_par["DT"]
+    #orbit = (time / (2 * np.pi)) * frame
+    #current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
+    #if orbit >= 1: # taper_time:
+    #    frame_title = r"$t$ $=$ $%.1f$" % (orbit)
+    #    #fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    #else:
+    #    frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    #    #fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     size = 1.0 # cm-size only (in the future, make this a parameter?)
     size_label = util.get_size_label(size)
