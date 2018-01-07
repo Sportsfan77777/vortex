@@ -62,8 +62,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: magma)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
-                         help = 'maximum density in colorbar (default: 15), except for um (fixed: 1.5)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = 300,
+                         help = 'maximum density in colorbar (default: 300)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 18)')
@@ -216,10 +216,10 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-    plot.title("%s" % (title), fontsize = fontsize + 1)
+    plot.title("%s" % (title), y = 1.02, fontsize = fontsize + 1)
 
     # Title
-    left_x = -0.8 * box_size; line_y = 1.1 * box_size; linebreak = 0.2 * box_size
+    left_x = -0.8 * box_size; line_y = 1.15 * box_size; linebreak = 0.2 * box_size
     right_x = 1.3 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
@@ -230,9 +230,9 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
         line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
         plot.text(right_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
 
-    #if frame_i != 1:
-    #    # Remove unless 1st frame
-    #    ax.set_yticklabels([])
+    if frame_i <= 2:
+        # Remove unless 1st frame
+        ax.set_xticklabels([])
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if colorbar:
@@ -241,9 +241,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        if frame_i == 1:
-            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
-        else:
+        if frame_i % 2 == 0:
             cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         #if frame_i != num_frames:
@@ -270,7 +268,7 @@ def make_plot(show = False):
     stokes_number = util.get_stokes_number(size)
 
     title = r"$\mathrm{1\ cm-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (stokes_number)
-    fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
