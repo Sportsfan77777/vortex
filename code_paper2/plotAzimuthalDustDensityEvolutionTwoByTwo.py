@@ -52,8 +52,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--max_y', dest = "max_y", nargs = 4, type = float, default = None,
-                         help = 'max_y for each frame (default: None)')
+    parser.add_argument('--max_y', dest = "max_y", nargs = '+', type = float, default = None,
+                         help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 1.0,
@@ -122,6 +122,10 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 max_y = args.max_y
+if max_y is None:
+    pass
+elif len(max_y) == 1:
+    max_y = [max_y, max_y, max_y, max_y]
 
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
@@ -186,17 +190,15 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
+labels = [r"$\mathrm{+0.50\ h}$", r"$\mathrm{+0.25\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{-0.25\ h}$", r"$\mathrm{-0.50\ h}$"]
+
+def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Convert size to number
+    size_name = "cm"
     size = util.get_size(size_name)
 
     ### Data ###
-    if size_name == "um":
-        # Gas case is separate!
-        density = util.read_data(frame, 'dust', fargo_par, directory = "../cm-size") / surface_density_zero
-        gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../cm-size") / (100 * surface_density_zero)
-    else:
-        density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name) / surface_density_zero
+    density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name) / surface_density_zero
 
     # Choose shift option
     if center:
@@ -204,24 +206,18 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         if fargo_par["MassTaper"] < 10.1:
             shift = az.get_azimuthal_peak(density, fargo_par)
         else:
-            if size_name == "um":
-                threshold = util.get_threshold(1.0) # cm-size
-            else:
-                threshold = util.get_threshold(size)
+            threshold = util.get_threshold(size)
             shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
     else:
         shift = None
 
-    if size_name == "um":
-        azimuthal_radii, azimuthal_profiles = az.get_profiles(gas_density, fargo_par, args, shift = shift)
-    else:
-        azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
 
     ### Plot ###
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
 
     # Analytic
     if frame_i != 1:
@@ -261,10 +257,8 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     angles = np.linspace(-max_x, max_x, 7)
     plot.xticks(angles)
 
-    if no_max_y:
+    if max_y is None:
         plot.ylim(0, plot.ylim()[-1]) # No Input
-    elif max_y is None:
-        plot.ylim(0, az.get_max_y(size, taper_time)) # Default
     else:
         plot.ylim(0, max_y[frame_i - 1]) # Input
 
@@ -322,7 +316,7 @@ def make_plot(show = False):
     gs = gridspec.GridSpec(2, 2)
 
     frame_str = ""
-    for i, frame_i in enumerate(frames):
+    for i, frame_i in enumerate(frame_range):
         ax = fig.add_subplot(gs[i])
         ax = add_to_plot(frame_i, fig, ax, len(frame_range), i + 1)
         frame_i += "%04d_" % frame_i
@@ -336,10 +330,17 @@ def make_plot(show = False):
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
     if orbit >= 1: # taper_time:
         frame_title = r"$t$ $=$ $%.1f$" % (orbit)
-        fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+        #fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
     else:
         frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
-        fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+        #fig.suptitle(frame_title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+
+    size = 1.0 # cm-size only (in the future, make this a parameter?)
+    size_label = util.get_size_label(size)
+    stokes_number = util.get_stokes_number(size)
+
+    title = r"$\mathrm{1\ cm-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (stokes_number)
+    fig.suptitle(title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
