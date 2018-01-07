@@ -220,22 +220,21 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
 
     # Analytic
-    if frame_i != 1:
-        middle_i = (num_profiles - 1) / 2
-        radius = azimuthal_radii[middle_i] # middle
-        #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
-        max_density = np.max(azimuthal_profiles[middle_i])
+    middle_i = (num_profiles - 1) / 2
+    radius = azimuthal_radii[middle_i] # middle
+    #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
+    max_density = np.max(azimuthal_profiles[middle_i])
 
-        aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
-        S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
+    aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
+    S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
 
-        analytic = np.array([az.get_analytic_profile(angle, r_a, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
-        analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
+    analytic = np.array([az.get_analytic_profile(angle, r_a, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
+    analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
-        # Mask outside vortex and plot
-        masked_i = np.abs(x) <= (dtheta_a / 2.0)
-        masked_x = x[masked_i]; masked_y = analytic[masked_i]
-        plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
+    # Mask outside vortex and plot
+    masked_i = np.abs(x) <= (dtheta_a / 2.0)
+    masked_x = x[masked_i]; masked_y = analytic[masked_i]
+    plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
 
     # Mark Planet
     if shift is None:
