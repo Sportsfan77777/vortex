@@ -100,12 +100,6 @@ viscosity = fargo_par["Viscosity"]
 # Frames
 frame_range = args.frames
 
-# Number of Cores 
-num_cores = args.num_cores
-
-# Sizes
-sizes = args.sizes
-
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
