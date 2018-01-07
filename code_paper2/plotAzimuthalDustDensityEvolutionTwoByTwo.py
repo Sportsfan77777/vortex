@@ -268,6 +268,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
+    current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
 
     if frame_i > 2:
         plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
