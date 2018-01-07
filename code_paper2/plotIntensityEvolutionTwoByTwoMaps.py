@@ -42,8 +42,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'select four frames to display the cm-size dust density maps')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "dustDensityEvolutionTwoByTwoMaps",
-                         help = 'save directory (default: dustDensityEvolutionTwoByTwoMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "intensityEvolutionTwoByTwoMaps",
+                         help = 'save directory (default: intensityEvolutionTwoByTwoMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -102,6 +102,8 @@ viscosity = fargo_par["Viscosity"]
 beam_size = fargo_par["Beam"]
 wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
+
+arc_beam = beam_size * planet_radius / distance
 
 ### Get Input Parameters ###
 
@@ -274,12 +276,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-
-    size = 1.0 # cm-size only (in the future, make this a parameter?)
-    size_label = util.get_size_label(size)
-    stokes_number = util.get_stokes_number(size)
-
-    title = r"$\mathrm{1\ cm-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (stokes_number)
+    title = r"$\mathrm{Beam: } %.02f^{\prime\prime} \times %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
     fig.suptitle(title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
