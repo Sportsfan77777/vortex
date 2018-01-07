@@ -319,7 +319,7 @@ def make_plot(show = False):
     for i, frame_i in enumerate(frame_range):
         ax = fig.add_subplot(gs[i])
         ax = add_to_plot(frame_i, fig, ax, len(frame_range), i + 1)
-        frame_i += "%04d_" % frame_i
+        frame_str += "%04d_" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
