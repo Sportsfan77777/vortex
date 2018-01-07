@@ -198,9 +198,9 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     if shift is None:
         planet_loc = theta[0]
     else:
-        if shift < -len(theta):
-            shift += len(theta)
-        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
+        if shift < -len(dust_theta):
+            shift += len(dust_theta)
+        planet_loc = dust_theta[shift] * (180.0 / np.pi) - 180.0
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
