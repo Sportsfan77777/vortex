@@ -173,6 +173,8 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
 
     ### Data ###
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
+    if normalize:
+        intensity_polar /= np.max(intensity_polar)
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
     # Get Shift
