@@ -61,8 +61,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 2.0,
                          help = 'number of scale heights (default: 2.0)')
 
-    parser.add_argument('--shift_off', dest = "center", action = 'store_false', default = True,
-                         help = 'do not center frame on vortex peak or middle (default: shift to center)')
+    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
+                         help = 'normalize by max (default: normalize)')
     parser.add_argument('-t', dest = "threshold", type = float, default = None,
                          help = 'threshold for centering vortex with its center (default: varies with size)')
     
@@ -136,7 +136,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
-center = args.center
+normalize = args.normalize
 threshold = args.threshold
 #if threshold is None:
 #    threshold = util.get_threshold(size)
