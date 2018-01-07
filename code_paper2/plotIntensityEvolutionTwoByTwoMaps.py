@@ -48,6 +48,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
@@ -117,7 +119,9 @@ show = args.show
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
+id_number = args.id_number
 version = args.version
+
 box = args.box
 normalize = args.normalize
 colorbar = args.colorbar
