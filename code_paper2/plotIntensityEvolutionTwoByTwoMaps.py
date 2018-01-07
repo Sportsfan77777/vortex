@@ -64,8 +64,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: magma)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = 300,
-                         help = 'maximum density in colorbar (default: 300)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
+                         help = 'maximum density in colorbar (default: None, except 1 if normalized)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 18)')
