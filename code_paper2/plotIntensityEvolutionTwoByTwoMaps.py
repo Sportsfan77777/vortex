@@ -163,7 +163,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     # Get Shift
     dust_fargo_par = util.get_pickled_parameters(directory = "../../../cm-size") ## shorten name?
     ######## Need to extract parameters, and add 'rad' and 'theta' ########
-    dust_rad = np.linspace(gas_fargo_par['Rmin'], dust_fargo_par['Rmax'], dust_fargo_par['Nrad'])
+    dust_rad = np.linspace(dust_fargo_par['Rmin'], dust_fargo_par['Rmax'], dust_fargo_par['Nrad'])
     dust_theta = np.linspace(0, 2 * np.pi, dust_fargo_par['Nsec'])
     dust_fargo_par['rad'] = dust_rad; dust_fargo_par['theta'] = dust_theta
     gas_surface_density_zero = dust_fargo_par['Sigma0']
