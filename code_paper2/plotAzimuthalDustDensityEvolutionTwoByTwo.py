@@ -282,6 +282,9 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         plot.legend(loc = "upper right", bbox_to_anchor = (1.3, 0.94)) # outside of plot
 
     # Extra Annotation
+    rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
+    plot.text(-160, 0.9 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+
     if frame_i % 2 == 0:    
         center_x = 1.32 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
