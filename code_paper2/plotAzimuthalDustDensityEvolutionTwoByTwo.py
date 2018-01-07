@@ -287,7 +287,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     plot.text(-170, 0.85 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i % 2 == 0:    
-        center_x = 1.33 * plot.xlim()[-1]
+        center_x = 1.35 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         if frame_i == 2:
@@ -311,7 +311,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     
 def make_plot(show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 7), dpi = dpi)
+    fig = plot.figure(figsize = (12, 6.5), dpi = dpi)
     gs = gridspec.GridSpec(2, 2)
 
     frame_str = ""
