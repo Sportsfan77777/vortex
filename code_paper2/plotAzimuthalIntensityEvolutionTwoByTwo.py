@@ -49,6 +49,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
