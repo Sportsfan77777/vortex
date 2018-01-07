@@ -285,7 +285,7 @@ def make_plot(frame, show = False):
     if version is None:
         save_fn = "%s/densityMapEvolution_%s.png" % (save_directory, frame_str)
     else:
-        save_fn = "%s/v%04d_densityMapEvolution_%s.png" % (save_directory, version, frame_str
+        save_fn = "%s/v%04d_densityMapEvolution_%s.png" % (save_directory, version, frame_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
