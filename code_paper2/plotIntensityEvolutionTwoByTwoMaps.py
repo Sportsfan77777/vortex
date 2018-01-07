@@ -278,7 +278,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$\mathrm{Beam:\ } %.02f^{\prime\prime} \times \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$\mathrm{Beam:\ }\ \ %.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
     fig.suptitle(title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
