@@ -287,7 +287,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     plot.text(-170, 0.85 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i % 2 == 0:    
-        center_x = 1.32 * plot.xlim()[-1]
+        center_x = 1.33 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         if frame_i == 2:
@@ -339,7 +339,7 @@ def make_plot(show = False):
     stokes_number = util.get_stokes_number(size)
 
     title = r"$\mathrm{1\ cm-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (stokes_number)
-    fig.suptitle(title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
