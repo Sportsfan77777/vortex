@@ -58,8 +58,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
-    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 2.0,
-                         help = 'number of scale heights (default: 2.0)')
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 8.0,
+                         help = 'number of scale heights (default: 8.0)')
 
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
@@ -234,7 +234,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     if frame_i % 2 == 1:
-        plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
+        plot.ylabel(r"$I$ / $I_\mathrm{0}$", fontsize = fontsize)
 
     # Legend
     if frame_i == 2:
