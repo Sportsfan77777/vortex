@@ -284,7 +284,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
 
     # Extra Annotation
     rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
-    plot.text(-160, 0.9 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+    plot.text(-170, 0.9 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i % 2 == 0:    
         center_x = 1.32 * plot.xlim()[-1]
@@ -306,7 +306,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
             plot.plot(analytic_legend_x, analytic_legend_y, linewidth = linewidth, c = 'k', linestyle = "--", clip_on = False)
 
     # Title
-    title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
     plot.title("%s" % (title), fontsize = fontsize + 1)
     
 def make_plot(show = False):
