@@ -273,9 +273,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     if frame_i > 2:
         plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
-    if frame_i == 1:
-        plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize)
-    elif frame_i == 3:
+    if frame_i % 2 == 1:
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
 
     # Legend
@@ -322,7 +320,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    
+
     size = 1.0 # cm-size only (in the future, make this a parameter?)
     size_label = util.get_size_label(size)
     stokes_number = util.get_stokes_number(size)
