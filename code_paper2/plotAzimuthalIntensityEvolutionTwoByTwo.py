@@ -122,6 +122,8 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 # Plot Parameters (variable)
+normalize = args.normalize
+
 show = args.show
 max_y = args.max_y
 if normalize:
@@ -136,7 +138,6 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
-normalize = args.normalize
 threshold = args.threshold
 #if threshold is None:
 #    threshold = util.get_threshold(size)
