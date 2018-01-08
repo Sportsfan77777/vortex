@@ -83,11 +83,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-dir1 = args.directory1
-dir2 = args.directory2
-
 ### Get ID%04d Parameters ###
-fn = "%s/id%04d_par.p" % (dir2, args.id_number)
+fn = "id%04d_par.p" % (args.id_number)
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -153,6 +150,82 @@ elif normalize:
 
 fontsize = args.fontsize
 dpi = args.dpi
+
+##############################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get ID%04d Parameters ###
+fn = "id%04d_par.p" % (args.id_number)
+fargo_par = pickle.load(open(fn, "rb"))
+
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+dust_surface_density_zero = surface_density_zero / 100
+disk_mass = 2 * np.pi * dust_surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
+
+planet_radius = fargo_par["Radius"]
+
+beam_size = fargo_par["Beam"]
+wavelength = fargo_par["Wavelength"]
+distance = fargo_par["Distance"]
+
+arc_beam = beam_size * planet_radius / distance
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = args.frames
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+normalize = args.normalize
+
+show = args.show
+max_y = args.max_y
+if normalize:
+    max_y = 1
+
+num_profiles = args.num_profiles
+num_scale_heights = args.num_scale_heights
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+id_number = args.id_number
+version = args.version
+
+threshold = args.threshold
+#if threshold is None:
+#    threshold = util.get_threshold(size)
+
+# Plot Parameters (constant)
+fontsize = args.fontsize
+labelsize = args.labelsize
+linewidth = args.linewidth
+alpha = args.alpha
+dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
 ###############################################################################
 
