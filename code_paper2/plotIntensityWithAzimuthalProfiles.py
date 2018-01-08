@@ -35,12 +35,6 @@ for key in cmaps:
 def new_argument_parser(description = "Plot convolved intensity maps."):
     parser = argparse.ArgumentParser()
 
-    # Directory Selection
-    parser.add_argument('--dir1', dest = "directory1", default = None,
-                         help = 'data directory for gas (default: None)')
-    parser.add_argument('--dir2', dest = "directory2", default = None,
-                         help = 'data directory for convolved cartesian intensity (default: None)')
-
     # Frame Selection
     parser.add_argument('frames', type = int, nargs = '+',
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
@@ -48,8 +42,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "sidebysideGasAndIntensity",
-                         help = 'save directory (default: cartesianIntensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "sidebysideIntensityAndAzimuthal",
+                         help = 'save directory (default: sidebysideIntensityAndAzimuthal)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -59,8 +53,15 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
-                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
+    parser.add_argument('--max_y', dest = "max_y", nargs = '+', type = float, default = None,
+                         help = 'max_y for each frame, or same for all (default: None)')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
+                         help = 'number of profiles (default: 5)')
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 8.0,
+                         help = 'number of scale heights (default: 8.0)')
+
+    parser.add_argument('--box', dest = "box", type = float, default = 2.5,
+                         help = 'width of box (in r_p) (default: 2.5)')
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
 
@@ -68,7 +69,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: inferno)')
     parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
-                         help = 'maximum density in colorbar (default: 2.5)')
+                         help = 'maximum density in colorbar (default: None, except 1 if normalized)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -165,9 +166,6 @@ def make_plot(frame, show = False):
 
     plot.subplot(1, 2, 1, aspect = 'equal')
 
-    cwd = os.getcwd()
-    os.chdir(dir1)
-
     # Data
     gas_fargo_par = util.get_pickled_parameters() ## shorten name?
     ######## Need to extract parameters, and add 'rad' and 'theta' ########
@@ -232,12 +230,9 @@ def make_plot(frame, show = False):
     plot.xlim(-box_size, box_size)
     plot.ylim(-box_size, box_size)
 
-    ############################# Right Panel #################################
+    ############################## Left Panel #################################
 
     plot.subplot(1, 2, 2, aspect = 'equal')
-
-    os.chdir(cwd)
-    os.chdir(dir2)
 
     # Data
     intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
@@ -288,9 +283,9 @@ def make_plot(frame, show = False):
     plot.xlim(-box_size, box_size)
     plot.ylim(-box_size, box_size)
 
-    ################################# End #####################################
+    ############################# Right Panel #################################
 
-    os.chdir(cwd)
+    ################################# End #####################################
 
     # Save, Show,  and Close
     if version is None:
