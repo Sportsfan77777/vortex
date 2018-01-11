@@ -153,10 +153,6 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 def add_to_plot(frame, fig, ax, num_sizes, frame_i):
-    # Convert size to number
-    size_name = "cm"
-    size = util.get_size(size_name)
-
     # Declare Subplot
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
 
@@ -278,7 +274,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$\mathrm{Beam:\ }\ \ %.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
     fig.suptitle(title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
