@@ -173,7 +173,7 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
 def center_vortex(density):
     """ Step 2: center the vortex so that the peak is at 180 degrees """
     if massTaper < 10.1:
-        for i in enumerate(sizes):
+        for i, size in enumerate(sizes):
             shift_i = az.get_azimuthal_peak(density[:, :, i], fargo_par)
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
