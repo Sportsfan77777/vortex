@@ -164,8 +164,8 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-label_numbers = (num_scale_heights / 2, num_scale_heights / 4, num_scale_heights / 4, num_scale_heights / 2)
-labels = [r"$\mathrm{-%.01f\ h}$", r"$\mathrm{-%.01f\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+%0.1f\ h}$", r"$\mathrm{+%0.1f\ h}$"] % label_numbers
+ns = [num_scale_heights / 2, num_scale_heights / 4, num_scale_heights / 4, num_scale_heights / 2]
+labels = [r"$\mathrm{-%.01f\ h}$" % ns[0], r"$\mathrm{-%.01f\ h}$" % ns[1], r"$\mathrm{+0\ h}$", r"$\mathrm{+%0.1f\ h}$" % ns[-2], r"$\mathrm{+%0.1f\ h}$" % ns[-1]]
 
 def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Convert size to number
