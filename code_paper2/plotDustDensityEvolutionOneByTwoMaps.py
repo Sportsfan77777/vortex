@@ -38,7 +38,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 4,
+    parser.add_argument('frames', type = int, nargs = 2,
                          help = 'select four frames to display the cm-size dust density maps')
 
     # Files
