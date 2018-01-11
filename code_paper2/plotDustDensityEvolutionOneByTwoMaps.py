@@ -42,8 +42,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'select four frames to display the cm-size dust density maps')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "dustDensityEvolutionTwoByTwoMaps",
-                         help = 'save directory (default: dustDensityEvolutionTwoByTwoMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "dustDensityEvolutionOneByTwoMaps",
+                         help = 'save directory (default: dustDensityEvolutionOneByTwoMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
