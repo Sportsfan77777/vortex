@@ -277,10 +277,10 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
 
     # Extra Annotation
     rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
-    plot.text(-170, 0.85 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+    plot.text(-170, 0.90 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i == 2:    
-        center_x = 1.38 * plot.xlim()[-1]
+        center_x = 1.32 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         line1 = "Radii"
@@ -289,7 +289,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         plot.text(center_x, 0.25 * top_y, line2, fontsize = fontsize, horizontalalignment = 'center')
 
         half_width = 0.12 * plot.xlim()[-1]
-        analytic_legend_y0 = 0.15 * top_y
+        analytic_legend_y0 = 0.20 * top_y
 
         analytic_legend_x = [1.005 * center_x - half_width, 1.005 * center_x + half_width]
         analytic_legend_y = [analytic_legend_y0, analytic_legend_y0]
