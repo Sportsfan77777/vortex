@@ -118,6 +118,10 @@ arc_beam = beam_size * planet_radius / distance
 # Frames
 frame_range = args.frames
 
+# Directories
+directory1 = args.directory1
+directory2 = args.directory2
+
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
