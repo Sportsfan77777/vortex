@@ -42,10 +42,10 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
                          help = 'select two frames to compare intensity (first is for T = 10, second is for T = 1000)')
 
     # Files
-    parser.add_argument('--dir1', dest = "directory1", default = '.',
-                         help = 'select two directories to compare intensity (first is for T = 10, second is for T = 1000) (default: .)')
-    parser.add_argument('--dir2', dest = "directory2", default = '.',
-                         help = 'select two directories to compare intensity (first is for T = 10, second is for T = 1000) (default: .)')
+    parser.add_argument('--dir1', dest = "directory1", default = '../taper10',
+                         help = 'select first directory to compare intensity (first is for T = 10, second is for T = 10) (default: ../taper10)')
+    parser.add_argument('--dir2', dest = "directory2", default = '../taper1000',
+                         help = 'select second directory to compare intensity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "intensityComparison",
@@ -121,6 +121,7 @@ frame_range = args.frames
 # Directories
 directory1 = args.directory1
 directory2 = args.directory2
+directories = [directory1, directory2]
 
 # Files
 save_directory = args.save_directory
@@ -170,7 +171,8 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
 
     # Change directories
-    os.chdir()
+    cwd = os.getcwd()
+    os.chdir(directories[frame_i - 1])
 
     # Data
     intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
@@ -271,6 +273,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
         #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     # Return to previous directory
+    os.chdir(cwd)
 
     return ax
     
