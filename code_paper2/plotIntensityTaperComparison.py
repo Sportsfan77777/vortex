@@ -41,11 +41,16 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('frames', type = int, nargs = 2,
                          help = 'select two frames to compare intensity (first is for T = 10, second is for T = 1000)')
 
-    # Files
+    # Directory Selection
     parser.add_argument('--dir1', dest = "directory1", default = '../taper10',
                          help = 'select first directory to compare intensity (first is for T = 10, second is for T = 10) (default: ../taper10)')
     parser.add_argument('--dir2', dest = "directory2", default = '../taper1000',
                          help = 'select second directory to compare intensity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
+
+    parser.add_argument('-w', dest = "wavelength", type = float, default = 870,
+                         help = 'wavelength (in um) (default: 870)')
+    parser.add_argument('-b', dest = "beam_size", type = float, default = 10,
+                         help = 'beam_size (in AU) (default: 10)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "intensityComparison",
@@ -88,7 +93,9 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % (args.id_number)
+default_directory = "taper1000/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)
+
+fn = "../%s/id%04d_par.p" % (default_directory, args.id_number)
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
