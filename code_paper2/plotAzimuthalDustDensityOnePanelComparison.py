@@ -203,43 +203,26 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density = util.read_data(frame, 'dust', fargo_par, directory = "../%s-size" % size_name) / surface_density_zero
+    density1 = util.read_data(frame, 'dust', fargo_par, directory = directory = "taper10/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
+    density2 = util.read_data(frame, 'dust', fargo_par, directory = directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
 
     # Choose shift option
     if center:
-        # Center vortex
-        if fargo_par["MassTaper"] < 10.1:
-            shift = az.get_azimuthal_peak(density, fargo_par)
-        else:
-            threshold = util.get_threshold(size)
-            shift = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
-    else:
-        shift = None
+        shift1 = az.get_azimuthal_peak(density1, fargo_par)
 
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density, fargo_par, args, shift = shift)
+        threshold = util.get_threshold(size)
+        shift2 = az.get_azimuthal_center(density2, fargo_par, threshold = threshold)
+    else:
+        shift1 = None; shift2 = None
+
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density1, fargo_par, args, shift = shift1)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(density2, fargo_par, args, shift = shift2)
 
     ### Plot ###
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
-
-    # Analytic
-    middle_i = (num_profiles - 1) / 2
-    radius = azimuthal_radii[middle_i] # middle
-    #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
-    max_density = np.max(azimuthal_profiles[middle_i])
-
-    aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
-    S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
-
-    analytic = np.array([az.get_analytic_profile(angle, r_a, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
-    analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
-
-    # Mask outside vortex and plot
-    masked_i = np.abs(x) <= (dtheta_a / 2.0)
-    masked_x = x[masked_i]; masked_y = analytic[masked_i]
-    plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
 
     # Mark Planet
     if shift is None:
@@ -251,12 +234,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
-    if taper_time < 10.1:
-        # T = 10
-        max_x = 60
-    else:
-        # T = 1000
-        max_x = 180
+    max_x = 180
     plot.xlim(-max_x, max_x)
     angles = np.linspace(-max_x, max_x, 7)
     plot.xticks(angles)
