@@ -266,9 +266,9 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
 
     # Extra Annotation
     rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
-    plot.text(-170, 0.87 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+    plot.text(-170, 0.885 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
 
-    if frame_i == 2:    
+    if frame_i == 2:
         center_x = 1.38 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
@@ -278,7 +278,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
 
     # Label
     taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
-    plot.text(0.95 * plot.xlim()[-1], 0.87 * plot.ylim()[-1], taper_title, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(0.95 * plot.xlim()[-1], 0.885 * plot.ylim()[-1], taper_title, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
 
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
