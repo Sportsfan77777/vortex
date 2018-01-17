@@ -170,8 +170,8 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-directory_base = "../taper%d/synethetic"
-directories = [directory_base % 10, directory_base % 1000]
+#directory_base = "../taper%d/synthetic"
+#directories = [directory_base % 10, directory_base % 1000]
 
 def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     # Declare Subplot
