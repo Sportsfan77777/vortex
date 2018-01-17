@@ -93,7 +93,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-default_directory = "taper1000/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)
+default_directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)
 
 fn = "../%s/id%04d_par.p" % (default_directory, args.id_number)
 fargo_par = pickle.load(open(fn, "rb"))
@@ -188,7 +188,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     os.chdir(directories[frame_i - 1])
 
     # Data
-    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
+    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, directory = "synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
     _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Get Shift
