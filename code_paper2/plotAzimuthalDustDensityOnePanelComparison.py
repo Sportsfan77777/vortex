@@ -215,7 +215,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         shift1 = None; shift2 = None
 
     azimuthal_radii1, azimuthal_profiles1 = az.get_profiles(density1, fargo_par, args, shift = shift1)
-    azimuthal_radii1, azimuthal_profiles2 = az.get_profiles(density2, fargo_par, args, shift = shift2)
+    azimuthal_radii2, azimuthal_profiles2 = az.get_profiles(density2, fargo_par, args, shift = shift2)
 
     ### Plot ###
     # Profiles
