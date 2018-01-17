@@ -59,8 +59,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('--max_y', dest = "max_y", nargs = '+', type = float, default = None,
                          help = 'max_y for each frame, or same for all (default: None)')
-    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
-                         help = 'number of profiles (default: 5)')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 3,
+                         help = 'number of profiles (default: 3)')
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 1.0,
                          help = 'number of scale heights (default: 1.0)')
 
@@ -199,7 +199,6 @@ labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{-0.25\ h}$", r"$\mathrm{+0\ h}$", r
 
 def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Convert size to number
-    size_name = "cm"
     size = util.get_size(size_name)
 
     ### Data ###
@@ -298,10 +297,10 @@ def make_plot(show = False):
     gs = gridspec.GridSpec(1, 2)
 
     frame_str = ""
+    sizes = ["cm", "mm"] # <<<====== Make this a parameter
     for i, frame_i in enumerate(frame_range):
         ax = fig.add_subplot(gs[i])
-        ax = add_to_plot(frame_i, fig, ax, "cm", len(frame_range), i + 1)
-        ax = add_to_plot(frame_i, fig, ax, "mm", len(frame_range), i + 1)
+        ax = add_to_plot(frame_i, fig, ax, sizes[i], len(frame_range), i + 1)
         frame_str += "%04d-" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
@@ -319,7 +318,7 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/azimuthalDensityEvolution_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/azimuthalDensityOnePanelComparison_%s.png" % (save_directory, frame_str)
     else:
         save_fn = "%s/v%04d_azimuthalDensityEvolution_%s.png" % (save_directory, version, frame_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
