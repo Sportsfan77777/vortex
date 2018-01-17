@@ -276,6 +276,10 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
 
+    # Label
+    taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
+    plot.text(0.9 * plot.ylim()[-1], 2, taper_title, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
     plot.title("%s" % (title), fontsize = fontsize + 1)
