@@ -54,8 +54,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'beam_size (in AU) (default: 10)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
-                         help = 'save directory (default: azimuthalIntensityEvolution)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityComparison",
+                         help = 'save directory (default: azimuthalIntensityComparison)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
