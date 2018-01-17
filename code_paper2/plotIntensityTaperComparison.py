@@ -126,8 +126,8 @@ arc_beam = beam_size * planet_radius / distance
 frame_range = args.frames
 
 # Directories
-directory1 = args.directory1
-directory2 = args.directory2
+directory1 = "%s/synthetic" % args.directory1
+directory2 = "%s/synthetic" % args.directory2
 directories = [directory1, directory2]
 
 # Files
@@ -188,7 +188,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     os.chdir(directories[frame_i - 1])
 
     # Data
-    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, directory = "synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
+    intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
     _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Get Shift
