@@ -177,6 +177,12 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     # Declare Subplot
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
 
+    # Taper
+    if frame_i == 1:
+        taper_time = 10
+    else:
+        taper_time = 1000
+
     # Change directories
     cwd = os.getcwd()
     os.chdir(directories[frame_i - 1])
