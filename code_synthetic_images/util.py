@@ -74,7 +74,7 @@ def read_data(frame, fn, fargo_par, id_number = None, version = None, directory 
     elif ext == ".dat":
         data = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta))
     elif ext == ".p":
-        data = pickle.load(open("%s/%s" (directory, basename), "rb"))
+        data = pickle.load(open("%s/%s" % (directory, basename), "rb"))
     return data
 
 def read_gas_data(frame, fargo_par, normalize = True, directory = "."):
