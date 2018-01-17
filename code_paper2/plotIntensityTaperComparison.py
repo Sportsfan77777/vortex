@@ -306,16 +306,16 @@ def make_plot(show = False):
 
     #### Finish Plot ####
     title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    fig.suptitle(title, y = 1.00, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 0.95, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
 
     # Save, Show,  and Close
     if version is None:
-        save_fn = "%s/intensityCartGridEvolution_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/intensityCartGridTaperComparison_%s.png" % (save_directory, frame_str)
     else:
-        save_fn = "%s/v%04d_intensityCartGridEvolution_%s.png" % (save_directory, version, frame_str)
+        save_fn = "%s/v%04d_intensityCartGridTaperComparison_%s.png" % (save_directory, version, frame_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
