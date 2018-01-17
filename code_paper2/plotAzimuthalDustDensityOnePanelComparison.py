@@ -99,7 +99,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get FARGO Parameters ###
-fargo_par = util.get_pickled_parameters(directory = "taper10/cm-size")
+fargo_par = util.get_pickled_parameters(directory = "../taper10/cm-size")
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
