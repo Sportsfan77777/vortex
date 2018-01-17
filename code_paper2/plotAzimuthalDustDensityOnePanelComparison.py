@@ -227,18 +227,18 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
 
     # Mark Planet
     if shift1 is None:
-        planet_loc = theta[0]
+        planet_loc1 = theta[0]
     else:
         if shift1 < -len(theta):
             shift1 += len(theta)
-        planet_loc = theta[shift1] * (180.0 / np.pi) - 180.0
+        planet_loc1 = theta[shift1] * (180.0 / np.pi) - 180.0
 
     if shift2 is None:
-        planet_loc = theta[0]
+        planet_loc2 = theta[0]
     else:
         if shift2 < -len(theta):
             shift2 += len(theta)
-        planet_loc = theta[shift2] * (180.0 / np.pi) - 180.0
+        planet_loc2 = theta[shift2] * (180.0 / np.pi) - 180.0
     plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
     plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
 
