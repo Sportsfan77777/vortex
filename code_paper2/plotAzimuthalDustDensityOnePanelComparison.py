@@ -215,23 +215,33 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     else:
         shift1 = None; shift2 = None
 
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density1, fargo_par, args, shift = shift1)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(density2, fargo_par, args, shift = shift2)
+    azimuthal_radii1, azimuthal_profiles1 = az.get_profiles(density1, fargo_par, args, shift = shift1)
+    azimuthal_radii1, azimuthal_profiles2 = az.get_profiles(density2, fargo_par, args, shift = shift2)
 
     ### Plot ###
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
-    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
+    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
+    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha)
 
     # Mark Planet
-    if shift is None:
+    if shift1 is None:
         planet_loc = theta[0]
     else:
         if shift < -len(theta):
             shift += len(theta)
-        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
-    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
+        planet_loc = theta[shift1] * (180.0 / np.pi) - 180.0
+
+    if shift2 is None:
+        planet_loc = theta[0]
+    else:
+        if shift2 < -len(theta):
+            shift2 += len(theta)
+        planet_loc = theta[shift2] * (180.0 / np.pi) - 180.0
+    plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
+    plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
     max_x = 180
