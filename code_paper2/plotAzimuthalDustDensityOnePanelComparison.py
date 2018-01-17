@@ -99,7 +99,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get FARGO Parameters ###
-fargo_par = util.get_pickled_parameters(directory = "../cm-size")
+fargo_par = util.get_pickled_parameters(directory = "taper10/cm-size")
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -202,8 +202,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density1 = util.read_data(frame, 'dust', fargo_par, directory = "taper10/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
-    density2 = util.read_data(frame, 'dust', fargo_par, directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
+    density1 = util.read_data(frame, 'dust', fargo_par, directory = "taper10/cm-size") / surface_density_zero
+    density2 = util.read_data(frame, 'dust', fargo_par, directory = "taper1000/cm-size") / surface_density_zero
 
     # Choose shift option
     if center:
@@ -229,8 +229,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     if shift1 is None:
         planet_loc = theta[0]
     else:
-        if shift < -len(theta):
-            shift += len(theta)
+        if shift1 < -len(theta):
+            shift1 += len(theta)
         planet_loc = theta[shift1] * (180.0 / np.pi) - 180.0
 
     if shift2 is None:
