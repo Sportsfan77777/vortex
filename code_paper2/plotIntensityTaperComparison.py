@@ -270,7 +270,6 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
         plot.text(left_x, line_y + 0.5 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
-        plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
     elif frame_i == 2:
         line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
         plot.text(right_x, line_y + 0.5 * linebreak, line2, horizontalalignment = 'right', fontsize = fontsize + 2)
