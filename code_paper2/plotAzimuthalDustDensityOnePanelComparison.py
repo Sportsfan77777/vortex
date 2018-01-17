@@ -202,8 +202,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density1 = util.read_data(frame, 'dust', fargo_par, directory = directory = "taper10/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
-    density2 = util.read_data(frame, 'dust', fargo_par, directory = directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
+    density1 = util.read_data(frame, 'dust', fargo_par, directory = "taper10/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
+    density2 = util.read_data(frame, 'dust', fargo_par, directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)) / surface_density_zero
 
     # Choose shift option
     if center:
