@@ -237,7 +237,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Axes
     if taper_time < 10.1:
         # T = 10
-        max_x = 60
+        max_x = 180
     else:
         # T = 1000
         max_x = 180
