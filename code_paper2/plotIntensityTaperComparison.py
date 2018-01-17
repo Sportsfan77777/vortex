@@ -257,7 +257,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     ax.set_aspect('equal')
 
     # Label
-    taper_title = r"$\mathrm{$T_\mathrm{growth} = %d$}$" % taper_time
+    taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
     plot.text(0.9 * box_size, 2, taper_title, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
 
     # Title
