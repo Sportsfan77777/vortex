@@ -256,21 +256,24 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
 
+    # Label
+    taper_title = r"$\mathrm{$T_\mathrm{growth} = %d$}$" % taper_time
+    plot.text(0.9 * box_size, 2, taper_title, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+
     # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
     plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 1)
 
-    # Title
+    # Super Title
     left_x = -0.8 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
     right_x = 1.3 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
-        line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
-        plot.text(left_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
+        plot.text(left_x, line_y + 0.5 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
         plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
     elif frame_i == 2:
-        line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
-        plot.text(right_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+        line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
+        plot.text(right_x, line_y + 0.5 * linebreak, line2, horizontalalignment = 'right', fontsize = fontsize + 2)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if colorbar:
@@ -304,7 +307,7 @@ def make_plot(show = False):
 
     #### Finish Plot ####
     title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    fig.suptitle(title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 1.01, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
