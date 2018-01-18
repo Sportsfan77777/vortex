@@ -130,7 +130,7 @@ max_y = args.max_y
 if max_y is None:
     pass
 elif len(max_y) == 1:
-    max_y = [max_y, max_y, max_y, max_y]
+    max_y = [max_y, max_y]
 
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
@@ -195,6 +195,11 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
+colors1 = ['#f28407', '#f20202', '#f1c306']
+colors2 = ['#0609ef', '#06c1f0', '#8a06ef']
+
+dashes = [[8, 2], None, [3, 2]]
+
 labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.50\ h}$"]
 
 def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
@@ -221,9 +226,9 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels[i])
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha)
 
     # Mark Planet
     if shift1 is None:
