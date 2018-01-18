@@ -196,9 +196,9 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#bcbd22', '#17becf']
 
 colors1 = ['#f28407', '#f20202', '#f1c306']
-colors2 = ['#0609ef', '#06c1f0', '#8a06ef']
+colors2 = ['#06c1f0', '#0609ef', '#8a06ef']
 
-dashes = [[8, 2], [100, 1], [3, 2]]
+dashes = [[8, 2], [10000, 1], [3, 2]]
 
 labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.50\ h}$"]
 
@@ -228,7 +228,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels[i])
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels[i])
 
     # Mark Planet
     if shift1 is None:
