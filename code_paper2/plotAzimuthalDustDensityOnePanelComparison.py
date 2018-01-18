@@ -202,8 +202,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     size = util.get_size(size_name)
 
     ### Data ###
-    density1 = util.read_data(frame_range[0], 'dust', fargo_par, directory = "../taper10/cm-size") / surface_density_zero
-    density2 = util.read_data(frame_range[1], 'dust', fargo_par, directory = "../taper1000/cm-size") / surface_density_zero
+    density1 = util.read_data(frame_range[0], 'dust', fargo_par, directory = "../taper10/%s-size" % size_name) / surface_density_zero
+    density2 = util.read_data(frame_range[1], 'dust', fargo_par, directory = "../taper1000/%s-size" % size_name) / surface_density_zero
 
     # Choose shift option
     if center:
