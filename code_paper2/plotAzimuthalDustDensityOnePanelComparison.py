@@ -200,7 +200,8 @@ colors2 = ['#0366a8', '#0609ef', '#370282']
 
 dashes = [[8, 4], [10000, 1], [3, 3]]
 
-labels = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c}$", r"$\mathrm{+0.50\ h}$"]
+labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
+labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
 
 def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Convert size to number
@@ -226,9 +227,9 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels[i])
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels[i])
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
 
     # Mark Planet
     if shift1 is None:
