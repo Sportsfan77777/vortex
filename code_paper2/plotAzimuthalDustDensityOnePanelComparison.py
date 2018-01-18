@@ -48,8 +48,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('--dir2', dest = "directory2", default = '../taper1000',
                          help = 'select second directory to compare intensity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensityEvolution",
-                         help = 'save directory (default: azimuthalDensityEvolution)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalDensityOnePanel",
+                         help = 'save directory (default: azimuthalDensityOnePanel)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -195,7 +195,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{-0.25\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.25\ h}$", r"$\mathrm{+0.50\ h}$"]
+labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.50\ h}$"]
 
 def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Convert size to number
