@@ -197,7 +197,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{-0.25\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.25\ h}$", r"$\mathrm{+0.50\ h}$"]
 
-def add_to_plot(fig, ax, size_name, num_frames, frame_i):
+def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
 
@@ -293,7 +293,7 @@ def make_plot(show = False):
     sizes = ["cm", "mm"] # <<<====== Make this a parameter
     for i, (size_i, frame_i) in enumerate(zip(sizes, frame_range)):
         ax = fig.add_subplot(gs[i])
-        ax = add_to_plot(fig, ax, size_i, len(frame_range), i + 1)
+        ax = add_to_plot(frame_i, fig, ax, size_i, len(frame_range), i + 1)
         frame_str += "%04d-" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
