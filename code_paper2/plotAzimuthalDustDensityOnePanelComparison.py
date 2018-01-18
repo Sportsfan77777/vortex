@@ -198,7 +198,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 colors1 = ['#f28407', '#f20202', '#f1c306']
 colors2 = ['#0609ef', '#06c1f0', '#8a06ef']
 
-dashes = [[8, 2], None, [3, 2]]
+dashes = [[8, 2], [1], [3, 2]]
 
 labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.50\ h}$"]
 
