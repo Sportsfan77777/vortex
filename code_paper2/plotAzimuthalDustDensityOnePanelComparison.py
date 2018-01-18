@@ -230,7 +230,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
 
     # Add a beak in the legend
-    plot.plot([0, 0], [1, 0], c = 'white', label = "\t")
+    plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
 
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
@@ -284,7 +284,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i == 2:    
-        center_x = 1.32 * plot.xlim()[-1]
+        center_x = 1.34 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         line1 = "Radii"
