@@ -197,13 +197,13 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{-0.25\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.25\ h}$", r"$\mathrm{+0.50\ h}$"]
 
-def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
+def add_to_plot(fig, ax, size_name, num_frames, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
 
     ### Data ###
-    density1 = util.read_data(frame, 'dust', fargo_par, directory = "../taper10/cm-size") / surface_density_zero
-    density2 = util.read_data(frame, 'dust', fargo_par, directory = "../taper1000/cm-size") / surface_density_zero
+    density1 = util.read_data(frame_range[0], 'dust', fargo_par, directory = "../taper10/cm-size") / surface_density_zero
+    density2 = util.read_data(frame_range[1], 'dust', fargo_par, directory = "../taper1000/cm-size") / surface_density_zero
 
     # Choose shift option
     if center:
@@ -278,16 +278,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         top_y = plot.ylim()[-1]
 
         line1 = "Radii"
-        line2 = "Analytic"
         plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(center_x, 0.25 * top_y, line2, fontsize = fontsize, horizontalalignment = 'center')
-
-        half_width = 0.12 * plot.xlim()[-1]
-        analytic_legend_y0 = 0.18 * top_y
-
-        analytic_legend_x = [1.005 * center_x - half_width, 1.005 * center_x + half_width]
-        analytic_legend_y = [analytic_legend_y0, analytic_legend_y0]
-        plot.plot(analytic_legend_x, analytic_legend_y, linewidth = linewidth, c = 'k', linestyle = "--", clip_on = False)
 
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
@@ -300,9 +291,9 @@ def make_plot(show = False):
 
     frame_str = ""
     sizes = ["cm", "mm"] # <<<====== Make this a parameter
-    for i, frame_i in enumerate(frame_range):
+    for i, (size_i, frame_i) in enumerate(zip(sizes, frame_range)):
         ax = fig.add_subplot(gs[i])
-        ax = add_to_plot(frame_i, fig, ax, sizes[i], len(frame_range), i + 1)
+        ax = add_to_plot(fig, ax, size_i, len(frame_range), i + 1)
         frame_str += "%04d-" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
