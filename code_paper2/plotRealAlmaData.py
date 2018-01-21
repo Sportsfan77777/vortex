@@ -115,6 +115,7 @@ def make_plot(show = False):
     box = 2
     plot.xlim(-box, box)
     plot.ylim(-box, box)
+    plot.axes().set_aspect('equal')
 
     # Annotate Axes
     plot.xlabel(r"$\mathrm{Relative\ R.A.\ [arcsec]}$", fontsize = fontsize)
