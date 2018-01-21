@@ -103,8 +103,9 @@ pa_rad   = pa / 180. * np.pi
 
 def deproject_image(incl, pa, image):
     npix=len(image)
-    imx=np.arange(npix)
-    imy=np.arange(npix)
+    imx = 1.0 * np.arange(npix); imy = 1.0 * np.arange(npix)
+    imx -= np.median(imx); imy -= np.median(imy)
+
     xx,yy   = np.meshgrid(imx, imy)
     xxr      = xx*np.cos(pa_rad) - yy*np.sin(pa_rad)
     yyr      = xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
