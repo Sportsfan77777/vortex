@@ -51,6 +51,8 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
+    parser.add_argument('--box', dest = "box", type = float, default = 2,
+                         help = 'width of box (in r_p) (default: 2)')
 
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
@@ -83,6 +85,8 @@ if not os.path.isdir(save_directory):
 show = args.show
 version = args.version
 
+box = args.box
+
 # Plot Parameters (constant)
 cmap = args.cmap
 cmax = args.cmax
@@ -97,21 +101,32 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    #alma_image = pyfits.getdata(filename, 0, header = True)
     fits_file = fits.open(filename)[0]
-    intensity = fits_file.data[0, 0, :, :]
+    intensity = fits_file.data[0, 0, :, :]; header = fits_file.header
 
-    #pixscales_alma = alma_image[1]['CDELT2'] * 3600
+    px_scale = header['cdelt2'] * 3600
+    num_x = header['naxis1']; num_y = header['naxis2']
+    width = num_x * px_scale; height = num_y * px_scale
 
     ### Plot ###
-    x = np.linspace(-10, 10, 1024)
-    y = np.copy(x)
+    x = np.linspace(-width / 2, width / 2, num_x)
+    y = np.linspace(-height / 2, height / 2, num_x)
     result = ax.pcolormesh(x, y, intensity, cmap = cmap)
 
     #result.set_clim(clim[0], clim[1])
 
+    # Add Contours
+    
+
+    # Add Beam
+    beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
+    beam_angle = header['bpa'] - 90 # principal axes
+
+    pos_x = -0.75 * box; pos_y = -0.75 * box 
+    beam = plot.patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
+    ax.add_artist(beam)
+
     # Axes
-    box = 2
     plot.xlim(-box, box)
     plot.ylim(-box, box)
     plot.axes().set_aspect('equal')
@@ -124,7 +139,7 @@ def make_plot(show = False):
     if True:
         # Only for last frame
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        cax = divider.append_axes("right", size = "4%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
         cbar.set_label(r"$Jy\ /\ beam$", fontsize = fontsize, rotation = 270, labelpad = 25)
