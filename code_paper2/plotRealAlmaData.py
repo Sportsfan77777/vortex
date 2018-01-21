@@ -53,7 +53,7 @@ def new_argument_parser(description = "Plot real ALMA images."):
 
 
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'color map (default: viridis)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
@@ -117,8 +117,8 @@ def make_plot(show = False):
     plot.ylim(-box, box)
 
     # Annotate Axes
-    plot.xlabel(r"$\mathrm{Relative R.A. [arcsec]}$", fontsize = fontsize)
-    plot.ylabel(r"$\mathrm{Relative Dec. [arcsec]}$", fontsize = fontsize)
+    plot.xlabel(r"$\mathrm{Relative\ R.A.\ [arcsec]}$", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{Relative\ Dec.\ [arcsec]}$", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
