@@ -107,9 +107,18 @@ def make_plot(show = False):
     x = np.linspace(-10, 10, 1024)
     y = np.copy(x)
     result = ax.pcolormesh(x, y, intensity, cmap = cmap)
-
-    fig.colorbar(result)
+    
     #result.set_clim(clim[0], clim[1])
+
+    # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
+    if colorbar:
+        # Only for last frame
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        cbar = fig.colorbar(result, cax = cax)
+        if frame_i == 2:
+            cbar.set_label("Normalized Intensity", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Axes
     box = 2
