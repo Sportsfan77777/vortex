@@ -105,17 +105,17 @@ def deproject_image(incl, pa, image):
     npix=len(image)
     imx=np.arange(npix)
     imy=np.arange(npix)
-    xx,yy   = meshgrid(imx, imy)
-    xxr      = xx*cos(pa_rad) - yy*sin(pa_rad)
-    yyr      = xx*sin(pa_rad) + yy*cos(pa_rad)
-    spline   = rbs(imx, imy, image.T, kx=3, ky=3)
+    xx,yy   = np.meshgrid(imx, imy)
+    xxr      = xx*np.cos(pa_rad) - yy*np.sin(pa_rad)
+    yyr      = xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
+    spline1   = spline(imx, imy, image.T, kx=3, ky=3)
     dummy_inu = zeros([npix, npix], dtype=float)
     for ix in range(npix):
         for iy in range(npix):
-            dummy_inu[iy,ix] = spline(xxr[iy,ix], yyr[iy,ix])
-    xxr      = (xx*cos(pa_rad) + yy*sin(pa_rad)) * cos(incl_rad)
-    yyr      = -xx*sin(pa_rad) + yy*cos(pa_rad)
-    sp       = rbs(imx, imy, dummy_inu.T, kx=3, ky=3)
+            dummy_inu[iy,ix] = spline1(xxr[iy,ix], yyr[iy,ix])
+    xxr      = (xx*np.cos(pa_rad) + yy*np.sin(pa_rad)) * np.cos(incl_rad)
+    yyr      = -xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
+    sp       = spline(imx, imy, dummy_inu.T, kx=3, ky=3)
     inuDP    = zeros([npix, npix], dtype=float)
     for ix in range(npix):
         for iy in range(npix):
