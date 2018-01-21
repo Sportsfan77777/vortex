@@ -20,6 +20,7 @@ import matplotlib
 #matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
+from matplotlib import patches
 from matplotlib import gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -116,14 +117,14 @@ def make_plot(show = False):
     #result.set_clim(clim[0], clim[1])
 
     # Add Contours
-    
+
 
     # Add Beam
     beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
     beam_angle = header['bpa'] - 90 # principal axes
 
-    pos_x = -0.75 * box; pos_y = -0.75 * box 
-    beam = plot.patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
+    pos_x = -0.75 * box; pos_y = -0.75 * box
+    beam = patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
     ax.add_artist(beam)
 
     # Axes
