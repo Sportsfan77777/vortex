@@ -117,8 +117,7 @@ def make_plot(show = False):
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        if frame_i == 2:
-            cbar.set_label(r"$Jy\ /\ beam$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"$Jy\ /\ beam$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Axes
     box = 2
