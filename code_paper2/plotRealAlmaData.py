@@ -9,6 +9,8 @@ import pickle, glob
 from multiprocessing import Pool
 import argparse
 
+from astropy.io import fits
+
 import math
 import numpy as np
 from scipy import interpolate
@@ -22,7 +24,6 @@ from matplotlib import gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from pylab import rcParams, fromfile
-import pyfits as fits
 
 import util
 import square as sq
@@ -43,7 +44,7 @@ def new_argument_parser(description = "Plot real ALMA images."):
     return parser
 
 
-
+filename = 'J10563044_centered.fits'
 
 ##### PLOTTING #####
 
@@ -53,50 +54,33 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
-    if center:
-        if taper < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
-        else:
-            threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
-        density = np.roll(density, shift_c)
-    normalized_density = density / surface_density_zero
+    #alma_image = pyfits.getdata(filename, 0, header = True)
+    fits_file = fits.open(filename)[0]
+    intensity = fits_file.data
+
+    #pixscales_alma = alma_image[1]['CDELT2'] * 3600
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
 
     fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    #result.set_clim(clim[0], clim[1])
 
     # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+    #plot.xlim(x_min, x_max)
+    #plot.ylim(0, 360)
 
     # Annotate Axes
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-
-    title = readTitle()
-
-    plot.xlabel("Radius", fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
-
-    if title is None:
-        plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
-    else:
-        plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
+    plot.xlabel(r"$\mathrm{Relative R.A. [arcsec]}$", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{Relative Dec. [arcsec]}$", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/dustDensityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/almaImage_%s.png" % (save_directory, name)
     else:
-        save_fn = "%s/v%04d_dustDensityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_almaImage_%s.png" % (save_directory, version, name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
