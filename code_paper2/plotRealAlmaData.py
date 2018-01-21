@@ -117,7 +117,10 @@ def make_plot(show = False):
     #result.set_clim(clim[0], clim[1])
 
     # Add Contours
+    levels = 1
 
+    #ax.contour(intensity, levels, origin = 'lower', linewidths = 2, extent = [-aus_alma, aus_alma, -aus_alma, aus_alma], colors = 'DarkGray')
+    ax.contour(intensity, levels, origin = 'lower', linewidths = 2, colors = 'DarkGray')
 
     # Add Beam
     beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
@@ -143,7 +146,7 @@ def make_plot(show = False):
         cax = divider.append_axes("right", size = "4%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"$Jy\ /\ beam$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"$\mathrm{Jy\ /\ beam}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
