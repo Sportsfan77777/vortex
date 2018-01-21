@@ -41,11 +41,43 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser.add_argument('name',
                          help = 'name of imaged system')
 
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
+                         help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
+
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
     return parser
 
-filename = 'J10563044_centered.fits'
 
-show = True
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+filename = 'J10563044_centered.fits' # replace with args.name eventually
+
+# Plot Parameters (variable)
+show = args.show
+version = args.version
+
+# Plot Parameters (constant)
+cmap = args.cmap
+cmax = args.cmax
+fontsize = args.fontsize
+dpi = args.dpi
 
 ##### PLOTTING #####
 
