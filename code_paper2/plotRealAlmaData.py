@@ -71,6 +71,7 @@ def new_argument_parser(description = "Plot real ALMA images."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
+name = 'SY_Cha'
 filename = 'J10563044_centered.fits' # replace with args.name eventually
 
 # Files
