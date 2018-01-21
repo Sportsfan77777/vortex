@@ -106,14 +106,15 @@ def make_plot(show = False):
     ### Plot ###
     x = np.linspace(-10, 10, 1024)
     y = np.copy(x)
-    result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
+    result = ax.pcolormesh(x, y, intensity, cmap = cmap)
 
     fig.colorbar(result)
     #result.set_clim(clim[0], clim[1])
 
     # Axes
-    #plot.xlim(x_min, x_max)
-    #plot.ylim(0, 360)
+    box = 2
+    plot.xlim(-box, box)
+    plot.ylim(-box, box)
 
     # Annotate Axes
     plot.xlabel(r"$\mathrm{Relative R.A. [arcsec]}$", fontsize = fontsize)
