@@ -98,8 +98,8 @@ dpi = args.dpi
 incl=50.0
 pa=-14.0
 
-incl_rad = incl / 180. * pi
-pa_rad   = pa / 180. * pi
+incl_rad = incl / 180. * np.pi
+pa_rad   = pa / 180. * np.pi
 
 def deproject_image(incl, pa, image):
     npix=len(image)
