@@ -120,9 +120,9 @@ def make_plot(show = False):
     peak_intensity = np.max(intensity)
     levels = np.linspace(0.2 * peak_intensity, peak_intensity, 5)
 
-    #aus_alma = width / 2
-    #ax.contour(intensity, levels, origin = 'lower', linewidths = 2, extent = [-aus_alma, aus_alma, -aus_alma, aus_alma], colors = 'DarkGray')
-    ax.contour(intensity, levels, origin = 'lower', linewidths = 2, colors = 'DarkGray')
+    aus_alma = width / 2
+    ax.contour(intensity, levels, origin = 'lower', linewidths = 2, extent = [-aus_alma, aus_alma, -aus_alma, aus_alma], colors = 'DarkGray')
+    #ax.contour(intensity, levels, origin = 'lower', linewidths = 2, colors = 'DarkGray')
 
     # Add Beam
     beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
