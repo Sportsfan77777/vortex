@@ -89,7 +89,7 @@ def make_plot(show = False):
     # Data
     #alma_image = pyfits.getdata(filename, 0, header = True)
     fits_file = fits.open(filename)[0]
-    intensity = fits_file.data
+    intensity = fits_file.data[0, 0, :, :]
 
     #pixscales_alma = alma_image[1]['CDELT2'] * 3600
 
