@@ -41,6 +41,10 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser.add_argument('name',
                          help = 'name of imaged system')
 
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "almaImages",
+                         help = 'save directory (default: almaImages)')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -68,6 +72,11 @@ def new_argument_parser(description = "Plot real ALMA images."):
 args = new_argument_parser().parse_args()
 
 filename = 'J10563044_centered.fits' # replace with args.name eventually
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
 
 # Plot Parameters (variable)
 show = args.show
