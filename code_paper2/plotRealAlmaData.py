@@ -109,14 +109,14 @@ def deproject_image(incl, pa, image):
     xxr      = xx*np.cos(pa_rad) - yy*np.sin(pa_rad)
     yyr      = xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
     spline1   = spline(imx, imy, image.T, kx=3, ky=3)
-    dummy_inu = zeros([npix, npix], dtype=float)
+    dummy_inu = np.zeros([npix, npix], dtype=float)
     for ix in range(npix):
         for iy in range(npix):
             dummy_inu[iy,ix] = spline1(xxr[iy,ix], yyr[iy,ix])
     xxr      = (xx*np.cos(pa_rad) + yy*np.sin(pa_rad)) * np.cos(incl_rad)
     yyr      = -xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
     sp       = spline(imx, imy, dummy_inu.T, kx=3, ky=3)
-    inuDP    = zeros([npix, npix], dtype=float)
+    inuDP    = np.zeros([npix, npix], dtype=float)
     for ix in range(npix):
         for iy in range(npix):
             inuDP[iy,ix] = sp(xxr[iy,ix], yyr[iy,ix])
