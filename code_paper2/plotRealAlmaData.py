@@ -135,7 +135,7 @@ def make_plot(show = False):
     fits_file = fits.open(filename)[0]
     intensity = fits_file.data[0, 0, :, :]; header = fits_file.header
 
-    intensity = deproject_image(intensity)
+    intensity = deproject_image(incl_rad, pa_rad, intensity)
 
     px_scale = header['cdelt2'] * 3600
     num_x = header['naxis1']; num_y = header['naxis2']
