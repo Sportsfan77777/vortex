@@ -43,8 +43,9 @@ def new_argument_parser(description = "Plot real ALMA images."):
 
     return parser
 
-
 filename = 'J10563044_centered.fits'
+
+show = True
 
 ##### PLOTTING #####
 
