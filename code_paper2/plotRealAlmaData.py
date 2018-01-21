@@ -94,8 +94,8 @@ def make_plot(show = False):
     #pixscales_alma = alma_image[1]['CDELT2'] * 3600
 
     ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
+    x = np.linspace(-10, 10, 1024)
+    y = np.copy(x)
     result = ax.pcolormesh(x, y, np.transpose(intensity), cmap = cmap)
 
     fig.colorbar(result)
