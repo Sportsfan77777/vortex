@@ -80,6 +80,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
+name = 'SY_Cha'
+filename = 'J10563044_centered.fits' # replace with args.name eventually
+
 ### Get Fake FARGO Parameters ###
 fn = "deprojected_params.p"
 fargo_par = pickle.load(open(fn, "rb"))
