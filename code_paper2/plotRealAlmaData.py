@@ -127,7 +127,7 @@ def deproject_image(incl, pa, image):
     return(inuDP)
 
 def save_data(data, fargo_par):
-    fn = "deprojected_image.p" % 
+    fn = "deprojected_image.p"
     pickle.dump(data, open(fn, "wb"))
 
     par_fn = "deprojected_params.p"
@@ -148,7 +148,6 @@ def make_plot(show = False):
 
     if deproject:
         intensity = deproject_image(incl_rad, pa_rad, intensity)
-        save_data(intensity)
 
     px_scale = header['cdelt2'] * 3600
     num_x = header['naxis1']; num_y = header['naxis2']
