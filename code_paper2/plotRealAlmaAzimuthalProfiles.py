@@ -9,6 +9,8 @@ import pickle, glob
 from multiprocessing import Pool
 import argparse
 
+from astropy.io import fits
+
 import math
 import numpy as np
 
@@ -79,7 +81,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get Fake FARGO Parameters ###
-fn = "ideprojected_params.p"
+fn = "deprojected_params.p"
 fargo_par = pickle.load(open(fn, "rb"))
 
 rad = fargo_par["rad"]
@@ -105,9 +107,6 @@ if normalize:
 
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
-
-rad = np.linspace(r_min, r_max, num_rad)
-theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
@@ -155,7 +154,7 @@ def make_plot(show = False):
     if normalize:
         intensity_polar /= np.max(intensity_polar)
 
-      
+
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
     ### Plot ###
