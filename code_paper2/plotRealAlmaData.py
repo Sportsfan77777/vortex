@@ -126,15 +126,9 @@ def deproject_image(incl, pa, image):
             inuDP[iy,ix] = sp(xxr[iy,ix], yyr[iy,ix])
     return(inuDP)
 
-def save_data(data):
+def save_data(data, fargo_par):
     fn = "deprojected_image.p" % 
     pickle.dump(data, open(fn, "wb"))
-
-    fargo_par = {}
-    fargo_par["rad"] = np.linspace(0, 10, 1024)
-    fargo_par["theta"] = np.linspace(0, 2 * np.pi, 1024)
-    fargo_par["AspectRatio"] = 0.03
-    fargo_par["Sigma0"] = 1
 
     par_fn = "deprojected_params.p"
     pickle.dump(fargo_par, open(par_fn, "wb"))
@@ -212,6 +206,17 @@ def make_plot(show = False):
         plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
+
+    # Store Data and Parameters
+    max_r = np.sqrt(np.power(np.max(x), 2) + np.power(np.max(y), 2))
+
+    fargo_par = {}
+    fargo_par["rad"] = np.linspace(0, max_r, num_x)
+    fargo_par["theta"] = np.linspace(0, 2 * np.pi, num_y)
+    fargo_par["AspectRatio"] = 0.03
+    fargo_par["Sigma0"] = 1
+
+    save_data(intensity, fargo_par)
 
 
 ##### Make Plots! #####

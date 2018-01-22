@@ -58,9 +58,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
-    parser.add_argument('-t', dest = "threshold", type = float, default = None,
-                         help = 'threshold for centering vortex with its center (default: varies with size)')
-    
+
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 18)')
@@ -114,10 +112,6 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
-threshold = args.threshold
-#if threshold is None:
-#    threshold = util.get_threshold(size)
-
 # Plot Parameters (constant)
 fontsize = args.fontsize
 labelsize = args.labelsize
@@ -144,11 +138,24 @@ def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
+    # Header (and extract info!)
+    fits_file = fits.open(filename)[0]
+    header = fits_file.header
+
+    px_scale = header['cdelt2'] * 3600
+    num_x = header['naxis1']; num_y = header['naxis2']
+    width = num_x * px_scale; height = num_y * px_scale
+
+    xs = np.linspace(-width / 2, width / 2, num_x)
+    ys = np.linspace(-height / 2, height / 2, num_x)
+
     ### Data ###
     intensity_cart = pickle.load(open("deprojected_image.p", "rb"))
-    intensity_polar = sq.cartesian_to_polar(intensity_cart, fargo_par)
+    rs, thetas, rs_grid, thetas_grid, intensity_polar = sq.cartesian_to_polar(intensity_cart, xs, ys)
     if normalize:
         intensity_polar /= np.max(intensity_polar)
+
+      
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
     ### Plot ###
