@@ -54,6 +54,8 @@ def new_argument_parser(description = "Plot real ALMA images."):
 
     parser.add_argument('--box', dest = "box", type = float, default = 2,
                          help = 'width of box (in r_p) (default: 2)')
+    parser.add_argument('--original', dest = "deproject", action = 'store_false', default = True,
+                         help = 'do not deproject (default: deproject)')
 
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
@@ -86,6 +88,7 @@ show = args.show
 version = args.version
 
 box = args.box
+deproject = args.deproject
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -123,6 +126,19 @@ def deproject_image(incl, pa, image):
             inuDP[iy,ix] = sp(xxr[iy,ix], yyr[iy,ix])
     return(inuDP)
 
+def save_data(data):
+    fn = "deprojected_image.p" % 
+    pickle.dump(data, open(fn, "wb"))
+
+    fargo_par = {}
+    fargo_par["rad"] = np.linspace(0, 10, 1024)
+    fargo_par["theta"] = np.linspace(0, 2 * np.pi, 1024)
+    fargo_par["AspectRatio"] = 0.03
+    fargo_par["Sigma0"] = 1
+
+    par_fn = "deprojected_params.p"
+    pickle.dump(fargo_par, open(par_fn, "wb"))
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -136,7 +152,9 @@ def make_plot(show = False):
     fits_file = fits.open(filename)[0]
     intensity = fits_file.data[0, 0, :, :]; header = fits_file.header
 
-    intensity = deproject_image(incl_rad, pa_rad, intensity)
+    if deproject:
+        intensity = deproject_image(incl_rad, pa_rad, intensity)
+        save_data(intensity)
 
     px_scale = header['cdelt2'] * 3600
     num_x = header['naxis1']; num_y = header['naxis2']
