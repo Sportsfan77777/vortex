@@ -84,6 +84,9 @@ args = new_argument_parser().parse_args()
 fn = "ideprojected_params.p"
 fargo_par = pickle.load(open(fn, "rb"))
 
+rad = fargo_par["rad"]
+theta = fargo_par["theta"]
+
 ### Get Input Parameters ###
 
 # Frames
@@ -136,29 +139,17 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 ns = [num_scale_heights / 2, num_scale_heights / 4, num_scale_heights / 4, num_scale_heights / 2]
 labels = [r"$\mathrm{-%.01f\ h}$" % ns[0], r"$\mathrm{-%.01f\ h}$" % ns[1], r"$\mathrm{+0\ h}$", r"$\mathrm{+%0.1f\ h}$" % ns[-2], r"$\mathrm{+%0.1f\ h}$" % ns[-1]]
 
-def add_to_plot(frame, fig, ax, num_frames, frame_i):
-    # Convert size to number
-    size_name = "cm"
-    size = util.get_size(size_name)
+def make_plot(show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
 
     ### Data ###
-    intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
+    intensity_cart = pickle.load(open("deprojected_image.p", "rb"))
+    intensity_polar = sq.cartesian_to_polar(intensity_cart, fargo_par)
     if normalize:
         intensity_polar /= np.max(intensity_polar)
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
-
-    # Get Shift
-    dust_fargo_par = util.get_pickled_parameters(directory = "../../../cm-size") ## shorten name?
-    ######## Need to extract parameters, and add 'rad' and 'theta' ########
-    dust_rad = np.linspace(dust_fargo_par['Rmin'], dust_fargo_par['Rmax'], dust_fargo_par['Nrad'])
-    dust_theta = np.linspace(0, 2 * np.pi, dust_fargo_par['Nsec'])
-    dust_fargo_par['rad'] = dust_rad; dust_fargo_par['theta'] = dust_theta
-    gas_surface_density_zero = dust_fargo_par['Sigma0']
-
-    dust_density = util.read_data(frame, 'dust', dust_fargo_par, id_number = id_number, directory = "../../../cm-size")
-
-    # Shift gas density with center of dust density
-    shift = az.get_azimuthal_center(dust_density, dust_fargo_par, threshold = 10.0 * gas_surface_density_zero / 100.0)
 
     ### Plot ###
     # Profiles
@@ -166,22 +157,8 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
 
-    # Mark Planet
-    if shift is None:
-        planet_loc = theta[0]
-    else:
-        if shift < -len(dust_theta):
-            shift += len(dust_theta)
-        planet_loc = dust_theta[shift] * (180.0 / np.pi) - 180.0
-    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
-
     # Axes
-    if taper_time < 10.1:
-        # T = 10
-        max_x = 60
-    else:
-        # T = 1000
-        max_x = 180
+    max_x = 180
     plot.xlim(-max_x, max_x)
     angles = np.linspace(-max_x, max_x, 7)
     plot.xticks(angles)
@@ -192,59 +169,32 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         plot.ylim(0, max_y) # Input
 
     # Annotate Axes
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
-    current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
-
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
-
-    if frame_i == 1:
-        plot.ylabel(r"$I$ / $I_\mathrm{0}$", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{Intensity}$", fontsize = fontsize)
 
     # Legend
-    if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Extra Annotation
-    rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
-    plot.text(-170, 0.90 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+    #rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
+    #plot.text(-170, 0.90 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+ 
+    center_x = 1.38 * plot.xlim()[-1]
+    top_y = plot.ylim()[-1]
 
-    if frame_i == 2:    
-        center_x = 1.38 * plot.xlim()[-1]
-        top_y = plot.ylim()[-1]
-
-        line = "Radii"
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
+    line = "Radii"
+    plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
-    title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
-    plot.title("%s" % (title), fontsize = fontsize + 1)
-    
-def make_plot(show = False):
-    # Set up figure
-    fig = plot.figure(figsize = (12, 5), dpi = dpi)
-    gs = gridspec.GridSpec(1, 2)
-
-    frame_str = ""
-    for i, frame_i in enumerate(frame_range):
-        ax = fig.add_subplot(gs[i])
-        ax = add_to_plot(frame_i, fig, ax, len(frame_range), i + 1)
-        frame_str += "%04d-" % frame_i
-    frame_str = frame_str[:-1] # Trim last '_'
-
-    #### Finish Plot ####
-    title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
-
-    # Save and Close
-    plot.tight_layout()
+    #title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    #plot.title("%s" % (title), fontsize = fontsize + 1)
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/azimuthalIntensityEvolution_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/almaAzimuthalProfiles_%s.png" % (save_directory, name)
     else:
-        save_fn = "%s/v%04d_azimuthalIntensityEvolution_%s.png" % (save_directory, version, frame_str)
+        save_fn = "%s/v%04d_almaAzimuthalProfiles_%s.png" % (save_directory, version, name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
