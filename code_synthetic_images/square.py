@@ -23,10 +23,17 @@ def get_cartesian_grid(rad):
     xs_grid, ys_grid = np.meshgrid(xs, ys)
     return xs, ys, xs_grid, ys_grid
 
-def get_polar_grid(xs, ys):
+def get_polar_grid(xs, ys, min_r = 0):
     """ return polar grid associated with cartesian to polar"""
-    return rs, thetas, rs_grid, thetas_grid
+    max_r = np.sqrt(np.max(xs)**2 + np.max(ys)**2)
+    num_r = len(xs); num_theta = len(ys)
 
+    # Set up rt-grid
+    rs = np.linspace(min_r, max_r, num_r)
+    thetas = np.linspace(0, 2 * np.pi, num_theta)
+
+    rs_grid, thetas_grid = np.meshgrid(rs, thetas)
+    return rs, thetas, rs_grid, thetas_grid
 
 def polar_to_cartesian(data, rs, thetas, order = 3):
     """ Input: Data, Radial array for Data, Azimuthal array for Data"""
