@@ -35,12 +35,10 @@ def polar_to_cartesian(data, rs, thetas, order = 3):
     xs, ys, xs_grid, ys_grid = get_cartesian_grid(rs)
 
     # Interpolate rt-grid
-
     interpolated_rs = interpolate(rs, np.arange(len(rs)), bounds_error = False)
     interpolated_thetas = interpolate(thetas, np.arange(len(thetas)), bounds_error = False)
 
     # Match up xy-grid with rt-grid
-
     new_rs = np.sqrt(np.power(xs_grid, 2) + np.power(ys_grid, 2))
     new_thetas = np.arctan2(ys_grid, xs_grid)
 
