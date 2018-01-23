@@ -9,6 +9,9 @@ import util
 
 ###############################################################################
 
+outer_start = 1.1
+outer_end = 2.3
+
 ### Helper Methods ###
 def my_searchsorted(array, target):
     """ np.searchsorted, but it works all the time """
@@ -19,14 +22,14 @@ def my_searchsorted(array, target):
             return i
     return len(array)
 
-def get_radial_peak(averagedDensity, fargo_par):
+def get_radial_peak(averagedDensity, fargo_par, start = outer_start, end = outer_end):
     """ find peak in azimuthally-averaged density in the outer disk (i.e. the vortex) """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
 
     ########### Method ##############
-    outer_disk_start = np.searchsorted(rad, 1.1) # look for max radial density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    outer_disk_start = np.searchsorted(rad, start) # look for max radial density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
     peak_rad_outer_index = np.argmax(averagedDensity[outer_disk_start : outer_disk_end])
 
     peak_index = outer_disk_start + peak_rad_outer_index
@@ -56,15 +59,15 @@ def get_radial_min(averagedDensity, peak_rad, fargo_par):
         # No Gap Yet
         return peak_rad, 0
 
-def get_peak(density, fargo_par):
+def get_peak(density, fargo_par, start = outer_start, end = outer_end):
     """ return location of peak in data in outer disk """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
     theta = fargo_par["theta"]
 
     ########### Method ##############
-    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
     density_segment = density[outer_disk_start : outer_disk_end]
 
     argmax = np.argmax(density_segment)
@@ -74,14 +77,14 @@ def get_peak(density, fargo_par):
 
     return arg_r, arg_phi
 
-def get_azimuthal_peak(density, fargo_par):
+def get_azimuthal_peak(density, fargo_par, start = outer_start, end = outer_end):
     """ return shift needed to shift vortex peak to 180 degrees """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
     theta = fargo_par["theta"]
 
     ########### Method ##############
-    arg_r, arg_phi = get_peak(density, fargo_par)
+    arg_r, arg_phi = get_peak(density, fargo_par, start = start, end = end)
 
     ### Calculate shift for true center to 180 degrees ###
     middle = np.searchsorted(theta, np.pi)
@@ -89,7 +92,7 @@ def get_azimuthal_peak(density, fargo_par):
 
     return shift_peak
 
-def get_azimuthal_center(density, fargo_par, threshold = 0.05):
+def get_azimuthal_center(density, fargo_par, threshold = 0.05, start = outer_start, end = outer_end):
     """ return shift needed to shift vortex center to 180 degrees """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
@@ -102,8 +105,8 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05):
 
     ### Identify center using threshold ###
     # Search outer disk only
-    outer_disk_start = np.searchsorted(rad, 1.1) # look for max density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 2.3) # look for max density before r = 2.3
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
     density_segment = density[outer_disk_start : outer_disk_end]
 
     # Get peak in azimuthal profile
@@ -164,7 +167,7 @@ def get_contrast(data, fargo_par):
 
 ### Data ###
 
-def get_profiles(density, fargo_par, args, normalize = False, shift = None):
+def get_profiles(density, fargo_par, args, normalize = False, shift = None, start = outer_start, end = outer_end):
     """ Gather azimuthal radii and profiles """
     
     ######## Get Parameters #########
@@ -184,7 +187,7 @@ def get_profiles(density, fargo_par, args, normalize = False, shift = None):
 
     # Find Peak in Radial Profile (in Outer Disk)
     averagedDensity = np.average(density, axis = 1)
-    peak_rad, peak_density = get_radial_peak(averagedDensity, fargo_par)
+    peak_rad, peak_density = get_radial_peak(averagedDensity, fargo_par, start = start, end = end)
 
     # Gather Azimuthal Profiles
     num_profiles = args.num_profiles
