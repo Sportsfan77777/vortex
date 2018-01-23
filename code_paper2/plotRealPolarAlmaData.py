@@ -43,8 +43,8 @@ def new_argument_parser(description = "Plot real ALMA images."):
                          help = 'name of imaged system')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "cartesianAlmaImages",
-                         help = 'save directory (default: cartesianAlmaImages)')
+    parser.add_argument('--dir', dest = "save_directory", default = "polarAlmaImages",
+                         help = 'save directory (default: polarAlmaImages)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -198,9 +198,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/cartesianAlmaImage_%s.png" % (save_directory, name)
+        save_fn = "%s/polarAlmaImage_%s.png" % (save_directory, name)
     else:
-        save_fn = "%s/v%04d_cartesianAlmaImage_%s.png" % (save_directory, version, name)
+        save_fn = "%s/v%04d_polarAlmaImage_%s.png" % (save_directory, version, name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
@@ -217,7 +217,7 @@ def make_plot(show = False):
     fargo_par["AspectRatio"] = 0.03
     fargo_par["Sigma0"] = 1
 
-    save_data(intensity, fargo_par)
+    #save_data(intensity, fargo_par)
 
 
 ##### Make Plots! #####
