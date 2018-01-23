@@ -158,7 +158,7 @@ def make_plot(show = False):
     y = np.linspace(-height / 2, height / 2, num_x)
 
     rs, thetas, rs_grid, thetas_grid, intensity_polar = sq.cartesian_to_polar(intensity, x, y)
-    result = ax.pcolormesh(rs, thetas, intensity_polar, cmap = cmap)
+    result = ax.pcolormesh(rs, thetas * (180.0 / np.pi), intensity_polar, cmap = cmap)
 
     #result.set_clim(clim[0], clim[1])
 
@@ -179,13 +179,16 @@ def make_plot(show = False):
     #ax.add_artist(beam)
 
     # Axes
-    plot.xlim(rs[0], rs[-1])
-    plot.ylim(thetas[0], thetas[-1])
-    plot.axes().set_aspect('equal')
+    r_max = 2
+    plot.xlim(rs[0], r_max)
+    plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
 
     # Annotate Axes
-    plot.xlabel(r"$\mathrm{Relative\ R.A.\ [arcsec]}$", fontsize = fontsize)
-    plot.ylabel(r"$\mathrm{Relative\ Dec.\ [arcsec]}$", fontsize = fontsize)
+    plot.xlabel("Radius", fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if True:
