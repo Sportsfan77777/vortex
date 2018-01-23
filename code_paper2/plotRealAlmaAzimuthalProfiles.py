@@ -158,7 +158,7 @@ def make_plot(show = False):
         intensity_polar /= np.max(intensity_polar)
 
 
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None, start = 0, end = 1)
 
     ### Plot ###
     # Profiles
@@ -185,8 +185,8 @@ def make_plot(show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Extra Annotation
-    #rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
-    #plot.text(-170, 0.90 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+    rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
+    plot.text(-170, 0.90 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
  
     center_x = 1.38 * plot.xlim()[-1]
     top_y = plot.ylim()[-1]

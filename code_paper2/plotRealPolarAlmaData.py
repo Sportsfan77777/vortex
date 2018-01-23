@@ -159,8 +159,8 @@ def make_plot(show = False):
 
     rs, thetas, rs_grid, thetas_grid, intensity_polar = sq.cartesian_to_polar(intensity, x, y)
 
-    np.roll(intensity_polar, len(thetas) / 2)
-    result = ax.pcolormesh(rs * 3, thetas * (180.0 / np.pi), intensity_polar, cmap = cmap)
+    intensity_polar = np.roll(intensity_polar, len(thetas) / 2, axis = 0)
+    result = ax.pcolormesh(rs, thetas * (180.0 / np.pi), intensity_polar, cmap = cmap)
 
     #result.set_clim(clim[0], clim[1])
 
