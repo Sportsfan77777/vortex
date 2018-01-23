@@ -55,10 +55,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
                          help = 'number of profiles (default: 5)')
-    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 8.0,
+    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 16.0,
                          help = 'number of scale heights (default: 8.0)')
 
-    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
+    parser.add_argument('-n', dest = "normalize", action = 'store_true', default = False,
                          help = 'normalize by max (default: normalize)')
 
     # Plot Parameters (rarely need to change)
@@ -157,8 +157,8 @@ def make_plot(show = False):
     if normalize:
         intensity_polar /= np.max(intensity_polar)
 
-    intensity_polar = np.roll(intensity_polar, len(thetas) / 2, axis = 0)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None, start = 0.2, end = 1)
+    intensity_polar = np.roll(intensity_polar, len(thetas) / 2, axis = 0) # Note: Must transpose after!!!
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar.T, fargo_par, args, shift = None, start = 0.2, end = 1)
 
     ### Plot ###
     # Profiles
