@@ -163,7 +163,7 @@ def make_plot(show = False):
     #result.set_clim(clim[0], clim[1])
 
     # Add Contours
-    peak_intensity = np.max(intensity)
+    peak_intensity = np.max(intensity_polar)
     levels = np.linspace(0.2 * peak_intensity, peak_intensity, 5)
 
     aus_alma = width / 2
@@ -171,16 +171,16 @@ def make_plot(show = False):
     #ax.contour(intensity, levels, origin = 'lower', linewidths = 2, colors = 'DarkGray')
 
     # Add Beam
-    beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
-    beam_angle = header['bpa'] - 90 # principal axes
+    #beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
+    #beam_angle = header['bpa'] - 90 # principal axes
 
-    pos_x = -0.75 * box; pos_y = -0.75 * box
-    beam = patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
-    ax.add_artist(beam)
+    #pos_x = -0.75 * box; pos_y = -0.75 * box
+    #beam = patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
+    #ax.add_artist(beam)
 
     # Axes
-    plot.xlim(-box, box)
-    plot.ylim(-box, box)
+    plot.xlim(rs[0], rs[-1])
+    plot.ylim(thetas[0], thetas[-1])
     plot.axes().set_aspect('equal')
 
     # Annotate Axes
