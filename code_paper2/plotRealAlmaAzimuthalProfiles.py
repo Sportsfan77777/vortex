@@ -178,7 +178,7 @@ def make_plot(show = False):
         plot.ylim(0, max_y) # Input
 
     # Annotate Axes
-    plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.xlabel(r"$\phi - \phi_\mathrm{0}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$\mathrm{Intensity}$", fontsize = fontsize)
 
     # Legend
