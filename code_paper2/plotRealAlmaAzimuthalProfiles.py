@@ -157,8 +157,8 @@ def make_plot(show = False):
     if normalize:
         intensity_polar /= np.max(intensity_polar)
 
-
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None, start = 0, end = 1)
+    intensity_polar = np.roll(intensity_polar, len(thetas) / 2, axis = 0)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None, start = 0.2, end = 1)
 
     ### Plot ###
     # Profiles
