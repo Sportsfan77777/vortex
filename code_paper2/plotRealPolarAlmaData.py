@@ -181,7 +181,7 @@ def make_plot(show = False):
     #ax.add_artist(beam)
 
     # Axes
-    r_max = 2
+    r_max = 1.333
     plot.xlim(rs[0], r_max * 3)
     plot.ylim(0, 360)
 
