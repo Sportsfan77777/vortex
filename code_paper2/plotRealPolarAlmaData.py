@@ -157,7 +157,7 @@ def make_plot(show = False):
     x = np.linspace(-width / 2, width / 2, num_x)
     y = np.linspace(-height / 2, height / 2, num_x)
 
-    rs, thetas, rs_grid, thetas_grid, intensity_polar = sq.cartesian_to_polar(intensity_cart, x, y)
+    rs, thetas, rs_grid, thetas_grid, intensity_polar = sq.cartesian_to_polar(intensity, x, y)
     result = ax.pcolormesh(rs, thetas, intensity_polar, cmap = cmap)
 
     #result.set_clim(clim[0], clim[1])
