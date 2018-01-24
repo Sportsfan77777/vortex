@@ -87,13 +87,13 @@ def store():
 
 	# Store in Pickle
 	fn1 = basename % (args.id_number, name)
-	pickle.dump(intensity, fn1)
+	pickle.dump(intensity, open(fn1, "wb"))
 
 	fn2 = "deproject_%s" % fn1
-	pickle.dump(deprojected_intensity, fn2)
+	pickle.dump(deprojected_intensity, open(fn2, "wb"))
 
 	fn3 = "params_%s" % fn1
-	pickle.dump(header, fn3)
+	pickle.dump(header, open(fn3, "wb"))
 
 
 ### Store! ###
