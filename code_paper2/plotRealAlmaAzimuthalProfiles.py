@@ -37,8 +37,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('name',
-                         help = 'name of imaged system')
+    parser.add_argument('id_number',
+                         help = 'id number of imaged system')
+
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "almaAzimuthalProfiles",
                          help = 'save directory (default: almaAzimuthalProfiles)')
@@ -46,8 +47,6 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
-    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
-                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
@@ -93,7 +92,12 @@ theta = fargo_par["theta"]
 ### Get Input Parameters ###
 
 # Frames
-name = args.name
+id_number = args.id_number
+
+# Data (from pickles)
+intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "rb"))
+deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0], "rb"))
+header = pickle.load(open(glob.glob("params_fits%03d*.p" % id_number)[0], "rb"))
 
 # Files
 save_directory = args.save_directory
@@ -111,7 +115,6 @@ if normalize:
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
 
-id_number = args.id_number
 version = args.version
 
 # Plot Parameters (constant)
