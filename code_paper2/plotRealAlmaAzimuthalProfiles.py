@@ -155,7 +155,7 @@ def make_plot(show = False):
     ys = np.linspace(-height / 2, height / 2, num_x)
 
     ### Data ###
-    intensity_cart = pickle.load(open("deprojected_image.p", "rb"))
+    intensity_cart = np.copy(deprojected_intensity)
     rs, thetas, rs_grid, thetas_grid, intensity_polar = sq.cartesian_to_polar(intensity_cart, xs, ys)
     if normalize:
         intensity_polar /= np.max(intensity_polar)
