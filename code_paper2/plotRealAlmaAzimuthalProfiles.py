@@ -37,7 +37,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('id_number',
+    parser.add_argument('id_number', type = int,
                          help = 'id number of imaged system')
 
     # Files
