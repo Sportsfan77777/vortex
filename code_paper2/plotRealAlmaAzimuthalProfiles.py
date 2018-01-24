@@ -9,7 +9,7 @@ import pickle, glob
 from multiprocessing import Pool
 import argparse
 
-from astropy.io import fits
+#from astropy.io import fits
 
 import math
 import numpy as np
@@ -144,7 +144,6 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Header (and extract info!)
-    fits_file = fits.open(filename)[0]
     header = fits_file.header
 
     px_scale = header['cdelt2'] * 3600
