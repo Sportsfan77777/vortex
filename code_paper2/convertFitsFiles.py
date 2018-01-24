@@ -86,7 +86,7 @@ def store():
 	deprojected_intensity = deproject_image(header["inc"], header["pa"], intensity)
 
 	# Store in Pickle
-	fn1 = basename % (id_number, name)
+	fn1 = basename % (args.id_number, name)
 	pickle.dump(intensity, fn1)
 
 	fn2 = "deproject_%s" % fn1
