@@ -2,6 +2,8 @@
 convert fits files into pickle files
 """
 
+import argparse
+
 from astropy.io import fits
 import pickle
 
@@ -44,6 +46,9 @@ def deproject_image(incl, pa, image):
     npix=len(image)
     imx = 1.0 * np.arange(npix); imy = 1.0 * np.arange(npix)
     imx -= np.median(imx); imy -= np.median(imy)
+
+    pa_rad = pa * (np.pi / 180.0)
+    incl_rad = incl * (np.pi / 180.0)
 
     xx,yy   = np.meshgrid(imx, imy)
     xxr      = xx*np.cos(pa_rad) - yy*np.sin(pa_rad)
