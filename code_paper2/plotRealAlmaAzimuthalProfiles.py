@@ -79,25 +79,13 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-name = 'SY_Cha'
-filename = 'J10563044_centered.fits' # replace with args.name eventually
-
-### Get Fake FARGO Parameters ###
-fn = "deprojected_params.p"
-fargo_par = pickle.load(open(fn, "rb"))
-
-rad = fargo_par["rad"]
-theta = fargo_par["theta"]
-
-### Get Input Parameters ###
-
-# Frames
+# File Number
 id_number = args.id_number
 
-# Data (from pickles)
-intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "rb"))
-deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0], "rb"))
-header = pickle.load(open(glob.glob("params_fits%03d*.p" % id_number)[0], "rb"))
+# Get Data
+default_intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "rb"))
+deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
+header = pickle.load(open(glob.glob("params_fits%03d*.p" % id_number)[0]))
 
 # Files
 save_directory = args.save_directory
@@ -160,7 +148,7 @@ def make_plot(show = False):
         intensity_polar /= np.max(intensity_polar)
 
     intensity_polar = np.roll(intensity_polar, len(thetas) / 2, axis = 0) # Note: Must transpose after!!!
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar.T, fargo_par, args, shift = None, start = 0.2, end = 1)
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar.T, header, args, shift = None, start = 0.2, end = 1)
 
     ### Plot ###
     # Profiles
