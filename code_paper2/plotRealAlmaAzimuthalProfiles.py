@@ -131,9 +131,6 @@ def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
-    # Header (and extract info!)
-    header = fits_file.header
-
     px_scale = header['cdelt2'] * 3600
     num_x = header['naxis1']; num_y = header['naxis2']
     width = num_x * px_scale; height = num_y * px_scale
