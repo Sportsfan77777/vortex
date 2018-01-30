@@ -75,7 +75,7 @@ def deproject_image(incl, pa, image):
 ###############################################################################
 
 def clean(header):
-    """ Remove history and save all of the normal keys in a dictionary """
+    """ Remove history, save all of the normal keys in a dictionary, and add fargo_par parameters """
     new_header = {}
 
     # Delete history and get keys
@@ -85,6 +85,18 @@ def clean(header):
     # Create Dictionary
     for key in keys:
         new_header[key] = header[key]
+
+    # Add extra 'fargo_par' parameters
+    px_scale = new_header['cdelt2'] * 3600
+    num_x = new_header['naxis1']; num_y = new_header['naxis2']
+    width = num_x * px_scale; height = num_y * px_scale
+
+    max_r = np.sqrt(np.power(np.max(width / 2.0), 2) + np.power(np.max(height / 2.0), 2))
+
+    new_header["rad"] = np.linspace(0, max_r, num_x)
+    new_header["theta"] = np.linspace(0, 2 * np.pi, num_y)
+    new_header["AspectRatio"] = 0.03
+    new_header["Sigma0"] = 1
 
     return new_header
 
