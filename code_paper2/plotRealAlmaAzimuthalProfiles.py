@@ -191,9 +191,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/almaAzimuthalProfiles_%s.png" % (save_directory, name)
+        save_fn = "%s/almaAzimuthalProfiles_%s.png" % (save_directory, header['savename'])
     else:
-        save_fn = "%s/v%04d_almaAzimuthalProfiles_%s.png" % (save_directory, version, name)
+        save_fn = "%s/v%04d_almaAzimuthalProfiles_%s.png" % (save_directory, version, header['savename'])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:

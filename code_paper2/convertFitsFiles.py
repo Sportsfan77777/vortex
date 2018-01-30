@@ -112,6 +112,9 @@ def store():
     # Extra Properties
     header["name"] = name
 
+    savename = name.replace(" ", "_")
+    header["savename"] = savename
+
     if args.inclination is not None:
         header["inc"] = args.inclination
     if args.position_angle is not None:
@@ -121,7 +124,7 @@ def store():
     deprojected_intensity = deproject_image(header["inc"], header["pa"], intensity)
 
     # Store in Pickle
-    savename = name.replace(" ", "_")
+    
     fn1 = basename % (args.id_number, savename)
     pickle.dump(intensity, open(fn1, "wb"))
 
