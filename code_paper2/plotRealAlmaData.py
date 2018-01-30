@@ -39,8 +39,8 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('name',
-                         help = 'name of imaged system')
+    parser.add_argument('id_number', type = int,
+                         help = 'id number of imaged system')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "almaImages",
@@ -75,8 +75,13 @@ def new_argument_parser(description = "Plot real ALMA images."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-name = 'SY_Cha'
-filename = 'J10563044_centered.fits' # replace with args.name eventually
+# File Number
+id_number = args.id_number
+
+# Get Data
+default_intensity = glob.glob("fits%03d*.p" % id_number)[0]
+deprojected_intensity = glob.glob("deprojected_fits%03d*.p" % id_number)[0]
+header = glob.glob("deprojected_fits%03d*.p" % id_number)[0]
 
 # Files
 save_directory = args.save_directory
@@ -98,43 +103,6 @@ dpi = args.dpi
 
 ###############################################################################
 
-incl=50.0
-pa=-14.0
-
-incl_rad = incl / 180. * np.pi
-pa_rad   = pa / 180. * np.pi
-
-def deproject_image(incl, pa, image):
-    npix=len(image)
-    imx = 1.0 * np.arange(npix); imy = 1.0 * np.arange(npix)
-    imx -= np.median(imx); imy -= np.median(imy)
-
-    xx,yy   = np.meshgrid(imx, imy)
-    xxr      = xx*np.cos(pa_rad) - yy*np.sin(pa_rad)
-    yyr      = xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
-    spline1   = spline(imx, imy, image.T, kx=3, ky=3)
-    dummy_inu = np.zeros([npix, npix], dtype=float)
-    for ix in range(npix):
-        for iy in range(npix):
-            dummy_inu[iy,ix] = spline1(xxr[iy,ix], yyr[iy,ix])
-    xxr      = (xx*np.cos(pa_rad) + yy*np.sin(pa_rad)) * np.cos(incl_rad)
-    yyr      = -xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
-    sp       = spline(imx, imy, dummy_inu.T, kx=3, ky=3)
-    inuDP    = np.zeros([npix, npix], dtype=float)
-    for ix in range(npix):
-        for iy in range(npix):
-            inuDP[iy,ix] = sp(xxr[iy,ix], yyr[iy,ix])
-    return(inuDP)
-
-def save_data(data, fargo_par):
-    fn = "deprojected_image.p"
-    pickle.dump(data, open(fn, "wb"))
-
-    par_fn = "deprojected_params.p"
-    pickle.dump(fargo_par, open(par_fn, "wb"))
-
-###############################################################################
-
 ##### PLOTTING #####
 
 def make_plot(show = False):
@@ -143,11 +111,10 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    fits_file = fits.open(filename)[0]
-    intensity = fits_file.data[0, 0, :, :]; header = fits_file.header
-
     if deproject:
-        intensity = deproject_image(incl_rad, pa_rad, intensity)
+        intensity = deprojected_intensity
+    else:
+        intensity = default_intensity
 
     px_scale = header['cdelt2'] * 3600
     num_x = header['naxis1']; num_y = header['naxis2']
@@ -205,17 +172,6 @@ def make_plot(show = False):
         plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
-
-    # Store Data and Parameters
-    max_r = np.sqrt(np.power(np.max(x), 2) + np.power(np.max(y), 2))
-
-    fargo_par = {}
-    fargo_par["rad"] = np.linspace(0, max_r, num_x)
-    fargo_par["theta"] = np.linspace(0, 2 * np.pi, num_y)
-    fargo_par["AspectRatio"] = 0.03
-    fargo_par["Sigma0"] = 1
-
-    save_data(intensity, fargo_par)
 
 
 ##### Make Plots! #####
