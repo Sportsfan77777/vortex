@@ -79,9 +79,9 @@ args = new_argument_parser().parse_args()
 id_number = args.id_number
 
 # Get Data
-default_intensity = glob.glob("fits%03d*.p" % id_number)[0]
-deprojected_intensity = glob.glob("deprojected_fits%03d*.p" % id_number)[0]
-header = glob.glob("deprojected_fits%03d*.p" % id_number)[0]
+default_intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "rb"))
+deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
+header = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
 
 # Files
 save_directory = args.save_directory
