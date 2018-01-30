@@ -87,6 +87,9 @@ default_intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "r
 deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
 header = pickle.load(open(glob.glob("params_fits%03d*.p" % id_number)[0]))
 
+rad = header["rad"]
+theta = header["theta"]
+
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
