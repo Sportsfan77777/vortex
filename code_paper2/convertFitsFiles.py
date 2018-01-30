@@ -16,11 +16,13 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     # File Selection
     parser.add_argument('fn',
-                         help = 'name of imaged system')
+                         help = 'filename of imaged system')
 
-    # Save Number
+    # Save Info
     parser.add_argument('--id', dest = "id_number", type = int, default = None,
                          help = 'save number (default: None)')
+    parser.add_argument('--name', dest = "name", default = None,
+                         help = 'name of system (default: stem of fn)')
 
     # Extra Properties
     parser.add_argument('-i', dest = "inclination", type = float, default = None,
@@ -35,7 +37,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-name = args.fn[:-5] # remove .fits ending
+if args.name is None:
+    name = args.fn[:-5] # remove .fits ending
+else:
+    name = args.name
 basename = "fits%03d_%s.p" # savename
 
 ###############################################################################
@@ -91,6 +96,8 @@ def store():
     intensity = np.array(fits_file.data[0, 0, :, :]); header = clean(fits_file.header)
 
     # Extra Properties
+    header["name"] = name
+
     if args.inclination is not None:
         header["inc"] = args.inclination
     if args.position_angle is not None:
