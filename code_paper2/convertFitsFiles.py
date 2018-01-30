@@ -121,7 +121,8 @@ def store():
     deprojected_intensity = deproject_image(header["inc"], header["pa"], intensity)
 
     # Store in Pickle
-    fn1 = basename % (args.id_number, name)
+    savename = name.replace(" ", "_")
+    fn1 = basename % (args.id_number, savename)
     pickle.dump(intensity, open(fn1, "wb"))
 
     fn2 = "deprojected_%s" % fn1
