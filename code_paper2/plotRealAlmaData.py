@@ -81,7 +81,7 @@ id_number = args.id_number
 # Get Data
 default_intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "rb"))
 deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
-header = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
+header = pickle.load(open(glob.glob("params_fits%03d*.p" % id_number)[0]))
 
 # Files
 save_directory = args.save_directory
