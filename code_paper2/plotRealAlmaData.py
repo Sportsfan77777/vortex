@@ -163,9 +163,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/almaImage_%s.png" % (save_directory, name)
+        save_fn = "%s/almaImage_%s.png" % (save_directory, header['name'])
     else:
-        save_fn = "%s/v%04d_almaImage_%s.png" % (save_directory, version, name)
+        save_fn = "%s/v%04d_almaImage_%s.png" % (save_directory, version, header['name'])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
