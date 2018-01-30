@@ -87,8 +87,8 @@ def clean(header):
         new_header[key] = header[key]
 
     # Add extra 'fargo_par' parameters
-    px_scale = new_header['cdelt2'] * 3600
-    num_x = new_header['naxis1']; num_y = new_header['naxis2']
+    px_scale = new_header['CDELT2'] * 3600
+    num_x = new_header['NAXIS1']; num_y = new_header['NAXIS2']
     width = num_x * px_scale; height = num_y * px_scale
 
     max_r = np.sqrt(np.power(np.max(width / 2.0), 2) + np.power(np.max(height / 2.0), 2))
