@@ -69,31 +69,45 @@ def deproject_image(incl, pa, image):
 
 ###############################################################################
 
+def clean(header):
+    """ Remove history and save all of the normal keys in a dictionary """
+    new_header = {}
+    keys = header.keys()
+
+    # Delete history
+    del header['HISTORY']
+
+    # Create Dictionary
+    for key in keys:
+        new_header[key] = header[key]
+
+    return new_header
+
 ### Store Things ###
 
 def store():
-	# Read Fits File
-	fits_file = fits.open(args.fn)[0]
-	intensity = fits_file.data[0, 0, :, :]; header = fits_file.header
+    # Read Fits File
+    fits_file = fits.open(args.fn)[0]
+    intensity = np.array(fits_file.data[0, 0, :, :]); header = clean(fits_file.header)
 
-	# Extra Properties
-	if args.inclination is not None:
-		header["inc"] = args.inclination
-	if args.position_angle is not None:
-		header["pa"] = args.position_angle
+    # Extra Properties
+    if args.inclination is not None:
+        header["inc"] = args.inclination
+    if args.position_angle is not None:
+        header["pa"] = args.position_angle
 
-	# Deproject
-	deprojected_intensity = deproject_image(header["inc"], header["pa"], intensity)
+    # Deproject
+    deprojected_intensity = deproject_image(header["inc"], header["pa"], intensity)
 
-	# Store in Pickle
-	fn1 = basename % (args.id_number, name)
-	pickle.dump(intensity, open(fn1, "wb"))
+    # Store in Pickle
+    fn1 = basename % (args.id_number, name)
+    pickle.dump(intensity, open(fn1, "wb"))
 
-	fn2 = "deproject_%s" % fn1
-	pickle.dump(deprojected_intensity, open(fn2, "wb"))
+    fn2 = "deprojected_%s" % fn1
+    pickle.dump(deprojected_intensity, open(fn2, "wb"))
 
-	fn3 = "params_%s" % fn1
-	pickle.dump(header, open(fn3, "wb"))
+    fn3 = "params_%s" % fn1
+    pickle.dump(header, open(fn3, "wb"))
 
 
 ### Store! ###
