@@ -39,8 +39,8 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('name',
-                         help = 'name of imaged system')
+    parser.add_argument('id_number', type = int,
+                         help = 'id number of imaged system')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "polarAlmaImages",
@@ -52,8 +52,8 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--box', dest = "box", type = float, default = 2,
-                         help = 'width of box (in r_p) (default: 2)')
+    parser.add_argument('--max_r', dest = "r_max", type = float, default = 2,
+                         help = 'range of r in plot (default: 2)')
     parser.add_argument('--original', dest = "deproject", action = 'store_false', default = True,
                          help = 'do not deproject (default: deproject)')
 
@@ -75,8 +75,13 @@ def new_argument_parser(description = "Plot real ALMA images."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-name = 'SY_Cha'
-filename = 'J10563044_centered.fits' # replace with args.name eventually
+# File Number
+id_number = args.id_number
+
+# Get Data
+default_intensity = pickle.load(open(glob.glob("fits%03d*.p" % id_number)[0], "rb"))
+deprojected_intensity = pickle.load(open(glob.glob("deprojected_fits%03d*.p" % id_number)[0]))
+header = pickle.load(open(glob.glob("params_fits%03d*.p" % id_number)[0]))
 
 # Files
 save_directory = args.save_directory
@@ -87,7 +92,7 @@ if not os.path.isdir(save_directory):
 show = args.show
 version = args.version
 
-box = args.box
+r_max = args.r_max
 deproject = args.deproject
 
 # Plot Parameters (constant)
@@ -95,43 +100,6 @@ cmap = args.cmap
 cmax = args.cmax
 fontsize = args.fontsize
 dpi = args.dpi
-
-###############################################################################
-
-incl=50.0
-pa=-14.0
-
-incl_rad = incl / 180. * np.pi
-pa_rad   = pa / 180. * np.pi
-
-def deproject_image(incl, pa, image):
-    npix=len(image)
-    imx = 1.0 * np.arange(npix); imy = 1.0 * np.arange(npix)
-    imx -= np.median(imx); imy -= np.median(imy)
-
-    xx,yy   = np.meshgrid(imx, imy)
-    xxr      = xx*np.cos(pa_rad) - yy*np.sin(pa_rad)
-    yyr      = xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
-    spline1   = spline(imx, imy, image.T, kx=3, ky=3)
-    dummy_inu = np.zeros([npix, npix], dtype=float)
-    for ix in range(npix):
-        for iy in range(npix):
-            dummy_inu[iy,ix] = spline1(xxr[iy,ix], yyr[iy,ix])
-    xxr      = (xx*np.cos(pa_rad) + yy*np.sin(pa_rad)) * np.cos(incl_rad)
-    yyr      = -xx*np.sin(pa_rad) + yy*np.cos(pa_rad)
-    sp       = spline(imx, imy, dummy_inu.T, kx=3, ky=3)
-    inuDP    = np.zeros([npix, npix], dtype=float)
-    for ix in range(npix):
-        for iy in range(npix):
-            inuDP[iy,ix] = sp(xxr[iy,ix], yyr[iy,ix])
-    return(inuDP)
-
-def save_data(data, fargo_par):
-    fn = "deprojected_image.p"
-    pickle.dump(data, open(fn, "wb"))
-
-    par_fn = "deprojected_params.p"
-    pickle.dump(fargo_par, open(par_fn, "wb"))
 
 ###############################################################################
 
@@ -172,17 +140,8 @@ def make_plot(show = False):
     ax.contour(intensity, levels, origin = 'lower', linewidths = 2, extent = [-aus_alma, aus_alma, -aus_alma, aus_alma], colors = 'DarkGray')
     #ax.contour(intensity, levels, origin = 'lower', linewidths = 2, colors = 'DarkGray')
 
-    # Add Beam
-    #beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
-    #beam_angle = header['bpa'] - 90 # principal axes
-
-    #pos_x = -0.75 * box; pos_y = -0.75 * box
-    #beam = patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
-    #ax.add_artist(beam)
-
     # Axes
-    r_max = 1.333
-    plot.xlim(rs[0], r_max * 3)
+    plot.xlim(rs[0], r_max)
     plot.ylim(0, 360)
 
     angles = np.linspace(0, 360, 7)
@@ -203,9 +162,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/polarAlmaImage_%s.png" % (save_directory, name)
+        save_fn = "%s/polarAlmaImage_%s.png" % (save_directory, header['name'])
     else:
-        save_fn = "%s/v%04d_polarAlmaImage_%s.png" % (save_directory, version, name)
+        save_fn = "%s/v%04d_polarAlmaImage_%s.png" % (save_directory, version, header['name'])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
