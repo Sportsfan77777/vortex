@@ -48,6 +48,7 @@ basename = "fits%03d_%s.p" # savename
 ### Helper Function ###
 
 def deproject_image(incl, pa, image):
+    """ deproject image with angles in degrees """
     npix=len(image)
     imx = 1.0 * np.arange(npix); imy = 1.0 * np.arange(npix)
     imx -= np.median(imx); imy -= np.median(imy)
