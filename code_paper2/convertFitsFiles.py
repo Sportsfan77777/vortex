@@ -72,10 +72,10 @@ def deproject_image(incl, pa, image):
 def clean(header):
     """ Remove history and save all of the normal keys in a dictionary """
     new_header = {}
-    keys = header.keys()
 
-    # Delete history
+    # Delete history and get keys
     del header['HISTORY']
+    keys = header.keys()
 
     # Create Dictionary
     for key in keys:
