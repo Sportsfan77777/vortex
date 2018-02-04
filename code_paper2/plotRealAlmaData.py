@@ -9,7 +9,7 @@ import pickle, glob
 from multiprocessing import Pool
 import argparse
 
-from astropy.io import fits
+#from astropy.io import fits
 
 import math
 import numpy as np
@@ -135,6 +135,9 @@ def make_plot(show = False):
     ax.contour(intensity, levels, origin = 'lower', linewidths = 2, extent = [-aus_alma, aus_alma, -aus_alma, aus_alma], colors = 'DarkGray')
     #ax.contour(intensity, levels, origin = 'lower', linewidths = 2, colors = 'DarkGray')
 
+    # Add Star
+    plot.scatter(0, 0, c = "white", s = 100, marker = "*", zorder = 100) # star
+
     # Add Beam
     beam_semimajor = header['bmaj'] * 3600; beam_semiminor = header['bmin'] * 3600
     beam_angle = header['bpa'] - 90 # principal axes
@@ -143,23 +146,28 @@ def make_plot(show = False):
     beam = patches.Ellipse(xy = (pos_x, pos_y), width = beam_semimajor, height = beam_semiminor, color='w', fill = True, angle = beam_angle)
     ax.add_artist(beam)
 
+    # Add Name of Disk
+    name_x = -0.85 * box; name_y = 0.75 * box
+    plot.text(name_x, name_y, header['name'], size = 30, color = 'w', fontname = "Times New Roman")
+
     # Axes
     plot.xlim(-box, box)
     plot.ylim(-box, box)
     plot.axes().set_aspect('equal')
+
+    ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+    ax.tick_params(colors = 'white', labelcolor = 'black', width = 2, length = 10)
 
     # Annotate Axes
     plot.xlabel(r"$\mathrm{Relative\ R.A.\ [arcsec]}$", fontsize = fontsize)
     plot.ylabel(r"$\mathrm{Relative\ Dec.\ [arcsec]}$", fontsize = fontsize)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if True:
-        # Only for last frame
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "4%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"$\mathrm{Jy\ /\ beam}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size = "4%", pad = 0.2)
+    #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+    cbar = fig.colorbar(result, cax = cax)
+    cbar.set_label(r"$\mathrm{Jy\ /\ beam}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
