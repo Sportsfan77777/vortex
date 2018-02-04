@@ -80,7 +80,7 @@ def clean(header):
     new_header = {}
 
     # Delete history and comments, and get keys
-    del header['HISTORY']; del header['COMMENT']
+    del header['HISTORY']; del header['COMMENT']; del header['']
     keys = header.keys()
 
     # Create Dictionary
