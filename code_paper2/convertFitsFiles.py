@@ -79,8 +79,8 @@ def clean(header):
     """ Remove history, save all of the normal keys in a dictionary, and add fargo_par parameters """
     new_header = {}
 
-    # Delete history and get keys
-    del header['HISTORY']
+    # Delete history and comments, and get keys
+    del header['HISTORY']; del header['COMMENT']
     keys = header.keys()
 
     # Create Dictionary
