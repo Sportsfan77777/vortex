@@ -71,10 +71,10 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('--cmax', dest = "cmax", type = int, default = 15,
                          help = 'maximum density in colorbar (default: 15), except for um (fixed: 1.5)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -229,15 +229,19 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Annotate Axes
     if frame_i > 2:
-        ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
+        ax.set_xlabel(r"$x$ [$r_\mathrm{p}$]", fontsize = fontsize)
     if frame_i % 2 == 1:
-        ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
+        ax.set_ylabel(r"$y$ [$r_\mathrm{p}$]", fontsize = fontsize)
 
     # Axes
     box_size = 2.5
     ax.set_xlim(-box_size, box_size)
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
+
+    if frame_i > 1:
+        ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 2, length = 10)
 
     # Label
     size_label = util.get_size_label(size)
