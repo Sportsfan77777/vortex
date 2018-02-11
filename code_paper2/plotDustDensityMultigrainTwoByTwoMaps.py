@@ -241,7 +241,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     if frame_i > 1:
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
-        ax.tick_params(colors = 'white', labelcolor = 'black', width = 2, length = 10)
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
 
     # Label
     size_label = util.get_size_label(size)
