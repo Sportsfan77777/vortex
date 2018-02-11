@@ -278,8 +278,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Extra Annotation
-    rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f$" % azimuthal_radii1[(num_profiles - 1) / 2]
-    rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f$" % azimuthal_radii2[(num_profiles - 1) / 2]
+    rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f \ r_\mathrm{p}$" % azimuthal_radii1[(num_profiles - 1) / 2]
+    rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f \ r_\mathrm{p}$" % azimuthal_radii2[(num_profiles - 1) / 2]
     plot.text(-170, 0.90 * plot.ylim()[-1], rc_line1, fontsize = fontsize, horizontalalignment = 'left')
     plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
 
