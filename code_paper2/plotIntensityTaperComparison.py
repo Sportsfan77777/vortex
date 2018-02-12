@@ -282,7 +282,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Super Title
-    left_x = -1.1 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
+    left_x = -1.2 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
     right_x = 1.2 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
