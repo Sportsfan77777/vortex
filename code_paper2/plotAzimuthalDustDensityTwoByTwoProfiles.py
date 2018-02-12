@@ -73,10 +73,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'threshold for centering vortex with its center (default: varies with size)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'labelsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
     parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
@@ -201,6 +201,9 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
+colors = ["#bcbd22", "9467bd", "1f77b4", "2ca02c", "17becf"]
+dashes = [[3, 3], [8, 4], [10000, 1], [8, 4], [3, 3]]
+
 def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
@@ -236,7 +239,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = "%.3f" % radius)
 
     # Analytic
     if frame_i != 1:
@@ -312,8 +315,8 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
             line = "Radii"
         elif frame_i == 4:
             line = "Analytic"
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
+        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
         if frame_i == 4:
             half_width = 0.12 * plot.xlim()[-1]
@@ -330,7 +333,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     title = r"%s$\mathrm{-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (size_label, stokes_number)
     if frame_i == 1:
         title = r"$\mathrm{Gas\ Density}$"
-    plot.title("%s" % (title), fontsize = fontsize + 1)
+    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 1)
 
     
 def make_plot(frame, show = False):
