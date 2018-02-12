@@ -55,6 +55,8 @@ def new_argument_parser(description = "Plot intensity maps in one by two grid.")
 
     parser.add_argument('--box', dest = "box", type = float, default = 2.5,
                          help = 'width of box (in r_p) (default: 2.5)')
+    parser.add_argument('--arc', dest = "arc", action = 'store_false', default = True,
+                         help = 'axes in arcseconds (default: yes, arcseconds!)')
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
 
@@ -127,6 +129,7 @@ id_number = args.id_number
 version = args.version
 
 box = args.box
+arc = args.arc
 normalize = args.normalize
 colorbar = args.colorbar
 
@@ -270,7 +273,7 @@ def make_plot(show = False):
 
     #### Finish Plot ####
     title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    fig.suptitle(title, y = 1.02, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 1.01, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
