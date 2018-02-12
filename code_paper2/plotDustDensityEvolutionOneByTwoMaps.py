@@ -221,7 +221,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Title
-    left_x = -0.8 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
+    left_x = -0.8 * box_size; line_y = 1.28 * box_size; linebreak = 0.2 * box_size
     right_x = 1.3 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
@@ -266,7 +266,7 @@ def make_plot(show = False):
     stokes_number = util.get_stokes_number(size)
 
     title = r"$\mathrm{1\ cm-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (stokes_number)
-    fig.suptitle(title, y = 0.96, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
