@@ -202,7 +202,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#bcbd22', '#17becf']
 
 colors = ["#ff7f0e", "#9467bd", "#1f77b4", "#2ca02c", "#d62728"]
-dashes = [[3, 3], [28, 4], [10000, 1], [28, 4], [3, 3]]
+dashes = [[3, 3], [42, 4], [10000, 1], [42, 4], [3, 3]]
 
 def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Convert size to number
@@ -308,7 +308,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Extra Annotation
     if frame_i % 2 == 0:    
-        center_x = 1.32 * plot.xlim()[-1]
+        center_x = 1.33 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         if frame_i == 2:
