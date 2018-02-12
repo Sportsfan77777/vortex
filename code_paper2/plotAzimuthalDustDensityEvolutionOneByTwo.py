@@ -288,8 +288,8 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
 
         line1 = "Radii"
         line2 = "Analytic"
-        plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(center_x, 0.25 * top_y, line2, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize - 1, horizontalalignment = 'center')
+        plot.text(center_x, 0.25 * top_y, line2, fontsize = fontsize - 1, horizontalalignment = 'center')
 
         half_width = 0.12 * plot.xlim()[-1]
         analytic_legend_y0 = 0.18 * top_y
