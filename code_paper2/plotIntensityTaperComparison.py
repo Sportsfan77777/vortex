@@ -80,10 +80,10 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
                          help = 'maximum density in colorbar (default: None, except 1 if normalized)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -279,7 +279,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 1)
+    plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Super Title
     left_x = -1.1 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
@@ -323,7 +323,7 @@ def make_plot(show = False):
 
     #### Finish Plot ####
     title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    fig.suptitle(title, y = 0.95, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 0.945, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
