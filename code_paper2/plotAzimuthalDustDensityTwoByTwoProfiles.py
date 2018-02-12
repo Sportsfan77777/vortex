@@ -365,11 +365,15 @@ def make_plot(frame, show = False):
     plot.tight_layout()
 
     # Save, Show, and Close
+    png = "png"; pdf = "pdf"
     if version is None:
-        save_fn = "%s/azimuthalDensityProfiles_%04d.png" % (save_directory, frame)
+        save_fn = "%s/azimuthalDensityProfiles_%04d.%s" % (save_directory, frame, png)
+        pdf_save_fn = "%s/azimuthalDensityProfiles_%04d.%s" % (save_directory, frame, pdf)
     else:
-        save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.%s" % (save_directory, version, frame, png)
+        pdf_save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.%s" % (save_directory, version, frame, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(save_fn, bbox_inches = 'tight', format = "pdf")
 
     if show:
         plot.show()
