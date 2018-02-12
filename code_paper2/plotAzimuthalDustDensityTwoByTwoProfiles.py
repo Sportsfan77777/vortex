@@ -201,8 +201,8 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-colors = ["#bcbd22", "#9467bd", "#1f77b4", "#2ca02c", "#17becf"]
-dashes = [[3, 3], [8, 4], [10000, 1], [8, 4], [3, 3]]
+colors = ["#ff7f0e", "#9467bd", "#1f77b4", "#2ca02c", "#d62728"]
+dashes = [[3, 3], [28, 4], [10000, 1], [28, 4], [3, 3]]
 
 def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
     # Convert size to number
