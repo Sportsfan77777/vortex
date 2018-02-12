@@ -252,7 +252,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-    plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+    plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
     if arc:
