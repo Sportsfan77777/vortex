@@ -304,7 +304,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Legend
     if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.3, 0.94)) # outside of plot
+        plot.legend(loc = "upper right", bbox_to_anchor = (1.32, 0.94)) # outside of plot
 
     # Extra Annotation
     if frame_i % 2 == 0:    
