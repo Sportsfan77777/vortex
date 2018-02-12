@@ -78,10 +78,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'threshold for centering vortex with its center (default: varies with size)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'labelsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
     parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
