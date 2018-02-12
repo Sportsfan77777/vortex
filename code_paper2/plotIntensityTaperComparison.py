@@ -66,6 +66,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 
     parser.add_argument('--box', dest = "box", type = float, default = 2.5,
                          help = 'width of box (in r_p) (default: 2.5)')
+    parser.add_argument('--arc', dest = "arc", action = 'store_false', default = True,
+                         help = 'axes in arcseconds (default: yes, arcseconds!)')
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
 
@@ -145,6 +147,7 @@ id_number = args.id_number
 version = args.version
 
 box = args.box
+arc = args.arc
 normalize = args.normalize
 colorbar = args.colorbar
 
@@ -189,7 +192,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     # Data
     intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
-    _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
+    xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Get Shift
     dust_fargo_par = util.get_pickled_parameters(directory = "../cm-size") ## shorten name?
@@ -208,19 +211,25 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     if normalize:
         intensity_cart /= np.max(intensity_cart)
 
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
+    # Arcseconds or Planet Radii
+    if arc:
+        arc_weight = planet_radius / distance # related to parallax
+    else:
+        arc_weight = 1
+
+    result = plot.pcolormesh(xs * arc_weight, ys * arc_weight, np.transpose(intensity_cart), cmap = cmap)
     result.set_clim(clim[0], clim[1])
 
     # Get rid of interior
-    circle = plot.Circle((0, 0), min(rad), color = "black")
+    circle = plot.Circle((0, 0), min(rad) * arc_weight, color = "black")
     ax.add_artist(circle)
 
     # Add beam size
-    beam = plot.Circle((-2, -2), beam_size / 2, color = "white")
+    beam = plot.Circle((-2 * arc_weight, -2 * arc_weight), (beam_size / 2) * arc_weight, color = "white")
     fig.gca().add_artist(beam)
 
     # Add planet orbit
-    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
+    planet_orbit = plot.Circle((0, 0), 1 * arc_weight, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
     ax.add_artist(planet_orbit)
 
     # Locate Planet
@@ -246,12 +255,17 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
-    ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
+    if arc:
+        unit = "^{\prime\prime}"
+    else:
+        unit = "r_\mathrm{p}"
+
+    ax.set_xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
     if frame_i == 1:
-        ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
+        ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
     # Axes
-    box_size = args.box
+    box_size = args.box * arc_weight
     ax.set_xlim(-box_size, box_size)
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
@@ -266,7 +280,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     # Super Title
     left_x = -0.8 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
-    right_x = 1.3 * box_size
+    right_x = 1.2 * box_size
     if frame_i == 1:
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
         plot.text(left_x, line_y + 0.2 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
