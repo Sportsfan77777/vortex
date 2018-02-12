@@ -373,7 +373,7 @@ def make_plot(frame, show = False):
         save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.%s" % (save_directory, version, frame, png)
         pdf_save_fn = "%s/v%04d_azimuthalDensityProfiles_%04d.%s" % (save_directory, version, frame, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
-    plot.savefig(save_fn, bbox_inches = 'tight', format = "pdf")
+    plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
     if show:
         plot.show()
