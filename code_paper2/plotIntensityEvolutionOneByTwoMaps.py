@@ -69,10 +69,10 @@ def new_argument_parser(description = "Plot intensity maps in one by two grid.")
     parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
                          help = 'maximum density in colorbar (default: None, except 1 if normalized)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -161,7 +161,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     # Data
     intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
-    _, _, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
+    xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Get Shift
     dust_fargo_par = util.get_pickled_parameters(directory = "../../../cm-size") ## shorten name?
@@ -180,19 +180,26 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     if normalize:
         intensity_cart /= np.max(intensity_cart)
 
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
+    # Arcseconds or Planet Radii
+    if arc:
+        arc_weight = planet_radius / distance # related to parallax
+    else:
+        arc_weight = 1
+
+    ## Plot! ##
+    result = plot.pcolormesh(xs * arc_weight, ys * arc_weight, np.transpose(intensity_cart), cmap = cmap)
     result.set_clim(clim[0], clim[1])
 
     # Get rid of interior
-    circle = plot.Circle((0, 0), min(rad), color = "black")
+    circle = plot.Circle((0, 0), min(rad) * arc_weight, color = "black")
     ax.add_artist(circle)
 
     # Add beam size
-    beam = plot.Circle((-2, -2), beam_size / 2, color = "white")
+    beam = plot.Circle((-2 * arc_weight, -2 * arc_weight), (beam_size / 2) * arc_weight, color = "white")
     fig.gca().add_artist(beam)
 
     # Add planet orbit
-    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
+    planet_orbit = plot.Circle((0, 0), 1 * arc_weight, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
     ax.add_artist(planet_orbit)
 
     # Locate Planet
@@ -215,7 +222,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-    plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+    plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
     ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
@@ -223,14 +230,14 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
         ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
 
     # Axes
-    box_size = args.box
+    box_size = args.box * arc_weight
     ax.set_xlim(-box_size, box_size)
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
 
     # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 1)
+    plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Title
     left_x = -0.8 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
@@ -272,7 +279,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
     fig.suptitle(title, y = 1.01, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
