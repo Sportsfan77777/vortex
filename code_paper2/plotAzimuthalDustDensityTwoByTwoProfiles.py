@@ -308,7 +308,7 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
 
     # Extra Annotation
     if frame_i % 2 == 0:    
-        center_x = 1.33 * plot.xlim()[-1]
+        center_x = 1.34 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         if frame_i == 2:
