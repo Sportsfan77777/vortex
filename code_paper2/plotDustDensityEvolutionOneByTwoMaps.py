@@ -203,9 +203,9 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
-    ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
+    ax.set_xlabel(r"$x$ [$r_\mathrm{p}$]", fontsize = fontsize)
     if frame_i == 1:
-        ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
+        ax.set_ylabel(r"$y$ [$r_\mathrm{p}$]", fontsize = fontsize)
 
     # Axes
     box_size = args.box
@@ -218,7 +218,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 1)
+    plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Title
     left_x = -0.8 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
@@ -266,7 +266,7 @@ def make_plot(show = False):
     stokes_number = util.get_stokes_number(size)
 
     title = r"$\mathrm{1\ cm-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (stokes_number)
-    fig.suptitle(title, y = 1.01, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 0.94, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
