@@ -233,7 +233,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     if frame_i == 1:
-        plot.ylabel(r"$I$ / $I_\mathrm{0}$", fontsize = fontsize)
+        plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
 
     # Legend
     if frame_i == 2:
