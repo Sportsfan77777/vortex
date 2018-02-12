@@ -93,3 +93,11 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
 ###############################################################################
 
+def make_plot(show = False):
+    pass
+
+
+##### Make Plots! #####
+
+make_plot(show = show)
+
