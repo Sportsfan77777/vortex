@@ -323,7 +323,7 @@ def make_plot(show = False):
 
     #### Finish Plot ####
     #title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    title = r"$\mathrm{%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
     fig.suptitle(title, y = 0.945, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
