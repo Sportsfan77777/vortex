@@ -65,10 +65,10 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('--cmax', dest = "cmax", type = int, default = 300,
                          help = 'maximum density in colorbar (default: 300)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -212,6 +212,9 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     ax.set_xlim(-box_size, box_size)
     ax.set_ylim(-box_size, box_size)
     ax.set_aspect('equal')
+
+    ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+    ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
 
     # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
