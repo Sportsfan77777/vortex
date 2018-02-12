@@ -266,6 +266,10 @@ def add_to_plot(frame, fig, ax, size_name, num_sizes, frame_i):
         line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
         plot.text(left_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
         plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
+
+        if orbit < taper_time:
+            # Add this white line to keep supertitle in the save frame
+            plot.text(left_x, line_y + 2.0 * linebreak, line1, color = "white", horizontalalignment = 'left', fontsize = fontsize + 2)
     elif frame_i == 2 :
         line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
         plot.text(right_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
@@ -314,7 +318,7 @@ def make_plot(frame, show = False):
         fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
     else:
         frame_title = "\n" + r"$t$ $=$ $%.1f$" % (orbit) + "\n" + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
-        fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+        fig.suptitle(frame_title, y = 1.0, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 20.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
