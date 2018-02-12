@@ -182,8 +182,11 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
+colors = ["#ff7f0e", "#9467bd", "#1f77b4", "#2ca02c", "#d62728"]
+dashes = [[3, 3], [42, 4], [10000, 1], [42, 4], [3, 3]]
+
 ns = [num_scale_heights / 2, num_scale_heights / 4, num_scale_heights / 4, num_scale_heights / 2]
-labels = [r"$\mathrm{-%.01f\ h}$" % ns[0], r"$\mathrm{-%.01f\ h}$" % ns[1], r"$\mathrm{+0\ h}$", r"$\mathrm{+%0.1f\ h}$" % ns[-2], r"$\mathrm{+%0.1f\ h}$" % ns[-1]]
+labels = [r"$\mathrm{-%.01f\ h}$" % ns[0], r"$\mathrm{-%.01f\ h}$" % ns[1], r"$r_\mathrm{c}$", r"$\mathrm{+%0.1f\ h}$" % ns[-2], r"$\mathrm{+%0.1f\ h}$" % ns[-1]]
 
 def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Convert size to number
@@ -223,7 +226,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = labels[i])
 
     # Mark Planet
     if shift is None:
@@ -273,8 +276,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         top_y = plot.ylim()[-1]
 
         line = "Radii"
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Label
     taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
@@ -301,7 +303,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
     fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
