@@ -190,7 +190,10 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{-0.25\ h}$", r"$\mathrm{+0\ h}$", r"$\mathrm{+0.25\ h}$", r"$\mathrm{+0.50\ h}$"]
+colors = ["#ff7f0e", "#9467bd", "#1f77b4", "#2ca02c", "#d62728"]
+dashes = [[3, 3], [42, 4], [10000, 1], [42, 4], [3, 3]]
+
+labels = [r"$\mathrm{-0.50\ h}$", r"$\mathrm{-0.25\ h}$", r"$r_\mathrm{c}$", r"$\mathrm{+0.25\ h}$", r"$\mathrm{+0.50\ h}$"]
 
 def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Convert size to number
@@ -217,7 +220,7 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = labels[i])
 
     # Analytic
     middle_i = (num_profiles - 1) / 2
