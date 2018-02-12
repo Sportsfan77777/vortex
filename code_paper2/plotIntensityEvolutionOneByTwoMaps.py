@@ -225,9 +225,14 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
-    ax.set_xlabel(r"$x$ [$r_p$]", fontsize = fontsize)
+    if arc:
+        unit = "^{\prime\prime}"
+    else:
+        unit = "r_\mathrm{p}"
+
+    ax.set_xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
     if frame_i == 1:
-        ax.set_ylabel(r"$y$ [$r_p$]", fontsize = fontsize)
+        ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
     # Axes
     box_size = args.box * arc_weight
