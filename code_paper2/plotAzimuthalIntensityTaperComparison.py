@@ -310,11 +310,15 @@ def make_plot(show = False):
     plot.tight_layout()
 
     # Save, Show, and Close
+    png = "png"; pdf = "pdf"
     if version is None:
-        save_fn = "%s/azimuthalIntensityTaperComparison_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/azimuthalIntensityTaperComparison_%s.%s" % (save_directory, frame_str, png)
+        pdf_save_fn = "%s/azimuthalIntensityTaperComparison_%s.%s" % (save_directory, frame_str, pdf)
     else:
-        save_fn = "%s/v%04d_azimuthalIntensityTaperComparison_%s.png" % (save_directory, version, frame_str)
+        save_fn = "%s/v%04d_azimuthalIntensityTaperComparison_%s.%s" % (save_directory, version, frame_str, png)
+        pdf_save_fn = "%s/v%04d_azimuthalIntensityTaperComparison_%s.%s" % (save_directory, version, frame_str, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
     if show:
         plot.show()
