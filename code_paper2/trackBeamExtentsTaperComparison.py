@@ -174,20 +174,12 @@ fargo_par["theta"] = theta
 def get_extents(directories, frame):
     extents = np.zeros(len(directories))
 
-    cwd = os.getcwd()
-
     for i, directory_i in enumerate(directories):
-        # cd directory_i
-        os.chdir(directory_i)
-
         # Get Data
-        intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
-        extent = get_extent(intensity_polar, fargo_par, threshold = threshold, sliver_width = sliver_width):
+        intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = directory_i)
+        extent = get_extent(intensity_polar, fargo_par, threshold = threshold, sliver_width = sliver_width)
 
         extents[i] = extent
-
-        # cd back
-        os.chdir(cwd)
 
     return extents
 
