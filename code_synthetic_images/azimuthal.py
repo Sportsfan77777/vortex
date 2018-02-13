@@ -210,8 +210,8 @@ def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width
     azimuthal_profile = np.roll(azimuthal_profile, shift_min)
 
     # Find extents with the threshold
-    left_theta_i = np.searchsorted(azimuthal_profile, threshold)
-    right_theta_i = len(theta) - (np.searchsorted(azimuthal_profile[::-1], threshold))
+    left_theta_i = my_searchsorted(azimuthal_profile, threshold)
+    right_theta_i = len(theta) - (my_searchsorted(azimuthal_profile[::-1], threshold)) - 1
 
     left_theta = theta[left_theta_i]
     right_theta = theta[right_theta_i]
