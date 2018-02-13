@@ -169,7 +169,7 @@ def get_contrast(data, fargo_par):
     return contrast, data_peak, data_opposite
 
 
-def get_extent(data, fargo_par, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
+def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
     """ Get azimuthal extent at peak across a given threshold """
 
     ######## Get Parameters #########
@@ -200,6 +200,9 @@ def get_extent(data, fargo_par, threshold = 0.5, sliver_width = 0.5, start = out
     length = len(data_sliver); std = length / 3.0
     weights = gaussian(length, std)
     azimuthal_profile = np.average(data_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
+
+    if normalize:
+        azimuthal_profile /= np.max(azimuthal_profile)
 
     # Move minimum to theta = zero
     arg_min = np.argmin(azimuthal_profile)
