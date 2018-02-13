@@ -176,7 +176,7 @@ def get_extents(directories, frame):
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = directory_i)
         extent = az.get_extent(intensity_polar, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
-        extents[i] = extent
+        extents[i] = extent * (180.0 / np.pi)
 
     return extents
 
@@ -186,6 +186,7 @@ def get_extents(directories, frame):
 ##### PLOTTING #####
 
 colors = ['#f20202', '#0609ef']
+labels = [r"$T_\mathrm{growth} = 10$", r"$T_\mathrm{growth} = 1000$"]
 
 def make_plot(show = False):
 
@@ -195,7 +196,22 @@ def make_plot(show = False):
     extent_arrays = [extents1, extents2]
 
     for i, extent_array in enumerate(extent_arrays):
-        plot.plot(beam_sizes, extent_array, c = colors[i], linewidth = linewidth)
+        plot.plot(beam_sizes, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
+
+    # Axes
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
+    plot.ylim(0, 360)
+
+    # Annotate Axes
+    plot.xlabel(r"$\mathrm{Beam Size}$ [$r_\mathrm{p}$]", fontsize = fontsize + 2)
+    plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+
+    plot.legend(loc = "upper left")
+
+    # Title
+    title = r"Vortex Azimuthal Extents for $I / I_0 = %.1d$" % (threshold)
+    plot.title("%s" % (title), fontsize = fontsize + 3)
 
     # Save, Show, and Close
     frame_str = ""
