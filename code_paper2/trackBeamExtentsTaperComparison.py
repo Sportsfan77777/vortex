@@ -174,7 +174,7 @@ def get_extents(directories, frame):
     for i, directory_i in enumerate(directories):
         # Get Data
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = directory_i)
-        extent = az.get_extent(normalized_intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
+        extent = az.get_extent(intensity_polar, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
         extents[i] = extent
 
