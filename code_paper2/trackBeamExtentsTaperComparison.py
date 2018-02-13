@@ -202,6 +202,9 @@ def make_plot(show = False):
     for i, extent_array in enumerate(extent_arrays):
         plot.plot(x, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
 
+    difference = extents2 - extents1
+    plot.plot(x, difference, c = "k", linewidth = linewidth - 1, linestyle = "--")
+
     # Axes
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
