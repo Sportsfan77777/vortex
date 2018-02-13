@@ -195,8 +195,7 @@ def make_plot(show = False):
     extent_arrays = [extents1, extents2]
 
     for i, extent_array in enumerate(extent_arrays):
-        plot.plot(beam_sizes, extents[i], c = colors[i], linewidth = linewidth)
-
+        plot.plot(beam_sizes, extent_array, c = colors[i], linewidth = linewidth)
 
     # Save, Show, and Close
     frame_str = ""
