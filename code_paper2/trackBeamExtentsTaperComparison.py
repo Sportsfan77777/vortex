@@ -119,8 +119,6 @@ planet_radius = fargo_par["Radius"]
 wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
-arc_beam = beam_size * planet_radius / distance
-
 ### Get Input Parameters ###
 
 # Frames
@@ -139,8 +137,6 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 # Plot Parameters (variable)
-normalize = args.normalize
-
 show = args.show
 max_y = args.max_y
 
@@ -178,7 +174,7 @@ def get_extents(directories, frame):
     for i, directory_i in enumerate(directories):
         # Get Data
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = directory_i)
-        extent = get_extent(intensity_polar, fargo_par, threshold = threshold, sliver_width = sliver_width)
+        extent = az.get_extent(intensity_polar, fargo_par, threshold = threshold, sliver_width = sliver_width)
 
         extents[i] = extent
 
