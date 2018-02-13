@@ -55,8 +55,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'wavelength (in um) (default: 870)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityComparison",
-                         help = 'save directory (default: azimuthalIntensityComparison)')
+    parser.add_argument('--dir', dest = "save_directory", default = "extentsByBeam",
+                         help = 'save directory (default: extentsByBeam)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -199,7 +199,38 @@ def get_extents(directories, frame):
 colors = ['#f20202', '#0609ef']
 
 def make_plot(show = False):
-    pass
+
+    extents1 = get_extents(directories1, frame_range[0])
+    extents2 = get_extents(directories2, frame_range[1])
+
+    extent_arrays = [extents1, extents2]
+
+    for i, extent_array in enumerate(extent_arrays):
+        plot.plot(beam_sizes, extents[i], c = colors[i], linewidth = linewidth)
+
+
+    # Save, Show, and Close
+    frame_str = ""
+    for i, frame_i in enumerate(frame_range):
+        ax = fig.add_subplot(gs[i])
+        ax = add_to_plot(frame_i, fig, ax, len(frame_range), i + 1)
+        frame_str += "%04d-" % frame_i
+    frame_str = frame_str[:-1] # Trim last '_'
+
+    png = "png"; pdf = "pdf"
+    if version is None:
+        save_fn = "%s/extentsByBeam_%s.%s" % (save_directory, frame_str, png)
+        pdf_save_fn = "%s/extentsByBeam__%s.%s" % (save_directory, frame_str, pdf)
+    else:
+        save_fn = "%s/v%extentsByBeam_%s.%s" % (save_directory, version, frame_str, png)
+        pdf_save_fn = "%s/v%extentsByBeam_%s.%s" % (save_directory, version, frame_str, pdf)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
 
 
 ##### Make Plots! #####
