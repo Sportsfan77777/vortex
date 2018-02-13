@@ -217,8 +217,8 @@ def make_plot(show = False):
     plot.legend(loc = "upper left")
 
     # Title
-    title = r"Vortex Azimuthal Extents for $I / I_0 = %.1f$" % (threshold)
-    plot.title("%s" % (title), fontsize = fontsize + 3)
+    title = r"Azimuthal Extents at $I / I_0 = %.1f$" % (threshold)
+    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     # Save, Show, and Close
     frame_str = ""
