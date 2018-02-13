@@ -222,8 +222,8 @@ def make_plot(show = False):
         save_fn = "%s/extentsByBeam_%s.%s" % (save_directory, frame_str, png)
         pdf_save_fn = "%s/extentsByBeam__%s.%s" % (save_directory, frame_str, pdf)
     else:
-        save_fn = "%s/v%extentsByBeam_%s.%s" % (save_directory, version, frame_str, png)
-        pdf_save_fn = "%s/v%extentsByBeam_%s.%s" % (save_directory, version, frame_str, pdf)
+        save_fn = "%s/v%04d_extentsByBeam_%s.%s" % (save_directory, version, frame_str, png)
+        pdf_save_fn = "%s/v%04d_extentsByBeam_%s.%s" % (save_directory, version, frame_str, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
     plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
