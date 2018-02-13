@@ -181,11 +181,11 @@ def get_extent(data, fargo_par, threshold = 0.5, sliver_width = 0.5, start = out
     # Search outer disk only
     outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
-    density_segment = density[outer_disk_start : outer_disk_end]
+    data_segment = data[outer_disk_start : outer_disk_end]
 
     # Get peak in azimuthal profile
-    avg_density = np.average(density_segment, axis = 1) # avg over theta
-    segment_arg_peak = np.argmax(avg_density)
+    avg_data = np.average(data_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_data)
     arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
     peak_rad = rad[arg_peak]
 
@@ -194,10 +194,10 @@ def get_extent(data, fargo_par, threshold = 0.5, sliver_width = 0.5, start = out
     zoom_start = np.searchsorted(rad, peak_rad - half_width)
     zoom_end = np.searchsorted(rad, peak_rad + half_width)
 
-    density_sliver = density[zoom_start : zoom_end]
-    length = len(density_sliver); std = length / 3.0
+    data_sliver = data[zoom_start : zoom_end]
+    length = len(data_sliver); std = length / 3.0
     weights = gaussian(length, std)
-    azimuthal_profile = np.average(density_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
+    azimuthal_profile = np.average(data_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
 
     # Move minimum to theta = zero
     arg_min = np.argmin(azimuthal_profile)
