@@ -189,14 +189,18 @@ colors = ['#f20202', '#0609ef']
 labels = [r"$T_\mathrm{growth} = 10$", r"$T_\mathrm{growth} = 1000$"]
 
 def make_plot(show = False):
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
+    # Data
     extents1 = get_extents(directories1, frame_range[0])
     extents2 = get_extents(directories2, frame_range[1])
 
     extent_arrays = [extents1, extents2]
 
+    # Plot
+    x = beam_sizes / planet_radius
     for i, extent_array in enumerate(extent_arrays):
-        plot.plot(beam_sizes, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
+        plot.plot(x, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
 
     # Axes
     angles = np.linspace(0, 360, 7)
@@ -204,13 +208,13 @@ def make_plot(show = False):
     plot.ylim(0, 360)
 
     # Annotate Axes
-    plot.xlabel(r"$\mathrm{Beam Size}$ [$r_\mathrm{p}$]", fontsize = fontsize + 2)
+    plot.xlabel(r"$\mathrm{Beam\ Size}$ [$r_\mathrm{p}$]", fontsize = fontsize + 2)
     plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     plot.legend(loc = "upper left")
 
     # Title
-    title = r"Vortex Azimuthal Extents for $I / I_0 = %.1d$" % (threshold)
+    title = r"Vortex Azimuthal Extents for $I / I_0 = %.1f$" % (threshold)
     plot.title("%s" % (title), fontsize = fontsize + 3)
 
     # Save, Show, and Close
