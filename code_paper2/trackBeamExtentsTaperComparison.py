@@ -94,7 +94,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-default_directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)
+default_beam_size = 10
+default_directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, default_beam_size)
 
 fn = "../%s/id%04d_par.p" % (default_directory, args.id_number)
 fargo_par = pickle.load(open(fn, "rb"))
