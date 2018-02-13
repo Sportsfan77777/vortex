@@ -13,6 +13,7 @@ outer_start = 1.1
 outer_end = 2.3
 
 ### Helper Methods ###
+
 def my_searchsorted(array, target):
     """ np.searchsorted, but it works all the time """
     for i, x in enumerate(array):
@@ -142,6 +143,8 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05, start = outer_sta
 
     return shift_c
 
+### Extract Values ###
+
 def get_contrast(data, fargo_par):
     """ for polar data, returns contrast between peak and opposite point """
     ######## Get Parameters #########
@@ -165,10 +168,56 @@ def get_contrast(data, fargo_par):
 
     return contrast, data_peak, data_opposite
 
+
+def get_extent(data, fargo_par, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
+    """ Get azimuthal extent at peak across a given threshold """
+
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    ########### Method ##############
+
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+    density_segment = density[outer_disk_start : outer_disk_end]
+
+    # Get peak in azimuthal profile
+    avg_density = np.average(density_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_density)
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+    peak_rad = rad[arg_peak]
+
+    # Zoom in on peak --- Average over half a scale height
+    half_width = (0.5 * sliver_width) * scale_height
+    zoom_start = np.searchsorted(rad, peak_rad - half_width)
+    zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+    density_sliver = density[zoom_start : zoom_end]
+    length = len(density_sliver); std = length / 3.0
+    weights = gaussian(length, std)
+    azimuthal_profile = np.average(density_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
+
+    # Move minimum to theta = zero
+    arg_min = np.argmin(azimuthal_profile)
+    shift_min = int(0 - arg_min)
+    azimuthal_profile = np.roll(azimuthal_profile, shift_min)
+
+    # Find extents with the threshold
+    left_theta_i = np.searchsorted(azimuthal_profile, threshold)
+    right_theta_i = len(theta) - (np.searchsorted(azimuthal_profile[::-1], threshold))
+
+    left_theta = theta[left_theta_i]
+    right_theta = theta[right_theta_i]
+
+    extent = right_theta - left_theta
+    return extent
+
 ### Data ###
 
 def get_profiles(density, fargo_par, args, normalize = False, shift = None, start = outer_start, end = outer_end):
-    """ Gather azimuthal radii and profiles """
+    """ Gather azimuthal radii and profiles (doesn't have to be density) """
     
     ######## Get Parameters #########
     rad = fargo_par["rad"]
