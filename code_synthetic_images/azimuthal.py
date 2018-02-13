@@ -176,6 +176,8 @@ def get_extent(data, fargo_par, threshold = 0.5, sliver_width = 0.5, start = out
     rad = fargo_par["rad"]
     theta = fargo_par["theta"]
 
+    scale_height = fargo_par["AspectRatio"]
+
     ########### Method ##############
 
     # Search outer disk only
