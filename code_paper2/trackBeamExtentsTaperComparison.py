@@ -206,7 +206,7 @@ def make_plot(show = False):
         plot.plot(x_arc, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
 
     difference = extents2 - extents1
-    plot.plot(x_arc, difference, c = "k", linewidth = linewidth - 1, linestyle = "--", label = "difference")
+    plot.plot(x_arc, difference, c = "k", linewidth = linewidth - 1, linestyle = "--", label = r"$Difference$")
 
     # Axes
     angles = np.linspace(0, 360, 7)
