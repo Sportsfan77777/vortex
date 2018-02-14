@@ -200,13 +200,13 @@ def make_plot(show = False):
 
     # Plot
     x = beam_sizes / planet_radius
-    x_arc = beam_sizes / distance
+    x_arc = 1.0 * beam_sizes / distance
 
     for i, extent_array in enumerate(extent_arrays):
         plot.plot(x_arc, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
 
     difference = extents2 - extents1
-    plot.plot(x, difference, c = "k", linewidth = linewidth - 1, linestyle = "--", label = "difference")
+    plot.plot(x_arc, difference, c = "k", linewidth = linewidth - 1, linestyle = "--", label = "difference")
 
     # Axes
     angles = np.linspace(0, 360, 7)
