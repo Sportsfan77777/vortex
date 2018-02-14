@@ -200,13 +200,13 @@ def make_plot(show = False):
 
     # Plot
     x = beam_sizes / planet_radius
-    x_arc = beam_sizes * planet_radius / distance
+    x_arc = beam_sizes / distance
 
     for i, extent_array in enumerate(extent_arrays):
         plot.plot(x_arc, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
 
     difference = extents2 - extents1
-    plot.plot(x, difference, c = "k", linewidth = linewidth - 1, linestyle = "--")
+    plot.plot(x, difference, c = "k", linewidth = linewidth - 1, linestyle = "--", label = "difference")
 
     # Axes
     angles = np.linspace(0, 360, 7)
@@ -214,14 +214,14 @@ def make_plot(show = False):
     plot.ylim(0, 360)
 
     # Annotate Axes
-    plot.xlabel(r"$\mathrm{Beam\ Size}$ [$r_\mathrm{p}$]", fontsize = fontsize + 2)
+    plot.xlabel(r"$\mathrm{Beam\ Diameter}$ [$^{\prime \prime}$]", fontsize = fontsize + 2)
     plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     plot.legend(loc = "upper left")
 
     # Title
     title = r"Azimuthal Extents at $I / I_0 = %.1f$" % (threshold)
-    plot.title("%s" % (title), y = 1.05, fontsize = fontsize + 3)
+    plot.title("%s" % (title), y = 1.10, fontsize = fontsize + 3)
 
     # Second x-axis
     ax2 = ax.twiny()
