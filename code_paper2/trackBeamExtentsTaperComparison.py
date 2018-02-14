@@ -225,7 +225,7 @@ def make_plot(show = False):
 
     # Second x-axis
     ax2 = ax.twiny()
-    ax2.set_xlim(x[0], x[-1])
+    ax2.set_xlim(plot.xlim()[0] * (distance / planet_radius), plot.xlim()[-1] * (distance / planet_radius))
 
     # Save, Show, and Close
     frame_str = ""
