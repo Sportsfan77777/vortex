@@ -189,7 +189,8 @@ colors = ['#f20202', '#0609ef']
 labels = [r"$T_\mathrm{growth} = 10$", r"$T_\mathrm{growth} = 1000$"]
 
 def make_plot(show = False):
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    fig = plot.figure(figsize = (7, 5), dpi = dpi)
+    ax = fig.add_subplot(111)
 
     # Data
     extents1 = get_extents(directories1, frame_range[0])
@@ -199,8 +200,10 @@ def make_plot(show = False):
 
     # Plot
     x = beam_sizes / planet_radius
+    x_arc = beam_sizes * planet_radius / distance
+
     for i, extent_array in enumerate(extent_arrays):
-        plot.plot(x, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
+        plot.plot(x_arc, extent_array, c = colors[i], linewidth = linewidth, label = labels[i])
 
     difference = extents2 - extents1
     plot.plot(x, difference, c = "k", linewidth = linewidth - 1, linestyle = "--")
@@ -218,7 +221,11 @@ def make_plot(show = False):
 
     # Title
     title = r"Azimuthal Extents at $I / I_0 = %.1f$" % (threshold)
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
+    plot.title("%s" % (title), y = 1.05, fontsize = fontsize + 3)
+
+    # Second x-axis
+    ax2 = ax.twiny()
+    ax2.set_xlim(x[0], x[-1])
 
     # Save, Show, and Close
     frame_str = ""
