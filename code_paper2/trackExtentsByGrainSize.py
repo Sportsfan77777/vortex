@@ -107,7 +107,7 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
-frame_range = args.frames
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -149,7 +149,10 @@ fargo_par["theta"] = theta
 
 ### Data ###
 
-def get_extent(frame):
+def get_extent(args):
+    # Extract args
+    i, frame = args
+    
     # Get data and measure extent
     dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = ".")
     extent = az.get_extent(dust_density, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
