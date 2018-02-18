@@ -152,7 +152,7 @@ fargo_par["theta"] = theta
 def get_extent(args):
     # Extract args
     i, frame = args
-    
+
     # Get data and measure extent
     dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = ".")
     extent = az.get_extent(dust_density, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
@@ -186,7 +186,7 @@ def make_plot(show = False):
     # Plot
     x = frame_range
     y = np.array(extents)
-    plot.plot(x, y, c = colors[i], linewidth = linewidth)
+    plot.plot(x, y, linewidth = linewidth)
 
     # Axes
     angles = np.linspace(0, 360, 7)
