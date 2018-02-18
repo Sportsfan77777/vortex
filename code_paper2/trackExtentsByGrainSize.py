@@ -149,16 +149,12 @@ fargo_par["theta"] = theta
 
 ### Data ###
 
-def get_extents(frame):
-    extents = np.zeros(len(directories))
-
+def get_extent(frame):
     dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = ".")
     extent = az.get_extent(dust_density, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
-    extents[i] = extent * (180.0 / np.pi)
-
-    return extents
-
+    extent *= (180.0 / np.pi)
+    return extent
 
 ###############################################################################
 
@@ -176,7 +172,7 @@ def make_plot(show = False):
     extents = mp_array("f", len(frame_range)) # Track 'r' for aspect ratio
 
     p = Pool(num_cores)
-    p.map(get_extents, frame_range)
+    p.map(get_extent, frame_range)
     p.terminate()
 
     # Plot
