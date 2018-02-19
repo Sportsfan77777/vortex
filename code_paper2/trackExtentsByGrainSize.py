@@ -36,6 +36,8 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 # Grain Sizes for Extent Comparison
+sizes = [1, 0.3, 0.1, 0.03, 0.01, 0.0001]
+grain_sizes = ["cm", "hcm", "mm", "hmm", "hum", "um"]
 
 def new_argument_parser(description = "Plot azimuthal density profiles in two by two grid."):
     parser = argparse.ArgumentParser()
@@ -86,7 +88,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get Fargo Parameters ###
-fargo_par = util.get_pickled_parameters()
+fargo_par = util.get_pickled_parameters(directory = "../cm-size")
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -151,27 +153,33 @@ fargo_par["theta"] = theta
 
 def get_extent(args):
     # Extract args
-    i, frame = args
+    grain_i, i, directory, frame = args
 
     # Get data and measure extent
-    dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = ".")
+    dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = directory)
     extent = az.get_extent(dust_density, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
     # Convert to degrees
     extent *= (180.0 / np.pi)
 
     # Store
-    extents[i] = extent
+    (extents[grain_i])[i] = extent
 
 ###############################################################################
 
 # Data
-extents = mp_array("f", len(frame_range)) # Track 'r' for aspect ratio
-pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+extents = []
+for i, grain in enumerate(grain_sizes):
+    extents.append(mp_array("f", len(frame_range)))
 
-p = Pool(num_cores)
-p.map(get_extent, pool_args)
-p.terminate()
+for grain_i, grain in enumerate(grain_sizes):
+    directory = "../%s-size" % grain
+    pool_args = [(grain_i, i, directory, frame) for i, frame in enumerate(frame_range)]    
+
+    p = Pool(num_cores)
+    p.map(get_extent, pool_args)
+    p.terminate()
+
 
 ##### PLOTTING #####
 
@@ -180,13 +188,16 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#bcbd22', '#17becf']
 
 def make_plot(show = False):
-    fig = plot.figure(figsize = (7, 5), dpi = dpi)
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Plot
-    x = frame_range
-    y = np.array(extents)
-    plot.plot(x, y, linewidth = linewidth)
+    for i, size in enumerate(sizes):
+        size_label = util.get_size_label(size)
+
+        x = frame_range
+        y = np.array(extents[i])
+        plot.plot(x, y, c = colors[i], linewidth = linewidth, label = size_label)
 
     # Axes
     angles = np.linspace(0, 360, 7)
@@ -196,6 +207,8 @@ def make_plot(show = False):
     # Annotate Axes
     plot.xlabel(r"$t \mathrm{\ (planet orbits)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
     # Title
     size_label = util.get_size_label(size)
