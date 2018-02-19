@@ -36,8 +36,12 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 # Grain Sizes for Extent Comparison
-sizes = [1, 0.3, 0.1, 0.03, 0.01, 0.0001]
-grain_sizes = ["cm", "hcm", "mm", "hmm", "hum", "um"]
+sizes = np.array([1, 0.3, 0.1, 0.03, 0.01, 0.0001])
+grain_sizes = np.array(["cm", "hcm", "mm", "hmm", "hum", "um"])
+
+# Reverse
+sizes = sizes[::-1]
+grain_sizes = grain_sizes[::-1]
 
 def new_argument_parser(description = "Plot azimuthal density profiles in two by two grid."):
     parser = argparse.ArgumentParser()
@@ -75,8 +79,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
-    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
-                         help = 'line transparency in plot (default: 0.65)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.35,
+                         help = 'line transparency in plot (default: 0.35)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -197,7 +201,12 @@ def make_plot(show = False):
 
         x = frame_range
         y = np.array(extents[i])
-        plot.plot(x, y, c = colors[i], linewidth = linewidth, label = size_label)
+
+        kernel = 5
+        smooth_y = util.smooth(y, kernel)
+
+        plot.plot(x, y, c = colors[i], linewidth = linewidth, alpha = alpha)
+        plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth, label = size_label)
 
     # Axes
     angles = np.linspace(0, 360, 7)
@@ -205,14 +214,13 @@ def make_plot(show = False):
     plot.ylim(0, 360)
 
     # Annotate Axes
-    plot.xlabel(r"$t \mathrm{\ (planet orbits)}$", fontsize = fontsize + 2)
+    plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
     # Title
-    size_label = util.get_size_label(size)
-    title = r"Azimuthal Extents (%s)" % (size_label)
+    title = r"Azimuthal Extents"
     plot.title("%s" % (title), fontsize = fontsize + 3)
 
     # Save, Show, and Close
