@@ -224,11 +224,10 @@ def make_plot(show = False):
     plot.title("%s" % (title), fontsize = fontsize + 3)
 
     # Save, Show, and Close
-    size_name = util.get_size_name(size)
     if version is None:
-        save_fn = "%s/extentsBySize_%s.png" % (save_directory, size_name)
+        save_fn = "%s/extentsBySize.png" % (save_directory)
     else:
-        save_fn = "%s/v%04d_extentsBySize_%s.png" % (save_directory, version, size_name)
+        save_fn = "%s/v%04d_extentsBySize.png" % (save_directory, version)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
