@@ -1,24 +1,16 @@
 """
-plot 2-D density maps
+convolves intensity map to make it look like an alma image
 
-python plotDensityMaps.py
-python plotDensityMaps.py frame_number
-python plotDensityMaps.py -1 <<<===== Plots a sample
-python plotDensityMaps.py -m
+python convolveIntensityMap.py frame
 """
 
-import sys
-import os
-import subprocess
-import pickle
-import glob
+import sys, os, subprocess
+import pickle, glob
 from multiprocessing import Pool
+import argparse
 
 import math
 import numpy as np
-
-from scipy.interpolate import interp1d as interpolate
-from scipy.ndimage import map_coordinates
 
 import matplotlib
 #matplotlib.use('Agg')
@@ -29,211 +21,196 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
-from readTitle import readTitle
+import square as sq
 
-import colormaps as cmaps
-plot.register_cmap(name = 'viridis', cmap = cmaps.viridis)
-plot.register_cmap(name = 'inferno', cmap = cmaps.inferno)
-plot.register_cmap(name = 'plasma', cmap = cmaps.plasma)
-plot.register_cmap(name = 'magma', cmap = cmaps.magma)
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
 
-save_directory = "squarePolarGasDensityMaps"
+###############################################################################
 
-### Get FARGO Parameters ###
-# Create param file if it doesn't already exist
-param_fn = "params.p"
-if not os.path.exists(param_fn):
-    command = "python pickleParameters.py"
-    split_command = command.split()
-    subprocess.Popen(split_command)
-fargo_par = pickle.load(open(param_fn, "rb"))
+### Input Parameters ###
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+def new_argument_parser(description = "Plot convolved intensity maps."):
+    parser = argparse.ArgumentParser()
 
-rad = np.loadtxt("used_rad.dat")[:-1]
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMaps",
+                         help = 'save directory (default: cartesianIntensityMaps)')
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
+                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
+    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
+                         help = 'normalize by max (default: normalize)')
+
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
+                         help = 'maximum density in colorbar (default: 2.5)')
+
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get ID%04d Parameters ###
+fn = "id%04d_par.p" % args.id_number
+fargo_par = pickle.load(open(fn, "rb"))
+
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = util.get_frame_range(args.frames)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+
+rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density_zero = float(fargo_par["Sigma0"])
-scale_height = float(fargo_par["AspectRatio"])
-viscosity = float(fargo_par["Viscosity"])
+id_number = args.id_number
+version = args.version
+if args.r_lim is None:
+    x_min = r_min; x_max = r_max
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+normalize = args.normalize
 
-planet_mass = float(fargo_par["PlanetMass"])
-taper_time = int(float(fargo_par["MassTaper"]))
+# Plot Parameters (constant)
+cmap = args.cmap
+cmax = args.cmax
+if cmax is not None:
+    clim = [0, args.cmax]
+elif normalize:
+    cmax = 1
+    clim = [0, 1]
 
-### Converter ###
+fontsize = args.fontsize
+dpi = args.dpi
 
-def polar_to_cartesian(data, rs, thetas, order = 3):
-    # Source: http://stackoverflow.com/questions/2164570/reprojecting-polar-to-cartesian-grid
-    # Set up xy-grid
-    max_r = rs[-1]
-    resolution = 2 * len(rad)
-
-    xs = np.linspace(-max_r, max_r, resolution)
-    ys = np.linspace(-max_r, max_r, resolution)
-
-    xs_grid, ys_grid = np.meshgrid(xs, ys)
-
-    # Interpolate rt-grid
-
-    interpolated_rs = interpolate(rs, np.arange(len(rs)), bounds_error = False)
-    interpolated_thetas = interpolate(thetas, np.arange(len(thetas)), bounds_error = False)
-
-    # Match up xy-grid with rt-grid
-
-    new_rs = np.sqrt(np.power(xs_grid, 2) + np.power(ys_grid, 2))
-    new_thetas = np.arctan2(ys_grid, xs_grid)
-
-    # Convert from [-pi, pi] to [0, 2 * pi]
-    new_thetas[new_thetas < 0] = new_thetas[new_thetas < 0] + 2 * np.pi
-
-    new_interpolated_rs = interpolated_rs(new_rs.ravel())
-    new_interpolated_thetas = interpolated_thetas(new_thetas.ravel())
-
-    # Fix Bounds (outside of polar image, but inside cartesian image)
-    new_interpolated_rs[new_rs.ravel() > max(rs)] = len(rs) - 1
-    new_interpolated_rs[new_rs.ravel() < min(rs)] = 0
-
-    cart_data = map_coordinates(data, np.array([new_interpolated_rs, new_interpolated_thetas]), order = order).reshape(new_rs.shape)
-
-    return xs_grid, ys_grid, cart_data
+###############################################################################
 
 ##### PLOTTING #####
 
-# Make Directory
-try:
-    os.mkdir(save_directory)
-except:
-    print "Directory Already Exists"
-
-# Plot Parameters
-cmap = "inferno"
-clim = [0, 2]
-
-fontsize = 14
-my_dpi = 100
-
 def make_plot(frame, show = False):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    print frame
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
 
-        # Mass
-        if orbit >= taper_time:
-            current_mass = planet_mass / 0.001
-        else:
-            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * (planet_mass / 0.001)
+    # Data
+    density = util.read_data(frame, 'gas', fargo_par, normalize = normalize)
+    xs, ys, xs_grid, ys_grid, density_cart = sq.polar_to_cartesian(density, rad, theta)
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
+    ### Plot ###
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
+    cbar = fig.colorbar(result)
 
-        # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta)) /surface_density_zero
-        xs_grid, ys_grid, density_cart = polar_to_cartesian(density, rad, theta)
-
-        # Axis
-        #if axis == "zoom":
-        #    x = (rad - 1) / scale_height
-        #    prefix = "zoom_"
-        #    plot.xlim(0, 40) # to match the ApJL paper
-        #    xlabel = r"($r - r_p$) $/$ $h$"
-        #else:
-        #    x = rad
-        #    prefix = ""
-        #    plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-        #    xlabel = "Radius"
-        if axis == "zoom":
-            prefix = "zoom_"
-            sq = 2.5
-        else:
-            prefix = ""
-            sq = np.max(xs_grid)
-
-        plot.xlim(-sq, sq)
-        plot.ylim(-sq, sq)
-        plot.axes().set_aspect('equal')
-
-        ### Plot ###
-        result = ax.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
-        cbar = fig.colorbar(result)
+    if cmax is not None:
         result.set_clim(clim[0], clim[1])
 
-        cbar.set_label(r"Normalized Surface Density", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
+    # Add planet orbit
+    planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
+    fig.gca().add_artist(planet_orbit)
 
-        # Get rid of interior
-        circle = plot.Circle((0, 0), min(rad), color = "black")
-        fig.gca().add_artist(circle)
-
-        # Label star and planet
-        planet_size = (current_mass / (planet_mass / 0.001))
-        plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-        plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
-
-        # Add minor grid lines
-        alpha = 0.2
-        dashes = [1, 5]
-        #plot.grid(b = True, which = 'major', color = "black", dashes = dashes, alpha = alpha)
-        #plot.grid(b = True, which = 'minor', color = "black", dashes = dashes, alpha = alpha)
-        plot.minorticks_on()
-
-        # Annotate
-        title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-        title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
-        #plot.xlabel("x", fontsize = fontsize)
-        #plot.ylabel("y", fontsize = fontsize)
-        plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
-        plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
-
-        # Save and Close
-        plot.savefig("%s/%ssquareDensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
-
-    i = frame
-    #choose_axis(i, "normal")
-    choose_axis(i, "zoom")
-
-
-##### Plot One File or All Files #####
-
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = 125 #util.find_max_frame()
-        sample = np.linspace(0, max_frame, 126) # 100 evenly spaced frames
-        #for i in sample:
-        #    make_plot(i)
-
-        p = Pool(10)
-        p.map(make_plot, sample)
-        p.terminate()
-
+    # Label star and planet
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
+    if orbit >= taper_time:
+        current_mass = planet_mass
     else:
-        # Plot Single
-        make_plot(frame_number, show = True)
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+    planet_size = current_mass / planet_mass
+    plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
+    plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+
+    # Annotate Axes
+    plot.xlabel(r"$\mathrm{x [r_\mathrm{p}]$}", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{y [r_\mathrm{p}]$}", fontsize = fontsize)
+
+    title1 = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup} \mathrm{,}$ $\alpha_\mathrm{disk} = 3 \times 10^{%d} \mathrm{,}$ $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)) - 2, taper_time)
+    title2 = r"$t = %d$ $\mathrm{orbits,}}$ $m_\mathrm{p}(t) = %.2f$ $M_\mathrm{Jup}$" % (orbit, current_mass)
+    plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
+    plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    # Axes
+    box_size = 2.5
+    plot.xlim(-box_size, box_size)
+    plot.ylim(-box_size, box_size)
+    plot.axes().set_aspect('equal')
+
+    # Save, Show,  and Close
+    if version is None:
+        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+    else:
+        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+
+###############################################################################
+
+##### Make Plots! #####
+
+# Iterate through frames
+
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
 else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    #p = Pool() # default number of processes is multiprocessing.cpu_count()
-    #p.map(make_plot, range(num_frames))
-    #p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
 
 
 
