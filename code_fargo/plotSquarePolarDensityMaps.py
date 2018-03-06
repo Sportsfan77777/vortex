@@ -185,8 +185,8 @@ def make_plot(frame, show = False):
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(-1.7, 3.14, text_mass, fontsize = fontsize + 1, color = 'black', horizontalalignment = 'right')
-    plot.text(1.7, 3.14, text_visc, fontsize = fontsize + 1, color = 'black', horizontalalignment = 'left')
+    plot.text(-1.7, 3.24, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    plot.text(1.7, 3.24, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     # Save, Show,  and Close
     if version is None:
