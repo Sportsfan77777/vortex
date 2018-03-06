@@ -60,8 +60,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
-                         help = 'maximum density in colorbar (default: 2.5)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2.0,
+                         help = 'maximum density in colorbar (default: 2.0)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -76,8 +76,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % args.id_number
-fargo_par = pickle.load(open(fn, "rb"))
+fargo_par = util.get_pickled_parameters()
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -122,11 +121,7 @@ normalize = args.normalize
 # Plot Parameters (constant)
 cmap = args.cmap
 cmax = args.cmax
-if cmax is not None:
-    clim = [0, args.cmax]
-elif normalize:
-    cmax = 1
-    clim = [0, 1]
+clim = [0.0, cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -141,15 +136,19 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = util.read_data(frame, 'gas', fargo_par, normalize = normalize)
+    density = util.read_gas_data(frame, fargo_par, normalize = normalize)
     xs, ys, xs_grid, ys_grid, density_cart = sq.polar_to_cartesian(density, rad, theta)
 
     ### Plot ###
-    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(intensity_cart), cmap = cmap)
+    result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
     cbar = fig.colorbar(result)
 
     if cmax is not None:
         result.set_clim(clim[0], clim[1])
+
+    # Get rid of interior
+    circle = plot.Circle((0, 0), min(rad), color = "black")
+    fig.gca().add_artist(circle)
 
     # Add planet orbit
     planet_orbit = plot.Circle((0, 0), 1, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
@@ -168,10 +167,11 @@ def make_plot(frame, show = False):
     plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Annotate Axes
-    plot.xlabel(r"$\mathrm{x [r_\mathrm{p}]$}", fontsize = fontsize)
-    plot.ylabel(r"$\mathrm{y [r_\mathrm{p}]$}", fontsize = fontsize)
+    unit = "r_\mathrm{p}"
+    plot.xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
-    title1 = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup} \mathrm{,}$ $\alpha_\mathrm{disk} = 3 \times 10^{%d} \mathrm{,}$ $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)) - 2, taper_time)
+    title1 = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup} \mathrm{,}$ $\alpha_\mathrm{disk} = 3 \times 10^{%d}\mathrm{,}$ $T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (int(planet_mass), int(np.log(viscosity) / np.log(10)) + 2, taper_time)
     title2 = r"$t = %d$ $\mathrm{orbits,}}$ $m_\mathrm{p}(t) = %.2f$ $M_\mathrm{Jup}$" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
     plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
