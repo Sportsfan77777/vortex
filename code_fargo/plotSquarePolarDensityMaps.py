@@ -171,10 +171,16 @@ def make_plot(frame, show = False):
     plot.xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
-    title1 = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup} \mathrm{,}$ $\alpha_\mathrm{disk} = 3 \times 10^{%d}\mathrm{,}$ $T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (int(planet_mass), int(np.log(viscosity) / np.log(10)) + 2, taper_time)
+    title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     title2 = r"$t = %d$ $\mathrm{orbits,}}$ $m_\mathrm{p}(t) = %.2f$ $M_\mathrm{Jup}$" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
     plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    # Text
+    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}" % (int(planet_mass))
+    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}" % (int(np.log(viscosity) / np.log(10)) + 2)
+    plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
 
     # Axes
     box_size = 2.5
