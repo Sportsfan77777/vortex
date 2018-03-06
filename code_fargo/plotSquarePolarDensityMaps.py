@@ -178,7 +178,7 @@ def make_plot(frame, show = False):
     plot.ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
     title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title2 = r"$t = %d$ $\mathrm{orbits,}}$ $m_\mathrm{p}(t) = %.2f$ $M_\mathrm{Jup}$" % (orbit, current_mass)
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
     plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
