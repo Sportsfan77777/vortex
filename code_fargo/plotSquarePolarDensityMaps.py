@@ -41,8 +41,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMaps",
-                         help = 'save directory (default: cartesianIntensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "squarePolarDensityMaps",
+                         help = 'save directory (default: squarePolarDensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -177,14 +177,16 @@ def make_plot(frame, show = False):
 
     title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
-    plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.text(0.0, 3.24, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
-    plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(-1.7, 3.14, text_mass, fontsize = fontsize + 1, color = 'black', horizontalalignment = 'right')
+    plot.text(1.7, 3.14, text_visc, fontsize = fontsize + 1, color = 'black', horizontalalignment = 'left')
 
     # Save, Show,  and Close
     if version is None:
