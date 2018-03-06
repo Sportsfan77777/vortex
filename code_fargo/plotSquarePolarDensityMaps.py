@@ -166,6 +166,12 @@ def make_plot(frame, show = False):
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
     plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
+    # Axes
+    box_size = 2.5
+    plot.xlim(-box_size, box_size)
+    plot.ylim(-box_size, box_size)
+    plot.axes().set_aspect('equal')
+
     # Annotate Axes
     unit = "r_\mathrm{p}"
     plot.xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
@@ -180,13 +186,7 @@ def make_plot(frame, show = False):
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}" % (int(planet_mass))
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}" % (int(np.log(viscosity) / np.log(10)) + 2)
     plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-
-    # Axes
-    box_size = 2.5
-    plot.xlim(-box_size, box_size)
-    plot.ylim(-box_size, box_size)
-    plot.axes().set_aspect('equal')
+    plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
 
     # Save, Show,  and Close
     if version is None:
