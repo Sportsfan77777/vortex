@@ -52,8 +52,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--r_range', dest = "r_lim", type = int, nargs = 2, default = None,
-                         help = 'id number for this set of plot parameters (default: [r_min, r_max])')
+    parser.add_argument('--box', dest = "box", type = float, default = 2.5,
+                         help = 'width of box (in r_p) (default: 2.5)')
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
 
@@ -112,10 +112,8 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+
+box = args.box
 normalize = args.normalize
 
 # Plot Parameters (constant)
@@ -143,8 +141,8 @@ def make_plot(frame, show = False):
     result = plot.pcolormesh(xs_grid, ys_grid, np.transpose(density_cart), cmap = cmap)
     cbar = fig.colorbar(result)
 
-    if cmax is not None:
-        result.set_clim(clim[0], clim[1])
+    result.set_clim(clim[0], clim[1])
+    cbar.set_label(r"Normalized Surface Density", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -167,7 +165,7 @@ def make_plot(frame, show = False):
     plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
     # Axes
-    box_size = 2.5
+    box_size = box
     plot.xlim(-box_size, box_size)
     plot.ylim(-box_size, box_size)
     plot.axes().set_aspect('equal')
