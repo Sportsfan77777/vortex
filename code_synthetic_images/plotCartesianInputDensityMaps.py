@@ -58,8 +58,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'normalize by max (default: normalize)')
 
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
+                         help = 'color map (default: inferno)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 2.0,
                          help = 'maximum density in colorbar (default: 2.0)')
 
