@@ -136,7 +136,7 @@ def make_plot(frame, show = False):
 
     # Data
     fn = "id%04d_gasddens%d.p" % (id_number, frame)
-    density = pickle.load(open(fn, "rb"))
+    density = np.transpose(pickle.load(open(fn, "rb")))
     density /= surface_density_zero
     xs, ys, xs_grid, ys_grid, density_cart = sq.polar_to_cartesian(density, rad, theta)
 
