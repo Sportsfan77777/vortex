@@ -223,7 +223,7 @@ def make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     if use_contours:
-        levels = np.linspace(c_low, c_high, num_levels)
+        levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
         plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, extent = extent, colors = colors)
 
