@@ -118,11 +118,13 @@ r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
 surface_density_zero = fargo_par["Sigma0"] / 100.0
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
-taper_time = fargo_par["MassTaper"]
+viscosity = fargo_par["Viscosity"]
 
 size = fargo_par["PSIZE"]
 
