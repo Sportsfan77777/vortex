@@ -79,6 +79,18 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
+
+    # Plot Parameters (contours)
+    parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
+                         help = 'use contours or not (default: do not use contours)')
+    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.1,
+                         help = 'lowest contour (default: 1.1)')
+    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
+                         help = 'highest contour (default: 3.5)')
+    parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
+                         help = 'number of contours (choose this or separation) (default: None)')
+    parser.add_argument('--separation', dest = "separation", type = int, default = 0.1,
+                         help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
@@ -147,6 +159,15 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 center = args.center
 
+# Plot Parameters (contours)
+use_contours = args.use_contours
+low_contour = args.low_contour
+high_contour = args.high_contour
+num_levels = args.num_levels
+if num_levels is None:
+    separation = args.separation
+    num_levels = (high_contour - low_contour) / separation + 1
+
 # Plot Parameters (constant)
 cmap = args.cmap
 cmax = args.cmax
@@ -165,6 +186,13 @@ fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
 ###############################################################################
+
+def generate_colors(n):
+    c = ['k', 'b', 'firebrick']
+    colors = []
+    for i in range(n):
+        colors.append(c[i % len(c)])
+    return colors
 
 ##### PLOTTING #####
 
@@ -191,6 +219,11 @@ def make_plot(frame, show = False):
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
+
+    if use_contours:
+        levels = np.linspace(c_low, c_high, num_levels)
+        colors = generate_colors(num_levels)
+        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, extent = extent, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
