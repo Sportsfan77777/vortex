@@ -236,9 +236,10 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
 
-    title = readTitle()
+    #title = readTitle()
 
-    plot.xlabel("Radius", fontsize = fontsize)
+    unit = "r_\mathrm{p}"
+    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
 
     #if title is None:
