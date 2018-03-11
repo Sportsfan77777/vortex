@@ -122,7 +122,7 @@ surface_density_zero = fargo_par["Sigma0"] / 100.0
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
-taper = fargo_par["MassTaper"]
+taper_time = fargo_par["MassTaper"]
 
 size = fargo_par["PSIZE"]
 
@@ -204,7 +204,7 @@ def make_plot(frame, show = False):
     # Data
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     if center:
-        if taper < 10.1:
+        if taper_time < 10.1:
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
             threshold = util.get_threshold(size)
