@@ -236,6 +236,11 @@ def make_plot(frame, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
 
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
