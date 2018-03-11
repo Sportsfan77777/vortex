@@ -168,7 +168,7 @@ high_contour = args.high_contour
 num_levels = args.num_levels
 if num_levels is None:
     separation = args.separation
-    num_levels = (high_contour - low_contour) / separation + 1
+    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
 # Plot Parameters (constant)
 cmap = args.cmap
