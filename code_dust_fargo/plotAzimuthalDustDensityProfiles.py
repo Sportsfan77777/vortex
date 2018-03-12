@@ -61,7 +61,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
@@ -131,9 +133,13 @@ if threshold is None:
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
+labelsize = args.labelsize
 linewidth = args.linewidth
 alpha = args.alpha
 dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 ###############################################################################
 
@@ -149,15 +155,18 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
+colors = ["#ff7f0e", "#9467bd", "#1f77b4", "#2ca02c", "#d62728"]
+dashes = [[3, 3], [42, 4], [10000, 1], [42, 4], [3, 3]]
+
 def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
     ### Plot ###
-    x = theta * (180.0 / np.pi)
+    x = theta * (180.0 / np.pi) - 180.0
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%.3f" % radius)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = "%.3f" % radius)
 
     # Mark Planet
     if shift is None:
@@ -165,13 +174,13 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     else:
         if shift < -len(theta):
             shift += len(theta)
-        planet_loc = theta[shift] * (180.0 / np.pi)
+        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D") # planet
 
     # Axes
-    plot.xlim(0, 360)
+    plot.xlim(-180, 180)
 
-    angles = np.linspace(0, 360, 7)
+    angles = np.linspace(-180, 180, 7)
     plot.xticks(angles)
 
     if max_y is not None:
@@ -183,26 +192,38 @@ def make_plot(frame, shift, azimuthal_radii, azimuthal_profiles, show = False):
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
 
-    plot.xlabel(r"$\phi$", fontsize = fontsize + 2)
-    plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
+    plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    #plot.ylabel("Azimuthal Dust Density", fontsize = fontsize)
+    plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
 
-    title = r"(t = %.1f orbits)" % (orbit)
-    plot.title("%s" % (title), fontsize = fontsize + 1)
+    size_label = util.get_size_label(size)
+    stokes_number = util.get_stokes_number(size)
+
+    title = r"%s$\mathrm{-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (size_label, stokes_number)
+    #title = r"(t = %.1f orbits)" % (orbit)
+    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 1)
 
     # Annotate Parameters
-    line_x = 15.0; line_y = 0.93; linebreak = 0.07
+    line_x = -165.0; line_y = 0.91; linebreak = 0.07
+    center_x = 1.30 * plot.xlim()[-1]; top_y = plot.ylim()[-1]
 
-    left1 = r"$M_p = %d$ $M_{Jup}$" % (planet_mass)
-    left2 = r"$\nu = 10^{%d}$" % (np.log10(viscosity))
+    #left1 = r"$M_p = %d$ $M_{Jup}$" % (planet_mass)
+    #left2 = r"$\nu = 10^{%d}$" % (np.log10(viscosity))
+    #plot.text(line_x, line_y * plot.ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
+    #plot.text(line_x, (line_y - linebreak) * plot.ylim()[-1], left2, horizontalalignment = 'left', fontsize = fontsize)
+
+    #right1 = r"$T_{growth} = %d$ $\rm{orbits}$" % (taper)
+    #right2 = r"$s$ = %s" % (size_label)
+    #plot.text(360 - line_x, line_y * plot.ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
+    #plot.text(360 - line_x, (line_y - linebreak) * plot.ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
+
+    left1 = r"$t = %.1f$" % (orbit)
     plot.text(line_x, line_y * plot.ylim()[-1], left1, horizontalalignment = 'left', fontsize = fontsize)
-    plot.text(line_x, (line_y - linebreak) * plot.ylim()[-1], left2, horizontalalignment = 'left', fontsize = fontsize)
 
-    right1 = r"$T_{growth} = %d$ $\rm{orbits}$" % (taper)
-    right2 = r"$s$ = %s" % (size_label)
-    plot.text(360 - line_x, line_y * plot.ylim()[-1], right1, horizontalalignment = 'right', fontsize = fontsize)
-    plot.text(360 - line_x, (line_y - linebreak) * plot.ylim()[-1], right2, horizontalalignment = 'right', fontsize = fontsize)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+    plot.text(center_x, 0.95 * top_y, "Radii", fontsize = fontsize - 1, horizontalalignment = 'center')
+
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 0.94)) # outside of plot
 
     # Save, Show, and Close
     if version is None:
