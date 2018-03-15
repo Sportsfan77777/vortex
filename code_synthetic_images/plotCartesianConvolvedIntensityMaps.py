@@ -204,7 +204,7 @@ def make_plot(frame, show = False):
     ax.add_artist(circle)
 
     # Add beam size
-    beam = plot.Circle((-2 * arc_weight, -2 * arc_weight), (beam_size / 2) * arc_weight, color = "white")
+    beam = plot.Circle((1.7 * arc_weight, 1.7 * arc_weight), (beam_size / 2) * arc_weight, color = "white")
     fig.gca().add_artist(beam)
 
     # Add planet orbit
@@ -233,6 +233,15 @@ def make_plot(frame, show = False):
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
     plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
 
+    # Axes
+    box_size = args.box * arc_weight
+    plot.xlim(-box_size, box_size)
+    plot.ylim(-box_size, box_size)
+    plot.axes().set_aspect('equal')
+
+    ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+    ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
+
     # Annotate Axes
     if arc:
         unit = "^{\prime\prime}"
@@ -242,19 +251,14 @@ def make_plot(frame, show = False):
     ax.set_xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
     ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
+    # Title
     title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     #plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
-    # Axes
-    box_size = args.box * arc_weight
-    plot.xlim(-box_size, box_size)
-    plot.ylim(-box_size, box_size)
-    plot.axes().set_aspect('equal')
-
-    ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
-    ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
+    taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
+    plot.text(0.0 * box_size, 2 * arc_weight, taper_title, fontsize = fontsize, color = 'white', horizontalalignment = 'center', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0), zorder = 100)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if colorbar:
