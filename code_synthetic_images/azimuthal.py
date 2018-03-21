@@ -233,6 +233,7 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     # Search outer disk only
     outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+    rad_segment = rad[outer_disk_start : outer_disk_end]
     data_segment = data[outer_disk_start : outer_disk_end]
 
     # Get peak in azimuthal profile
@@ -258,7 +259,7 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     data_sliver = data_segment[:, zoom_start : zoom_end]
     length = len(data_sliver[0]); std = length / 3.0
     weights = gaussian(length, std)
-    radial_profile = np.average(data_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
+    radial_profile = np.average(data_sliver, weights = weights, axis = 1) # avg over rad to get azimuthal profile
 
     if normalize:
         radial_profile /= np.max(radial_profile)
@@ -267,8 +268,8 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     left_rad_i = my_searchsorted(radial_profile, threshold)
     right_rad_i = len(theta) - (my_searchsorted(radial_profile[::-1], threshold)) - 1
 
-    left_rad = theta[left_rad_i]
-    right_rad = theta[right_rad_i]
+    left_rad = rad_segment[left_rad_i]
+    right_rad = rad_segment[right_rad_i]
 
     extent = right_rad - left_rad
     return extent
