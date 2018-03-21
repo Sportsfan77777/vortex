@@ -163,7 +163,12 @@ fargo_par["theta"] = theta
 def get_peak(frame):
     """return peak in azimuthal profile of vortex"""
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
-    peak = az.get_azimuthal_peak(intensity_polar, fargo_par)
+    arg_r, arg_phi = az.get_peak(intensity_polar, fargo_par)
+
+    # Return peak relative to the center
+    peak = theta[arg_phi]
+    peak = peak * (180.0 / np.pi) - 180.0
+
     return peak
 
 ###############################################################################
