@@ -55,8 +55,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'wavelength (in um) (default: 870)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "extentsByBeam",
-                         help = 'save directory (default: extentsByBeam)')
+    parser.add_argument('--dir', dest = "save_directory", default = "radialExtentsByBeam",
+                         help = 'save directory (default: radialExtentsByBeam)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -176,7 +176,7 @@ def get_extents(directories, frame):
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = directory_i)
         extent = az.get_radial_extent(intensity_polar, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
-        extents[i] = extent * (180.0 / np.pi)
+        extents[i] = extent
 
     return extents
 
@@ -209,13 +209,12 @@ def make_plot(show = False):
     plot.plot(x_arc, difference, c = "k", linewidth = linewidth - 1, linestyle = "--", label = r"$\mathrm{Difference}$")
 
     # Axes
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
-    plot.ylim(0, 360)
+    #plot.yticks(angles)
+    plot.ylim(0, 1.2 * np.max(extent_array))
 
     # Annotate Axes
     plot.xlabel(r"$\mathrm{Beam\ Diameter}$ [$^{\prime \prime}$]", fontsize = fontsize + 2)
-    plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.ylabel(r"$\delta r$ [$r_\mathrm{p}$]", fontsize = fontsize + 2)
 
     plot.legend(loc = "upper left")
 
@@ -236,11 +235,11 @@ def make_plot(show = False):
 
     png = "png"; pdf = "pdf"
     if version is None:
-        save_fn = "%s/extentsByBeam_%s.%s" % (save_directory, frame_str, png)
-        pdf_save_fn = "%s/extentsByBeam__%s.%s" % (save_directory, frame_str, pdf)
+        save_fn = "%s/radialExtentsByBeam_%s.%s" % (save_directory, frame_str, png)
+        pdf_save_fn = "%s/radialExtentsByBeam__%s.%s" % (save_directory, frame_str, pdf)
     else:
-        save_fn = "%s/v%04d_extentsByBeam_%s.%s" % (save_directory, version, frame_str, png)
-        pdf_save_fn = "%s/v%04d_extentsByBeam_%s.%s" % (save_directory, version, frame_str, pdf)
+        save_fn = "%s/v%04d_radialExtentsByBeam_%s.%s" % (save_directory, version, frame_str, png)
+        pdf_save_fn = "%s/v%04d_radialExtentsByBeam_%s.%s" % (save_directory, version, frame_str, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
     plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
