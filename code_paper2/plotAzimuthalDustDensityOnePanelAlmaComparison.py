@@ -308,7 +308,7 @@ def make_plot(show = False):
     frame_str = ""
     sizes = ["cm", "mm"] # <<<====== Make this a parameter
     for i, (size_i, frame_i) in enumerate(zip(sizes, frame_range)):
-        add_to_plot(frame_i, fig, size_i, len(frame_range), i + 1)
+        add_to_plot(frame_i, fig, size_i, len(frame_range), i)
         frame_str += "%04d-" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
