@@ -194,7 +194,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 colors1 = ['#f28407', '#f20202', '#590f02']
 colors2 = ['#0366a8', '#0609ef', '#370282']
 
-colors = ['#f20202', '#0609ef']
+colors = ['grey', '#0609ef']
 
 dashes = [[10000, 1], [8, 2, 4, 2]]
 
@@ -229,7 +229,7 @@ def add_to_plot(frame, fig, size_name, num_frames, frame_i):
     middle_i = (num_profiles - 1) / 2
 
     middle_profile1 = azimuthal_profiles1[middle_i]
-    plot.plot(x, middle_profile1, linewidth = linewidth - 1, dashes = dashes[frame_i], c = colors[0], alpha = alpha, label = labels[frame_i])
+    plot.plot(x, middle_profile1, linewidth = linewidth, dashes = dashes[frame_i], c = colors[0], alpha = alpha, label = labels[frame_i])
 
     # Add a break in the legend
     plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
@@ -306,7 +306,7 @@ def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     frame_str = ""
-    sizes = ["hcm", "mm"] # <<<====== Make this a parameter
+    sizes = ["cm", "mm"] # <<<====== Make this a parameter
     for i, (size_i, frame_i) in enumerate(zip(sizes, frame_range)):
         add_to_plot(frame_i, fig, size_i, len(frame_range), i)
         frame_str += "%04d-" % frame_i
