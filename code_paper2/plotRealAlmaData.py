@@ -63,8 +63,10 @@ def new_argument_parser(description = "Plot real ALMA images."):
     parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 18)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -100,6 +102,9 @@ cmap = args.cmap
 cmax = args.cmax
 fontsize = args.fontsize
 dpi = args.dpi
+
+rc['xtick.labelsize'] = args.labelsize
+rc['ytick.labelsize'] = args.labelsize
 
 ###############################################################################
 
