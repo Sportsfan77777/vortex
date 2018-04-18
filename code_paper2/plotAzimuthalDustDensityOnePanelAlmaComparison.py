@@ -196,7 +196,7 @@ colors2 = ['#0366a8', '#0609ef', '#370282']
 
 colors = ['grey', '#0609ef']
 
-dashes = [[10000, 1], [8, 2, 4, 2]]
+dashes = [[10000, 1], [10, 2, 2, 2]]
 
 labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
 labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
