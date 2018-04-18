@@ -203,7 +203,7 @@ dashes = [[8, 4], [10000, 1], [3, 3]]
 labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
 labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
 
-def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
+def add_to_plot(frame, fig, size_name, num_frames, frame_i):
     # Convert size to number
     size = util.get_size(size_name)
 
@@ -297,6 +297,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
 
     title = r"%s$\mathrm{-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (size_label, stokes_number)
     plot.title("%s" % (title), fontsize = fontsize + 1)
+
     
 def make_plot(show = False):
     # Set up figure
@@ -305,7 +306,7 @@ def make_plot(show = False):
     frame_str = ""
     sizes = ["cm", "mm"] # <<<====== Make this a parameter
     for i, (size_i, frame_i) in enumerate(zip(sizes, frame_range)):
-        ax = add_to_plot(frame_i, fig, ax, size_i, len(frame_range), i + 1)
+        add_to_plot(frame_i, fig, size_i, len(frame_range), i + 1)
         frame_str += "%04d-" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
