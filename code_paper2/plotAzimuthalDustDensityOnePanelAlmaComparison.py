@@ -198,7 +198,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 colors1 = ['#f28407', '#f20202', '#590f02']
 colors2 = ['#0366a8', '#0609ef', '#370282']
 
-dashes = [[8, 4], [10000, 1], [3, 3]]
+dashes = [[8, 4], [10000, 1]]
 
 labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
 labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
@@ -249,8 +249,8 @@ def add_to_plot(frame, fig, size_name, num_frames, frame_i):
         if shift2 < -len(theta):
             shift2 += len(theta)
         planet_loc2 = theta[shift2] * (180.0 / np.pi) - 180.0
-    plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
-    plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
+    #plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
+    #plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
     max_x = 180
@@ -278,10 +278,10 @@ def add_to_plot(frame, fig, size_name, num_frames, frame_i):
         plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Extra Annotation
-    rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f \ r_\mathrm{p}$" % azimuthal_radii1[(num_profiles - 1) / 2]
-    rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f \ r_\mathrm{p}$" % azimuthal_radii2[(num_profiles - 1) / 2]
-    plot.text(-170, 0.90 * plot.ylim()[-1], rc_line1, fontsize = fontsize, horizontalalignment = 'left')
-    plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
+    #rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f \ r_\mathrm{p}$" % azimuthal_radii1[(num_profiles - 1) / 2]
+    #rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f \ r_\mathrm{p}$" % azimuthal_radii2[(num_profiles - 1) / 2]
+    #plot.text(-170, 0.90 * plot.ylim()[-1], rc_line1, fontsize = fontsize, horizontalalignment = 'left')
+    #plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i == 2:    
         center_x = 1.34 * plot.xlim()[-1]
