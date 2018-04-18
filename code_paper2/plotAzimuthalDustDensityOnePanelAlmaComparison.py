@@ -57,7 +57,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--max_y', dest = "max_y", nargs = '+', type = float, default = None,
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 3,
                          help = 'number of profiles (default: 3)')
@@ -127,10 +127,6 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 max_y = args.max_y
-if max_y is None:
-    pass
-elif len(max_y) == 1:
-    max_y = [max_y, max_y]
 
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
@@ -198,10 +194,14 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 colors1 = ['#f28407', '#f20202', '#590f02']
 colors2 = ['#0366a8', '#0609ef', '#370282']
 
+colors = ['#f20202', '#0609ef']
+
 dashes = [[8, 4], [10000, 1]]
 
 labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
 labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
+
+labels = [r"$3 \mathrm{mm}$", r"$1 \mathrm{mm}$"]
 
 def add_to_plot(frame, fig, size_name, num_frames, frame_i):
     # Convert size to number
@@ -226,14 +226,16 @@ def add_to_plot(frame, fig, size_name, num_frames, frame_i):
     ### Plot ###
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
-    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
+    middle_i = (num_profiles - 1) / 2
 
-    # Add a beak in the legend
+    middle_profile1 = azimuthal_profiles1[middle_i]
+    plot.plot(x, middle_profile1, linewidth = linewidth, dashes = dashes[frame_i], c = colors[0], alpha = 1.0, label = labels[frame_i])
+
+    # Add a break in the legend
     plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
 
-    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
+    middle_profile2 = azimuthal_profiles2[middle_i]
+    plot.plot(x, middle_profile2, linewidth = linewidth, dashes = dashes[frame_i], c = colors[1], alpha = alpha, label = labels[frame_i])
 
     # Mark Planet
     if shift1 is None:
