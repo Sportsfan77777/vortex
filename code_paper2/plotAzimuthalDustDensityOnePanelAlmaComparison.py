@@ -306,7 +306,7 @@ def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     frame_str = ""
-    sizes = ["cm", "mm"] # <<<====== Make this a parameter
+    sizes = ["hcm", "mm"] # <<<====== Make this a parameter
     for i, (size_i, frame_i) in enumerate(zip(sizes, frame_range)):
         add_to_plot(frame_i, fig, size_i, len(frame_range), i)
         frame_str += "%04d-" % frame_i
