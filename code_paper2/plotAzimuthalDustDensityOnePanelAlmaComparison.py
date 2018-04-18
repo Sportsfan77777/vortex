@@ -196,7 +196,7 @@ colors2 = ['#0366a8', '#0609ef', '#370282']
 
 colors = ['#f20202', '#0609ef']
 
-dashes = [[10000, 1], [8, 2]]
+dashes = [[10000, 1], [8, 2, 4, 2]]
 
 labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
 labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
@@ -229,13 +229,13 @@ def add_to_plot(frame, fig, size_name, num_frames, frame_i):
     middle_i = (num_profiles - 1) / 2
 
     middle_profile1 = azimuthal_profiles1[middle_i]
-    plot.plot(x, middle_profile1, linewidth = linewidth, dashes = dashes[frame_i], c = colors[0], alpha = 1.0, label = labels[frame_i])
+    plot.plot(x, middle_profile1, linewidth = linewidth - 1, dashes = dashes[frame_i], c = colors[0], alpha = alpha, label = labels[frame_i])
 
     # Add a break in the legend
     plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
 
     middle_profile2 = azimuthal_profiles2[middle_i]
-    plot.plot(x, middle_profile2, linewidth = linewidth, dashes = dashes[frame_i], c = colors[1], alpha = alpha, label = labels[frame_i])
+    plot.plot(x, middle_profile2, linewidth = linewidth, dashes = dashes[frame_i], c = colors[1], alpha = 1.0, label = labels[frame_i])
 
     # Mark Planet
     if shift1 is None:
