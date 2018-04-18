@@ -263,7 +263,7 @@ def add_to_plot(frame, fig, size_name, num_frames, frame_i):
     if max_y is None:
         plot.ylim(0, plot.ylim()[-1]) # No Input
     else:
-        plot.ylim(0, max_y[frame_i - 1]) # Input
+        plot.ylim(0, max_y) # Input
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
