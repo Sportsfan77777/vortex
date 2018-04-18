@@ -57,8 +57,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
-                         help = 'max_y for each frame, or same for all (default: None)')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = 120,
+                         help = 'max_y for each frame, or same for all (default: 120)')
     parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 3,
                          help = 'number of profiles (default: 3)')
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 1.0,
@@ -76,8 +76,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'labelsize of plot annotations (default: 15)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'linewidths in plot (default: 3)')
-    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
-                         help = 'line transparency in plot (default: 0.65)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.4,
+                         help = 'line transparency in plot (default: 0.4)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -196,7 +196,7 @@ colors2 = ['#0366a8', '#0609ef', '#370282']
 
 colors = ['#f20202', '#0609ef']
 
-dashes = [[8, 4], [10000, 1]]
+dashes = [[10000, 1], [8, 2]]
 
 labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
 labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=1000}$", r"$\mathrm{+0.50\ h}$"]
