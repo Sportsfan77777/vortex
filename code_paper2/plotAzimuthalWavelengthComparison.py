@@ -215,7 +215,7 @@ def get_middle_profile(directory):
 #labels = [r"$\mathrm{-%.01f\ h}$" % ns[0], r"$\mathrm{-%.01f\ h}$" % ns[1], r"$r_\mathrm{c}$", r"$\mathrm{+%0.1f\ h}$" % ns[-2], r"$\mathrm{+%0.1f\ h}$" % ns[-1]]
 
 colors = ["#1f77b4", "#9467bd"]
-labels = [r"$%.02f~\mathrm{mm}$" % (wavelength1 / 1000.0), r"$%.02f~\mathrm{mm}$" % (wavelength2 / 1000.0)]
+labels = [r"$%.02f$ $\mathrm{mm}$" % (wavelength1 / 1000.0), r"$%.02f$ $\mathrm{mm}$" % (wavelength2 / 1000.0)]
 
 def make_plot(show = False):
     # Set up figure
@@ -243,7 +243,7 @@ def make_plot(show = False):
     # Annotate Axes
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
-    plot.title(r"$d_{beam} = 0.21^{\prime \prime}$ ($1.0~r_\mathrm{p}$)", y = 1.01, fontsize = fontsize)
+    plot.title(r"$d_{beam} = 0.21^{\prime \prime}$ ($1.0$ $r_\mathrm{p}$)", y = 1.01, fontsize = fontsize)
 
     plot.legend(loc = "upper left") # outside of plot
 
