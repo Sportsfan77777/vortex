@@ -243,7 +243,7 @@ def make_plot(show = False):
     # Annotate Axes
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
-    plot.title(r"$\mathrm{Wavelength Comparison}$", fontsize = fontsize)
+    plot.title(r"$d_{beam} = 0.21^{\prime \prime}~(1~r_\mathrm{p})$", fontsize = fontsize)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
