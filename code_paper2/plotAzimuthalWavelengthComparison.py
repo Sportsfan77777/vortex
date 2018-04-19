@@ -192,7 +192,7 @@ def get_middle_profile(directory):
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
     # Middle Profile
-    middle_i = (num_profiles - 1) / 2.0
+    middle_i = (num_profiles - 1) / 2
     middle_profile = azimuthal_profiles[middle_i]
 
     # Return to previous directory
@@ -227,7 +227,22 @@ def make_plot(show = False):
     # Plot
     x = theta * (180.0 / np.pi) - 180.0
     for i, middle_profile in enumerate(middle_profiles):
-        plot.plot(x, middle_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = labels[i])
+        plot.plot(x, middle_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = labels[i])
+
+    # Axes
+    max_x = 180
+    plot.xlim(-max_x, max_x)
+    angles = np.linspace(-max_x, max_x, 7)
+    plot.xticks(angles)
+
+    if max_y is None:
+        plot.ylim(0, plot.ylim()[-1]) # No Input
+    else:
+        plot.ylim(0, max_y) # Input
+
+    # Annotate Axes
+    plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
 
     # Save, Show, and Close
     png = "png"; pdf = "pdf"
@@ -256,6 +271,8 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
         taper_time = 10
     else:
         taper_time = 1000
+
+
 
     ### Data ###
     middle_profiles = [get_middle_profile(directory_i) for directory_i in directories]
