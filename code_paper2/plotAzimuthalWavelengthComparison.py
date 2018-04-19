@@ -243,7 +243,7 @@ def make_plot(show = False):
     # Annotate Axes
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
-    plot.title(r"$d_{beam} = 0.21^{\prime \prime}$ ($1.0$ $r_\mathrm{p}$)", y = 1.01, fontsize = fontsize)
+    plot.title(r"$d_{beam} = %.02f^{\prime \prime}$ ($%.1f$ $r_\mathrm{p}$)" % (0.21 * args.beam_size / 20.0, args.beam_size / 20.0), y = 1.01, fontsize = fontsize)
 
     plot.legend(loc = "upper left") # outside of plot
 
