@@ -243,6 +243,9 @@ def make_plot(show = False):
     # Annotate Axes
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
+    plot.title(r"$\mathrm{Wavelength Comparison}$", fontsize = fontsize)
+
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Save, Show, and Close
     png = "png"; pdf = "pdf"
