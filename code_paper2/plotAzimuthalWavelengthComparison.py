@@ -39,7 +39,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 2,
+    parser.add_argument('frame', type = int,
                          help = 'select two frames to compare intensity (first is for T = 10, second is for T = 1000)')
 
     # Directory Selection
@@ -125,7 +125,7 @@ arc_beam = beam_size * planet_radius / distance
 ### Get Input Parameters ###
 
 # Frames
-frame_range = args.frames
+frame = args.frame
 
 # Directories
 directory1 = base_directory % (args.wavelength1, args.beam_size)
@@ -179,7 +179,7 @@ fargo_par["theta"] = theta
 def get_middle_profile(directory):
     # Change directories
     cwd = os.getcwd()
-    os.chdir(directories[frame_i])
+    os.chdir(directory)
 
     ### Data ###
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
@@ -228,11 +228,11 @@ def make_plot(show = False):
     # Save, Show, and Close
     png = "png"; pdf = "pdf"
     if version is None:
-        save_fn = "%s/azimuthalIntensityBeamComparison_%s.%s" % (save_directory, frame_str, png)
-        pdf_save_fn = "%s/azimuthalIntensityBeamComparison_%s.%s" % (save_directory, frame_str, pdf)
+        save_fn = "%s/azimuthalIntensityBeamComparison_%04d.%s" % (save_directory, frame, png)
+        pdf_save_fn = "%s/azimuthalIntensityBeamComparison_%04d.%s" % (save_directory, frame, pdf)
     else:
-        save_fn = "%s/v%04d_azimuthalIntensityBeamComparison_%s.%s" % (save_directory, version, frame_str, png)
-        pdf_save_fn = "%s/v%04d_azimuthalIntensityBeamComparison_%s.%s" % (save_directory, version, frame_str, pdf)
+        save_fn = "%s/v%04d_azimuthalIntensityBeamComparison_%04d.%s" % (save_directory, version, frame, png)
+        pdf_save_fn = "%s/v%04d_azimuthalIntensityBeamComparison_%04d.%s" % (save_directory, version, frame, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
     plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
