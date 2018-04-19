@@ -97,7 +97,7 @@ args = new_argument_parser().parse_args()
 base_directory = "../taper1000/synthetic/lambda%04d/beam%03d"
 default_directory = base_directory % (args.wavelength1, args.beam_size)
 
-fn = "../%s/id%04d_par.p" % (default_directory, args.id_number)
+fn = "%s/id%04d_par.p" % (default_directory, args.id_number)
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
