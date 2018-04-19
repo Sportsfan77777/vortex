@@ -127,9 +127,13 @@ arc_beam = beam_size * planet_radius / distance
 # Frames
 frame = args.frame
 
+# Wavelengths
+wavelength1 = args.wavelength1
+wavelength2 = args.wavelength2
+
 # Directories
-directory1 = base_directory % (args.wavelength1, args.beam_size)
-directory2 = base_directory % (args.wavelength2, args.beam_size)
+directory1 = base_directory % (wavelength1, args.beam_size)
+directory2 = base_directory % (wavelength2, args.beam_size)
 directories = [directory1, directory2]
 
 # Files
