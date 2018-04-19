@@ -253,7 +253,7 @@ def make_plot(frame, show = False):
 
     # Title
     #title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-    title = r"$\lambda = 0.87$ $\mathrm{mm}$ [$d_\mathrm{beam} = %.02f^{\prime \prime}$]" % (beam_size / 100.0)
+    title = r"[$\lambda = 0.87$ $\mathrm{mm}$] [$d_\mathrm{beam} = %.02f^{\prime \prime}$]" % (beam_size / 10.0)
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     #plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
