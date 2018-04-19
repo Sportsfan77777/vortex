@@ -186,7 +186,7 @@ def get_middle_profile(directory):
     os.chdir(directory)
 
     ### Data ###
-    intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "lambda%04d/beam%03d" % (args.wavelength, args.beam_size))
+    intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = ".")
     if normalize:
         intensity_polar /= np.max(intensity_polar)
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
