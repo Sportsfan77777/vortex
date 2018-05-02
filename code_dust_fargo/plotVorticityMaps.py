@@ -96,8 +96,8 @@ def new_argument_parser(description = "Plot dust density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
-                         help = 'maximum density in colorbar (default: 2)')
+    parser.add_argument('--crange', dest = "c_lim", type = float, nargs = 2, default = None,
+                         help = 'range in colorbar (default: [0, 2])')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -173,7 +173,10 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+if args.c_lim is None:
+    clim = [0, 2]
+else:
+    clim = [args.c_lim[0], args.c_lim[1]]
 
 fontsize = args.fontsize
 dpi = args.dpi
