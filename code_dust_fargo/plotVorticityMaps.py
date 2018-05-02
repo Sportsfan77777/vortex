@@ -45,6 +45,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import utilVorticity
 import azimuthal as az
 from readTitle import readTitle
 
@@ -201,7 +202,7 @@ def make_plot(frame, show = False):
     vrad = (fromfile("gasvrad%d.dat" % i).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vtheta = (fromfile("gasvtheta%d.dat" % i).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
 
-    vorticity = util.velocity_curl(vrad, vtheta, rad, theta) # frame = 1 shifts out of frame
+    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta) # frame = 1 shifts out of frame
 
     # Shift
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
