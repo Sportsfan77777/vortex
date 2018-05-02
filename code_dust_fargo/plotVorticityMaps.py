@@ -223,7 +223,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     fig.colorbar(result)
-    #result.set_clim(clim[0], clim[1])
+    result.set_clim(clim[0], clim[1])
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
