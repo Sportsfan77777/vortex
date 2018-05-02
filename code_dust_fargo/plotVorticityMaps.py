@@ -67,8 +67,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
+                         help = 'save directory (default: vorticityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -273,9 +273,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/vorticityMap_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_vorticityMap_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
