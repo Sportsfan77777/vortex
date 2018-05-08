@@ -45,6 +45,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
                          help = 'save directory (default: azimuthalIntensityEvolution)')
 
+    # Save Data
+    parser.add_argument('--data', dest = "save_data", action = 'store_true', default = False,
+                         help = 'save data or not (default: do not save)')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -120,6 +124,9 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+# Save Data
+save_data = args.save_data
+
 # Plot Parameters (variable)
 normalize = args.normalize
 
@@ -188,7 +195,7 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     frame_str = ""
-    for i, frame_i in enumerate(frame_range):
+    for i, frame_i in enumerate(args.frames):
         frame_str += "%04d-" % frame_i
     frame_str = frame_str[:-1] # Trim last '_'
 
@@ -202,6 +209,10 @@ def make_plot(show = False):
         plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
+
+    if save_data:
+        save_name = "id%04d_b%02d_intensityPeaks.p" % (id_number, beam_size)
+        pickle.dump(peaks, open(save_name, "wb"))
 
 ##### Make Plots! #####
 
