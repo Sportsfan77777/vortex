@@ -172,8 +172,8 @@ def make_plot(show = False):
     # Results
     # Overall:
     # (21%, 47%, 65%) have change less than (1, 3, 5) degrees
-    # Largest shifts are the most robust:
-    #
+    # Largest shifts are the most robust. Of the 57/200 (29%) with shifts greater than 20:
+    # (30%, 61%, 84%) have change less than (1, 3, 5) degrees
 
     # Save, Show, and Close
     frame_str = ""
