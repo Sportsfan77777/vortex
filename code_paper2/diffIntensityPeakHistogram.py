@@ -115,14 +115,9 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
-# Save Data
-save_data = args.save_data
 
 # Plot Parameters (variable)
-normalize = args.normalize
-
 show = args.show
-max_y = args.max_y
 
 version = args.version
 
