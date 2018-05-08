@@ -211,7 +211,7 @@ def make_plot(show = False):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
     if save_data:
-        save_name = "id%04d_b%02d_intensityPeaks.p" % (id_number, beam_size)
+        save_name = "id%04d_b%02d_intensityPeaks.p" % (id_number, beam_size * planet_radius)
         pickle.dump(peaks, open(save_name, "wb"))
 
 ##### Make Plots! #####
