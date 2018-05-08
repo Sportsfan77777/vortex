@@ -200,9 +200,9 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     if version is None:
-        save_fn = "%s/intensityPeakHistogram_%s.%s" % (save_directory, frame_str, png)
+        save_fn = "%s/intensityPeakHistogram_%s.png" % (save_directory, frame_str)
     else:
-        save_fn = "%s/v%04d_intensityPeakHistogram_%s.%s" % (save_directory, version, frame_str, png)
+        save_fn = "%s/v%04d_intensityPeakHistogram_%s.png" % (save_directory, version, frame_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
