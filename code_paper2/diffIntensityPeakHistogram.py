@@ -48,6 +48,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
                          help = 'save directory (default: azimuthalIntensityEvolution)')
 
+    # Print
+    parser.add_argument('--print', dest = "print_data", action = 'store_true', default = False,
+                         help = 'print data (default: do not print)')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -115,6 +119,8 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+# Print
+print_data = args.print_data
 
 # Plot Parameters (variable)
 show = args.show
@@ -140,6 +146,10 @@ data2 = pickle.load(open("id%04d_b%02d_intensityPeaks.p" % (id2, beam_size * pla
 
 diff = data1 - data2
 
+if print_data:
+    for (frame, d1, d2, d) in zip(frame_range, data1, data2, diff):
+        print "Frame %04d: %02.1f, %02.1f (Difference: %02.2f)"
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -149,9 +159,11 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Plot
-    bins = np.linspace(-20, 20, 13)
+    bins = np.linspace(-20, 20, 21)
+    bins = np.linspace(-20, 20, 201)
     data = diff
-    plot.hist(data, bins = bins)
+    plot.hist(data / len(frame_range), bins = bins1, histtype = 'step')
+    plot.hist(data / len(frame_range), bins = bins2, histtype = 'step', cumulative = True)
 
     # Save, Show, and Close
     frame_str = ""
