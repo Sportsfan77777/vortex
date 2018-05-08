@@ -159,11 +159,17 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Plot
-    bins1 = np.linspace(-20, 20, 21)
+    bins1 = np.linspace(-19, 21, 21)
     bins2 = np.linspace(-20, 20, 2001)
     data = diff
     plot.hist(data, bins = bins1, histtype = 'step')
     plot.hist(data, bins = bins2, histtype = 'step', cumulative = True)
+
+    # Results
+    # Overall:
+    # (21%, 47%, 65%) have change less than (1, 3, 5) degrees
+    # Largest shifts are the most robust:
+    #
 
     # Save, Show, and Close
     frame_str = ""
