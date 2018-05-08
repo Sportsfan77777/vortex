@@ -172,9 +172,9 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     if version is None:
-        save_fn = "%s/diffIntensityPeakHistogram_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/diffIntensityPeakHistogram_%s_%s.png" % (save_directory, frame_str, id_str)
     else:
-        save_fn = "%s/v%04d_diffIntensityPeakHistogram_%s.png" % (save_directory, version, frame_str)
+        save_fn = "%s/v%04d_diffIntensityPeakHistogram_%s_%s.png" % (save_directory, version, frame_str, id_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
