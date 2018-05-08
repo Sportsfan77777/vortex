@@ -148,7 +148,7 @@ diff = data1 - data2
 
 if print_data:
     for (frame, d1, d2, d) in zip(frame_range, data1, data2, diff):
-        print "Frame %04d: %02.1f, %02.1f (Difference: %02.2f)"
+        print "Frame %04d: %02.1f, %02.1f (Difference: %02.2f)" % (frame, d1, d2, d)
 
 ###############################################################################
 
