@@ -45,8 +45,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'two id numbers (up to 4 digits) for these two sets of input parameters (default: None)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
-                         help = 'save directory (default: azimuthalIntensityEvolution)')
+    parser.add_argument('--dir', dest = "save_directory", default = "intensityPeaks",
+                         help = 'save directory (default: intensityPeaks)')
 
     # Print
     parser.add_argument('--print', dest = "print_data", action = 'store_true', default = False,
