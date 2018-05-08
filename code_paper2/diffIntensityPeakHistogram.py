@@ -159,8 +159,8 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Plot
-    bins = np.linspace(-20, 20, 21)
-    bins = np.linspace(-20, 20, 201)
+    bins1 = np.linspace(-20, 20, 21)
+    bins2 = np.linspace(-20, 20, 201)
     data = diff
     plot.hist(data / len(frame_range), bins = bins1, histtype = 'step')
     plot.hist(data / len(frame_range), bins = bins2, histtype = 'step', cumulative = True)
