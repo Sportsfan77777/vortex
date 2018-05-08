@@ -162,8 +162,8 @@ def make_plot(show = False):
     bins1 = np.linspace(-20, 20, 21)
     bins2 = np.linspace(-20, 20, 201)
     data = diff
-    plot.hist(data / len(frame_range), bins = bins1, histtype = 'step')
-    plot.hist(data / len(frame_range), bins = bins2, histtype = 'step', cumulative = True)
+    plot.hist(data, bins = bins1, histtype = 'step')
+    plot.hist(data, bins = bins2, histtype = 'step', cumulative = True)
 
     # Save, Show, and Close
     frame_str = ""
