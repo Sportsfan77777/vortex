@@ -145,6 +145,9 @@ data1 = pickle.load(open("id%04d_b%02d_intensityPeaks.p" % (id1, beam_size * pla
 data2 = pickle.load(open("id%04d_b%02d_intensityPeaks.p" % (id2, beam_size * planet_radius), "rb"))
 
 diff = data1 - data2
+filtered = diff[np.where(data1 > 20)]
+
+print len(filtered)
 
 if print_data:
     for (frame, d1, d2, d) in zip(frame_range, data1, data2, diff):
@@ -161,7 +164,8 @@ def make_plot(show = False):
     # Plot
     bins1 = np.linspace(-19, 21, 21)
     bins2 = np.linspace(-20, 20, 2001)
-    data = diff
+    #data = diff
+    data = filtered
     plot.hist(data, bins = bins1, histtype = 'step')
     plot.hist(data, bins = bins2, histtype = 'step', cumulative = True)
 
