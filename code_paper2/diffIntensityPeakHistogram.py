@@ -160,7 +160,7 @@ def make_plot(show = False):
 
     # Plot
     bins1 = np.linspace(-20, 20, 21)
-    bins2 = np.linspace(-20, 20, 201)
+    bins2 = np.linspace(-20, 20, 2001)
     data = diff
     plot.hist(data, bins = bins1, histtype = 'step')
     plot.hist(data, bins = bins2, histtype = 'step', cumulative = True)
