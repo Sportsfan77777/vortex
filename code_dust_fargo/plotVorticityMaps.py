@@ -214,7 +214,7 @@ def make_plot(frame, show = False):
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
             threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
+            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
         density = np.roll(density, shift_c)
 
     ### Plot ###
