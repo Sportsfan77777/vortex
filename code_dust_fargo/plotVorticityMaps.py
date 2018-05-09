@@ -283,6 +283,12 @@ def make_plot(frame, show = False):
     plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
     plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
+    # Label colorbar
+    if rossby:
+       cbar_name = r"$\mathrm{Rossby} \mathrm{number}$"
+    else:
+       cbar_name = r"$\mathrm{Vorticity}$"
+    cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
