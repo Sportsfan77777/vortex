@@ -70,6 +70,12 @@ def new_argument_parser(description = "Plot dust density maps."):
     parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
                          help = 'save directory (default: vorticityMaps)')
 
+    # Quantity to plot
+    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
+                         help = 'plot rossby number instead of vorticity (default: plot vorticity)')
+    parser.add_argument('--not_rotating', dest = "not_rotating", action = 'store_true', default = False,
+                         help = 'shift out of rotating frame (default: do not shift out of rotating frame)')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -149,6 +155,10 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+# Quantity to Plot
+rossby = args.rossby
+not_rotating = args.not_rotating
+
 # Plot Parameters (variable)
 show = args.show
 
@@ -205,7 +215,7 @@ def make_plot(frame, show = False):
     vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
 
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta) # frame = 1 shifts out of frame
+    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, not_rotating = not_rotating)
 
     # Shift
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
