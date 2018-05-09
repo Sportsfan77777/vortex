@@ -219,13 +219,15 @@ def make_plot(frame, show = False):
 
     # Shift
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     if center:
         if taper_time < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
+            shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
         else:
             threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
+            shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
         vorticity = np.roll(vorticity, shift_c)
+        density = np.roll(density, shift_c)
 
     ### Plot ###
     x = rad
@@ -238,7 +240,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(vorticity), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
