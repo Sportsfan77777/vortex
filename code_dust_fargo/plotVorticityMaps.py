@@ -218,14 +218,14 @@ def make_plot(frame, show = False):
     vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
     # Shift
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     if center:
         if taper_time < 10.1:
             shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
             threshold = util.get_threshold(size)
             shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
-        density = np.roll(density, shift_c)
+        vorticity = np.roll(vorticity, shift_c)
 
     ### Plot ###
     x = rad
