@@ -36,6 +36,7 @@ movie_dictionary["azimuthalDensity"] = "azimuthalDensityProfiles_"
 movie_dictionary["intensity"] = "intensityMap_"
 movie_dictionary["polarIntensity"] = "intensityMap_"
 movie_dictionary["cartesianIntensity"] = "intensityCartGrid_"
+movie_dictionary["vorticity"] = "vorticityMap_"
 
 ###############################################################################
 
