@@ -285,7 +285,7 @@ def make_plot(frame, show = False):
 
     # Label colorbar
     if rossby:
-       cbar_name = r"$\mathrm{Rossby} \mathrm{number}$"
+       cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
     else:
        cbar_name = r"$\mathrm{Vorticity}$"
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
