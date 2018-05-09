@@ -215,7 +215,7 @@ def make_plot(frame, show = False):
     vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
 
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, not_rotating = not_rotating)
+    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, not_rotating_frame = not_rotating)
 
     # Shift
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
