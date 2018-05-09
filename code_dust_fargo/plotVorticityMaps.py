@@ -218,7 +218,7 @@ def make_plot(frame, show = False):
     vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
     # Shift
-    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
     dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     if center:
         if taper_time < 10.1:
