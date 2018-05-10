@@ -274,7 +274,7 @@ def add_to_plot(frame, fig, ax, frame_i):
 
     title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.025, fontsize = fontsize + 1)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
@@ -289,7 +289,7 @@ def add_to_plot(frame, fig, ax, frame_i):
 
     # Label colorbar
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if frame_i == 2:
+    if frame_i == 5:
         # Only for last frame
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
@@ -305,13 +305,6 @@ def add_to_plot(frame, fig, ax, frame_i):
         #if frame_i != num_frames:
         #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
-    if frame_i == 5:
-        if rossby:
-           cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
-        else:
-           cbar_name = r"$\mathrm{Vorticity}$"
-        cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
-
     # Return to previous directory
     os.chdir(cwd)
 
@@ -319,7 +312,7 @@ def add_to_plot(frame, fig, ax, frame_i):
     
 def make_plot(show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 6), dpi = dpi)
+    fig = plot.figure(figsize = (11, 6), dpi = dpi)
     gs = gridspec.GridSpec(1, 2)
 
     frame_str = ""
