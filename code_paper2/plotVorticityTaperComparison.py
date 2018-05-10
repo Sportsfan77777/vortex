@@ -231,8 +231,8 @@ def add_to_plot(frame, fig, ax, frame_i):
     y = theta * (180.0 / np.pi) - 180.0
     result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
-    if frame_i == 2:
-        cbar = fig.colorbar(result)
+    #if frame_i == 2:
+    #    cbar = fig.colorbar(result)
 
     result.set_clim(clim[0], clim[1])
 
