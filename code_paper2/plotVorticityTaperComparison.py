@@ -288,7 +288,8 @@ def add_to_plot(frame, fig, ax, frame_i):
         plot.text(0.84 * x_range / 2.0 + x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     # Set Aspect Ratio
-    ax.set_aspect(1.12)
+    unit_aspect_ratio = (360) / (x_range)
+    ax.set_aspect(1.12 * unit_aspect_ratio)
 
     # Label colorbar
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
