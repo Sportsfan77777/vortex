@@ -197,6 +197,7 @@ def generate_colors(n):
 def add_to_plot(frame, fig, ax, frame_i):
     # Declare Subplot
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
+    ax.set_aspect(1.12)
 
     # Taper
     if frame_i == 1:
@@ -279,7 +280,7 @@ def add_to_plot(frame, fig, ax, frame_i):
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
-    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
+    text_visc = r"$\nu = 10^{%d}$" % (int(np.log(viscosity) / np.log(10)))
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     if frame_i == 1:
@@ -289,7 +290,7 @@ def add_to_plot(frame, fig, ax, frame_i):
 
     # Label colorbar
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if frame_i == 5:
+    if frame_i == 2:
         # Only for last frame
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
