@@ -289,25 +289,26 @@ def add_to_plot(frame, fig, ax, frame_i):
 
     # Label colorbar
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-    if frame_i == 2:
+    if frame_i < 5:
         # Only for last frame
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size = "8%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
 
-        if rossby:
-           cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
-        else:
-           cbar_name = r"$\mathrm{Vorticity}$"
-        cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
+        if frame_i == 2:
+            if rossby:
+               cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
+            else:
+               cbar_name = r"$\mathrm{Vorticity}$"
+            cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
         #if frame_i != num_frames:
         #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     # Set Aspect Ratio
-    unit_aspect_ratio = (360) / (x_range)
-    ax.set_aspect(1.12 / unit_aspect_ratio)
+    #unit_aspect_ratio = (360) / (x_range)
+    #ax.set_aspect(1.12 / unit_aspect_ratio)
 
     # Return to previous directory
     os.chdir(cwd)
