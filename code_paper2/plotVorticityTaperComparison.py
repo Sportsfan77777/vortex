@@ -197,7 +197,6 @@ def generate_colors(n):
 def add_to_plot(frame, fig, ax, frame_i):
     # Declare Subplot
     #ax = plot.subplot(1, num_frames, frame_i, sharex = prev_ax, sharey = prev_ax, aspect = "equal")
-    ax.set_aspect(1.12)
 
     # Taper
     if frame_i == 1:
@@ -288,6 +287,9 @@ def add_to_plot(frame, fig, ax, frame_i):
     if frame_i == 2:
         plot.text(0.84 * x_range / 2.0 + x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
+    # Set Aspect Ratio
+    ax.set_aspect(1.12)
+
     # Label colorbar
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if frame_i == 2:
@@ -313,7 +315,7 @@ def add_to_plot(frame, fig, ax, frame_i):
     
 def make_plot(show = False):
     # Set up figure
-    fig = plot.figure(figsize = (11, 6), dpi = dpi)
+    fig = plot.figure(figsize = (12, 6), dpi = dpi)
     gs = gridspec.GridSpec(1, 2)
 
     frame_str = ""
