@@ -292,7 +292,7 @@ def add_to_plot(frame, fig, ax, frame_i):
     if frame_i < 5:
         # Only for last frame
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        cax = divider.append_axes("right", size = "6%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
 
