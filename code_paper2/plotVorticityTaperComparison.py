@@ -74,14 +74,14 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
                          help = 'use contours or not (default: do not use contours)')
-    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.1,
-                         help = 'lowest contour (default: 1.1)')
-    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
+    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.0,
+                         help = 'lowest contour (default: 1.0)')
+    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.6,
                          help = 'highest contour (default: 3.5)')
     parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
                          help = 'number of contours (choose this or separation) (default: None)')
-    parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
-                         help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+    parser.add_argument('--separation', dest = "separation", type = float, default = 0.2,
+                         help = 'separation between contours (choose this or num_levels) (default: 0.2)')
 
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "magma",
@@ -231,7 +231,9 @@ def add_to_plot(frame, fig, ax, frame_i):
     y = theta * (180.0 / np.pi) - 180.0
     result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
-    cbar = fig.colorbar(result)
+    if frame_i == 2:
+        cbar = fig.colorbar(result)
+
     result.set_clim(clim[0], clim[1])
 
     if use_contours:
@@ -280,8 +282,10 @@ def add_to_plot(frame, fig, ax, frame_i):
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
-    plot.text(0.84 * x_range / 2.0 + x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+    if frame_i == 1:
+        plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    if frame_i == 2:
+        plot.text(0.84 * x_range / 2.0 + x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     # Label colorbar
     if frame_i == 2:
