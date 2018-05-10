@@ -42,9 +42,9 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 
     # Directory Selection
     parser.add_argument('--dir1', dest = "directory1", default = '../taper10',
-                         help = 'select first directory to compare intensity (first is for T = 10, second is for T = 10) (default: ../taper10)')
+                         help = 'select first directory to compare vorticity (first is for T = 10, second is for T = 10) (default: ../taper10)')
     parser.add_argument('--dir2', dest = "directory2", default = '../taper1000',
-                         help = 'select second directory to compare intensity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
+                         help = 'select second directory to compare vorticity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
 
     parser.add_argument('-g', dest = "grain_size", default = "cm",
                          help = 'grain size string (default: cm)')
@@ -52,6 +52,12 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "vorticityComparison",
                          help = 'save directory (default: vorticityComparison)')
+
+    # Quantity to plot
+    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
+                         help = 'plot rossby number instead of vorticity (default: plot vorticity)')
+    parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
+                         help = 'use v_theta or v_theta - v_kep (default: use residual)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -97,9 +103,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-default_directory = "../taper1000/%s-size/" % (args.wavelength, args.grain_size)
-
-fn = "../%s/id%04d_par.p" % (default_directory, args.id_number)
+default_directory = "../taper1000/%s-size/" % (args.grain_size)
 fargo_par = util.get_pickled_parameters(directory = default_directory)
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -128,9 +132,6 @@ grain_size = args.grain_size
 directory1 = "%s/%s-size" % (args.directory1, grain_size)
 directory2 = "%s/%s-size" % (args.directory2, grain_size)
 directories = [directory1, directory2]
-
-# Number of Cores 
-num_cores = args.num_cores
 
 # Files
 save_directory = args.save_directory
