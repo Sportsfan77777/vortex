@@ -67,6 +67,8 @@ def new_argument_parser(description = "Manage movie input parameters."):
     # Movie Parameters
     parser.add_argument('--fps', dest = "fps", type = int, default = 5,
                          help = 'movie frames per second (default: 5)')
+    parser.add_argument('--bit', dest = "bit_rate", type = int, default = 1000,
+                         help = 'bit rate in kbits/s (default: 1000)')
 
     # Speed up on El Gato
     parser.add_argument('--fast_off', dest = "speed_up", action = 'store_false', default = True,
@@ -98,6 +100,7 @@ movie_name = name + args.movie_name
 
 # Movie Parameters
 fps = args.fps
+bit_rate = args.bit_rate
 
 # Speed Parameter
 speed_up = args.speed_up
@@ -125,7 +128,7 @@ def make_movies():
     path = "%s/tmp_%s%s.png" % (directory, base_name, "%04d")
     output = "%s/%s.mp4" % (save_directory, movie_name)
 
-    command = "ffmpeg -f image2 -r %d -i %s -vcodec mpeg4 -y %s" % (fps, path, output)
+    command = "ffmpeg -f image2 -r %d -i %s -b:v -%dk -vcodec mpeg4 -y %s" % (fps, path, bit_rate, output)
     if speed_up:
        command += ' -c:v libx264 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"'
     process = subprocess.Popen(command.split())
