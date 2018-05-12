@@ -173,11 +173,14 @@ for i, resolution in enumerate(resolutions):
 
 for resolution_i, resolution in enumerate(resolutions):
     directory = "../mm-size-%d" % resolution
-    pool_args = [(resolution_i, i, directory, frame) for i, frame in enumerate(frame_range)]    
+    pool_args = [(resolution_i, i, directory, frame) for i, frame in enumerate(frame_range)]
 
-    p = Pool(num_cores)
-    p.map(get_extent, pool_args)
-    p.terminate()
+    if num_cores == 1:
+        get_extent(pool_args)
+    else:
+        p = Pool(num_cores)
+        p.map(get_extent, pool_args)
+        p.terminate()
 
 
 ##### PLOTTING #####
