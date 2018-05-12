@@ -35,7 +35,7 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 # Resolutions for Extent Comparison
-resolutions = np.array([1024, 2048, 4096])
+resolutions = np.array([2048, 4096])
 directories = []
 
 def new_argument_parser(description = "Plot azimuthal density profiles in two by two grid."):
@@ -87,7 +87,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get Fargo Parameters ###
-fargo_par = util.get_pickled_parameters(directory = "../cm-size")
+fargo_par = util.get_pickled_parameters(directory = "../mm-size-2048")
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -152,7 +152,7 @@ fargo_par["theta"] = theta
 
 def get_extent(args):
     # Extract args
-    grain_i, i, directory, frame = args
+    resolution_i, i, directory, frame = args
 
     # Get data and measure extent
     dust_density = util.read_data(frame, 'dust', fargo_par, id_number = id_number, directory = directory)
@@ -162,18 +162,18 @@ def get_extent(args):
     extent *= (180.0 / np.pi)
 
     # Store
-    (extents[grain_i])[i] = extent
+    (extents[resolution_i])[i] = extent
 
 ###############################################################################
 
 # Data
 extents = []
-for i, grain in enumerate(grain_sizes):
+for i, resolution in enumerate(resolutions):
     extents.append(mp_array("f", len(frame_range)))
 
-for grain_i, grain in enumerate(grain_sizes):
-    directory = "../%s-size" % grain
-    pool_args = [(grain_i, i, directory, frame) for i, frame in enumerate(frame_range)]    
+for resolution_i, resolution in enumerate(resolutions):
+    directory = "../mm-size-%d" % resolution
+    pool_args = [(resolution_i, i, directory, frame) for i, frame in enumerate(frame_range)]    
 
     p = Pool(num_cores)
     p.map(get_extent, pool_args)
@@ -191,8 +191,8 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Plot
-    for i, size in enumerate(sizes):
-        size_label = util.get_size_label(size)
+    for i, resolution in enumerate(resolutions):
+        resolution_label = r"$%d$" % resolution
 
         x = frame_range
         y = np.array(extents[i])
@@ -201,7 +201,7 @@ def make_plot(show = False):
         smooth_y = util.smooth(y, kernel)
 
         plot.plot(x, y, c = colors[i], linewidth = linewidth, alpha = alpha)
-        plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth, label = size_label)
+        plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth, label = resolution_label)
 
     # Axes
     angles = np.linspace(0, 360, 7)
@@ -220,9 +220,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/extents.png" % (save_directory)
+        save_fn = "%s/extentsByResolution.png" % (save_directory)
     else:
-        save_fn = "%s/v%04d_extents.png" % (save_directory, version)
+        save_fn = "%s/v%04d_extentsByResolution.png" % (save_directory, version)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
