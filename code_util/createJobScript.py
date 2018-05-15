@@ -26,8 +26,8 @@ def new_argument_parser(description = "Make a new job script."):
 
     parser.add_argument('-q', dest = "queue", default = "medium",
                          help = 'queue (default: medium)')
-    parser.add_argument('--name', dest = "name", default = "auto",
-                         help = 'queue (default: auto)')
+    parser.add_argument('--name', dest = "name", default = None,
+                         help = 'queue (default: fn)')
 
     parser.add_argument('--gpu', dest = "gpu", action = 'store_true', default = False,
                          help = 'request gpu resource (default: no gpus)')
@@ -41,10 +41,12 @@ def new_argument_parser(description = "Make a new job script."):
                          help = 'include openmpi module (default: include)')
 
     # Job
+    parser.add_argument('--mpi', dest = "mpirun", action = 'store_true', default = False,
+                         help = 'use mpirun (default: do not use mpirun)')
     parser.add_argument('-j', dest = "job", default = "",
                          help = 'job command (default: empty string)')
-    parser.add_argument('-o', dest = "output", default = "this.out",
-                         help = 'output file (default: this.out)')
+    parser.add_argument('-o', dest = "output", default = None,
+                         help = 'output file (.out appended to the end) (default: name)')
 
     return parser
 
@@ -53,8 +55,16 @@ def new_argument_parser(description = "Make a new job script."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-args.fn = "%s.sh" % args.fn
+# Names
+if args.name is None:
+    args.name = args.fn
+if args.output is None:
+    args.output = args.name
 
+args.fn = "%s.sh" % args.fn
+args.output = "%s.out" % args.output
+
+# Cores
 if (args.ptile is None) or (args.ptile > args.num_cores):
     args.ptile = args.num_cores
 
@@ -91,7 +101,7 @@ with open(args.fn, 'w') as f:
     f.write("\n")
 
     ### Job ###
-    if args.num_cores > 1:
+    if args.mpirun:
         f.write("mpirun -np %d " % args.num_cores)
     f.write("%s " % args.job)
     f.write("> %s\n" % args.output)
