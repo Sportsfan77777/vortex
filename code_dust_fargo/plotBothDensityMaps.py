@@ -84,12 +84,14 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'center frame on vortex peak or middle (default: do not center)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmapGas', dest = "gas_cmap", default = "viridis",
+                         help = 'gas color map (default: viridis)')
+    parser.add_argument('--cmapDust', dest = "dust_cmap", default = "inferno",
+                         help = 'dust color map (default: inferno)')
     parser.add_argument('--cmaxGas', dest = "gas_cmax", type = float, default = 2,
-                         help = 'maximum density in colorbar (default: 2)')
+                         help = 'gas maximum density in colorbar (default: 2)')
     parser.add_argument('--cmaxDust', dest = "dust_cmax", type = float, default = None,
-                         help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
+                         help = 'dust maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -153,7 +155,9 @@ else:
 center = args.center
 
 # Plot Parameters (constant)
-cmap = args.cmap
+gas_cmap = args.gas_cmap
+dust_cmap = args.dust_cmap
+
 gas_cmax = args.gas_cmax
 dust_cmax = args.dust_cmax
 if dust_cmax is None:
@@ -199,10 +203,17 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = gas_cmap)
 
     fig.colorbar(result)
     result.set_clim(gas_clim[0], gas_clim[1])
+
+    # Axes
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -218,13 +229,6 @@ def make_plot(frame, show = False):
     else:
         plot.title("Gas Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
-    # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
-
     ############################ Dust Density #################################
     plot.subplot(1, 2, 2)
 
@@ -234,10 +238,17 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = dust_cmap)
 
     fig.colorbar(result)
     result.set_clim(dust_clim[0], dust_clim[1])
+
+    # Axes
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -252,13 +263,6 @@ def make_plot(frame, show = False):
         plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
     else:
         plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
-
-    # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
 
     ###########################################################################
 
