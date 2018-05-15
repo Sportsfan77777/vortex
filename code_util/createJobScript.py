@@ -3,18 +3,21 @@ makes a new job script
 
 """
 
-
 import argparse
 
 
 def new_argument_parser(description = "Make a new job script."):
     parser = argparse.ArgumentParser()
 
+    # File
+    parser.add_argument("fn",
+                         help = 'job file name (.sh appended to the end) that must be included, error otherwise')
+
     # Basic Parameters
-    parser.add_argument('-c', dest = "num_cores", type = int, default = 16,
-                         help = 'number of cores (default: 16)')
-    parser.add_argument('-p', dest = "ptile", type = int, default = 16,
-                         help = 'number of cores needed on each computer (default: 16)')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+    parser.add_argument('-p', dest = "ptile", type = int, default = None,
+                         help = 'number of cores needed on each computer (default: num_cores)')
 
     parser.add_argument('--err', dest = "err_name", default = "err_%I",
                          help = 'job error file name (default: err_%I)')
@@ -26,7 +29,16 @@ def new_argument_parser(description = "Make a new job script."):
     parser.add_argument('--name', dest = "name", default = "auto",
                          help = 'queue (default: auto)')
 
+    parser.add_argument('--gpu', dest = "gpu", action = 'store_true', default = False,
+                         help = 'request gpu resource (default: no gpus)')
+
     # Modules
+    parser.add_argument('--python_off', dest = "python", action = 'store_false', default = True,
+                         help = 'include python module (default: include)')
+    parser.add_argument('--fftw_off', dest = "fftw", action = 'store_false', default = True,
+                         help = 'include fftw module (default: include)')
+    parser.add_argument('--openmpi_off', dest = "openmpi", action = 'store_false', default = True,
+                         help = 'include openmpi module (default: include)')
 
     # Job
     parser.add_argument('-j', dest = "job", default = "",
@@ -41,7 +53,9 @@ def new_argument_parser(description = "Make a new job script."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
-if args.ptile > args.num_cores:
+args.fn = "%s.sh" % args.fn
+
+if (args.ptile is None) or (args.ptile > args.num_cores):
     args.ptile = args.num_cores
 
 ###############################################################################
@@ -51,7 +65,7 @@ if args.ptile > args.num_cores:
 with open(args.fn, 'w') as f:
     f.write("#!/bin/bash\n")
 
-    # Basic Parameters
+    ### Basic Parameters ###
     f.write("#BSUB -n %d\n" % args.num_cores)
     f.write("#BSUB -e %s\n" % args.err_name)
     f.write("#BSUB -o %s\n" % args.out_name)
@@ -62,10 +76,10 @@ with open(args.fn, 'w') as f:
         f.write("#BSUB -R gpu\n")
     f.write('#BSUB -R "span[ptile=%d]"\n' % args.ptile)
 
-    # Line Break
+    # Line Break #
     f.write("\n")
 
-    # Modules
+    ### Modules ###
     if args.python:
         f.write("module load python/2.7.3\n")
     if args.fftw:
@@ -73,11 +87,17 @@ with open(args.fn, 'w') as f:
     if args.openmpi:
         f.write("module load openmpi\n")
 
-    # Job
-    if args.mpirun:
+    # Line Break
+    f.write("\n")
+
+    ### Job ###
+    if args.num_cores > 1:
         f.write("mpirun -np %d " % args.num_cores)
     f.write("%s " % args.job)
     f.write("> %s\n" % args.output)
+
+    # Line Break
+    f.write("\n")
 
 
 
