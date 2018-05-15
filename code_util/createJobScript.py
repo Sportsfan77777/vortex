@@ -10,12 +10,43 @@ import argparse
 def new_argument_parser(description = "Make a new job script."):
     parser = argparse.ArgumentParser()
 
-    
+    # Basic Parameters
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 16,
+                         help = 'number of cores (default: 16)')
+    parser.add_argument('-p', dest = "ptile", type = int, default = 16,
+                         help = 'number of cores needed on each computer (default: 16)')
+
+    parser.add_argument('--err', dest = "err_name", default = "err_%I",
+                         help = 'job error file name (default: err_%I)')
+    parser.add_argument('--out', dest = "out_name", default = "out_%I",
+                         help = 'job output file name (default: out_%I)')
+
+    parser.add_argument('-q', dest = "queue", default = "medium",
+                         help = 'queue (default: medium)')
+    parser.add_argument('--name', dest = "name", default = "auto",
+                         help = 'queue (default: auto)')
+
+    # Modules
+
+    # Job
+    parser.add_argument('-j', dest = "job", default = "",
+                         help = 'job command (default: empty string)')
+    parser.add_argument('-o', dest = "output", default = "this.out",
+                         help = 'output file (default: this.out)')
 
     return parser
 
 ###############################################################################
 
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+if args.ptile > args.num_cores:
+    args.ptile = args.num_cores
+
+###############################################################################
+
+### Write File ###
 
 with open(args.fn, 'w') as f:
     f.write("#!/bin/bash\n")
