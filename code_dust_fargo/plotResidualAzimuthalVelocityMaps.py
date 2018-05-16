@@ -193,13 +193,14 @@ def make_plot(frame, show = False):
 
     # Data
     gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     azimuthal_velocity = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta))
     if center:
         if taper_time < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
+            shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
         else:
-            threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
+            threshold = util.get_threshold(size) * 1.5
+            shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero)
         azimuthal_velocity = np.roll(azimuthal_velocity, shift_c)
     
     # Take Residual
