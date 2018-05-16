@@ -301,7 +301,7 @@ def add_to_plot(frame, fig, ax, frame_i):
                cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
             else:
                cbar_name = r"$\mathrm{Vorticity}$"
-            cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
+            cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 30)
 
         #if frame_i != num_frames:
         #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
