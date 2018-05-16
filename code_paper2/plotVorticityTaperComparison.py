@@ -273,7 +273,7 @@ def add_to_plot(frame, fig, ax, frame_i):
     y_text = 1.14
 
     title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_{J}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
