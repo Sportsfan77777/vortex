@@ -273,12 +273,12 @@ def add_to_plot(frame, fig, ax, frame_i):
     y_text = 1.14
 
     title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_{J}$]" % (orbit, current_mass)
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
-    text_mass = r"$M_\mathrm{p} = %d$ $M_J$" % (int(planet_mass))
+    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{J}$" % (int(planet_mass))
     text_visc = r"$\nu = 10^{%d}$" % (int(np.log(viscosity) / np.log(10)))
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
@@ -301,7 +301,7 @@ def add_to_plot(frame, fig, ax, frame_i):
                cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
             else:
                cbar_name = r"$\mathrm{Vorticity}$"
-            cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 30)
+            cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 32)
 
         #if frame_i != num_frames:
         #    fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
