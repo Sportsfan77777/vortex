@@ -52,7 +52,7 @@ def read_data(frame, fn, fargo_par, id_number = None, version = None, directory 
     ########### Method ##############
     # Dictionary
     basenames = {}
-    basenames['gas'] = "gasdens%d.dat"; basenames['dust'] = "gasddens%d.dat"
+    basenames['gas'] = "gasdens%d.dat"; basenames['dust'] = "gasddens%d.dat"; basenames['input_density'] = "id%04d_gasddens%d.p";
     basenames['intensity'] = "id%04d_intensity%04d.dat"; basenames['polar_intensity'] = "id%04d_intensityMap%04d.p"; basenames['cartesian_intensity'] = "id%04d_intensityCartGrid%04d.p"
 
     # Specific Data
@@ -74,7 +74,7 @@ def read_data(frame, fn, fargo_par, id_number = None, version = None, directory 
     elif ext == ".dat":
         data = (fromfile("%s/%s" % (directory, basename)).reshape(num_rad, num_theta))
     elif ext == ".p":
-        data = pickle.load(open(basename, "rb"))
+        data = pickle.load(open("%s/%s" % (directory, basename), "rb"))
     return data
 
 def read_gas_data(frame, fargo_par, normalize = True, directory = "."):
@@ -99,13 +99,34 @@ def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
         data /= (surface_density_zero / 100.0)
     return data
 
+def get_size(size_name):
+    """ return number corresponding to size name """
+    sizes = {}
+    sizes["cm"] = 1.0; sizes["hcm"] = 0.3; sizes["mm"] = 0.1
+    sizes["hmm"] = 0.03; sizes["hum"] = 0.01; sizes["um"] = 0.0001
+
+    return sizes[size_name]
+
+def get_size_name(size):
+    """ return size name corresponding to size number """
+    size_names = {}
+    size_names[1.0] = "cm"; size_names[0.3] = "hcm"; size_names[0.1] = "mm"
+    size_names[0.03] = "hmm"; size_names[0.01] = "hum"; size_names[0.0001] = "um"
+
+    return size_names[size]
+
 def get_size_label(size):
     """ return label corresponding to size """
-    sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
-    size_labels = [r"$1$ $\rm{cm}$", r"$0.3$ $\rm{cm}$", r"$1$ $\rm{mm}$", r"$0.3$ $\rm{mm}$", r"$100$ $\rm{\mu m}$", r"$1$ $\rm{\mu m}$"]
+    sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001]) ### <<<==== switch to dictionary!
+    size_labels = [r"$1$ $\rm{cm}$", r"$3$ $\rm{mm}$", r"$1$ $\rm{mm}$", r"$0.3$ $\rm{mm}$", r"$100$ $\rm{\mu m}$", r"$1$ $\rm{\mu m}$"]
 
     arg_size = np.abs(sizes - size).argmin() # find closest size
     return size_labels[arg_size]
+
+def get_stokes_number(size):
+    """ return size name corresponding to size number """
+    cm_ref = 0.076 # assumes r_p = 5 AU!
+    return cm_ref * size
 
 def get_threshold(size):
     """ return label corresponding to size """
@@ -115,6 +136,14 @@ def get_threshold(size):
 
     arg_size = np.abs(sizes - size).argmin() # find closest size
     return thresholds[arg_size]
+
+def get_current_mass(orbit, taper_time, planet_mass = 1.0):
+    """ calculate mass at a particular orbit given a growth time up to a planet mass """
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+    return current_mass
 
 def find_max_frame():
     """ Get last orbit """
