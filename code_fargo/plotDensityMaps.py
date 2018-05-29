@@ -1,25 +1,43 @@
 """
-plot 2-D density maps
+plot 2-D dust density maps
 
-python plotDensityMaps.py
-python plotDensityMaps.py frame_number
-python plotDensityMaps.py -1 <<<===== Plots a sample
-python plotDensityMaps.py -m
+usage: plotDustDensityMaps.py [-h] [-c NUM_CORES] [--dir SAVE_DIRECTORY]
+                              [--hide] [-v VERSION] [--range R_LIM R_LIM]
+                              [--shift] [--cmap CMAP] [--cmax CMAX]
+                              [--fontsize FONTSIZE] [--dpi DPI]
+                              frames [frames ...]
+
+positional arguments:
+  frames                select single frame or range(start, end, rate). error
+                        if nargs != 1 or 3
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c NUM_CORES          number of cores (default: 1)
+  --dir SAVE_DIRECTORY  save directory (default: dustDensityMaps)
+  --hide                for single plot, do not display plot (default: display
+                        plot)
+  -v VERSION            version number (up to 4 digits) for this set of plot
+                        parameters (default: None)
+  --range R_LIM R_LIM   radial range in plot (default: [r_min, r_max])
+  --shift               center frame on vortex peak or middle (default: do not
+                        center)
+  --cmap CMAP           color map (default: viridis)
+  --cmax CMAX           maximum density in colorbar (default: 10 for hcm+, 2.5
+                        otherwise)
+  --fontsize FONTSIZE   fontsize of plot annotations (default: 16)
+  --dpi DPI             dpi of plot annotations (default: 100)
 """
 
-import sys
-import os
-import subprocess
-import pickle
-import glob
+import sys, os, subprocess
+import pickle, glob
 from multiprocessing import Pool
+import argparse
 
 import math
 import numpy as np
 
-
 import matplotlib
-#matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -27,128 +45,241 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import azimuthal as az
 from readTitle import readTitle
 
-save_directory = "gasDensityMaps"
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
 
-### Get FARGO Parameters ###
-# Create param file if it doesn't already exist
-param_fn = "params.p"
-if not os.path.exists(param_fn):
-    command = "python pickleParameters.py"
-    split_command = command.split()
-    subprocess.Popen(split_command)
-fargo_par = pickle.load(open(param_fn, "rb"))
+###############################################################################
 
-num_rad = np.loadtxt("dims.dat")[-2]
-num_theta = np.loadtxt("dims.dat")[-1]
+### Input Parameters ###
 
-rad = np.loadtxt("used_rad.dat")[:-1]
+def new_argument_parser(description = "Plot gas density maps."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+                         help = 'save directory (default: gasDensityMaps)')
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
+                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
+                         help = 'center frame on vortex peak or middle (default: do not center)')
+
+    # Plot Parameters (contours)
+    parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
+                         help = 'use contours or not (default: do not use contours)')
+    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.1,
+                         help = 'lowest contour (default: 1.1)')
+    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
+                         help = 'highest contour (default: 3.5)')
+    parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
+                         help = 'number of contours (choose this or separation) (default: None)')
+    parser.add_argument('--separation', dest = "separation", type = int, default = 0.1,
+                         help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+    
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1.4,
+                         help = 'maximum density in colorbar (default: 1.4)')
+
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get Fargo Parameters ###
+fargo_par = util.get_pickled_parameters()
+
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = util.get_frame_range(args.frames)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+
+rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
-surface_density_zero = float(fargo_par["Sigma0"])
-scale_height = float(fargo_par["AspectRatio"])
+version = args.version
+if args.r_lim is None:
+    x_min = r_min; x_max = r_max
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+center = args.center
+
+# Plot Parameters (contours)
+use_contours = args.use_contours
+low_contour = args.low_contour
+high_contour = args.high_contour
+num_levels = args.num_levels
+if num_levels is None:
+    separation = args.separation
+    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
+# Plot Parameters (constant)
+cmap = args.cmap
+clim = [0, args.cmax]
+
+fontsize = args.fontsize
+dpi = args.dpi
+
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
+
+###############################################################################
+
+def generate_colors(n):
+    c = ['k', 'b', 'firebrick']
+    colors = []
+    for i in range(n):
+        colors.append(c[i % len(c)])
+    return colors
 
 ##### PLOTTING #####
 
-# Make Directory
-try:
-    os.mkdir(save_directory)
-except:
-    print "Directory Already Exists"
-
-# Plot Parameters
-cmap = "RdYlBu_r"
-clim = [0, 2]
-
-fontsize = 14
-my_dpi = 100
-
-
 def make_plot(frame, show = False):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
-        ax = fig.add_subplot(111)
-
-        # Axis
-        angles = np.linspace(0, 2 * np.pi, 7)
-        degree_angles = ["%d" % d_a for d_a in np.linspace(0, 360, 7)]
-
-        plot.ylim(0, 2 * np.pi)
-        plot.yticks(angles, degree_angles)
-        if axis == "zoom":
-            x = (rad - 1) / scale_height
-            prefix = "zoom_"
-            plot.xlim(0, 40) # to match the ApJL paper
-            xlabel = r"($r - r_p$) $/$ $h$"
+    # Data
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    if center:
+        if taper_time < 10.1:
+            shift_c = az.get_azimuthal_peak(density, fargo_par)
         else:
-            x = rad
-            prefix = ""
-            plot.xlim(float(fargo_par["Rmin"]), float(fargo_par["Rmax"]))
-            xlabel = "Radius"
+            pass
+            # shift away from the minimum
+        density = np.roll(density, shift_c)
+    normalized_density = density / surface_density_zero
 
-        # Data
-        density = (fromfile("gasdens%d.dat" % i).reshape(num_rad, num_theta))
-        normalized_density = density / surface_density_zero
+    ### Plot ###
+    x = rad
+    y = theta * (180.0 / np.pi)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
-        ### Plot ###
-        result = ax.pcolormesh(x, theta, np.transpose(normalized_density), cmap = cmap)
-        fig.colorbar(result)
-        result.set_clim(clim[0], clim[1])
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
 
-        # Annotate
-        this_title = readTitle()
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
-        plot.title("Gas Density Map at Orbit %d\n%s" % (orbit, this_title), fontsize = fontsize + 1)
+    if use_contours:
+        levels = np.linspace(low_contour, high_contour, num_levels)
+        colors = generate_colors(num_levels)
+        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
-        # Save and Close
-        plot.savefig("%s/%sdensityMap_%04d.png" % (save_directory, prefix, i), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
+    # Axes
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
 
-    i = frame
-    choose_axis(i, "normal")
-    choose_axis(i, "zoom")
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
 
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
 
-##### Plot One File or All Files #####
-
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(50, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            make_plot(i)
+    if orbit >= taper_time:
+        current_mass = planet_mass
     else:
-        # Plot Single
-        make_plot(frame_number, show = True)
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+    #title = readTitle()
+
+    unit = "r_\mathrm{p}"
+    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+
+    #if title is None:
+    #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    #else:
+    #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
+
+    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    y_text = 1.14
+
+    title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    # Text
+    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
+    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
+    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+
+
+    # Save, Show, and Close
+    if version is None:
+        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+    else:
+        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+##### Make Plots! #####
+
+# Iterate through frames
+
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
 else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    p = Pool() # default number of processes is multiprocessing.cpu_count()
-    p.map(make_plot, range(num_frames))
-    p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
-
-
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
 
