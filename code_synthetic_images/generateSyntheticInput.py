@@ -111,6 +111,9 @@ num_cores = args.num_cores
 mass = args.mass # (in solar masses)
 radius = args.radius # radius of planet (in AU)
 
+# Contribution Test
+zero = args.zero
+
 # Save Parameters
 num_grains = args.num_grains
 number_density_power = -args.number_density_power # Note: negative of input
