@@ -54,6 +54,10 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('-r', dest = "radius", type = float, default = 20.0,
                          help = 'radius of planet in AU (default: 20.0)')
 
+    # Contribution Test
+    parser.add_argument('-z', dest = "zero", type = int, default = -1,
+                         help = 'index of grain to leave out for contribution test (default: -1)')
+
     # Save Parameters
     parser.add_argument('-g', dest = "num_grains", type = int, default = 100,
                          help = 'number of interpolated grains (default: 100)')
@@ -149,7 +153,12 @@ def retrieve_density(frame, size_names):
 
     for i, size_name in enumerate(size_names):
         directory = "../%s-size" % size_name
-        density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory)
+
+        if zero == i:
+            # For debugging purposes to test contribution of a single grain size
+            pass
+        else:
+            density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory)
 
     return density, starting_sizes
 
