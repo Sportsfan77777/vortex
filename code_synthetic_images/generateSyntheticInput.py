@@ -245,8 +245,11 @@ def interpolate_density(density, num_grains):
 
 def distribute_density(density):
     """ Step 4 - Option B: distribute density according to a power law """
-    # Copy Sizes (may add different options later)
-    new_sizes = sizes[:]
+    # Reverse Sizes (may add different options later)
+    new_sizes = sizes[::-1]
+
+    # Reverse Density
+    reversed_density = density[:, :, ::-1]
 
     # Grain Ranges (for power-law distribution)
     log_sizes = np.log10(sizes[::-1])
@@ -271,8 +274,8 @@ def distribute_density(density):
 
     size_weights = [weighting_distribution(s) * dust_bins[i] for (i, s) in enumerate(sizes[::-1])]
     power_law = size_weights / np.sum(size_weights)
-    
-    distributed_density = power_law[None, :] * density
+
+    distributed_density = power_law[None, :] * reversed_density
 
     return distributed_density, new_sizes
 
