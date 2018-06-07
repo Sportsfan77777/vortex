@@ -208,7 +208,7 @@ def resample(density, new_num_rad = 400, new_num_theta = 400):
     return new_rad, new_theta, new_density
 
 def interpolate_density(density, num_grains):
-    """ Step 4: interpolate to more grain sizes """
+    """ Step 4 - Option A: interpolate to more grain sizes """
 
     ### New Grain Sizes and Ranges ###
     log_interpolated_sizes = np.linspace(np.log10(min(sizes)), np.log10(max(sizes)), num_grains)
@@ -242,6 +242,39 @@ def interpolate_density(density, num_grains):
     # Normalize to initial total gas mass
 
     return interpolated_density, interpolated_sizes
+
+def distribute_density(density):
+    """ Step 4 - Option B: distribute density according to a power law """
+    # Copy Sizes (may add different options later)
+    new_sizes = sizes[:]
+
+    # Grain Ranges (for power-law distribution)
+    log_sizes = np.log10(sizes[::-1])
+    range_a = log_sizes[:-1]
+    range_b = log_sizes[1:]
+    log_middle_midpoint_sizes = [np.mean([a, b]) for (a, b) in zip(range_a, range_b)]
+
+    log_midpoint_sizes = np.zeros(len(log_middle_midpoint_sizes) + 2)
+    log_midpoint_sizes[1:-1] = log_middle_midpoint_sizes
+    log_midpoint_sizes[0] = log_sizes[0] # - 0.5 * (middle_midpoint_sizes[0] - log__sizes[0])
+    log_midpoint_sizes[-1] = log_sizes[-1] #+ 0.5 * (middle_midpoint_sizes[-1] - log_sizes[-1])
+
+    midpoint_sizes = np.power(10.0, log_midpoint_sizes)
+    dust_bins = np.diff(midpoint_sizes)
+
+    # Scale to a Power Law Distribution
+    surface_density_power = number_density_power + 3.0
+
+    def weighting_distribution(x):
+        """ Determine weight of each dust size bin """
+        return x ** (surface_density_power)
+
+    size_weights = [weighting_distribution(s) * dust_bins[i] for (i, s) in enumerate(sizes[::-1])]
+    power_law = size_weights / np.sum(size_weights)
+    
+    distributed_density = power_law[None, :] * density
+
+    return distributed_density, new_sizes
 
 def convert_units(density):
     """ Step 5: convert density from code units to cgs units """
@@ -325,7 +358,12 @@ def full_procedure(frame):
     density, sizes = polish(density, sizes, scale = scale)
     density = center_vortex(density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
-    density, new_sizes = interpolate_density(density, num_grains)
+
+    if interpolate:
+        density, new_sizes = interpolate_density(density, num_grains)
+    else:
+        density, new_sizes = distribute_density(density)
+
     density = convert_units(density)
     output_density_txt(density, frame)
     output_density_pickle(density, frame)
