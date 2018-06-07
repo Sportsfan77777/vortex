@@ -58,6 +58,10 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('-z', dest = "zero", type = int, default = -1,
                          help = 'index of grain to leave out for contribution test (default: -1)')
 
+    # Interpolation
+    parser.add_argument('--raw', dest = "interpolate", action = 'store_false', default = True,
+                         help = 'interpolate or not (default: interpolate)')
+
     # Save Parameters
     parser.add_argument('-g', dest = "num_grains", type = int, default = 100,
                          help = 'number of interpolated grains (default: 100)')
@@ -110,6 +114,9 @@ num_cores = args.num_cores
 # System Parameters
 mass = args.mass # (in solar masses)
 radius = args.radius # radius of planet (in AU)
+
+# Interpolation
+interpolate = args.interpolate
 
 # Contribution Test
 zero = args.zero
@@ -263,6 +270,7 @@ def distribute_density(density):
     log_midpoint_sizes[-1] = log_sizes[-1] #+ 0.5 * (middle_midpoint_sizes[-1] - log_sizes[-1])
 
     midpoint_sizes = np.power(10.0, log_midpoint_sizes)
+    midpoint_sizes[0] = 0 # Fix smallest size to 0
     dust_bins = np.diff(midpoint_sizes)
 
     # Scale to a Power Law Distribution
