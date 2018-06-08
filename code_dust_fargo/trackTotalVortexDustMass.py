@@ -98,6 +98,7 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+name = args.name
 
 # Plot Parameters (variable)
 show = args.show
@@ -160,7 +161,7 @@ def make_plot(show = False):
 
     ### Line Plot ###
     x = np.array(frame_range)
-    y = np.array(get_total_mass(frame) for frame in x)
+    y = np.array([get_total_mass(frame) for frame in x])
     plot.plot(x, y, linewidth = linewidth)
 
     # Annotate Axes
