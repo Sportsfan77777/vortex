@@ -86,17 +86,20 @@ arc_beam = beam_size * planet_radius / distance
 ##### ANALYZE #####
 
 for f, frame in enumerate(frames):
-    print frame
+    print "t = %d" % frame
 
     reference_intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = reference_id)
     reference_max_intensity = np.max(reference_intensity_cart)
 
     for i, id_number in enumerate(ids):
+        fn = "id%04d_par.p" % id_number
+        fargo_par = pickle.load(open(fn, "rb"))
+
         intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
         max_intensity = np.max(intensity_cart)
-        percentage_loss = 1.0 - max_intensity / reference_max_intensity
+        percentage_loss = 100.0 * (1.0 - max_intensity / reference_max_intensity)
 
-        print "id %04d: %.06f (%.1f%)" % (id_number, max_intensity, percentage_loss)
+        print "id %04d: %.06f (%.1f%%)" % (id_number, max_intensity, percentage_loss)
 
     print
 
