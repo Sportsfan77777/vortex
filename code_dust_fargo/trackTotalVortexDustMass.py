@@ -125,7 +125,7 @@ fargo_par["theta"] = theta
 ### Helper Functions ###
 def get_total_mass(frame, num_scale_heights = 3):
     # Get Data
-    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta)) # Dust!!!!
+    density = util.read_dust_data(frame) # Dust!!!!
 
     # Find Center
     avgDensity = np.average(density, axis = -1)
