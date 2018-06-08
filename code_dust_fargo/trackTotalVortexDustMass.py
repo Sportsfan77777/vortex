@@ -124,7 +124,10 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 ### Helper Functions ###
-def get_total_mass(frame, num_scale_heights = 3):
+def get_total_mass(args, num_scale_heights = 3):
+    # Args
+    i, frame = args
+
     # Get Data
     density = util.read_dust_data(frame, fargo_par) # Dust!!!!
 
@@ -146,11 +149,26 @@ def get_total_mass(frame, num_scale_heights = 3):
     dr = rad[1] - rad[0]; dphi = theta[1] - theta[0]
     density_annulus = (dr * dphi) * rad_annulus[:, None] * density_annulus # (r * dr * d\phi) * \rho
 
+    # Calculate and store total mass
     total_mass = np.sum(density_annulus)
-
-    return total_mass
+    total_masses[i] = total_mass
 
 ###############################################################################
+
+### Get Data ###
+if num_cores == 1:
+    total_masses = np.zeros(len(frame_range))
+    for (i, frame) in enumerate(frame_range):
+        get_total_mass(i, frame)
+else:
+    # Multi-Core!
+    total_masses = mp_array("d", len(frame_range))
+    pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
+
+    # Pool
+    p = Pool(num_cores)
+    p.map(get_total_mass, pool_args)
+    p.terminate()
 
 ##### PLOTTING #####
 
@@ -161,17 +179,7 @@ def make_plot(show = False):
 
     ### Line Plot ###
     x = np.array(frame_range)
-
-    if num_cores == 1:
-        y = np.array([get_total_mass(frame) for frame in x])
-    else:
-        # Multi-Core!
-        y = mp_array("d", len(frame_range))
-        # Pool
-        p = Pool(num_cores)
-        p.map(get_total_mass, frame_range)
-        p.terminate()
-
+    y = np.array(total_masses)
     plot.plot(x, y, linewidth = linewidth)
 
     # Annotate Axes
