@@ -161,13 +161,23 @@ def make_plot(show = False):
 
     ### Line Plot ###
     x = np.array(frame_range)
-    y = np.array([get_total_mass(frame) for frame in x])
+
+    if num_cores == 1:
+        y = np.array([get_total_mass(frame) for frame in x])
+    else:
+        # Multi-Core!
+        y = mp_array("d", len(frame_range))
+        # Pool
+        p = Pool(num_cores)
+        p.map(get_total_mass, frame_range)
+        p.terminate()
+
     plot.plot(x, y, linewidth = linewidth)
 
     # Annotate Axes
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.title("Total Dust Mass in Vortex Annulus")
+    plot.title("Total Dust Mass in Vortex Annulus", fontsize = fontsize + 2)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
