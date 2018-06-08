@@ -29,11 +29,11 @@ for key in cmaps:
 
 ### Input Parameters ###
 
-def new_argument_parser(description = "Plot azimuthal density profiles."):
+def new_argument_parser(description = "Plot total dust mass in vortex annulus over time."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 3,
+    parser.add_argument('frames', type = int, nargs = '+',
                          help = 'select range(start, end, rate)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
@@ -63,3 +63,124 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 
     return parser
 
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get Fargo Parameters ###
+fargo_par = util.get_pickled_parameters()
+
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = util.get_frame_range(args.frames)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+max_y = args.max_y
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+# Plot Parameters (constant)
+fontsize = args.fontsize
+labelsize = args.labelsize
+linewidth = args.linewidth
+alpha = args.alpha
+dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
+
+###############################################################################
+
+### Helper Functions ###
+def get_total_mass(frame, num_scale_heights = 3):
+    # Get Data
+    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta)) # Dust!!!!
+
+    # Find Center
+    avgDensity = np.average(density, axis = -1)
+    peak_rad, peak_density = az.get_radial_peak(avgDensity, fargo_par)
+
+    # Zoom in on annulus
+    start_rad = peak_rad - 0.5 * num_scale_heights * scale_height
+    end_rad = peak_rad + 0.5 * num_scale_heights * scale_height
+
+    start_rad_i = np.searchsorted(start_rad)
+    end_rad_i = np.searchsorted(end_rad)
+
+    rad_annulus = rad[start_rad_i : end_rad_i]
+    density_annulus = density[start_rad_i : end_rad_i]
+
+    # Multiply by Grid Cell size
+    dr = rad[1] - rad[0]; dphi = theta[1] - theta[0]
+    density_annulus = (dr * dphi) * rad_annulus[:, None] * density_annulus # (r * dr * d\phi) * \rho
+
+    return total_mass
+
+###############################################################################
+
+##### PLOTTING #####
+
+def make_plot(show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
+
+    ### Line Plot ###
+    x = np.array(frame_range)
+    y = np.array(get_total_mass(frame) for frame in x)
+    plot.plot(x, y, linewidth = linewidth)
+
+    # Annotate Axes
+    plot.xlabel("Time (planet orbits)", fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.title("Total Dust Mass in Vortex Annulus")
+
+    #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+
+    # Axes
+    plot.xlim(frame_range[0], frame_range[-1])
+    if max_y is not None:
+        plot.ylim(0, max_y)
+
+    # Save, Show, and Close
+    save_fn = "totalVortexDustMass.png"
+    plot.savefig(save_fn, bbox_inches = 'tight')
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+
+##### Make Plots! #####
+
+make_plot(show = show)
