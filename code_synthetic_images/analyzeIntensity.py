@@ -57,7 +57,7 @@ if reference_id is None:
     reference_id = ids[0]
 
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % args.reference_id
+fn = "id%04d_par.p" % reference_id
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
