@@ -135,8 +135,8 @@ def get_total_mass(frame, num_scale_heights = 3):
     start_rad = peak_rad - 0.5 * num_scale_heights * scale_height
     end_rad = peak_rad + 0.5 * num_scale_heights * scale_height
 
-    start_rad_i = np.searchsorted(start_rad)
-    end_rad_i = np.searchsorted(end_rad)
+    start_rad_i = np.searchsorted(rad, start_rad)
+    end_rad_i = np.searchsorted(rad, end_rad)
 
     rad_annulus = rad[start_rad_i : end_rad_i]
     density_annulus = density[start_rad_i : end_rad_i]
