@@ -41,6 +41,8 @@ def new_argument_parser(description = "Plot total dust mass in vortex annulus ov
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = ".",
                          help = 'save directory (default: current directory)')
+    parser.add_argument('--name', dest = "name", default = "default",
+                         help = 'save name suffix (default: default)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -172,7 +174,7 @@ def make_plot(show = False):
         plot.ylim(0, max_y)
 
     # Save, Show, and Close
-    save_fn = "totalVortexDustMass.png"
+    save_fn = "totalVortexDustMass_%s.png" % name
     plot.savefig(save_fn, bbox_inches = 'tight')
 
     if show:
