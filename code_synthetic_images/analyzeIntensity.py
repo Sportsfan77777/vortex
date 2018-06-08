@@ -48,8 +48,16 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
+### Get Input Parameters ###
+frames = util.get_frame_range(args.frames)
+ids = util.get_frame_range(args.ids) # gets any range, really
+
+reference_id = args.reference_id
+if reference_id is None:
+    reference_id = ids[0]
+
 ### Get ID%04d Parameters ###
-fn = "id%04d_par.p" % args.id_number
+fn = "id%04d_par.p" % args.reference_id
 fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -73,21 +81,13 @@ distance = fargo_par["Distance"]
 
 arc_beam = beam_size * planet_radius / distance
 
-### Get Input Parameters ###
-frames = util.get_frame_range(args.frames)
-ids = util.get_frame_range(args.ids) # gets any range, really
-
-reference_id = args.reference_id
-if reference_id is None:
-    reference_id = ids[0]
-
 ###############################################################################
 
 ##### ANALYZE #####
 
 for f, frame in enumerate(frames):
     print frame
-    
+
     reference_intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = reference_id)
     reference_max_intensity = np.max(reference_intensity_cart)
 
