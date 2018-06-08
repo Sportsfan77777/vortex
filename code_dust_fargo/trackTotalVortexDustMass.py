@@ -145,6 +145,8 @@ def get_total_mass(frame, num_scale_heights = 3):
     dr = rad[1] - rad[0]; dphi = theta[1] - theta[0]
     density_annulus = (dr * dphi) * rad_annulus[:, None] * density_annulus # (r * dr * d\phi) * \rho
 
+    total_mass = np.sum(density_annulus)
+
     return total_mass
 
 ###############################################################################
