@@ -84,9 +84,9 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
                          help = 'center frame on vortex peak or middle (default: do not center)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "dust_cmap", default = "inferno",
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'dust color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "dust_cmax", type = float, nargs = 3, default = None,
+    parser.add_argument('--cmax', dest = "cmax", type = float, nargs = 3, default = None,
                          help = 'dust maximum density in colorbar (default: None)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
