@@ -180,7 +180,7 @@ def make_plot(frame, show = False):
         ### Plot ###
         x = rad
         y = theta * (180.0 / np.pi)
-        result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = dust_cmap)
+        result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
         fig.colorbar(result)
         result.set_clim(0, cmax[i])
