@@ -184,6 +184,13 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+def generate_colors(n):
+    c = ['k', 'b', 'firebrick']
+    colors = []
+    for i in range(n):
+        colors.append(c[i % len(c)])
+    return colors
+
 ##### PLOTTING #####
 
 def make_plot(frame, show = False):
