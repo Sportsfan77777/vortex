@@ -82,6 +82,19 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
+
+    # Plot Parameters (contours)
+    parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
+                         help = 'use contours or not (default: do not use contours)')
+    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.0,
+                         help = 'lowest contour (default: 1.1)')
+    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
+                         help = 'highest contour (default: 3.5)')
+    parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
+                         help = 'number of contours (choose this or separation) (default: None)')
+    parser.add_argument('--separation', dest = "separation", type = int, default = 0.1,
+                         help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+    
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
@@ -149,6 +162,15 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 center = args.center
 
+# Plot Parameters (contours)
+use_contours = args.use_contours
+low_contour = args.low_contour
+high_contour = args.high_contour
+num_levels = args.num_levels
+if num_levels is None:
+    separation = args.separation
+    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
 # Plot Parameters (constant)
 cmap = args.cmap
 cmax = args.cmax
@@ -174,6 +196,7 @@ def make_plot(frame, show = False):
         plot.subplot(1, 3, number)
 
         # Data
+        gas_density = (fromfile("../%s-size/gasdens%d.dat" % (grain, frame)).reshape(num_rad, num_theta)) / (100.0 * surface_density_zero)
         dust_density = (fromfile("../%s-size/gasddens%d.dat" % (grain, frame)).reshape(num_rad, num_theta))
         normalized_density = dust_density / (surface_density_zero)
 
@@ -184,6 +207,11 @@ def make_plot(frame, show = False):
 
         fig.colorbar(result)
         result.set_clim(0, cmax[i])
+
+        if use_contours:
+            levels = np.linspace(low_contour, high_contour, num_levels)
+            colors = generate_colors(num_levels)
+            plot.contour(x, y, np.transpose(gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
         # Axes
         plot.xlim(x_min, x_max)
@@ -202,9 +230,9 @@ def make_plot(frame, show = False):
         plot.ylabel(r"$\phi$", fontsize = fontsize)
 
         if title is None:
-            plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+            plot.title("%s-Dust Density Map\n(t = %.1f)" % (grain, orbit), fontsize = fontsize + 1)
         else:
-            plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
+            plot.title("%s-Dust Density Map\n%s\n(t = %.1f)" % (grain, title, orbit), fontsize = fontsize + 1)
 
     add_to_plot(0, "cm")
     add_to_plot(1, "hcm")
