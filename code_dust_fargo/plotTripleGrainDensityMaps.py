@@ -86,7 +86,7 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
                          help = 'use contours or not (default: do not use contours)')
-    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.0,
+    parser.add_argument('--low', dest = "low_contour", type = float, default = 0.9,
                          help = 'lowest contour (default: 1.1)')
     parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
                          help = 'highest contour (default: 3.5)')
@@ -185,7 +185,7 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 def generate_colors(n):
-    c = ['k', 'b', 'firebrick']
+    c = ['yellow', 'b', 'firebrick', 'magenta']
     colors = []
     for i in range(n):
         colors.append(c[i % len(c)])
