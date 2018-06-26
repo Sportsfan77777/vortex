@@ -38,6 +38,8 @@ movie_dictionary["intensity"] = "intensityMap_"
 movie_dictionary["polarIntensity"] = "intensityMap_"
 movie_dictionary["cartesianIntensity"] = "intensityCartGrid_"
 movie_dictionary["vorticity"] = "vorticityMap_"
+movie_dictionary["diffDensity"] = "diffDensityMap_"
+movie_dictionary["tripleDensity"] = "multigrainDensityMaps_"
 
 ###############################################################################
 
