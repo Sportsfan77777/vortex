@@ -171,8 +171,8 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    gas_density1 = (fromfile("../%s/gasdens%d.dat" % (sizes[0], frame)).reshape(num_rad, num_theta)) / surface_density_zero
-    gas_density2 = (fromfile("../%s/gasdens%d.dat" % (sizes[1], frame)).reshape(num_rad, num_theta)) / surface_density_zero
+    gas_density1 = (fromfile("../%s-size/gasdens%d.dat" % (sizes[0], frame)).reshape(num_rad, num_theta)) / surface_density_zero
+    gas_density2 = (fromfile("../%s-size/gasdens%d.dat" % (sizes[1], frame)).reshape(num_rad, num_theta)) / surface_density_zero
 
     diff_density = gas_density1 - gas_density2
 
