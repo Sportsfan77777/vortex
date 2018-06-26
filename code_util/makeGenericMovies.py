@@ -20,7 +20,7 @@ optional arguments:
                         parameters (default: None)
   --save_dir SAVE_DIRECTORY
                         location of files and output (default: current)
-  --save_name MOVIE_NAME
+  --movie MOVIE_NAME
                         select movie suffix (default: movie)
   --fps FPS             movie frames per second (default: 5)
 """
@@ -64,7 +64,7 @@ def new_argument_parser(description = "Manage movie input parameters."):
 
     parser.add_argument('--save_dir', dest = "save_directory", default = None,
                          help = 'location of files and output (default: file directory)')
-    parser.add_argument('--save_name', dest = "movie_name", default = "movie",
+    parser.add_argument('--movie', dest = "movie_name", default = "movie",
                          help = 'select movie suffix (default: movie)')
 
     # Movie Parameters
