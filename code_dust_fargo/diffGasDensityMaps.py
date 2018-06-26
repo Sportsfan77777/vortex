@@ -103,7 +103,7 @@ def new_argument_parser(description = "Plot dust density maps."):
 args = new_argument_parser().parse_args()
 
 ### Get Fargo Parameters ###
-fargo_par = util.get_pickled_parameters(directory = args.sizes[0])
+fargo_par = util.get_pickled_parameters(directory = "../%s-size/" % args.sizes[0])
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
