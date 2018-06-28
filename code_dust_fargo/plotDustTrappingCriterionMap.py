@@ -70,12 +70,6 @@ def new_argument_parser(description = "Plot dust density maps."):
     parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
                          help = 'save directory (default: vorticityMaps)')
 
-    # Quantity to plot
-    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
-                         help = 'plot rossby number instead of vorticity (default: plot vorticity)')
-    parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
-                         help = 'use v_theta or v_theta - v_kep (default: use residual)')
-
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -154,10 +148,6 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
-
-# Quantity to Plot
-rossby = args.rossby
-residual = args.residual
 
 # Plot Parameters (variable)
 show = args.show
@@ -252,13 +242,16 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
 
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+    du = velocity_perturbation(vrad, vtheta)
+    pressure_grad = pressure_gradient_term(density)
+
+    criterion = du[1:, 1:] - pressure_grad # difference
 
     # Shift
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
     dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     if center:
         if taper_time < 10.1:
@@ -272,7 +265,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(criterion), cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -326,17 +319,14 @@ def make_plot(frame, show = False):
     plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     # Label colorbar
-    if rossby:
-       cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
-    else:
-       cbar_name = r"$\mathrm{Vorticity}$"
+    cbar_name = r"$\mathrm{Positive} \mathrm{satifies} \mathrm{criterion}$"
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/vorticityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/dustTrappingCriterionMap_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_vorticityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_dustTrappingCriterionMap_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
