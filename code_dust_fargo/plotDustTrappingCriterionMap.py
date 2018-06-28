@@ -223,11 +223,16 @@ def pressure_gradient_term(density):
     pressure = sound_speed_squared[:, None] * (density - density_zero)
 
     # Pressure Gradient
+    d_rad = np.diff(rad)
+    d_theta = np.diff(theta)
+
+    dp_rad = np.diff(pressure, axis = 1) / d_rad[1:, None]
+    dp_theta = np.diff(pressure / rad[1:, None], axis = 0) / d_theta[1:, None]
 
     # Magnitude of pressure perturbation gradient
-    pressure_gradient_magnitude = np.sqrt(dprad * dprad + dptheta * dptheta)
+    pressure_gradient_magnitude = np.sqrt(dp_rad * dp_rad + dp_theta * dp_theta)
 
-    return pressure_gradient_magnitude * (rad[:, None] / density) / (2 * vk[:, None])
+    return pressure_gradient_magnitude * (rad[1:, None] / density[1:, 1:]) / (2 * vk[1:, None])
 
 
 ###############################################################################
