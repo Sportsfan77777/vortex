@@ -36,6 +36,7 @@ import argparse
 
 import math
 import numpy as np
+from scipy.ndimage import filters as ff
 
 import matplotlib
 from matplotlib import rcParams as rc
@@ -206,11 +207,15 @@ def pressure_gradient_term(density):
     # Keplerian velocity
     vk = np.power(rad, -0.5)
 
+    # Filter density
+    kernel = 4
+    filtered_density = ff.gaussian_filter(density, kernel)
+
     # Pressure: dP = c_s^2 * (rho - rho_0)
     height = scale_height * rad
     omegaK = np.power(rad, -1.5)
     sound_speed_squared = np.power(height, 2) * np.power(omegaK, 2)
-    pressure = sound_speed_squared[:, None] * (density - density_zero)
+    pressure = sound_speed_squared[:, None] * (filtered_density - density_zero)
 
     # Pressure Gradient
     d_rad = rad[1] - rad[0]
@@ -221,6 +226,8 @@ def pressure_gradient_term(density):
 
     # Magnitude of pressure perturbation gradient
     pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[1:, :] + (dp_theta * dp_theta)[:, 1:])
+
+    # Plot just the pressure gradient???? See if that works???
 
     return pressure_gradient_magnitude * (rad[1:, None] / density[1:, 1:]) / (2 * vk[1:, None])
 
@@ -273,7 +280,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(density), levels = levels, origin = 'upper', linewidths = 1, colors = colors, alpha = 0.8)
+        plot.contour(x, y, np.transpose(density / surface_density_zero), levels = levels, origin = 'upper', linewidths = 1, colors = colors, alpha = 0.8)
 
     # Axes
     plot.xlim(x_min, x_max)
