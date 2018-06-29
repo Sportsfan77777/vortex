@@ -94,8 +94,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "PuOr",
+                         help = 'color map (default: PuOr)')
     parser.add_argument('--crange', dest = "c_lim", type = float, nargs = 2, default = None,
                          help = 'range in colorbar (default: [0, 2])')
 
@@ -174,7 +174,7 @@ if num_levels is None:
 # Plot Parameters (constant)
 cmap = args.cmap
 if args.c_lim is None:
-    clim = [0, 2]
+    clim = [-1, 1]
 else:
     clim = [args.c_lim[0], args.c_lim[1]]
 
@@ -188,7 +188,7 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 # Initial Density
-density = (fromfile("gasdens0.dat").reshape(num_rad, num_theta))
+density_zero = (fromfile("gasdens0.dat").reshape(num_rad, num_theta))
 
 ### Helper Functions ###
 def velocity_perturbation(vrad, vtheta):
@@ -213,11 +213,11 @@ def pressure_gradient_term(density):
     pressure = sound_speed_squared[:, None] * (density - density_zero)
 
     # Pressure Gradient
-    d_rad = np.diff(rad)
-    d_theta = np.diff(theta)
+    d_rad = rad[1] - rad[0]
+    d_theta = theta[1] - theta[0]
 
-    dp_rad = np.diff(pressure, axis = 1) / d_rad[1:, None]
-    dp_theta = np.diff(pressure / rad[1:, None], axis = 0) / d_theta[1:, None]
+    dp_rad = np.diff(pressure, axis = 1) / d_rad
+    dp_theta = np.diff(pressure / rad[1:, None], axis = 0) / d_theta
 
     # Magnitude of pressure perturbation gradient
     pressure_gradient_magnitude = np.sqrt(dp_rad * dp_rad + dp_theta * dp_theta)
