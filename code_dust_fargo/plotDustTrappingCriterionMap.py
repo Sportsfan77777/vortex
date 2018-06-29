@@ -268,7 +268,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(criterion), cmap = cmap)
 
     cbar = fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    #result.set_clim(clim[0], clim[1])
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
@@ -319,7 +319,7 @@ def make_plot(frame, show = False):
     plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     # Label colorbar
-    cbar_name = r"$\mathrm{Positive} \mathrm{satifies} \mathrm{criterion}$"
+    cbar_name = r"$\mathrm{Positive}$ $\mathrm{satifies}$ $\mathrm{criterion}$"
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
