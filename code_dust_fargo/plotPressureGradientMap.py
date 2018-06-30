@@ -223,8 +223,6 @@ def pressure_gradient_term(density):
 
 ###############################################################################
 
-###############################################################################
-
 def generate_colors(n):
     c = ['k', 'b', 'firebrick']
     colors = []
@@ -250,10 +248,12 @@ def make_plot(frame, show = False):
         density = np.roll(density, shift_c)
     normalized_density = density / surface_density_zero
 
+    pressure_gradient = pressure_gradient_term(normalized_density)
+
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(pressure_gradient), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
