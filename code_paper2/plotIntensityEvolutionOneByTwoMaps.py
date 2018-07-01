@@ -45,6 +45,11 @@ def new_argument_parser(description = "Plot intensity maps in one by two grid.")
     parser.add_argument('--dir', dest = "save_directory", default = "intensityEvolutionOneByTwoMaps",
                          help = 'save directory (default: intensityEvolutionOneByTwoMaps)')
 
+    # Old Format
+    parser.add_argument('--old_res', dest = "old_res", type = int, nargs = 2, default = [1024, 2048],
+                         help = 'select two frames to display the intensity maps')
+
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -118,6 +123,10 @@ frame_range = args.frames
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Old Format
+old_num_rad = old_res[0]
+old_num_theta = old_res[1]
 
 # Plot Parameters (variable)
 show = args.show
@@ -289,7 +298,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$N_\mathrm{r} \times N_\mathrm{\phi} = %d \times \ \ %d$" % (num_rad, num_theta)
+    title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
     fig.suptitle(title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
