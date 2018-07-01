@@ -46,6 +46,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
                          help = 'save directory (default: azimuthalIntensityEvolution)')
 
+    # Old Format
+    parser.add_argument('--old_res', dest = "old_res", type = int, nargs = 2, default = [1024, 2048],
+                         help = 'select two frames to display the intensity maps')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -120,6 +124,10 @@ frame_range = args.frames
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Old Format
+old_num_rad = args.old_res[0]
+old_num_theta = args.old_res[1]
 
 # Plot Parameters (variable)
 normalize = args.normalize
@@ -253,6 +261,15 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
     plot.title("%s" % (title), fontsize = fontsize + 1)
+
+    # Title
+    left_x = -0.8 * box_size; line_y = 1.28 * box_size; linebreak = 0.2 * box_size
+    right_x = 1.3 * box_size
+    if frame_i == 1:
+        pass
+    elif frame_i == 2:
+        line1 = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+        plot.text(right_x, line_y, line1, horizontalalignment = 'right', fontsize = fontsize + 2)
     
 def make_plot(show = False):
     # Set up figure
@@ -267,7 +284,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
     fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
