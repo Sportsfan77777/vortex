@@ -257,7 +257,9 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
         plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
     elif frame_i == 2:
         line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
-        plot.text(right_x, line_y + 0.5 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+        line4 = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+        plot.text(right_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+        plot.text(right_x, line_y, line4, horizontalalignment = 'right', fontsize = fontsize + 2)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if colorbar:
