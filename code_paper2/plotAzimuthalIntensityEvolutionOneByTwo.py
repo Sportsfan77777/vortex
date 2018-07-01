@@ -263,7 +263,8 @@ def add_to_plot(frame, fig, ax, num_frames, frame_i):
     plot.title("%s" % (title), fontsize = fontsize + 1)
 
     # Title
-    left_x = -0.8 * box_size; line_y = 1.28 * box_size; linebreak = 0.2 * box_size
+    box_size = plot.xlim()[-1]; top_y = plot.ylim()[-1]
+    left_x = -0.8 * box_size; line_y = 1.28 * top_y; linebreak = 0.2 * box_size
     right_x = 1.3 * box_size
     if frame_i == 1:
         pass
