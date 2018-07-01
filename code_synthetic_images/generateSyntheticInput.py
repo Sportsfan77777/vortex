@@ -59,8 +59,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'index of grain to leave out for contribution test (default: -1)')
 
     # Interpolation
-    parser.add_argument('--raw', dest = "interpolate", action = 'store_false', default = True,
-                         help = 'interpolate or not (default: interpolate)')
+    parser.add_argument('--interpolate', dest = "interpolate", action = 'store_true', default = False,
+                         help = 'interpolate or not (default: do not interpolate)')
 
     # Save Parameters
     parser.add_argument('-g', dest = "num_grains", type = int, default = 100,
