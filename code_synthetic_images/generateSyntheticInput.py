@@ -364,8 +364,8 @@ def save_id_parameters():
     id_par["Nsec"] = new_num_theta
     id_par["Sigma0"] *= density_unit
 
-    id_part["old_Nrad"] = num_rad
-    id_part["old_Nrad"] = num_theta
+    id_par["old_Nrad"] = num_rad
+    id_par["old_Nsec"] = num_theta
 
     id_par["NumberDensityPower"] = number_density_power
 
