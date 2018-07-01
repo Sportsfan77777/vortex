@@ -70,10 +70,10 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('--scale', dest = "scale", type = int, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 420],
-                         help = 're-sample resolution (default: [400, 420])')
-    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [0.6, 3.6],
-                         help = 're-sample range (default: [0.6, 3.6])')
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = None,
+                         help = 're-sample resolution (default: [Nrad, Nsec])')
+    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = None,
+                         help = 're-sample range (default: [Rmin, Rmax])')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
     parser.add_argument('--save', dest = "save_directory", default = ".",
@@ -126,8 +126,15 @@ num_grains = args.num_grains
 number_density_power = -args.number_density_power # Note: negative of input
 scale = args.scale
 
-new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
-new_r_min = args.new_range[0]; new_r_max = args.new_range[1]
+if args.new_res is None:
+    new_num_rad = num_rad; new_num_theta = num_theta
+else:
+    new_num_rad = args.new_res[0]; new_num_theta = args.new_res[1]
+if args.new_range is None:
+    new_r_min = r_min; new_r_max = r_max
+else:
+    new_r_min = args.new_range[0]; new_r_max = args.new_range[1]
+
 id_number = args.id_number
 save_directory = args.save_directory
 save_separate = args.save_separate
