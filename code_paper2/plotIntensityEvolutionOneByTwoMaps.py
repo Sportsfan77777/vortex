@@ -289,7 +289,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+    title = r"$N_\mathrm{r} \times N_\mathrm{\phi} = %d \times \ \ %d$" % (num_rad, num_theta)
     fig.suptitle(title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
