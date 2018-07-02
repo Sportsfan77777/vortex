@@ -242,9 +242,9 @@ def make_plot(frame, show = False):
         if center is "off":
            pass
         elif center.startswith("cm"):
-           shift_density(dust_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density)
+           dust_density, _ = shift_density(dust_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density)
         else:
-           shift_density(dust_density, this_fargo_par, option = center)
+           dust_density, _ = shift_density(dust_density, this_fargo_par, option = center)
 
         ### Plot ###
         x = theta * (180.0 / np.pi)
