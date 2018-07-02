@@ -80,8 +80,8 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--shift', dest = "center", default = "off",
+                         help = 'center options: threshold, cm-threshold, away (from minimum), cm-away, peak, or cm-peak (default: do not center)')
 
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
@@ -184,8 +184,30 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+### Helper Functions ###
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold * surface_density_zero)
+    else:
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+
+    # Shift
+    shifted_density = np.roll(normalized_density, shift_c)
+    return shifted_density, shift_c
+
+###############################################################################
+
 def generate_colors(n):
-    c = ['yellow', 'b', 'firebrick', 'magenta']
+    c = ['yellow', 'b', 'firebrick', 'w', 'green']
     colors = []
     for i in range(n):
         colors.append(c[i % len(c)])
@@ -195,17 +217,32 @@ def generate_colors(n):
 
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (800 / dpi, 1000 / dpi), dpi = dpi)
+    fig = plot.figure(figsize = (600 / dpi, 1000 / dpi), dpi = dpi)
 
     def add_to_plot(i, grain):
         # Identify Subplot
         number = i + 1
         plot.subplot(3, 1, number)
 
-        # Data
+        # Parameters
+        this_fargo_par = util.get_pickled_parameters(directory = "../%s-size" % grain)
+
+        ### Data ###
         gas_density = (fromfile("../%s-size/gasdens%d.dat" % (grain, frame)).reshape(num_rad, num_theta)) / (100.0 * surface_density_zero)
         dust_density = (fromfile("../%s-size/gasddens%d.dat" % (grain, frame)).reshape(num_rad, num_theta))
         normalized_density = dust_density / (surface_density_zero)
+
+        # Store cm dust
+        if number == 1:
+           cm_dust_density = dust_density
+
+        # Shift
+        if center is "off":
+           pass
+        elif center.startswith("cm"):
+           shift_density(dust_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density)
+        else:
+           shift_density(dust_density, this_fargo_par, option = center)
 
         ### Plot ###
         x = theta * (180.0 / np.pi)
@@ -234,7 +271,7 @@ def make_plot(frame, show = False):
         title = readTitle()
 
         if number == 3:
-           plot.xlabel(r"$\phi$", fontsize = fontsize)
+           plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
         plot.ylabel("Radius", fontsize = fontsize)
 
         if number == 1:
