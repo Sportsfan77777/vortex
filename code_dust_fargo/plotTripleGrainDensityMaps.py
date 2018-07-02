@@ -196,7 +196,7 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
        shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
     elif option == "threshold":
        threshold = util.get_threshold(fargo_par["PSIZE"])
-       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold * surface_density_zero)
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
     elif option == "away":
        shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
     else:
