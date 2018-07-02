@@ -197,8 +197,10 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
     elif option == "threshold":
        threshold = util.get_threshold(fargo_par["PSIZE"])
        shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold * surface_density_zero)
-    else:
+    elif option == "away":
        shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, or (cm-)away"
 
     # Shift
     shifted_density = np.roll(normalized_density, shift_c)
