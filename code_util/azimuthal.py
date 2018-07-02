@@ -143,6 +143,45 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05, start = outer_sta
 
     return shift_c
 
+def shift_away_from_minimum(density, fargo_par, threshold = 0.05, start = outer_start, end = outer_end):
+    """ return shift needed to shift vortex center to 180 degrees """
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    scale_height = fargo_par["AspectRatio"]
+    surface_density_zero = fargo_par["Sigma0"]
+
+    ########### Method ##############
+
+    ### Identify center using threshold ###
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+    density_segment = density[outer_disk_start : outer_disk_end]
+
+    # Get peak in azimuthal profile
+    avg_density = np.average(density_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_density)
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+    peak_rad = rad[arg_peak]
+
+    # Zoom in on peak --- Average over half a scale height
+    half_width = 0.25 * scale_height
+    zoom_start = np.searchsorted(rad, peak_rad - half_width)
+    zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+    density_sliver = density[zoom_start : zoom_end]
+    length = len(density_sliver); std = length / 3.0
+    weights = gaussian(length, std)
+    avg_density_sliver = np.average(density_sliver, weights = weights, axis = 0) # avg over rad
+
+    # Move Minimum to Zero Degrees (vortex cannot cross zero)
+    arg_min = np.argmin(avg_density_sliver)
+    shift_min = int(0 - arg_min)
+
+    return shift_min
+
 ### Extract Values ###
 
 def get_contrast(data, fargo_par):
