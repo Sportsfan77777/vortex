@@ -157,9 +157,9 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = r_min; x_max = r_max
+    y_min = r_min; y_max = r_max
 else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+    y_min = args.r_lim[0]; y_max = args.r_lim[1]
 center = args.center
 
 # Plot Parameters (contours)
@@ -195,12 +195,12 @@ def generate_colors(n):
 
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (1400 / dpi, 600 / dpi), dpi = dpi)
+    fig = plot.figure(figsize = (800 / dpi, 1000 / dpi), dpi = dpi)
 
     def add_to_plot(i, grain):
         # Identify Subplot
         number = i + 1
-        plot.subplot(1, 3, number)
+        plot.subplot(3, 1, number)
 
         # Data
         gas_density = (fromfile("../%s-size/gasdens%d.dat" % (grain, frame)).reshape(num_rad, num_theta)) / (100.0 * surface_density_zero)
@@ -208,9 +208,9 @@ def make_plot(frame, show = False):
         normalized_density = dust_density / (surface_density_zero)
 
         ### Plot ###
-        x = rad
-        y = theta * (180.0 / np.pi)
-        result = plot.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+        x = theta * (180.0 / np.pi)
+        y = rad
+        result = plot.pcolormesh(x, y, normalized_density, cmap = cmap)
 
         fig.colorbar(result)
         result.set_clim(0, cmax[i])
@@ -218,14 +218,14 @@ def make_plot(frame, show = False):
         if use_contours:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
-            plot.contour(x, y, np.transpose(gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+            plot.contour(x, y, gas_density, levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
         # Axes
-        plot.xlim(x_min, x_max)
-        plot.ylim(0, 360)
-
+        plot.xlim(0, 360)
+        plot.ylim(y_min, y_max)
+        
         angles = np.linspace(0, 360, 7)
-        plot.yticks(angles)
+        plot.xticks(angles)
 
         # Annotate Axes
         time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -233,13 +233,15 @@ def make_plot(frame, show = False):
 
         title = readTitle()
 
-        plot.xlabel("Radius", fontsize = fontsize)
-        plot.ylabel(r"$\phi$", fontsize = fontsize)
+        if number == 3:
+           plot.xlabel(r"$\phi$", fontsize = fontsize)
+        plot.ylabel("Radius", fontsize = fontsize)
 
-        if title is None:
-            plot.title("%s-Dust Density Map\n(t = %.1f)" % (grain, orbit), fontsize = fontsize + 1)
-        else:
-            plot.title("%s-Dust Density Map\n%s\n(t = %.1f)" % (grain, title, orbit), fontsize = fontsize + 1)
+        if number == 1:
+           if title is None:
+               plot.title("%s-Dust Density Map\n(t = %.1f)" % (grain, orbit), fontsize = fontsize + 1)
+           else:
+               plot.title("%s-Dust Density Map\n%s\n(t = %.1f)" % (grain, title, orbit), fontsize = fontsize + 1)
 
     add_to_plot(0, "cm")
     add_to_plot(1, "hcm")
