@@ -267,6 +267,9 @@ def make_plot(frame, show = False):
         angles = np.linspace(0, 360, 7)
         plot.xticks(angles)
 
+        ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 2, length = 10)
+
         # Annotate Axes
         time = fargo_par["Ninterm"] * fargo_par["DT"]
         orbit = (time / (2 * np.pi)) * frame
