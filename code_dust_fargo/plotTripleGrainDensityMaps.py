@@ -227,7 +227,7 @@ def make_plot(frame, show = False):
         plot.subplot(3, 1, number)
 
         # Parameters
-        this_fargo_par = fargo_par.copy(); this_fargo_par = util.get_size(grain)
+        this_fargo_par = fargo_par.copy(); this_fargo_par["PSIZE"] = util.get_size(grain)
 
         ### Data ###
         gas_density = (fromfile("../%s-size/gasdens%d.dat" % (grain, frame)).reshape(num_rad, num_theta)) / (100.0 * surface_density_zero)
