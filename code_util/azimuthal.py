@@ -143,7 +143,7 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05, start = outer_sta
 
     return shift_c
 
-def shift_away_from_minimum(density, fargo_par, threshold = 0.05, start = outer_start, end = outer_end):
+def shift_away_from_minimum(density, fargo_par, start = outer_start, end = outer_end):
     """ return shift needed to shift vortex center to 180 degrees """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
