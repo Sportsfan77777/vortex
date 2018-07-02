@@ -56,6 +56,11 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     parser.add_argument('--dir', dest = "save_directory", default = "intensityComparison",
                          help = 'save directory (default: intensityComparison)')
 
+    # Old Format
+    parser.add_argument('--old_res', dest = "old_res", type = int, nargs = 2, default = [1024, 2048],
+                         help = 'select two frames to display the intensity maps')
+
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -136,6 +141,10 @@ directories = [directory1, directory2]
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Old Format
+old_num_rad = args.old_res[0]
+old_num_theta = args.old_res[1]
 
 # Plot Parameters (variable)
 show = args.show
@@ -326,7 +335,7 @@ def make_plot(show = False):
 
     #### Finish Plot ####
     #title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    title = r"$N_\mathrm{r} \times N_\mathrm{\phi} = %d \times \ \ %d$" % (num_rad, num_theta)
+    title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
     fig.suptitle(title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
