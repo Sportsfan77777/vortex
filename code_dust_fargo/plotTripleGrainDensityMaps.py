@@ -240,11 +240,12 @@ def make_plot(frame, show = False):
 
         # Shift
         if center is "off":
-           pass
+           shift_c = 0
         elif center.startswith("cm"):
-           normalized_density, _ = shift_density(normalized_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density)
+           normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density)
         else:
-           normalized_density, _ = shift_density(normalized_density, this_fargo_par, option = center)
+           normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center)
+        gas_density = np.roll(gas_density, shift_c)
 
         ### Plot ###
         x = theta * (180.0 / np.pi)
