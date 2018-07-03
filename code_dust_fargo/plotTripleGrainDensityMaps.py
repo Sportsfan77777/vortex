@@ -261,7 +261,7 @@ def make_plot(frame, show = False):
         y = rad
         result = plot.pcolormesh(x, y, normalized_density, cmap = cmap)
 
-        fig.colorbar(result)
+        cbar = fig.colorbar(result)
         result.set_clim(0, cmax[i])
 
         if number == 2:
