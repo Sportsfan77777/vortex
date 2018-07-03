@@ -224,7 +224,7 @@ def make_plot(frame, show = False):
     def add_to_plot(i, grain):
         # Identify Subplot
         number = i + 1
-        plot.subplot(3, 1, number)
+        ax = plot.subplot(3, 1, number)
 
         # Parameters
         this_fargo_par = fargo_par.copy(); this_fargo_par["PSIZE"] = util.get_size(grain)
@@ -255,6 +255,9 @@ def make_plot(frame, show = False):
         fig.colorbar(result)
         result.set_clim(0, cmax[i])
 
+        if frame_i == 2:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
         if use_contours:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
@@ -268,23 +271,21 @@ def make_plot(frame, show = False):
         plot.xticks(angles)
 
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
-        ax.tick_params(colors = 'white', labelcolor = 'black', width = 2, length = 10)
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 6)
 
         # Annotate Axes
         time = fargo_par["Ninterm"] * fargo_par["DT"]
         orbit = (time / (2 * np.pi)) * frame
 
-        title = readTitle()
+        #title = readTitle()
 
         if number == 3:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
-        plot.ylabel("Radius", fontsize = fontsize)
+        if number == 2:
+           plot.ylabel("Radius [$r_\mathrm{p}$]", fontsize = fontsize)
 
         if number == 1:
-           if title is None:
-               plot.title("%s-Dust Density Map\n(t = %.1f)" % (grain, orbit), fontsize = fontsize + 1)
-           else:
-               plot.title("%s-Dust Density Map\n%s\n(t = %.1f)" % (grain, title, orbit), fontsize = fontsize + 1)
+           plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), fontsize = fontsize + 1)
 
     add_to_plot(0, "cm")
     add_to_plot(1, "hcm")
