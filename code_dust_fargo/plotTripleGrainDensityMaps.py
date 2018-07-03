@@ -319,7 +319,7 @@ def make_plot(frame, show = False):
         left_x = plot.xlim()[0]; right_x = plot.xlim()[-1]; range_x = right_x - left_x; margin_x = 0.05 * range_x
         bottom_y = plot.ylim()[0]; top_y = plot.ylim()[-1]; range_y = top_y - bottom_y; margin_y = 0.15 * range_y
 
-        if number == 0:
+        if number == 1:
            # Gas
            title = r"$\mathrm{Gas\ Density}$"
            plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
@@ -336,7 +336,7 @@ def make_plot(frame, show = False):
 
         # Text
         line_y = top_y + 0.25 * range_y; linebreak = 0.25 * range_y
-        if frame_i == 0:
+        if number == 1:
            line1 = r'$M_p = %d$ $M_J$' % planet_mass
            line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
            plot.text(left_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
