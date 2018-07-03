@@ -336,7 +336,7 @@ def make_plot(frame, show = False):
            plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
 
         # Text
-        line_y = top_y + 0.33 * range_y; linebreak = 0.15 * range_y
+        line_y = top_y + 0.3 * range_y; linebreak = 0.18 * range_y
         left_start_x = left_x - 3.0 * margin_x; right_end_x = right_x + 4.0 * margin_x;
         if number == 1:
            line1 = r'$M_p = %d$ $M_J$' % planet_mass
