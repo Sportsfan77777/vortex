@@ -101,7 +101,7 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
                          help = 'dust color map (default: inferno)')
     parser.add_argument('--cmax', dest = "cmax", type = float, nargs = 3, default = None,
                          help = 'dust maximum density in colorbar (default: None)')
-    parser.add_argument('--cmax', dest = "cmaxGas", type = float, default = None,
+    parser.add_argument('--cmaxGas', dest = "cmaxGas", type = float, default = None,
                          help = 'dust maximum density in colorbar (default: 3.0 for T = 10, 1.4 for T = 1000)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
