@@ -101,6 +101,8 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
                          help = 'dust color map (default: inferno)')
     parser.add_argument('--cmax', dest = "cmax", type = float, nargs = 3, default = None,
                          help = 'dust maximum density in colorbar (default: None)')
+    parser.add_argument('--cmax', dest = "cmaxGas", type = float, default = None,
+                         help = 'dust maximum density in colorbar (default: 3.0 for T = 10, 1.4 for T = 1000)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 18)')
@@ -177,6 +179,13 @@ if num_levels is None:
 cmap = args.cmap
 cmax = args.cmax
 
+cmaxGas = args.cmaxGas
+if cmaxGas is None:
+   if taper < 10.1:
+      cmaxGas = 3.0 # Concentrated
+   else:
+      cmaxGas = 1.4 # Elongated
+
 fontsize = args.fontsize
 labelsize = args.labelsize
 dpi = args.dpi
@@ -225,7 +234,7 @@ def generate_colors(n):
 
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (700 / dpi, 1200 / dpi), dpi = dpi)
+    fig = plot.figure(figsize = (700 / dpi, 1500 / dpi), dpi = dpi)
 
     def add_to_plot(i, grain):
         # Grain Size
@@ -259,15 +268,23 @@ def make_plot(frame, show = False):
         ### Plot ###
         x = theta * (180.0 / np.pi)
         y = rad
-        result = plot.pcolormesh(x, y, normalized_density, cmap = cmap)
+        if number == 1:
+           result = plot.pcolormesh(x, y, gas_density, cmap = "viridis")
+        else:
+           result = plot.pcolormesh(x, y, normalized_density, cmap = cmap)
 
         cbar = fig.colorbar(result)
-        result.set_clim(0, cmax[i])
+        if number == 1:
+           result.set_clim(0, cmaxGas)
+        else:   
+           result.set_clim(0, cmax[i])
 
-        if number == 2:
+        if number == 1:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        elif number == 3:
             cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
-        if use_contours:
+        if use_contours and number > 1:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
             plot.contour(x, y, gas_density, levels = levels, origin = 'upper', linewidths = 1, colors = colors)
@@ -290,30 +307,51 @@ def make_plot(frame, show = False):
         else:
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper)), 2) * planet_mass
 
-        if number == 3:
+        if number == 4:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
-        if number == 2:
+        if number == 3:
            plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
 
         if number == 1:
            plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), bbox=dict(facecolor = 'w', edgecolor = 'k', pad = 10.0), y = 1.05, fontsize = fontsize + 1)
 
         # Label
-        size_label = util.get_size_label(this_size)
-        stokes_number = util.get_stokes_number(this_size)
-
-        title = r"%s$\mathrm{-size}$" % size_label
-        stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
-
         left_x = plot.xlim()[0]; right_x = plot.xlim()[-1]; range_x = right_x - left_x; margin_x = 0.05 * range_x
         bottom_y = plot.ylim()[0]; top_y = plot.ylim()[-1]; range_y = top_y - bottom_y; margin_y = 0.15 * range_y
 
-        plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-        plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+        if number == 0:
+           # Gas
+           title = r"$\mathrm{Gas\ Density}$"
+           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+        else:
+           # Dust
+           size_label = util.get_size_label(this_size)
+           stokes_number = util.get_stokes_number(this_size)
 
-    add_to_plot(0, "cm")
-    add_to_plot(1, "hcm")
-    add_to_plot(2, "mm")
+           title = r"%s$\mathrm{-size}$" % size_label
+           stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
+           
+           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+           plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+
+        # Text
+        line_y = top_y + 0.25 * range_y; linebreak = 0.25 * range_y
+        if frame_i == 0:
+           line1 = r'$M_p = %d$ $M_J$' % planet_mass
+           line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
+           plot.text(left_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
+           plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
+
+           line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
+           line4 = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (num_rad, num_theta)
+
+           plot.text(right_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+           plot.text(right_x, line_y, line4, horizontalalignment = 'right', fontsize = fontsize + 2)
+
+    add_to_plot(0, "cm") # Actually Gas!
+    add_to_plot(1, "cm")
+    add_to_plot(2, "hcm")
+    add_to_plot(3, "mm")
 
     # Save, Show, and Close
     if version is None:
