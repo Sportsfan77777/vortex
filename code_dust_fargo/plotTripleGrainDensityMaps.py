@@ -129,6 +129,7 @@ surface_density_zero = fargo_par["Sigma0"] / 100.0 # for the dust!!!
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
 taper = fargo_par["MassTaper"]
 
 size = fargo_par["PSIZE"]
