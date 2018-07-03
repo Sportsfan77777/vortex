@@ -104,6 +104,8 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 18)')
+    parser.add_argument('--labelsize', dest = "fontsize", type = int, default = 16,
+                         help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -176,7 +178,11 @@ cmap = args.cmap
 cmax = args.cmax
 
 fontsize = args.fontsize
+labelsize = args.labelsize
 dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
@@ -287,7 +293,7 @@ def make_plot(frame, show = False):
         if number == 3:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
         if number == 2:
-           plot.ylabel("Radius [$r_\mathrm{p}$]", fontsize = fontsize)
+           plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
 
         if number == 1:
            plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), fontsize = fontsize + 1)
@@ -299,8 +305,8 @@ def make_plot(frame, show = False):
         title = r"%s$\mathrm{-size}$" % size_label
         stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
 
-        left_x = plot_xlim()[0]; right_x = plot_xlim()[-1]; range_x = right_x - left_x; margin_x = 0.1 * range_x
-        bottom_y = plot_ylim()[0]; top_y = plot_ylim()[-1]; range_y = right_y - left_y; margin_y = 0.1 * range_y
+        left_x = plot.xlim()[0]; right_x = plot.xlim()[-1]; range_x = right_x - left_x; margin_x = 0.1 * range_x
+        bottom_y = plot.ylim()[0]; top_y = plot.ylim()[-1]; range_y = right_y - left_y; margin_y = 0.1 * range_y
 
         plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
         plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'black', pad = 10.0))
