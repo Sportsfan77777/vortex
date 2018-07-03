@@ -343,7 +343,7 @@ def make_plot(frame, show = False):
            plot.text(left_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
            plot.text(left_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
 
-           line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
+           line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper
            line4 = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (num_rad, num_theta)
 
            plot.text(right_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
