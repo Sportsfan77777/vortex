@@ -314,7 +314,7 @@ def make_plot(frame, show = False):
            plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
 
         if number == 1:
-           plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), bbox=dict(facecolor = 'w', edgecolor = 'k', pad = 10.0), y = 1.08, fontsize = fontsize + 1)
+           plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), bbox=dict(facecolor = 'w', edgecolor = 'k', pad = 10.0), y = 1.08, fontsize = fontsize + 2)
 
         # Label
         left_x = plot.xlim()[0]; right_x = plot.xlim()[-1]; range_x = right_x - left_x; margin_x = 0.05 * range_x
@@ -336,19 +336,19 @@ def make_plot(frame, show = False):
            plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
 
         # Text
-        line_y = top_y + 0.3 * range_y; linebreak = 0.18 * range_y
+        line_y = top_y + 0.31 * range_y; linebreak = 0.16 * range_y
         left_start_x = left_x - 3.0 * margin_x; right_end_x = right_x + 4.0 * margin_x;
         if number == 1:
            line1 = r'$M_p = %d$ $M_J$' % planet_mass
            line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
-           plot.text(left_start_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
-           plot.text(left_start_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
+           plot.text(left_start_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 1)
+           plot.text(left_start_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 1)
 
            line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper
            line4 = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (num_rad, num_theta)
 
-           plot.text(right_end_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
-           plot.text(right_end_x, line_y, line4, horizontalalignment = 'right', fontsize = fontsize + 2)
+           plot.text(right_end_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 1)
+           plot.text(right_end_x, line_y, line4, horizontalalignment = 'right', fontsize = fontsize + 1)
 
     add_to_plot(0, "cm") # Actually Gas!
     add_to_plot(1, "cm")
