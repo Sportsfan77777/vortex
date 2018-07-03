@@ -282,7 +282,7 @@ def make_plot(frame, show = False):
         if orbit >= taper:
             current_mass = planet_mass
         else:
-            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper)), 2) * planet_mass
 
         if number == 3:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
