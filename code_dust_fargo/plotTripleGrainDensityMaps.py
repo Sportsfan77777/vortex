@@ -279,7 +279,7 @@ def make_plot(frame, show = False):
         # Annotate Axes
         time = fargo_par["Ninterm"] * fargo_par["DT"]
         orbit = (time / (2 * np.pi)) * frame
-        if orbit >= taper_time:
+        if orbit >= taper:
             current_mass = planet_mass
         else:
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
@@ -303,7 +303,7 @@ def make_plot(frame, show = False):
         bottom_y = plot_ylim()[0]; top_y = plot_ylim()[-1]; range_y = right_y - left_y; margin_y = 0.1 * range_y
 
         plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-        plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right')
+        plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'black', pad = 10.0))
 
     add_to_plot(0, "cm")
     add_to_plot(1, "hcm")
