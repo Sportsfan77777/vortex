@@ -104,7 +104,7 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 18)')
-    parser.add_argument('--labelsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
                          help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
