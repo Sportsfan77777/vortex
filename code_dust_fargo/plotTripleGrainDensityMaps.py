@@ -278,7 +278,7 @@ def make_plot(frame, show = False):
         if number == 1:
            result.set_clim(0, cmaxGas)
         else:   
-           result.set_clim(0, cmax[i])
+           result.set_clim(0, cmax[i-1])
 
         if number == 1:
             cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
