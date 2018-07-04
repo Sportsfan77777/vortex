@@ -182,6 +182,68 @@ def shift_away_from_minimum(density, fargo_par, start = outer_start, end = outer
 
     return shift_min
 
+def find_shift(density, reference_density, fargo_par, start = outer_start, end = outer_end):
+    """ return shift needed to overlap the density with the reference_density """
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    scale_height = fargo_par["AspectRatio"]
+    surface_density_zero = fargo_par["Sigma0"]
+
+    ########### Method ##############
+
+    ### Get Slivers ###
+
+    def get_sliver(density):
+        ### Identify center using threshold ###
+        # Search outer disk only
+        outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+        outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+        density_segment = density[outer_disk_start : outer_disk_end]
+
+        # Get peak in azimuthal profile
+        avg_density = np.average(density_segment, axis = 1) # avg over theta
+        segment_arg_peak = np.argmax(avg_density)
+        arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+        peak_rad = rad[arg_peak]
+
+        # Zoom in on peak
+        half_width = 0.5 * num_scale_heights * scale_height
+        zoom_start = np.searchsorted(rad, peak_rad - half_width)
+        zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+        density_sliver = density[zoom_start : zoom_end]
+        return density_sliver
+
+    density_sliver = get_sliver(density)
+    reference_density_sliver = get_sliver(reference_density)
+
+    ### Shift reference density away from the min
+    shift_away = shift_away_from_minimum(reference_density_sliver, fargo_par)
+    reference_density_sliver = np.roll(reference_density_sliver, shift_away)
+
+    ### Test shifts ###
+    min_shift = 0; max_shift = 359; num_shifts = 360
+    possible_shifts = np.linspace(min_shift, max_shift, num_shifts)
+
+    mass_differences = np.zeros(num_shifts)
+
+    for i, possible_shift_i in enumerate(possible_shifts):
+        shift = np.searchsorted(theta, possible_shift_i)
+        tmp_density_sliver1 = np.roll(density_sliver1, shift)
+
+        diff = np.abs(density_sliver2 - tmp_density_sliver1)
+        mass_differences[i] = np.sum(diff)
+
+    ### The correct shift has the lowest mass difference ###
+    shift_i = np.argmin(mass_differences)
+    theta_shift = possible_shifts[shift_i]
+
+    shift_to_roll_i = np.searchsorted(theta, theta_shift) # this is an index
+
+    return shift_to_roll_i, theta_shift
+
 ### Extract Values ###
 
 def get_contrast(data, fargo_par):
