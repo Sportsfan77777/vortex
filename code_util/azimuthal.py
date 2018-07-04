@@ -182,7 +182,7 @@ def shift_away_from_minimum(density, fargo_par, start = outer_start, end = outer
 
     return shift_min
 
-def find_shift(density, reference_density, fargo_par, start = outer_start, end = outer_end):
+def find_shift(density, reference_density, fargo_par, center = True, num_scale_heights = 4.0, min_shift = 0, max_shift = 359, num_shifts = 360, start = outer_start, end = outer_end):
     """ return shift needed to overlap the density with the reference_density """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
@@ -220,14 +220,13 @@ def find_shift(density, reference_density, fargo_par, start = outer_start, end =
     reference_density_sliver = get_sliver(reference_density)
 
     ### Shift reference density away from the min
-    shift_away = shift_away_from_minimum(reference_density_sliver, fargo_par)
-    reference_density_sliver = np.roll(reference_density_sliver, shift_away)
+    if center:
+        shift_away = shift_away_from_minimum(reference_density_sliver, fargo_par)
+        reference_density_sliver = np.roll(reference_density_sliver, shift_away)
 
     ### Test shifts ###
-    min_shift = 0; max_shift = 359; num_shifts = 360
-    possible_shifts = np.linspace(min_shift, max_shift, num_shifts)
-
     mass_differences = np.zeros(num_shifts)
+    possible_shifts = np.linspace(min_shift, max_shift, num_shifts)
 
     for i, possible_shift_i in enumerate(possible_shifts):
         shift = np.searchsorted(theta, possible_shift_i)
