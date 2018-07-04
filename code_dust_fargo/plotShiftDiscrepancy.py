@@ -215,9 +215,9 @@ def make_plot(frame, show = False):
     min_shift = 0; max_shift = 359; num_shifts = 360
     possible_shifts = np.linspace(min_shift, max_shift, num_shifts)
 
-    grain_comp = "hcm"
-    density1 = (fromfile("gasdens%d.dat" % (frame)).reshape(num_rad, num_theta))
-    density2 = (fromfile("../%s-size/gasdens%d.dat" % (grain_comp, frame)).reshape(num_rad, num_theta))
+    grain1 = "cm"; grain2 = "hcm"
+    density1 = (fromfile("../%s-size/gasdens%d.dat" % (grain1, frame)).reshape(num_rad, num_theta))
+    density2 = (fromfile("../%s-size/gasdens%d.dat" % (grain2, frame)).reshape(num_rad, num_theta))
 
     ### Plot ###
     x = possible_shifts
