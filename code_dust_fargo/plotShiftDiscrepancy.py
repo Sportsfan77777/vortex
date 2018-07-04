@@ -221,7 +221,7 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     x = possible_shifts
-    y = mass_differences(density1, density2)
+    y = find_shift(density1, density2, fargo_par)
     plot.plot(x, y, linewidth = linewidth, c = "k")
 
     # Axes
