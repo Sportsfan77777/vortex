@@ -245,6 +245,14 @@ def find_shift(density, reference_density, fargo_par, center = True, num_scale_h
 
     return shift_to_roll_i, theta_shift
 
+def get_lookup_shift(frame, directory = "."):
+    """ lookup the shift determined with findShifts.py """
+    frames = pickle.load(open('%s/frame_lookup.p' % directory, 'r'))
+    shifts = pickle.load(open('%s/shift_lookup.p' % directory, 'r'))
+
+    frame_i = np.searchsorted(frames, frame)
+    return shifts[frame_i]
+
 ### Extract Values ###
 
 def get_contrast(data, fargo_par):
