@@ -136,11 +136,11 @@ def save_shifts(size_label, reference_label = "hcm"):
                 get_shift((i, frame, size_label, reference_label))
 
     # Save Data
-    shift_array = np.array(shift_array)
-    theta_shift_array = np.array(theta_shift_array)
+    shift_array_np = np.array(shift_array)
+    theta_shift_array_np = np.array(theta_shift_array)
 
-    pickle.dump(shift_array, open("../%-size/shift_lookup.p" % size_label, 'w'))
-    pickle.dump(theta_shift_array, open("../%-size/theta_lookup.p" % size_label, 'w'))
+    pickle.dump(shift_array_np, open("../%-size/shift_lookup.p" % size_label, 'w'))
+    pickle.dump(theta_shift_array_np, open("../%-size/theta_lookup.p" % size_label, 'w'))
 
 
 ### Make each call ###
