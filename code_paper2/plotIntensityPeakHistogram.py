@@ -166,16 +166,38 @@ fargo_par["theta"] = theta
 
 ### Data ###
 
-def get_peak(frame):
+def get_peak_offset(frame):
     """return peak in azimuthal profile of vortex"""
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     arg_r, arg_phi = az.get_peak(intensity_polar, fargo_par)
 
     # Return peak relative to the center
     peak = theta[arg_phi]
-    peak = peak * (180.0 / np.pi) - 180.0
+    peak_offset = peak * (180.0 / np.pi) - 180.0
 
-    return peak
+    return peak_offset
+
+def measure_peak_offset(frame, threshold = 0.5):
+    intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
+    peak_r_i, peak_phi_i = az.get_peak(intensity_polar, fargo_par)
+
+    # Return peak relative to the center, where the edges are set by a threshold
+    intensity_polar /= np.max(intensity_polar) # normalize
+
+    intensity_polar_at_peak = intensity_polar[peak_r_i, :] # take azimuthal profile
+    left_index = az.my_searchsorted(intensity_polar_at_peak, threshold)
+    right_index = len(intensity_polar_at_peak) - az.my_searchsorted(intensity_polar_at_peak[::-1], threshold) - 1
+
+    # Convert to theta
+    left_theta = theta[left_index]
+    right_theta = theta[right_index]
+    center_theta = left_theta + (right_theta - left_theta) / 2.0
+    
+    peak_theta = theta[peak_phi_i]
+    peak_offset = peak_theta - center_theta
+
+    return peak_offset
+
 
 ###############################################################################
 
@@ -186,7 +208,7 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Get Data
-    peaks = np.array([get_peak(frame) for frame in frame_range])
+    peaks = np.array([get_peak_offset(frame) for frame in frame_range])
 
     # Plot
     bins = np.linspace(-60, 60, 13)
