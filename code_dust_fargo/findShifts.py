@@ -123,7 +123,7 @@ def get_shift(args):
 def save_shifts(size_label, reference_label = "hcm"):
     # Collect Data
     if len(frame_range) == 1:
-        get_shift((i, frame, size_label, reference_label))
+        get_shift((0, frame, size_label, reference_label))
     else:
         if num_cores > 1:
             pool_args = [(i, frame, size_label, reference_label) for (i, frame) in enumerate(frame_range)]
@@ -132,7 +132,7 @@ def save_shifts(size_label, reference_label = "hcm"):
             p.map(get_shift, pool_args)
             p.terminate()
         else:
-            for frame in frame_range:
+            for i, frame in enumerate(frame_range):
                 get_shift((i, frame, size_label, reference_label))
 
     # Save Data
