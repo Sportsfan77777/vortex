@@ -221,7 +221,7 @@ def find_shift(density, reference_density, fargo_par, center = True, num_scale_h
 
     ### Shift reference density away from the min
     if center:
-        shift_away = shift_away_from_minimum(reference_density_sliver, fargo_par)
+        shift_away = shift_away_from_minimum(reference_density, fargo_par)
         reference_density_sliver = np.roll(reference_density_sliver, shift_away)
 
     ### Test shifts ###
@@ -230,9 +230,9 @@ def find_shift(density, reference_density, fargo_par, center = True, num_scale_h
 
     for i, possible_shift_i in enumerate(possible_shifts):
         shift = np.searchsorted(theta, possible_shift_i)
-        tmp_density_sliver1 = np.roll(density_sliver1, shift)
+        density_sliver_tmp = np.roll(density_sliver_tmp, shift)
 
-        diff = np.abs(density_sliver2 - tmp_density_sliver1)
+        diff = np.abs(reference_density_sliver - density_sliver_tmp)
         mass_differences[i] = np.sum(diff)
 
     ### The correct shift has the lowest mass difference ###
