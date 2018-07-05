@@ -60,6 +60,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
 
 ###############################################################################
 
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
 ### Get Input Parameters ###
 
 # Frames
