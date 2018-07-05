@@ -53,7 +53,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
     parser.add_argument('--num', dest = "num_shifts", type = int, default = 360,
                          help = 'number of shifts to check (default: 360)')
 
-    parser.add_argument('--ref', dest = "reference", type = int, default = "hcm",
+    parser.add_argument('--ref', dest = "reference_label", type = int, default = "hcm",
                          help = 'reference density (default: hcm)')
 
     return parser
@@ -74,7 +74,7 @@ min_shift = args.min_shift
 max_shift = args.max_shift
 num_shifts = args.num_shifts
 
-reference = args.reference
+reference_label = args.reference_label
 
 ### Get Fargo Parameters ###
 fargo_par = util.get_pickled_parameters(directory = "../%s-size" % reference)
@@ -102,11 +102,49 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def save_shifts(size, size_label, reference = "hcm"):
-	density = util.read_data(directory = "../%s-size" % size_label)
+def get_shift(args):
+    # Args
+    i, frame, size_label, reference_label = args
+
+    # Read Data
+    density = util.read_data(directory = "../%s-size" % size_label)
+    reference_density = util.read_data(directory = "../%s-size" % reference_label)
+
+    shift, theta_shift = az.find_shift(density, reference_density, fargo_par, num_scale_heights = num_scale_heights, min_shift = min_shift, max_shift = max_shift, num_shifts = num_shifts)
+
+    shift_array[i] = shift
+    theta_shift_array[i] = theta_shift * (180.0 / np.pi)
 
 
-# Make each call
+def save_shifts(size_label, reference_label = "hcm"):
+    # Collect Data
+    if len(frame_range) == 1:
+        get_shift(frame_range[0], show = show)
+    else:
+        if num_cores > 1:
+            pool_args = [(i, frame, size_label, reference_label) for (i, frame) in enumerate(frame_range)]
+
+            p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+            p.map(get_shift, frame_range)
+            p.terminate()
+        else:
+            for frame in frame_range:
+                get_shift(frame)
+
+    # Save Data
+    shift_array = np.array(shift_array)
+    theta_shift_array = np.array(theta_shift_array)
+
+    pickle.dump(shift_array, open("../%-size/shift_lookup.p" % size_label, 'w'))
+    pickle.dump(theta_shift_array, open("../%-size/theta_lookup.p" % size_label, 'w'))
+
+
+### Make each call ###
 
 for size_i, size_label_i in zip(sizes, size_labels):
-	save_shifts(size_i, size_label_i, reference = reference)
+    # Storage Arrays
+    shift_array = mp_array("d", len(frame_range))
+    theta_shift_array = mp_array("d", len(frame_range))
+
+    # Save Data
+    save_shifts(size_label_i, reference_label = reference_label)
