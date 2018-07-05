@@ -230,7 +230,7 @@ def find_shift(density, reference_density, fargo_par, center = True, num_scale_h
 
     for i, possible_shift_i in enumerate(possible_shifts):
         shift = np.searchsorted(theta, possible_shift_i)
-        density_sliver_tmp = np.roll(density_sliver_tmp, shift)
+        density_sliver_tmp = np.roll(density_sliver, shift)
 
         diff = np.abs(reference_density_sliver - density_sliver_tmp)
         mass_differences[i] = np.sum(diff)
