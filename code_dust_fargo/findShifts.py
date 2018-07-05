@@ -53,7 +53,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles."):
     parser.add_argument('--num', dest = "num_shifts", type = int, default = 360,
                          help = 'number of shifts to check (default: 360)')
 
-    parser.add_argument('--ref', dest = "reference_label", type = int, default = "hcm",
+    parser.add_argument('--ref', dest = "reference_label", default = "hcm",
                          help = 'reference density (default: hcm)')
 
     return parser
@@ -80,7 +80,7 @@ num_shifts = args.num_shifts
 reference_label = args.reference_label
 
 ### Get Fargo Parameters ###
-fargo_par = util.get_pickled_parameters(directory = "../%s-size" % reference)
+fargo_par = util.get_pickled_parameters(directory = "../%s-size" % reference_label)
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
