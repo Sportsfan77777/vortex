@@ -252,8 +252,8 @@ def get_lookup_shift(frame, directory = "."):
     frames = pickle.load(open('%s/frame_lookup.p' % directory, 'r'))
     shifts = pickle.load(open('%s/shift_lookup.p' % directory, 'r'))
 
-    frame_i = np.searchsorted(frames, frame)
-    return shifts[frame_i]
+    frame_i = np.searchsorted(frames, frame) # Note: not an int!
+    return int(round(shifts[frame_i], 0))
 
 ### Extract Values ###
 
