@@ -225,11 +225,13 @@ def find_shift(density, reference_density, fargo_par, center = True, num_scale_h
         reference_density_sliver = np.roll(reference_density_sliver, shift_away)
 
     ### Test shifts ###
+    theta_degrees = theta * (180.0 / np.pi)
+
     mass_differences = np.zeros(num_shifts)
     possible_shifts = np.linspace(min_shift, max_shift, num_shifts)
 
     for i, possible_shift_i in enumerate(possible_shifts):
-        shift = np.searchsorted(theta, possible_shift_i)
+        shift = np.searchsorted(theta_degrees, possible_shift_i)
         density_sliver_tmp = np.roll(density_sliver, shift)
 
         diff = np.abs(reference_density_sliver - density_sliver_tmp)
@@ -239,7 +241,7 @@ def find_shift(density, reference_density, fargo_par, center = True, num_scale_h
     shift_i = np.argmin(mass_differences)
     theta_shift = possible_shifts[shift_i]
 
-    shift_to_roll_i = np.searchsorted(theta, theta_shift) # this is an index
+    shift_to_roll_i = np.searchsorted(theta_degrees, theta_shift) # this is an index
 
     return shift_to_roll_i, theta_shift
 

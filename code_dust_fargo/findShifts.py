@@ -117,7 +117,7 @@ def get_shift(args):
     shift, theta_shift = az.find_shift(density, reference_density, fargo_par, center = False, num_scale_heights = num_scale_heights, min_shift = min_shift, max_shift = max_shift, num_shifts = num_shifts)
 
     shift_array[i] = shift
-    theta_shift_array[i] = theta_shift * (180.0 / np.pi)
+    theta_shift_array[i] = theta_shift
 
 
 def save_shifts(size_label, reference_label = "hcm"):
