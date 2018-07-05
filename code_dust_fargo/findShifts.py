@@ -111,8 +111,8 @@ def get_shift(args):
     i, frame, size_label, reference_label = args
 
     # Read Data
-    density = util.read_data(directory = "../%s-size" % size_label)
-    reference_density = util.read_data(directory = "../%s-size" % reference_label)
+    density = util.read_gas_data(frame, fargo_par, directory = "../%s-size" % size_label)
+    reference_density = util.read_gas_data(frame, fargo_par, directory = "../%s-size" % reference_label)
 
     shift, theta_shift = az.find_shift(density, reference_density, fargo_par, num_scale_heights = num_scale_heights, min_shift = min_shift, max_shift = max_shift, num_shifts = num_shifts)
 
