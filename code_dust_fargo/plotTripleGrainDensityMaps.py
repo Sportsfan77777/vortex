@@ -81,7 +81,7 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--shift', dest = "center", default = "off",
-                         help = 'center options: threshold, cm-threshold, away (from minimum), cm-away, peak, or cm-peak (default: do not center)')
+                         help = 'center options: threshold, cm-threshold, away (from minimum), cm-away, peak, cm-peak, lookup (default: do not center)')
 
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
@@ -195,7 +195,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_density(normalized_density, fargo_par, option = "away", reference_density = None):
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None, grain = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -208,8 +208,10 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
        shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
     elif option == "away":
        shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame, directory = "../%s-size" % grain)
     else:
-       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, or (cm-)away"
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
     shifted_density = np.roll(normalized_density, shift_c)
@@ -254,9 +256,9 @@ def make_plot(frame, show = False):
         if center is "off":
            shift_c = 0
         elif center.startswith("cm"):
-           normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density)
+           normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame, grain = grain)
         else:
-           normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center)
+           normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center, frame = frame, grain = grain)
         gas_density = np.roll(gas_density, shift_c)
 
         ### Plot ###
