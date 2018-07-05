@@ -6,6 +6,7 @@ default option is to also shift 3 mm grains away from the minimum
 import sys, os, subprocess
 import pickle, glob
 from multiprocessing import Pool
+from multiprocessing import Array as mp_array
 import argparse
 
 import math
