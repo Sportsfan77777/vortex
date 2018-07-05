@@ -2,6 +2,8 @@
 utility module for azimuthal-related plots
 """
 
+import pickle
+
 import numpy as np
 from scipy.signal import gaussian
 
