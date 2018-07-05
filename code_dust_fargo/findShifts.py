@@ -123,17 +123,17 @@ def get_shift(args):
 def save_shifts(size_label, reference_label = "hcm"):
     # Collect Data
     if len(frame_range) == 1:
-        get_shift(frame_range[0], show = show)
+        get_shift((i, frame, size_label, reference_label))
     else:
         if num_cores > 1:
             pool_args = [(i, frame, size_label, reference_label) for (i, frame) in enumerate(frame_range)]
 
             p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-            p.map(get_shift, frame_range)
+            p.map(get_shift, pool_args)
             p.terminate()
         else:
             for frame in frame_range:
-                get_shift(frame)
+                get_shift((i, frame, size_label, reference_label))
 
     # Save Data
     shift_array = np.array(shift_array)
