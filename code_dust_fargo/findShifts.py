@@ -114,7 +114,7 @@ def get_shift(args):
     density = util.read_gas_data(frame, fargo_par, directory = "../%s-size" % size_label)
     reference_density = util.read_gas_data(frame, fargo_par, directory = "../%s-size" % reference_label)
 
-    shift, theta_shift = az.find_shift(density, reference_density, fargo_par, center = False, num_scale_heights = num_scale_heights, min_shift = min_shift, max_shift = max_shift, num_shifts = num_shifts)
+    shift, theta_shift = az.find_shift(density, reference_density, fargo_par, num_scale_heights = num_scale_heights, min_shift = min_shift, max_shift = max_shift, num_shifts = num_shifts)
 
     shift_array[i] = shift
     theta_shift_array[i] = theta_shift
@@ -136,9 +136,11 @@ def save_shifts(size_label, reference_label = "hcm"):
                 get_shift((i, frame, size_label, reference_label))
 
     # Save Data
+    frame_array_np = np.array(frame_range)
     shift_array_np = np.array(shift_array)
     theta_shift_array_np = np.array(theta_shift_array)
 
+    pickle.dump(frame_array_np, open("../%s-size/frame_lookup.p" % size_label, 'w'))
     pickle.dump(shift_array_np, open("../%s-size/shift_lookup.p" % size_label, 'w'))
     pickle.dump(theta_shift_array_np, open("../%s-size/theta_lookup.p" % size_label, 'w'))
 
