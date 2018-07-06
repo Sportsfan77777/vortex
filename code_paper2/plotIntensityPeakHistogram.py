@@ -42,8 +42,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('frames', type = int, nargs = '+',
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
-                         help = 'save directory (default: azimuthalIntensityEvolution)')
+    parser.add_argument('--dir', dest = "save_directory", default = "intensityPeakHistogram",
+                         help = 'save directory (default: intensityPeakHistogram)')
 
     # Save Data
     parser.add_argument('--data', dest = "save_data", action = 'store_true', default = False,
