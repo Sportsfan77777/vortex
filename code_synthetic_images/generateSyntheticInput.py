@@ -54,6 +54,10 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('-r', dest = "radius", type = float, default = 20.0,
                          help = 'radius of planet in AU (default: 20.0)')
 
+    # Centering
+    parser.add_argument('--shift', dest = "center", default = "lookup",
+                         help = 'center options: threshold, cm-threshold, away (from minimum), cm-away, peak, cm-peak, lookup (default: lookup)')
+
     # Contribution Test
     parser.add_argument('-z', dest = "zero", type = int, default = -1,
                          help = 'index of grain to leave out for contribution test (default: -1)')
@@ -114,6 +118,9 @@ num_cores = args.num_cores
 # System Parameters
 mass = args.mass # (in solar masses)
 radius = args.radius # radius of planet (in AU)
+
+# Centering
+center = args.center
 
 # Interpolation
 interpolate = args.interpolate
@@ -204,9 +211,11 @@ def center_vortex(density, frame):
         for i, size_name in enumerate(size_names):
             if center == "lookup":
                 shift_i = az.get_lookup_shift(frame, directory = "../%s-size" % size)
-            else:
+            elif center == "threshold":
                 threshold = util.get_threshold(size) * surface_density_zero
                 shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par, threshold = threshold)
+            else:
+                print "invalid centering option"
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
