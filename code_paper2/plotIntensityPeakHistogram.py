@@ -186,11 +186,11 @@ def measure_peak_offset(frame, threshold = 0.5):
     right_index = len(intensity_polar_at_peak) - az.my_searchsorted(intensity_polar_at_peak[::-1], threshold) - 1
 
     # Convert to theta
-    left_theta = theta[left_index]
-    right_theta = theta[right_index]
+    left_theta = theta[left_index] * (180.0 / np.pi)
+    right_theta = theta[right_index] * (180.0 / np.pi)
     center_theta = left_theta + (right_theta - left_theta) / 2.0
     
-    peak_theta = theta[peak_phi_i]
+    peak_theta = theta[peak_phi_i] * (180.0 / np.pi)
     peak_offset = peak_theta - center_theta
 
     return peak_offset
