@@ -10,6 +10,7 @@ python plotDensityMaps.py -m
 import sys, os, subprocess
 import pickle, glob
 from multiprocessing import Pool
+from multiprocessing import Array as mp_array
 import argparse
 
 import math
@@ -41,6 +42,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     # Frame Selection
     parser.add_argument('frames', type = int, nargs = '+',
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "intensityPeakHistogram",
                          help = 'save directory (default: intensityPeakHistogram)')
@@ -119,6 +123,9 @@ arc_beam = beam_size * planet_radius / distance
 # Frames
 frame_range = util.get_frame_range(args.frames)
 
+# Number of Cores 
+num_cores = args.num_cores
+
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
@@ -163,8 +170,11 @@ fargo_par["theta"] = theta
 
 ### Data ###
 
-def get_peak_offset(frame):
+def get_peak_offset(args):
     """return peak in azimuthal profile of vortex"""
+    # Unpack
+    i, frame = args
+
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     arg_r, arg_phi = az.get_peak(intensity_polar, fargo_par)
 
@@ -172,9 +182,13 @@ def get_peak_offset(frame):
     peak = theta[arg_phi]
     peak_offset = peak * (180.0 / np.pi) - 180.0
 
-    return peak_offset
+    # Store in mp_array
+    peak_offsets[i] = peak_offset
 
-def measure_peak_offset(frame, threshold = 0.5):
+def measure_peak_offset(args, threshold = 0.5):
+    # Unpack
+    i, frame = args
+
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     peak_r_i, peak_phi_i = az.get_peak(intensity_polar, fargo_par)
 
@@ -193,26 +207,41 @@ def measure_peak_offset(frame, threshold = 0.5):
     peak_theta = theta[peak_phi_i] * (180.0 / np.pi)
     peak_offset = peak_theta - center_theta
 
-    return peak_offset
+    # Store in mp_array
+    peak_offsets[i] = peak_offset
 
 
 ###############################################################################
 
 ##### PLOTTING #####
 
+peak_offsets = mp_array("d", len(frame_range))
+
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 5), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Get Data
+    #if measure:
+    #    peaks = np.array([measure_peak_offset(frame, threshold = threshold) for frame in frame_range])
+    #else:
+    #    peaks = np.array([get_peak_offset(frame) for frame in frame_range])
+
     if measure:
-        peaks = np.array([measure_peak_offset(frame, threshold = threshold) for frame in frame_range])
+        offset_function = lambda f : measure_peak_offset(f, threshold = threshold)
     else:
-        peaks = np.array([get_peak_offset(frame) for frame in frame_range])
+        offset_function = get_peak_offset
+
+    # Pool
+    pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
+
+    p = Pool(num_cores)
+    p.map(offset_function, pool_args)
+    p.terminate()
 
     # Plot
     bins = np.linspace(-60, 60, 13)
-    data = peaks
+    data = peak_array
     plot.hist(data, bins = bins, cumulative = True)
 
     # Save, Show, and Close
