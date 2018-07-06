@@ -64,10 +64,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 8.0,
                          help = 'number of scale heights (default: 8.0)')
 
-    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
-                         help = 'normalize by max (default: normalize)')
-    parser.add_argument('-t', dest = "threshold", type = float, default = None,
-                         help = 'threshold for centering vortex with its center (default: varies with size)')
+    parser.add_argument('--retrieve', dest = "measure", action = 'store_false', default = True,
+                         help = 'measure or retrieve peak offset (default: measure)')
+    parser.add_argument('-t', dest = "threshold", type = float, default = 0.5,
+                         help = 'threshold for marking edges of vortex with intensity (default: 0.5)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -128,12 +128,10 @@ if not os.path.isdir(save_directory):
 save_data = args.save_data
 
 # Plot Parameters (variable)
-normalize = args.normalize
-
 show = args.show
 max_y = args.max_y
-if normalize:
-    max_y = 1
+#if max_y is None:
+#    max_y = 1
 
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
@@ -144,9 +142,8 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
+measure = args.measure
 threshold = args.threshold
-#if threshold is None:
-#    threshold = util.get_threshold(size)
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -208,12 +205,15 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Get Data
-    peaks = np.array([get_peak_offset(frame) for frame in frame_range])
+    if measure:
+        peaks = np.array([measure_peak_offset(frame, threshold = threshold) for frame in frame_range])
+    else:
+        peaks = np.array([get_peak_offset(frame) for frame in frame_range])
 
     # Plot
     bins = np.linspace(-60, 60, 13)
     data = peaks
-    plot.hist(data, bins = bins)
+    plot.hist(data, bins = bins, cumulative = True)
 
     # Save, Show, and Close
     frame_str = ""
