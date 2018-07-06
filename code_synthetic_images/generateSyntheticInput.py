@@ -34,8 +34,8 @@ import util
 import azimuthal as az
 from labelOpacities import label_opacities
 
-size_names = ["cm", "hcm", "mm", "hmm", "hum", "um"]
-sizes = np.array([1.0, 0.3, 0.1, 0.03, 0.01, 0.0001])
+size_names = ["cm", "hcm", "mm", "hmm"] # , "hum", "um"]
+sizes = np.array([1.0, 0.3, 0.1, 0.03]) #, 0.01, 0.0001])
 
 ### Input Parameters ###
 
@@ -192,7 +192,7 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
 
     return density, sizes
 
-def center_vortex(density):
+def center_vortex(density, frame):
     """ Step 2: center the vortex so that the peak is at 180 degrees """
     if massTaper < 10.1:
         for i, size in enumerate(sizes):
@@ -201,9 +201,12 @@ def center_vortex(density):
         return density
 
     elif massTaper > 999.9:
-        for i, size in enumerate(sizes):
-            threshold = util.get_threshold(size) * surface_density_zero
-            shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par, threshold = threshold)
+        for i, size_name in enumerate(size_names):
+            if center == "lookup":
+                shift_i = az.get_lookup_shift(frame, directory = "../%s-size" % size)
+            else:
+                threshold = util.get_threshold(size) * surface_density_zero
+                shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par, threshold = threshold)
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
@@ -377,7 +380,7 @@ def full_procedure(frame):
     density, sizes = retrieve_density(frame, size_names)
 
     density, sizes = polish(density, sizes, scale = scale)
-    density = center_vortex(density)
+    density = center_vortex(density, frame)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
 
     if interpolate:
