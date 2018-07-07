@@ -207,10 +207,10 @@ def center_vortex(density, frame):
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
-    elif massTaper > 999.9:
+    elif massTaper > 99.9:
         for i, size_name in enumerate(size_names):
             if center == "lookup":
-                shift_i = az.get_lookup_shift(frame, directory = "../%s-size" % size)
+                shift_i = az.get_lookup_shift(frame, directory = "../%s-size" % size_name)
             elif center == "threshold":
                 threshold = util.get_threshold(size) * surface_density_zero
                 shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par, threshold = threshold)
