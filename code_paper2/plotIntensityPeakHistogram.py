@@ -181,9 +181,9 @@ def get_peak_offset(args):
     # Store in mp_array
     peak_offsets[i] = peak_offset
 
-def measure_peak_offset(args, threshold = 0.5):
+def measure_peak_offset(args):
     # Unpack
-    i, frame = args
+    i, frame, threshold = args
 
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     peak_r_i, peak_phi_i = az.get_peak(intensity_polar, fargo_par)
@@ -220,17 +220,17 @@ def make_plot(show = False):
     # Get Data
     if num_cores == 1:
         if measure:
-            peaks = np.array([measure_peak_offset((i, frame), threshold = threshold) for i, frame in enumerate(frame_range)])
+            peaks = np.array([measure_peak_offset((i, frame, threshold)) for i, frame in enumerate(frame_range)])
         else:
             peaks = np.array([get_peak_offset((i, frame)) for i, frame in enumerate(frame_range)])
     else:
         # Pool
         if measure:
-            offset_function = lambda f : measure_peak_offset(f, threshold = threshold)
+            offset_function = measure_peak_offset
+            pool_args = [(i, frame, threshold) for (i, frame) in enumerate(frame_range)]
         else:
             offset_function = get_peak_offset
-
-        pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
+            pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
 
         p = Pool(num_cores)
         p.map(offset_function, pool_args)
