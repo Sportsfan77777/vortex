@@ -240,8 +240,8 @@ def make_plot(show = False):
     bins = np.linspace(-60, 60, 13) # Make this parameters
     data = np.array(peak_offsets)
 
-    hist = plot.hist(data, bins = bins, c = 'r', histtype = 'step')
-    hist_cum = plot.hist(data, bins = bins, c = 'b', histtype = 'step', cumulative = True)
+    hist = plot.hist(data, bins = bins, color = 'r', histtype = 'step')
+    hist_cum = plot.hist(data, bins = bins, color = 'b', histtype = 'step', cumulative = True)
 
     # Print
     if print_histogram:
