@@ -61,17 +61,15 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--max_y', dest = "max_y", nargs = '+', type = float, default = None,
-                         help = 'max_y for each frame, or same for all (default: None)')
-    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
-                         help = 'number of profiles (default: 5)')
-    parser.add_argument('-s', dest = "num_scale_heights", type = float, default = 8.0,
-                         help = 'number of scale heights (default: 8.0)')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+                         help = 'max_y for plot (default: None)')
 
     parser.add_argument('--retrieve', dest = "measure", action = 'store_false', default = True,
                          help = 'measure or retrieve peak offset (default: measure)')
     parser.add_argument('-t', dest = "threshold", type = float, default = 0.5,
                          help = 'threshold for marking edges of vortex with intensity (default: 0.5)')
+    parser.add_argument('--print', dest = "print_histogram", action = 'store_true', default = False,
+                         help = 'measure or retrieve peak offset (default: measure)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -140,9 +138,6 @@ max_y = args.max_y
 #if max_y is None:
 #    max_y = 1
 
-num_profiles = args.num_profiles
-num_scale_heights = args.num_scale_heights
-
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
@@ -151,6 +146,7 @@ version = args.version
 
 measure = args.measure
 threshold = args.threshold
+print_histogram = args.print_histogram
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -240,9 +236,16 @@ def make_plot(show = False):
     p.terminate()
 
     # Plot
-    bins = np.linspace(-60, 60, 13)
+    bins = np.linspace(-60, 60, 13) # Make this parameters
     data = peak_array
-    plot.hist(data, bins = bins, cumulative = True)
+
+    hist = plot.hist(data, bins = bins, c = 'r', histtype = 'step')
+    hist_cum = plot.hist(data, bins = bins, c = 'b', histtype = 'step', cumulative = True)
+
+    # Print
+    if print_histogram:
+        for i, (value, value_cum) in enumerate(zip(hist, hist_cum)):
+            print "%f - %f: %d, %d, (%d, %d)" % (bins[i], bins[i + 1], value, value_cum, value / len(frame_range), value_cum / len(frame_range))
 
     # Save, Show, and Close
     frame_str = ""
