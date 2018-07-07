@@ -218,22 +218,23 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Get Data
-    #if measure:
-    #    peaks = np.array([measure_peak_offset(frame, threshold = threshold) for frame in frame_range])
-    #else:
-    #    peaks = np.array([get_peak_offset(frame) for frame in frame_range])
-
-    if measure:
-        offset_function = lambda f : measure_peak_offset(f, threshold = threshold)
+    if num_cores == 1:
+        if measure:
+            peaks = np.array([measure_peak_offset((i, frame), threshold = threshold) for i, frame in enumerate(frame_range)])
+        else:
+            peaks = np.array([get_peak_offset((i, frame)) for i, frame in enumerate(frame_range)])
     else:
-        offset_function = get_peak_offset
+        # Pool
+        if measure:
+            offset_function = lambda f : measure_peak_offset(f, threshold = threshold)
+        else:
+            offset_function = get_peak_offset
 
-    # Pool
-    pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
+        pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
 
-    p = Pool(num_cores)
-    p.map(offset_function, pool_args)
-    p.terminate()
+        p = Pool(num_cores)
+        p.map(offset_function, pool_args)
+        p.terminate()
 
     # Plot
     bins = np.linspace(-60, 60, 13) # Make this parameters
