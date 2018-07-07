@@ -246,7 +246,7 @@ def make_plot(show = False):
     # Print
     if print_histogram:
         for i, (value, value_cum) in enumerate(zip(hist, hist_cum)):
-            print "%f - %f: %d, %d, (%d, %d)" % (bins[i], bins[i + 1], value, value_cum, 1.0 * value / len(frame_range), 1.0 * value_cum / len(frame_range))
+            print "%.1f - %.1f: %d, %d, (%.3f, %.3f)" % (bins[i], bins[i + 1], value, value_cum, value / len(frame_range), value_cum / len(frame_range))
 
     # Save, Show, and Close
     frame_str = ""
