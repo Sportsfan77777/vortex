@@ -270,8 +270,8 @@ def make_plot(show = False):
     if save_data:
         prefix = "id%04d_b%02d_t%02d" % (id_number, beam_size * planet_radius, int(round(100.0 * threshold, 0)))
 
-        save_frames_name = "%s_intensityFrames.p" % (id_number, prefix)
-        save_peaks_name = "%s_intensityPeaks.p" % (id_number, prefix)
+        save_frames_name = "%s_intensityFrames.p" % (prefix)
+        save_peaks_name = "%s_intensityPeaks.p" % (prefix)
 
         pickle.dump(frame_range, open(save_frames_name, "wb"))
         pickle.dump(peak_offsets, open(save_peaks_name, "wb"))
