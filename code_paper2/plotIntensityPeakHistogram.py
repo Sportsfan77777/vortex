@@ -220,9 +220,11 @@ def make_plot(show = False):
     # Get Data
     if num_cores == 1:
         if measure:
-            peak_offsets = np.array([measure_peak_offset((i, frame, threshold)) for i, frame in enumerate(frame_range)])
+            for i, frame in enumerate(frame_range):
+                measure_peak_offset((i, frame, threshold))
         else:
-            peak_offsets = np.array([get_peak_offset((i, frame)) for i, frame in enumerate(frame_range)])
+            for i, frame in enumerate(frame_range)
+                get_peak_offset((i, frame))
     else:
         # Pool
         if measure:
