@@ -257,10 +257,10 @@ def make_plot(frame, show = True):
     t4_line = "t = 0.4: %.1f" % (offset_t4)
     t5_line = "t = 0.5: %.1f" % (offset_t5)
 
-    linebreak = 0.1 * plot.ylim()[-1]
-    plot.text(0, 0.1 * plot.ylim()[-1] + 2.0 * linebreak, t5_line, fontsize = fontsize, horizontalalignment = 'center')
-    plot.text(0, 0.1 * plot.ylim()[-1] + 1.0 * linebreak, t4_line, fontsize = fontsize, horizontalalignment = 'center')
-    plot.text(0, 0.1 * plot.ylim()[-1] + 0.0 * linebreak, t3_line, fontsize = fontsize, horizontalalignment = 'center')
+    start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
+    plot.text(0, start_y + 2.0 * linebreak, t5_line, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(0, start_y + 1.0 * linebreak, t4_line, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(0, start_y + 0.0 * linebreak, t3_line, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
