@@ -251,7 +251,7 @@ def make_plot(frame, show = True):
     offsets_t5 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
 
     this_frame = np.searchsorted(frames, frame)
-    offset_t3 = offsets_t3[this_frame]; offset_t3 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
+    offset_t3 = offsets_t3[this_frame]; offset_t4 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
 
     t3_line = "t = 0.3: %.1f" % (offset_t3)
     t4_line = "t = 0.4: %.1f" % (offset_t4)
@@ -270,11 +270,8 @@ def make_plot(frame, show = True):
     box_size = plot.xlim()[-1]; top_y = plot.ylim()[-1]
     left_x = -0.8 * box_size; line_y = 1.18 * top_y; linebreak = 0.2 * box_size
     right_x = 1.3 * box_size
-    if frame_i == 1:
-        pass
-    elif frame_i == 2:
-        line1 = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-        plot.text(right_x, line_y, line1, horizontalalignment = 'right', fontsize = fontsize + 2)
+    line1 = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+    plot.text(right_x, line_y, line1, horizontalalignment = 'right', fontsize = fontsize + 2)
 
     # Save, Show, and Close
     plot.tight_layout()
