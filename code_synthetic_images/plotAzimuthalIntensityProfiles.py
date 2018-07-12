@@ -247,8 +247,8 @@ def make_plot(frame, show = True):
     # Annotate Peak Offsets
     frames = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
     offsets_t3 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t4 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t5 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t4 = pickle.load(open("id%04d_b%d_t40_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t5 = pickle.load(open("id%04d_b%d_t50_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
 
     this_frame = np.searchsorted(frames, frame)
     offset_t3 = offsets_t3[this_frame]; offset_t4 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
