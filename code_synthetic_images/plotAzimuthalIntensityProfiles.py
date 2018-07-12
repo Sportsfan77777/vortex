@@ -118,7 +118,7 @@ arc_beam = beam_size * planet_radius / distance
 ### Get Input Parameters ###
 
 # Frames
-frame_range = args.frames
+frame = args.frame
 
 # Files
 save_directory = args.save_directory
@@ -284,20 +284,13 @@ def make_plot(frame, show = True):
     # Save, Show, and Close
     plot.tight_layout()
 
-    frame_str = ""
-    for i, frame_i in enumerate(frame_range):
-        ax = fig.add_subplot(gs[i])
-        ax = add_to_plot(frame_i, fig, ax, len(frame_range), i + 1)
-        frame_str += "%04d-" % frame_i
-    frame_str = frame_str[:-1] # Trim last '_'
-
     png = "png"; pdf = "pdf"
     if version is None:
-        save_fn = "%s/azimuthalIntensityProfiles_%s.%s" % (save_directory, frame_str, png)
-        pdf_save_fn = "%s/azimuthalIntensityProfiles_%s.%s" % (save_directory, frame_str, pdf)
+        save_fn = "%s/azimuthalIntensityProfiles_%04d.%s" % (save_directory, frame, png)
+        pdf_save_fn = "%s/azimuthalIntensityProfiles_%04d.%s" % (save_directory, frame, pdf)
     else:
-        save_fn = "%s/v%04d_azimuthalIntensityProfiles_%s.%s" % (save_directory, version, frame_str, png)
-        pdf_save_fn = "%s/v%04d_azimuthalIntensityProfiles_%s.%s" % (save_directory, version, frame_str, pdf)
+        save_fn = "%s/v%04d_azimuthalIntensityProfiles_%04d.%s" % (save_directory, version, frame, png)
+        pdf_save_fn = "%s/v%04d_azimuthalIntensityProfiles_%04d.%s" % (save_directory, version, frame, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
     plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
@@ -309,4 +302,4 @@ def make_plot(frame, show = True):
 
 ##### Make Plots! #####
 
-make_plot(show = show) 
+make_plot(frame, show = show) 
