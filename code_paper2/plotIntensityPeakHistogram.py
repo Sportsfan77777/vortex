@@ -50,7 +50,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'save directory (default: intensityPeakHistogram)')
 
     # Save Data
-    parser.add_argument('--data', dest = "save_data", action = 'store_true', default = False,
+    parser.add_argument('--save', dest = "save_data", action = 'store_true', default = False,
                          help = 'save data or not (default: do not save)')
 
     # Plot Parameters (variable)
