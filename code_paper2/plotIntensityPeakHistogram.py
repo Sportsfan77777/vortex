@@ -274,7 +274,7 @@ def make_plot(show = False):
         save_peaks_name = "%s_intensityPeaks.p" % (prefix)
 
         pickle.dump(frame_range, open(save_frames_name, "wb"))
-        pickle.dump(peak_offsets, open(save_peaks_name, "wb"))
+        pickle.dump(data, open(save_peaks_name, "wb"))
 
 ##### Make Plots! #####
 
