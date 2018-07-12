@@ -182,28 +182,12 @@ def make_plot(frame, show = True):
     # Set up figure
     fig = plot.figure(figsize = (12, 5), dpi = dpi)
 
-    # Convert size to number
-    size_name = "cm"
-    size = util.get_size(size_name)
-
     ### Data ###
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     if normalize:
         intensity_polar /= np.max(intensity_polar)
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
-    # Get Shift
-    dust_fargo_par = util.get_pickled_parameters(directory = "../../../cm-size") ## shorten name?
-    ######## Need to extract parameters, and add 'rad' and 'theta' ########
-    dust_rad = np.linspace(dust_fargo_par['Rmin'], dust_fargo_par['Rmax'], dust_fargo_par['Nrad'])
-    dust_theta = np.linspace(0, 2 * np.pi, dust_fargo_par['Nsec'])
-    dust_fargo_par['rad'] = dust_rad; dust_fargo_par['theta'] = dust_theta
-    gas_surface_density_zero = dust_fargo_par['Sigma0']
-
-    dust_density = util.read_data(frame, 'dust', dust_fargo_par, id_number = id_number, directory = "../../../cm-size")
-
-    # Shift gas density with center of dust density
-    shift = az.get_azimuthal_center(dust_density, dust_fargo_par, threshold = 10.0 * gas_surface_density_zero / 100.0)
 
     ### Plot ###
     # Profiles
@@ -211,7 +195,9 @@ def make_plot(frame, show = True):
     for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = labels[i])
 
-    # Mark Planet
+    # Mark Planet (get shift first)
+    shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
+
     if shift is None:
         planet_loc = theta[0]
     else:
@@ -242,15 +228,12 @@ def make_plot(frame, show = True):
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
 
     plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
-
-    if frame_i == 1:
-        plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
+    plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
 
     # Legend
-    if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
-    # Extra Annotation
+    # Extra Annotation (Location, Legend Label)
     rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
     plot.text(-170, 0.885 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
 
@@ -260,6 +243,24 @@ def make_plot(frame, show = True):
 
         line = "Radii"
         plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
+
+    # Annotate Peak Offsets
+    frames = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
+    offsets_t3 = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
+    offsets_t4 = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
+    offsets_t5 = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
+
+    this_frame = np.searchsorted(frames, frame)
+    offset_t3 = offsets_t3[this_frame]; offset_t3 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
+
+    t3_line = "t = 0.3: %.1f" % (offset_t3)
+    t4_line = "t = 0.4: %.1f" % (offset_t4)
+    t5_line = "t = 0.5: %.1f" % (offset_t5)
+
+    linebreak = 0.1 * plot.ylim()[-1]
+    plot.text(0, 0.1 * plot.ylim()[-1] + 2.0 * linebreak, t5_line, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(0, 0.1 * plot.ylim()[-1] + 1.0 * linebreak, t4_line, fontsize = fontsize, horizontalalignment = 'center')
+    plot.text(0, 0.1 * plot.ylim()[-1] + 0.0 * linebreak, t3_line, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
@@ -274,12 +275,6 @@ def make_plot(frame, show = True):
     elif frame_i == 2:
         line1 = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
         plot.text(right_x, line_y, line1, horizontalalignment = 'right', fontsize = fontsize + 2)
-
-    
-
-    #### Finish Plot ####
-    title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
-    fig.suptitle(title, y = 0.97, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save, Show, and Close
     plot.tight_layout()
