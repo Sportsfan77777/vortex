@@ -220,9 +220,9 @@ def make_plot(show = False):
     # Get Data
     if num_cores == 1:
         if measure:
-            peaks = np.array([measure_peak_offset((i, frame, threshold)) for i, frame in enumerate(frame_range)])
+            peak_offsets = np.array([measure_peak_offset((i, frame, threshold)) for i, frame in enumerate(frame_range)])
         else:
-            peaks = np.array([get_peak_offset((i, frame)) for i, frame in enumerate(frame_range)])
+            peak_offsets = np.array([get_peak_offset((i, frame)) for i, frame in enumerate(frame_range)])
     else:
         # Pool
         if measure:
@@ -237,7 +237,7 @@ def make_plot(show = False):
         p.terminate()
 
     # Plot
-    bins = np.linspace(-60, 60, 13) # Make this parameters
+    bins = np.linspace(-90, 90, 19) # Make this parameters
     data = np.array(peak_offsets)
 
     hist = plot.hist(data, bins = bins, color = 'r', histtype = 'step')
@@ -266,8 +266,13 @@ def make_plot(show = False):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
     if save_data:
-        save_name = "id%04d_b%02d_intensityPeaks.p" % (id_number, beam_size * planet_radius)
-        pickle.dump(peaks, open(save_name, "wb"))
+        prefix = "id%04d_b%02d_t%02d" % (id_number, beam_size * planet_radius, int(round(100.0 * threshold, 0)))
+
+        save_frames_name = "%s_intensityFrames.p" % (id_number, prefix)
+        save_peaks_name = "%s_intensityPeaks.p" % (id_number, prefix)
+
+        pickle.dump(frame_range, open(save_frames_name, "wb"))
+        pickle.dump(peak_offsets, open(save_peaks_name, "wb"))
 
 ##### Make Plots! #####
 
