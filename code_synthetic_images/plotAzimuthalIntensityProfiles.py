@@ -39,16 +39,16 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 2,
-                         help = 'select four frames to display the cm-size dust density maps')
+    parser.add_argument('frame', type = int,
+                         help = 'select frame to display azimuthal intensity profiles')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityEvolution",
-                         help = 'save directory (default: azimuthalIntensityEvolution)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityProfiles",
+                         help = 'save directory (default: azimuthalIntensityProfiles)')
 
     # Old Format
-    parser.add_argument('--old_res', dest = "old_res", type = int, nargs = 2, default = [1024, 2048],
-                         help = 'select two frames to display the intensity maps')
+    parser.add_argument('--old_res', dest = "old_res", type = int, nargs = 2, default = None,
+                         help = 'resolution before re-sampling to calculate intensity (default: same)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -128,6 +128,11 @@ if not os.path.isdir(save_directory):
 # Old Format
 old_num_rad = args.old_res[0]
 old_num_theta = args.old_res[1]
+
+if old_res is None:
+    old_num_rad = num_rad; old_num_theta = num_theta
+else:
+    old_num_rad = args.old_res[0]; old_num_theta = args.old_res[1]
 
 # Plot Parameters (variable)
 normalize = args.normalize
