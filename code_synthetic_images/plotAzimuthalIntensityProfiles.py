@@ -126,7 +126,7 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 # Old Format
-if old_res is None:
+if args.old_res is None:
     old_num_rad = num_rad; old_num_theta = num_theta
 else:
     old_num_rad = args.old_res[0]; old_num_theta = args.old_res[1]
@@ -202,9 +202,9 @@ def make_plot(frame, show = True):
     if shift is None:
         planet_loc = theta[0]
     else:
-        if shift < -len(dust_theta):
-            shift += len(dust_theta)
-        planet_loc = dust_theta[shift] * (180.0 / np.pi) - 180.0
+        if shift < -len(theta):
+            shift += len(theta)
+        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
