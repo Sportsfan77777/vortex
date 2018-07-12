@@ -237,13 +237,12 @@ def make_plot(frame, show = True):
     # Extra Annotation (Location, Legend Label)
     rc_line = r"$r_\mathrm{c} = %.02f$" % azimuthal_radii[(num_profiles - 1) / 2]
     plot.text(-170, 0.885 * plot.ylim()[-1], rc_line, fontsize = fontsize, horizontalalignment = 'left')
+  
+    center_x = 1.38 * plot.xlim()[-1]
+    top_y = plot.ylim()[-1]
 
-    if frame_i == 2:    
-        center_x = 1.38 * plot.xlim()[-1]
-        top_y = plot.ylim()[-1]
-
-        line = "Radii"
-        plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
+    line = "Radii"
+    plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Annotate Peak Offsets
     frames = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
