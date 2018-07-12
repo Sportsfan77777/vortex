@@ -126,9 +126,6 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 # Old Format
-old_num_rad = args.old_res[0]
-old_num_theta = args.old_res[1]
-
 if old_res is None:
     old_num_rad = num_rad; old_num_theta = num_theta
 else:
@@ -192,7 +189,6 @@ def make_plot(frame, show = True):
     if normalize:
         intensity_polar /= np.max(intensity_polar)
     azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
-
 
     ### Plot ###
     # Profiles
