@@ -182,7 +182,7 @@ labels = [r"$\mathrm{-%.01f\ h}$" % ns[0], r"$\mathrm{-%.01f\ h}$" % ns[1], r"$r
 
 def make_plot(frame, show = True):
     # Set up figure
-    fig = plot.figure(figsize = (12, 5), dpi = dpi)
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     ### Data ###
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
@@ -246,9 +246,9 @@ def make_plot(frame, show = True):
 
     # Annotate Peak Offsets
     frames = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t3 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t4 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t5 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t3 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t4 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t5 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
 
     this_frame = np.searchsorted(frames, frame)
     offset_t3 = offsets_t3[this_frame]; offset_t4 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
