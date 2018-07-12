@@ -245,10 +245,10 @@ def make_plot(frame, show = True):
     plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Annotate Peak Offsets
-    frames = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
-    offsets_t3 = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
-    offsets_t4 = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
-    offsets_t5 = "id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius)
+    frames = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t3 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t4 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
+    offsets_t5 = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
 
     this_frame = np.searchsorted(frames, frame)
     offset_t3 = offsets_t3[this_frame]; offset_t3 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
