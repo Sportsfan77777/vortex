@@ -223,7 +223,7 @@ def make_plot(show = False):
             for i, frame in enumerate(frame_range):
                 measure_peak_offset((i, frame, threshold))
         else:
-            for i, frame in enumerate(frame_range)
+            for i, frame in enumerate(frame_range):
                 get_peak_offset((i, frame))
     else:
         # Pool
