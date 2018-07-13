@@ -39,8 +39,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frame', type = int,
-                         help = 'select frame to display azimuthal intensity profiles')
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityProfiles",
@@ -118,7 +118,7 @@ arc_beam = beam_size * planet_radius / distance
 ### Get Input Parameters ###
 
 # Frames
-frame = args.frame
+frame_range = util.get_frame_range(args.frames)
 
 # Files
 save_directory = args.save_directory
