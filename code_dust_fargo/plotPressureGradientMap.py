@@ -80,6 +80,8 @@ def new_argument_parser(description = "Plot dust density maps."):
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
 
+    parser.add_argument('--raw', dest = "raw", action = 'store_true', default = False,
+                         help = 'plot raw pressure term or differential pressure (default: differential pressure)')
     parser.add_argument('--modify', dest = "modified_term", action = 'store_true', default = False,
                          help = 'plot pressure term in units compared to velocity perturbation (default: do not center)')
 
@@ -164,6 +166,7 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 center = args.center
 
+raw = args.raw
 modified_term = args.modified_term
 
 # Plot Parameters (contours)
@@ -206,14 +209,17 @@ def pressure_gradient_term(density):
     height = scale_height * rad
     omegaK = np.power(rad, -1.5)
     sound_speed_squared = np.power(height, 2) * np.power(omegaK, 2)
-    pressure = sound_speed_squared[:, None] * (density - density_zero)
+    if raw:
+        pressure = sound_speed_squared[:, None] * density
+    else:
+        pressure = sound_speed_squared[:, None] * (density - density_zero)
 
     # Pressure Gradient
     d_rad = rad[1] - rad[0]
     d_theta = theta[1] - theta[0]
 
     dp_rad = np.diff(pressure, axis = 0) / d_rad
-    dp_theta = np.diff(pressure, axis = 1) / (rad[:, None] * d_theta[1:])
+    dp_theta = np.diff(pressure, axis = 1) / (rad[:, None] * d_theta)
 
     # Magnitude of pressure perturbation gradient
     pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[:, 1:] + (dp_theta * dp_theta)[1:, :])
