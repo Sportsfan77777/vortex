@@ -96,8 +96,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "PuOr",
+                         help = 'a color map that should be diverging (default: PuOr)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.5,
                          help = 'maximum density in colorbar (default: 0.5)')
 
@@ -213,8 +213,8 @@ def pressure_gradient_term(density):
     d_rad = rad[1] - rad[0]
     #d_theta = theta[1] - theta[0]
 
-    dp_rad = np.diff(pressure, axis = 1) / d_rad
-    #dp_theta = np.diff(pressure, axis = 0) / (rad[1:, None] * d_theta)
+    dp_rad = np.diff(pressure, axis = 0) / d_rad
+    #dp_theta = np.diff(pressure, axis = 1) / (rad[1:, None] * d_theta)
 
     # Magnitude of pressure perturbation gradient
     #pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[1:, :] + (dp_theta * dp_theta)[:, 1:])

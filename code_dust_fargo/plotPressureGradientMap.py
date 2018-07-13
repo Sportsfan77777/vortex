@@ -177,7 +177,7 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [-args.cmax, args.cmax]
+clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -199,18 +199,21 @@ def pressure_gradient_term(density):
     #kernel = 4
     #filtered_density = ff.gaussian_filter(density, kernel)
 
+
+    ##### Try re-sampling????? #####
+
     # Pressure: dP = c_s^2 * (rho - rho_0)
     height = scale_height * rad
     omegaK = np.power(rad, -1.5)
     sound_speed_squared = np.power(height, 2) * np.power(omegaK, 2)
-    pressure = sound_speed_squared[:, None] * (filtered_density - density_zero)
+    pressure = sound_speed_squared[:, None] * (density - density_zero)
 
     # Pressure Gradient
     d_rad = rad[1] - rad[0]
     d_theta = theta[1] - theta[0]
 
-    dp_rad = np.diff(pressure, axis = 1) / d_rad
-    dp_theta = np.diff(pressure, axis = 0) / (rad[1:, None] * d_theta)
+    dp_rad = np.diff(pressure, axis = 0) / d_rad
+    dp_theta = np.diff(pressure, axis = 1) / (rad[1:, None] * d_theta)
 
     # Magnitude of pressure perturbation gradient
     pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[1:, :] + (dp_theta * dp_theta)[:, 1:])
