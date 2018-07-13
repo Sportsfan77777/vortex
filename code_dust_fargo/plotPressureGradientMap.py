@@ -233,7 +233,7 @@ def pressure_gradient_term(density):
 ###############################################################################
 
 def generate_colors(n):
-    c = ['k', 'b', 'firebrick']
+    c = ['yellow', 'b', 'firebrick', 'w', 'green']
     colors = []
     for i in range(n):
         colors.append(c[i % len(c)])
