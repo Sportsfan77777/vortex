@@ -294,4 +294,17 @@ def make_plot(frame, show = True):
 
 ##### Make Plots! #####
 
-make_plot(frame, show = show) 
+##### Make Plots! #####
+
+# Iterate through frames
+
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
+else:
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
