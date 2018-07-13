@@ -67,7 +67,7 @@ def new_argument_parser(description = "Plot dust density maps."):
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "pressureGradientMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+                         help = 'save directory (default: pressureGradientMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -213,10 +213,10 @@ def pressure_gradient_term(density):
     d_theta = theta[1] - theta[0]
 
     dp_rad = np.diff(pressure, axis = 0) / d_rad
-    dp_theta = np.diff(pressure, axis = 1) / (rad[1:, None] * d_theta)
+    dp_theta = np.diff(pressure, axis = 1) / (rad[:, None] * d_theta[1:])
 
     # Magnitude of pressure perturbation gradient
-    pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[1:, :] + (dp_theta * dp_theta)[:, 1:])
+    pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[:, 1:] + (dp_theta * dp_theta)[1:, :])
 
     # Plot just the pressure gradient???? See if that works???
     if modified_term:
