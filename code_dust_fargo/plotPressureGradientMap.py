@@ -98,8 +98,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "Purples",
+                         help = 'color map (default: Purples)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.5,
                          help = 'maximum density in colorbar (default: 0.5)')
 
