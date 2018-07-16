@@ -252,8 +252,8 @@ def make_plot(frame, show = False):
 
     new_num_rad = 100
     new_num_theta = 100
-    new_rad, new_theta, new_data = resample(dust_vrad, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
-    new_rad, new_theta, new_data = resample(dust_vtheta, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
+    new_rad, new_theta, new_dust_vrad = resample(dust_vrad, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
+    new_rad, new_theta, new_dust_vtheta = resample(dust_vtheta, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
 
     ### Plot ###
     x = new_rad
@@ -261,7 +261,7 @@ def make_plot(frame, show = False):
     x_mesh, y_mesh = np.meshgrid(x, y)
     arrow_rate = 1
     print np.shape(x_mesh), np.shape(y_mesh), np.shape(dust_vrad), np.shape(dust_vtheta)
-    plot.quiver(x_mesh[::arrow_rate], y_mesh[::arrow_rate], np.transpose(dust_vrad)[::arrow_rate], np.transpose(dust_vtheta)[::arrow_rate], units = 'height')
+    plot.quiver(x_mesh[::arrow_rate], y_mesh[::arrow_rate], np.transpose(new_dust_vrad)[::arrow_rate], np.transpose(new_dust_vtheta)[::arrow_rate], units = 'height')
     #result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     #cbar = fig.colorbar(result)
