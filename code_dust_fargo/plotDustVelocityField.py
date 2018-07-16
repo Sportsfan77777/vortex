@@ -67,8 +67,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
-                         help = 'save directory (default: vorticityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "dustVelocityFields",
+                         help = 'save directory (default: dustVelocityFields)')
 
     # Quantity to plot
     parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
@@ -297,13 +297,13 @@ def make_plot(frame, show = False):
        cbar_name = r"$\mathrm{Rossby}$ $\mathrm{number}$"
     else:
        cbar_name = r"$\mathrm{Vorticity}$"
-    cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
+    #cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/vorticityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/dustVelocityField_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_vorticityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_dustVelocityField_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
