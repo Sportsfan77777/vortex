@@ -212,8 +212,10 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
+    v_kep = (fromfile("gasdvtheta0.dat").reshape(num_rad, num_theta))
+
     dust_vrad = (fromfile("gasdvrad%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    dust_vtheta = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    dust_vtheta = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta)) - v_kep # add a read_vrad to util.py!
 
     #vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
@@ -234,7 +236,9 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    plot.quiver(x, y, dust_vrad, dust_vtheta)
+    x_mesh, y_mesh = np.meshgrid(x, y)
+    print np.shape(x_mesh), np.shape(y_mesh), np.shape(dust_vrad), np.shape(dust_vtheta)
+    plot.quiver(x_mesh, y_mesh, dust_vrad, dust_vtheta)
     #result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     #cbar = fig.colorbar(result)
