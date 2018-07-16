@@ -238,7 +238,7 @@ def make_plot(frame, show = False):
     y = theta * (180.0 / np.pi)
     x_mesh, y_mesh = np.meshgrid(x, y)
     print np.shape(x_mesh), np.shape(y_mesh), np.shape(dust_vrad), np.shape(dust_vtheta)
-    plot.quiver(x_mesh, y_mesh, dust_vrad, dust_vtheta)
+    plot.quiver(x_mesh[::30], y_mesh[::30], dust_vrad[::30], dust_vtheta[::30], units = 'height')
     #result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     #cbar = fig.colorbar(result)
