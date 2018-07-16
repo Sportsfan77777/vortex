@@ -258,6 +258,8 @@ def make_plot(frame, show = False):
     new_rad, new_theta, new_dust_vrad = resample(dust_vrad, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
     new_rad, new_theta, new_dust_vtheta = resample(dust_vtheta, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
 
+    new_dust_vtheta[:, :] = 0 # to test vrad
+
     ### Plot ###
     x = new_rad
     y = new_theta * (180.0 / np.pi)
