@@ -268,6 +268,8 @@ def make_plot(frame, show = False):
     #result.set_clim(clim[0], clim[1])
 
     if use_contours:
+        x = rad
+        y = theta * (180.0 / np.pi)
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
         plot.contour(x, y, np.transpose(density), levels = levels, origin = 'upper', linewidths = 1, colors = colors, alpha = 0.8)
