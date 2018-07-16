@@ -206,7 +206,10 @@ def resample(data, new_num_rad = 400, new_num_theta = 400, new_r_min = 1, new_r_
     new_data = np.zeros((new_num_theta, new_num_rad))
 
     new_rad = np.linspace(new_r_min, new_r_max, new_num_rad)
-    new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
+    if center:
+        new_theta = np.linspace(0.25 * (2 * np.pi), 0.75 * (2 * np.pi), new_num_theta)
+    else:
+        new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
     interpolator = sp_int.interp2d(theta, rad, data[:, :]) # Careful: z is flattened!
     new_data[:, :] = (interpolator(new_theta, new_rad)).T # Note: result needs to be transposed
