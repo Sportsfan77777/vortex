@@ -212,10 +212,10 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    vrad = (fromfile("gasvrad%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    vtheta = (fromfile("gasvtheta%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    dust_vrad = (fromfile("gasdvrad%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    dust_vtheta = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
 
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+    #vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
     # Shift
     density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
@@ -226,16 +226,19 @@ def make_plot(frame, show = False):
         else:
             threshold = util.get_threshold(size)
             shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
-        vorticity = np.roll(vorticity, shift_c)
+        dust_vrad = np.roll(dust_vrad, shift_c)
+        dust_vtheta = np.roll(dust_vtheta, shift_c)
         density = np.roll(density, shift_c)
+
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
+    plot.quiver(x, y, dust_vrad, dust_vtheta)
+    #result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
-    cbar = fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    #cbar = fig.colorbar(result)
+    #result.set_clim(clim[0], clim[1])
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
