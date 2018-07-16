@@ -197,6 +197,23 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+### Helper Functions
+
+def resample(data, new_num_rad = 400, new_num_theta = 400, new_r_min = 1, new_r_max = 2):
+    """ Step 3: lower resolution (makes txt output smaller) """
+
+    new_data = np.zeros((new_num_theta, new_num_rad))
+
+    new_rad = np.linspace(new_r_min, new_r_max, new_num_rad)
+    new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
+
+    interpolator = sp_int.interp2d(theta, rad, data[:, :]) # Careful: z is flattened!
+    new_data[:, :] = (interpolator(new_theta, new_rad)).T # Note: result needs to be transposed
+    
+    return new_rad, new_theta, new_data
+
+###############################################################################
+
 def generate_colors(n):
     c = ['b', 'g', 'springgreen']
     colors = []
@@ -232,13 +249,18 @@ def make_plot(frame, show = False):
         dust_vtheta = np.roll(dust_vtheta, shift_c)
         density = np.roll(density, shift_c)
 
+    new_num_rad = 100
+    new_num_theta = 100
+    new_rad, new_theta, new_data = resample(dust_vrad, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
+    new_rad, new_theta, new_data = resample(dust_vtheta, new_num_rad, new_num_theta, new_r_min = x_min, new_r_max = x_max)
 
     ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
+    x = new_rad
+    y = new_theta * (180.0 / np.pi)
     x_mesh, y_mesh = np.meshgrid(x, y)
+    arrow_rate = 1
     print np.shape(x_mesh), np.shape(y_mesh), np.shape(dust_vrad), np.shape(dust_vtheta)
-    plot.quiver(x_mesh[::300], y_mesh[::300], np.transpose(dust_vrad)[::300], np.transpose(dust_vtheta)[::300], units = 'height', scale = 25)
+    plot.quiver(x_mesh[::arrow_rate], y_mesh[::arrow_rate], np.transpose(dust_vrad)[::arrow_rate], np.transpose(dust_vtheta)[::arrow_rate], units = 'height')
     #result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     #cbar = fig.colorbar(result)
