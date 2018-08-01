@@ -66,8 +66,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "radialPressureGradientMaps",
+                         help = 'save directory (default: radialPressureGradientMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
