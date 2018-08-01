@@ -214,7 +214,7 @@ def pressure_gradient_term(density):
     d_theta = theta[1] - theta[0]
 
     #dp_rad = np.diff(pressure, axis = 0) / d_rad
-    dp_theta = np.diff(pressure, axis = 1) / (rad[1:, None] * d_theta)
+    dp_theta = np.diff(pressure, axis = 1) / (rad[:, None] * d_theta)
 
     # Magnitude of pressure perturbation gradient
     #pressure_gradient_magnitude = np.sqrt((dp_rad * dp_rad)[1:, :] + (dp_theta * dp_theta)[:, 1:])
@@ -223,7 +223,7 @@ def pressure_gradient_term(density):
     #if modified_term:
     #   pressure_gradient_magnitude *= (rad[1:, None] / density_zero[1:, 1:]) / (2 * vk[1:, None])
 
-    return dp_rad
+    return dp_theta
 
 ###############################################################################
 
