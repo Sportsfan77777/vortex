@@ -41,6 +41,8 @@ movie_dictionary["azimuthalIntensity"] = "azimuthalIntensityProfiles_"
 movie_dictionary["vorticity"] = "vorticityMap_"
 movie_dictionary["diffDensity"] = "diffDensityMap_"
 movie_dictionary["tripleDensity"] = "multigrainDensityMaps_"
+movie_dictionary["radialPressure"] = "radialPressureGradientMap_"
+movie_dictionary["azimuthalPressure"] = "azimuthalPressureGradientMap_"
 
 ###############################################################################
 
