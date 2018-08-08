@@ -63,9 +63,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'max_y for plot (default: None)')
 
-    
-    parser.add_argument('--print', dest = "print_histogram", action = 'store_true', default = False,
-                         help = 'measure or retrieve peak offset (default: measure)')
+    parser.add_argument('--cum', dest = "cumulative", action = 'store_true', default = False,
+                         help = 'normal or cumulative (default: not cumulative)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -125,6 +124,9 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+beams = args.beams
+thresholds = args.thresholds
+
 # Save Data
 save_data = args.save_data
 
@@ -140,8 +142,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
-thresholds = args.thresholds
-print_histogram = args.print_histogram
+cumulative = args.cumulative
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -159,66 +160,36 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-def make_plot(show = False):
-    fig = plot.figure(figsize = (7, 5), dpi = dpi)
-    ax = fig.add_subplot(111)
-
-    # Get Data
-    
+data = np.zeros((len(beams), len(frame_range)))
+colors = ["b", "g", "y", "k"]
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 5), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Get Data
-    if num_cores == 1:
-        if measure:
-            for i, frame in enumerate(frame_range):
-                measure_peak_offset((i, frame, threshold))
-        else:
-            for i, frame in enumerate(frame_range):
-                get_peak_offset((i, frame))
-    else:
-        # Pool
-        if measure:
-            offset_function = measure_peak_offset
-            pool_args = [(i, frame, threshold) for (i, frame) in enumerate(frame_range)]
-        else:
-            offset_function = get_peak_offset
-            pool_args = [(i, frame) for (i, frame) in enumerate(frame_range)]
-
-        p = Pool(num_cores)
-        p.map(offset_function, pool_args)
-        p.terminate()
+    for i, (beam_i, threshold_i) in enumerate(zip(beams, thresholds)):
+        data[i] = pickle.load("id%04d_b%02d_t%02d_intensityPeaks.p" % (id_number, beam_i, int(round(100.0 * threshold_i, 0))))
 
     # Plot
     bins = np.linspace(-90, 90, 19) # Make this parameters
-    data = np.array(peak_offsets)
-
-    hist = plot.hist(data, bins = bins, color = 'r', histtype = 'step')
-    hist_cum = plot.hist(data, bins = bins, color = 'b', histtype = 'step', cumulative = True)
-
-    # Print
-    if print_histogram:
-        print "Extremes"
-        for i, (frame_i, offset) in enumerate(zip(frame_range, peak_offsets)):
-            if np.abs(offset) > 45:
-                print "%d: %.1f" % (frame_i, offset)
-        print
-        print "Bins"
-        for i, (value, value_cum) in enumerate(zip(hist[0], hist_cum[0])):
-            print "%.1f - %.1f: %d, %d, (%.3f, %.3f)" % (bins[i], bins[i + 1], value, value_cum, value / len(frame_range), value_cum / len(frame_range))
+    for i, beam_i in enumerate(beams):
+        data_i = data[i]
+        if cumulative:
+            plot.hist(data, bins = bins, color = colors[i], histtype = 'step', cumulative = True)
+        else:
+            hist = plot.hist(data, bins = bins, color = 'r', histtype = 'step')
 
     # Save, Show, and Close
     frame_str = ""
     for i, frame_i in enumerate(args.frames):
         frame_str += "%04d-" % frame_i
-    frame_str = frame_str[:-1] # Trim last '_'
+    frame_str = frame_str[:-1] # Trim last '-'
 
     if version is None:
-        save_fn = "%s/intensityPeakHistogram_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/intensityPeakHistograms_%s.png" % (save_directory, frame_str)
     else:
-        save_fn = "%s/v%04d_intensityPeakHistogram_%s.png" % (save_directory, version, frame_str)
+        save_fn = "%s/v%04d_intensityPeakHistograms_%s.png" % (save_directory, version, frame_str)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
@@ -226,14 +197,7 @@ def make_plot(show = False):
 
     plot.close(fig) # Close Figure (to avoid too many figures)
 
-    if save_data:
-        prefix = "id%04d_b%02d_t%02d" % (id_number, beam_size * planet_radius, int(round(100.0 * threshold, 0)))
 
-        save_frames_name = "%s_intensityFrames.p" % (prefix)
-        save_peaks_name = "%s_intensityPeaks.p" % (prefix)
-
-        pickle.dump(frame_range, open(save_frames_name, "wb"))
-        pickle.dump(data, open(save_peaks_name, "wb"))
 
 ##### Make Plots! #####
 
