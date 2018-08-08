@@ -169,16 +169,16 @@ def make_plot(show = False):
 
     # Get Data
     for i, (beam_i, threshold_i) in enumerate(zip(beams, thresholds)):
-        data[i] = pickle.load(open("id%04d_b%02d_t%02d_intensityPeaks.p" % (id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
+        data[i] = pickle.load(open("../beam%03d/id%04d_b%02d_t%02d_intensityPeaks.p" % (beam_i, id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
 
     # Plot
     bins = np.linspace(-90, 90, 19) # Make this parameters
     for i, beam_i in enumerate(beams):
         data_i = data[i]
         if cumulative:
-            plot.hist(data, bins = bins, color = colors[i], histtype = 'step', cumulative = True)
+            hist = plot.hist(data, bins = bins, color = colors[i], histtype = 'step', cumulative = True)
         else:
-            hist = plot.hist(data, bins = bins, color = 'r', histtype = 'step')
+            hist = plot.hist(data, bins = bins, color = colors[i], histtype = 'step')
 
     # Save, Show, and Close
     frame_str = ""
