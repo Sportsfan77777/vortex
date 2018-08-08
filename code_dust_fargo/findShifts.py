@@ -28,7 +28,7 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 ### Sizes ###
-sizes = np.array([1.0, 0.3, 0.1, 0.3])
+sizes = np.array([1.0, 0.3, 0.1, 0.03])
 size_labels = ["cm", "hcm", "mm", "hmm"]
 
 ###############################################################################
