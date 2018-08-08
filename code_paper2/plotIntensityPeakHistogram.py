@@ -250,13 +250,11 @@ def make_plot(show = False):
         print "Extremes"
         for i, (frame_i, offset) in enumerate(zip(frame_range, peak_offsets)):
             if np.abs(offset) > 45:
-                print frame_i, offset
+                print "%d: %.1f" % (frame_i, offset)
         print
         print "Bins"
         for i, (value, value_cum) in enumerate(zip(hist[0], hist_cum[0])):
             print "%.1f - %.1f: %d, %d, (%.3f, %.3f)" % (bins[i], bins[i + 1], value, value_cum, value / len(frame_range), value_cum / len(frame_range))
-
-
 
     # Save, Show, and Close
     frame_str = ""
