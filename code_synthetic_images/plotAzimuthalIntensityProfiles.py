@@ -71,6 +71,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'normalize by max (default: normalize)')
     parser.add_argument('-t', dest = "threshold", type = float, default = None,
                          help = 'threshold for centering vortex with its center (default: varies with size)')
+
+    parser.add_argument('-a', dest = "annotate", action = 'store_true', default = False,
+                         help = 'annotate peak offsets at different thresholds (default: do not annotate)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -156,6 +159,8 @@ version = args.version
 threshold = args.threshold
 #if threshold is None:
 #    threshold = util.get_threshold(size)
+
+annotate = args.annotate
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -250,22 +255,23 @@ def make_plot(frame, show = False):
     plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Annotate Peak Offsets
-    frames = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t3 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t4 = pickle.load(open("id%04d_b%d_t40_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
-    offsets_t5 = pickle.load(open("id%04d_b%d_t50_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+    if annotate:
+        frames = pickle.load(open("id%04d_b%d_t30_intensityFrames.p" % (id_number, beam_size * planet_radius), 'rb'))
+        offsets_t3 = pickle.load(open("id%04d_b%d_t30_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+        offsets_t4 = pickle.load(open("id%04d_b%d_t40_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
+        offsets_t5 = pickle.load(open("id%04d_b%d_t50_intensityPeaks.p" % (id_number, beam_size * planet_radius), 'rb'))
 
-    this_frame = np.searchsorted(frames, frame)
-    offset_t3 = offsets_t3[this_frame]; offset_t4 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
+        this_frame = np.searchsorted(frames, frame)
+        offset_t3 = offsets_t3[this_frame]; offset_t4 = offsets_t4[this_frame]; offset_t5 = offsets_t5[this_frame] 
 
-    t3_line = "t = 0.3: %.1f" % (offset_t3)
-    t4_line = "t = 0.4: %.1f" % (offset_t4)
-    t5_line = "t = 0.5: %.1f" % (offset_t5)
+        t3_line = "t = 0.3: %.1f" % (offset_t3)
+        t4_line = "t = 0.4: %.1f" % (offset_t4)
+        t5_line = "t = 0.5: %.1f" % (offset_t5)
 
-    start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
-    plot.text(0, start_y + 2.0 * linebreak, t5_line, fontsize = fontsize, horizontalalignment = 'center')
-    plot.text(0, start_y + 1.0 * linebreak, t4_line, fontsize = fontsize, horizontalalignment = 'center')
-    plot.text(0, start_y + 0.0 * linebreak, t3_line, fontsize = fontsize, horizontalalignment = 'center')
+        start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
+        plot.text(0, start_y + 2.0 * linebreak, t5_line, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(0, start_y + 1.0 * linebreak, t4_line, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(0, start_y + 0.0 * linebreak, t3_line, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
