@@ -1,11 +1,10 @@
 """
-compare intensityPeakHistograms at different beam sizes
+compare azimuthal intensity profiles at different beam sizes
 """
 
 import sys, os, subprocess
 import pickle, glob
 from multiprocessing import Pool
-from multiprocessing import Array as mp_array
 import argparse
 
 import math
@@ -41,16 +40,14 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'number of cores (default: 1)')
     parser.add_argument('-b', dest = "beams", nargs = '+', type = int, default = [10, 20, 30, 40],
                          help = 'list of beams to compare (in AU) (default: [10, 20, 30, 40])')
-    parser.add_argument('-t', dest = "thresholds", nargs = '+', type = float, default = [0.4, 0.5, 0.6, 0.7],
-                         help = 'thresholds for marking edges of vortex with intensity (default: [0.4, 0.5, 0.6, 0.7])')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "intensityPeakHistograms",
-                         help = 'save directory (default: intensityPeakHistograms)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityProfiles",
+                         help = 'save directory (default: azimuthalIntensityProfiles)')
 
-    # Save Data
-    parser.add_argument('--save', dest = "save_data", action = 'store_true', default = False,
-                         help = 'save data or not (default: do not save)')
+    # Old Format
+    parser.add_argument('--old_res', dest = "old_res", type = int, nargs = 2, default = None,
+                         help = 'resolution before re-sampling to calculate intensity (default: same)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -61,10 +58,10 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
-                         help = 'max_y for plot (default: None)')
+                         help = 'max_y for each frame, or same for all (default: None)')
 
-    parser.add_argument('--cum', dest = "cumulative", action = 'store_true', default = False,
-                         help = 'normal or cumulative (default: not cumulative)')
+    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
+                         help = 'normalize by max (default: normalize)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -119,30 +116,36 @@ frame_range = util.get_frame_range(args.frames)
 # Number of Cores 
 num_cores = args.num_cores
 
+# Beam Choices
+beams = args.beams
+
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
-beams = args.beams
-thresholds = args.thresholds
-
-# Save Data
-save_data = args.save_data
+# Old Format
+if args.old_res is None:
+    old_num_rad = num_rad; old_num_theta = num_theta
+else:
+    old_num_rad = args.old_res[0]; old_num_theta = args.old_res[1]
 
 # Plot Parameters (variable)
+normalize = args.normalize
+
 show = args.show
 max_y = args.max_y
-#if max_y is None:
-#    max_y = 1
+if normalize:
+    max_y = 1
+
+num_profiles = args.num_profiles
+num_scale_heights = args.num_scale_heights
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
-
-cumulative = args.cumulative
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -160,70 +163,71 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-min_x = -90; max_x = 90
-min_y = 0; max_y = 1
+##### PLOTTING #####
+def make_plot(frame, show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
-data = np.zeros((len(beams), len(frame_range)))
-colors = ["b", "g", "y", "k"]
+    ### Data ###
+    for beam_i in beams:
+        intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "../beam%03d" % beam_i)
+        if normalize:
+            intensity_polar /= np.max(intensity_polar)
+        azimuthal_radius, azimuthal_profile = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
-def make_plot(show = False):
-    fig = plot.figure(figsize = (7, 5), dpi = dpi)
-    ax = fig.add_subplot(111)
+        x = theta * (180.0 / np.pi) - 180.0
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = "%d" % beam_i)
 
-    # Get Data
-    for i, (beam_i, threshold_i) in enumerate(zip(beams, thresholds)):
-        data[i] = pickle.load(open("../beam%03d/id%04d_b%02d_t%02d_intensityPeaks.p" % (beam_i, id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
+    # Mark Planet (get shift first)
+    shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
 
-    # Plot
-    for i, beam_i in enumerate(beams):
-        data_i = data[i]
-        if cumulative:
-            bins = np.linspace(min_x - 10, max_x + 10, 201) # Make this parameters
-            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, zorder = 99, cumulative = True)
-        else:
-            bins = np.linspace(min_x - 10, max_x + 10, 21) # Make this parameters
-            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, zorder = 99)
-
-    # Minor Guidelines
-    vertical = np.linspace(-30, 30, 7)
-    horizontal = np.linspace(0, 1, 11)
-
-    for vertical_i in vertical:
-        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", linestyle = "--", alpha = alpha, zorder = 1)
-    #for horizontal_i in horizontal:
-    #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", linestyle = "--", alpha = alpha, zorder = 1)
-
-    # Major Guidelines
-    vertical = np.linspace(-30, 30, 3)
-
-    for vertical_i in vertical:
-        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", zorder = 1)
+    if shift is None:
+        planet_loc = theta[0]
+    else:
+        if shift < -len(theta):
+            shift += len(theta)
+        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
+    plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
-    plot.xlim(min_x, max_x)
-    plot.ylim(min_y, max_y)
+    if taper_time < 10.1:
+        # T = 10
+        max_x = 60
+    else:
+        # T = 1000
+        max_x = 180
+    plot.xlim(-max_x, max_x)
+    angles = np.linspace(-max_x, max_x, 7)
+    plot.xticks(angles)
 
-    xticks = np.linspace(min_x, max_x, 7)
-    plot.xticks(xticks)
+    if max_y is None:
+        plot.ylim(0, plot.ylim()[-1]) # No Input
+    else:
+        plot.ylim(0, max_y) # Input
 
-    plot.xlabel("Peak Offsets", fontsize = fontsize)
-    plot.ylabel("Frequency", fontsize = fontsize)
-    #plot.title("")
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
+    current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
+
+    plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
 
     # Legend
-    plot.legend(loc = "upper left")
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Save, Show, and Close
-    frame_str = ""
-    for i, frame_i in enumerate(args.frames):
-        frame_str += "%04d-" % frame_i
-    frame_str = frame_str[:-1] # Trim last '-'
+    plot.tight_layout()
 
+    png = "png"; pdf = "pdf"
     if version is None:
-        save_fn = "%s/intensityPeakHistograms_%s.png" % (save_directory, frame_str)
+        save_fn = "%s/azimuthalIntensityProfiles_%04d.%s" % (save_directory, frame, png)
+        pdf_save_fn = "%s/azimuthalIntensityProfiles_%04d.%s" % (save_directory, frame, pdf)
     else:
-        save_fn = "%s/v%04d_intensityPeakHistograms_%s.png" % (save_directory, version, frame_str)
+        save_fn = "%s/v%04d_azimuthalIntensityProfiles_%04d.%s" % (save_directory, version, frame, png)
+        pdf_save_fn = "%s/v%04d_azimuthalIntensityProfiles_%04d.%s" % (save_directory, version, frame, pdf)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(pdf_save_fn, bbox_inches = 'tight', format = "pdf")
 
     if show:
         plot.show()
@@ -231,12 +235,17 @@ def make_plot(show = False):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 
-
 ##### Make Plots! #####
 
-make_plot(show = show)
+# Iterate through frames
 
-
-
-
-
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
+else:
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
