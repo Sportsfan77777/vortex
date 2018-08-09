@@ -38,8 +38,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
-    parser.add_argument('-b', dest = "beams", nargs = '+', type = int, default = [10, 20, 30, 40],
-                         help = 'list of beams to compare (in AU) (default: [10, 20, 30, 40])')
+    parser.add_argument('-b', dest = "beams", nargs = '+', type = int, default = [1, 10, 20, 30, 40],
+                         help = 'list of beams to compare (in AU) (default: [1, 10, 20, 30, 40])')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityProfiles",
@@ -166,13 +166,15 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
+colors = ["#d11d1d", "#ef890b", "k", "#699cef", "#430aef"]
+
 ##### PLOTTING #####
 def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     ### Data ###
-    for i, beam_i in enumerate(beams):
+    for i, beam_i in enumerate(beams[::-1]):
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "../beam%03d" % beam_i)
         if normalize:
             intensity_polar /= np.max(intensity_polar)
@@ -213,11 +215,15 @@ def make_plot(frame, show = False):
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
 
-    plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
 
+    # Title
+    title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    plot.title("%s" % (title), fontsize = fontsize + 1)
+
     # Legend
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.24, 0.94)) # outside of plot
 
     # Save, Show, and Close
     plot.tight_layout()

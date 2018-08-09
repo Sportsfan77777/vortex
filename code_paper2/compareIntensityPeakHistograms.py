@@ -206,8 +206,8 @@ def make_plot(show = False):
     xticks = np.linspace(min_x, max_x, 7)
     plot.xticks(xticks)
 
-    plot.xlabel("Peak Offsets", fontsize = fontsize)
-    plot.ylabel("Frequency", fontsize = fontsize)
+    plot.xlabel(r"$\mathrm{Peak\ Offsets\ (degrees)}$", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{Frequency}$", fontsize = fontsize)
     #plot.title("")
 
     # Legend
