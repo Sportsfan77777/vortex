@@ -138,9 +138,6 @@ max_y = args.max_y
 if normalize:
     max_y = 1
 
-num_profiles = args.num_profiles
-num_scale_heights = args.num_scale_heights
-
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
@@ -163,6 +160,10 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
+          '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
+          '#bcbd22', '#17becf']
+
 ##### PLOTTING #####
 def make_plot(frame, show = False):
     # Set up figure
@@ -176,7 +177,7 @@ def make_plot(frame, show = False):
         azimuthal_radius, azimuthal_profile = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
         x = theta * (180.0 / np.pi) - 180.0
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], dashes = dashes[i], alpha = alpha, label = "%d" % beam_i)
+        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%d" % beam_i)
 
     # Mark Planet (get shift first)
     shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
