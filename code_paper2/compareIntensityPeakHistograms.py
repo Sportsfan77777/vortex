@@ -175,13 +175,13 @@ def make_plot(show = False):
         data[i] = pickle.load(open("../beam%03d/id%04d_b%02d_t%02d_intensityPeaks.p" % (beam_i, id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
 
     # Minor Guidelines
-    vertical = np.linspace(min_x, max_x, 19)
+    vertical = np.linspace(-30, 30, 19)
     horizontal = np.linspace(0, 1, 11)
 
     for vertical_i in vertical:
         plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", alpha = alpha)
-    for horizontal_i in horizontal:
-        plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", alpha = alpha)
+    #for horizontal_i in horizontal:
+    #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", alpha = alpha)
 
     # Plot
     for i, beam_i in enumerate(beams):
@@ -197,7 +197,7 @@ def make_plot(show = False):
     plot.xlim(min_x, max_x)
     plot.ylim(min_y, max_y)
 
-    xticks = vertical[:]
+    xticks = np.linspace(min_x, max_x, 7)
     plot.xticks(xticks)
 
     plot.xlabel("Peak Offsets", fontsize = fontsize)
