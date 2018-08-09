@@ -179,30 +179,33 @@ def make_plot(show = False):
     horizontal = np.linspace(0, 1, 11)
 
     for vertical_i in vertical:
-        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k")
+        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", alpha = alpha)
     for horizontal_i in horizontal:
-        plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k")
+        plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", alpha = alpha)
 
     # Plot
     for i, beam_i in enumerate(beams):
         data_i = data[i]
         if cumulative:
-            bins = np.linspace(min_x, max_x, 181) # Make this parameters
+            bins = np.linspace(min_x - 10, max_x + 10, 201) # Make this parameters
             hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, cumulative = True)
         else:
-            bins = np.linspace(min_x, max_x, 19) # Make this parameters
+            bins = np.linspace(min_x - 10, max_x + 10, 21) # Make this parameters
             hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i)
 
     # Axes
     plot.xlim(min_x, max_x)
     plot.ylim(min_y, max_y)
 
-    plot.xlabel("Peak Offsets")
-    plot.ylabel("Frequency Fraction")
+    xticks = vertical[:]
+    plot.xticks(xticks)
+
+    plot.xlabel("Peak Offsets", fontsize = fontsize)
+    plot.ylabel("Frequency", fontsize = fontsize)
     #plot.title("")
 
     # Legend
-    plot.legend(location = "upper left")
+    plot.legend(loc = "upper left")
 
     # Save, Show, and Close
     frame_str = ""
