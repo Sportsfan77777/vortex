@@ -160,6 +160,9 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+min_x = -90; max_x = 90
+min_y = 0; max_y = 1
+
 data = np.zeros((len(beams), len(frame_range)))
 colors = ["b", "g", "y", "k"]
 
@@ -171,14 +174,35 @@ def make_plot(show = False):
     for i, (beam_i, threshold_i) in enumerate(zip(beams, thresholds)):
         data[i] = pickle.load(open("../beam%03d/id%04d_b%02d_t%02d_intensityPeaks.p" % (beam_i, id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
 
+    # Minor Guidelines
+    vertical = np.linspace(min_x, max_x, 19)
+    horizontal = np.linspace(0, 1, 11)
+
+    for vertical_i in vertical:
+        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k")
+    for horizontal_i in horizontal:
+        plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k")
+
     # Plot
-    bins = np.linspace(-90, 90, 19) # Make this parameters
     for i, beam_i in enumerate(beams):
         data_i = data[i]
         if cumulative:
-            hist = plot.hist(data, bins = bins, color = colors[i], histtype = 'step', cumulative = True)
+            bins = np.linspace(min_x, max_x, 181) # Make this parameters
+            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, cumulative = True)
         else:
-            hist = plot.hist(data, bins = bins, color = colors[i], histtype = 'step')
+            bins = np.linspace(min_x, max_x, 19) # Make this parameters
+            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i)
+
+    # Axes
+    plot.xlim(min_x, max_x)
+    plot.ylim(min_y, max_y)
+
+    plot.xlabel("Peak Offsets")
+    plot.ylabel("Frequency Fraction")
+    #plot.title("")
+
+    # Legend
+    plot.legend(location = "upper left")
 
     # Save, Show, and Close
     frame_str = ""
