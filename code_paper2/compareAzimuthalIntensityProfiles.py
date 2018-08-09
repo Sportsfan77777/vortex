@@ -162,11 +162,11 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
-          '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
-          '#bcbd22', '#17becf']
-
 colors = ["#d11d1d", "#ef890b", "k", "#699cef", "#430aef"]
+
+alphas = [alpha, alpha, 1, 1, 1]
+linestyles = ["--", "--", "-", "-", "-"]
+linewidths = [linewidth, linewidth, linewidth + 1, linewidth + 1, linewidth]
 
 ##### PLOTTING #####
 def make_plot(frame, show = False):
@@ -175,13 +175,16 @@ def make_plot(frame, show = False):
 
     ### Data ###
     for i, beam_i in enumerate(beams[::-1]):
+        arc_beam = beam_i * planet_radius / distance
+        label_i = r"$%.03f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
+
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "../beam%03d" % beam_i)
         if normalize:
             intensity_polar /= np.max(intensity_polar)
         azimuthal_radius, azimuthal_profile = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
         x = theta * (180.0 / np.pi) - 180.0
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, c = colors[i], alpha = alpha, label = "%d" % beam_i)
+        plot.plot(x, azimuthal_profile, linewidth = linewidths[i], c = colors[i], alpha = alphas[i], linestyle = linestyles[i], label = "%d" % beam_i)
 
     # Mark Planet (get shift first)
     shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
@@ -224,6 +227,13 @@ def make_plot(frame, show = False):
 
     # Legend
     plot.legend(loc = "upper right", bbox_to_anchor = (1.24, 0.94)) # outside of plot
+
+    # Extra Annotation (Location, Legend Label)
+    center_x = 1.28 * plot.xlim()[-1]
+    top_y = plot.ylim()[-1]
+
+    line = r"$\mathrm{Beam\ Diameters}$"
+    plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Save, Show, and Close
     plot.tight_layout()
