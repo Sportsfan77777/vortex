@@ -174,15 +174,6 @@ def make_plot(show = False):
     for i, (beam_i, threshold_i) in enumerate(zip(beams, thresholds)):
         data[i] = pickle.load(open("../beam%03d/id%04d_b%02d_t%02d_intensityPeaks.p" % (beam_i, id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
 
-    # Minor Guidelines
-    vertical = np.linspace(-30, 30, 19)
-    horizontal = np.linspace(0, 1, 11)
-
-    for vertical_i in vertical:
-        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", alpha = alpha)
-    #for horizontal_i in horizontal:
-    #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", alpha = alpha)
-
     # Plot
     for i, beam_i in enumerate(beams):
         data_i = data[i]
@@ -192,6 +183,15 @@ def make_plot(show = False):
         else:
             bins = np.linspace(min_x - 10, max_x + 10, 21) # Make this parameters
             hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i)
+
+    # Minor Guidelines
+    vertical = np.linspace(-30, 30, 7)
+    horizontal = np.linspace(0, 1, 11)
+
+    for vertical_i in vertical:
+        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", linestyle = "--", alpha = alpha)
+    #for horizontal_i in horizontal:
+    #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", alpha = alpha)
 
     # Axes
     plot.xlim(min_x, max_x)
