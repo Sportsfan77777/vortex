@@ -59,6 +59,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'max_y for each frame, or same for all (default: None)')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 1,
+                         help = 'number of profiles (do not modify) (default: 1)')
 
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
