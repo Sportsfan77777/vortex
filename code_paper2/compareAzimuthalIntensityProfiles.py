@@ -172,7 +172,7 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     ### Data ###
-    for beam_i in beams:
+    for i, beam_i in enumerate(beams):
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "../beam%03d" % beam_i)
         if normalize:
             intensity_polar /= np.max(intensity_polar)
