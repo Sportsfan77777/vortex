@@ -193,6 +193,12 @@ def make_plot(show = False):
     #for horizontal_i in horizontal:
     #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", linestyle = "--", alpha = alpha, zorder = 1)
 
+    # Major Guidelines
+    vertical = np.linspace(-30, 30, 3)
+
+    for vertical_i in vertical:
+        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", zorder = 1)
+
     # Axes
     plot.xlim(min_x, max_x)
     plot.ylim(min_y, max_y)
