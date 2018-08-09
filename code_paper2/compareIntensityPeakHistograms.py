@@ -179,19 +179,19 @@ def make_plot(show = False):
         data_i = data[i]
         if cumulative:
             bins = np.linspace(min_x - 10, max_x + 10, 201) # Make this parameters
-            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, cumulative = True)
+            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, zorder = 99, cumulative = True)
         else:
             bins = np.linspace(min_x - 10, max_x + 10, 21) # Make this parameters
-            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i)
+            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, zorder = 99)
 
     # Minor Guidelines
     vertical = np.linspace(-30, 30, 7)
     horizontal = np.linspace(0, 1, 11)
 
     for vertical_i in vertical:
-        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", linestyle = "--", alpha = alpha)
+        plot.plot([vertical_i, vertical_i], [min_y, max_y], c = "k", linestyle = "--", alpha = alpha, zorder = 1)
     #for horizontal_i in horizontal:
-    #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", alpha = alpha)
+    #    plot.plot([min_x, max_x], [horizontal_i, horizontal_i], c = "k", linestyle = "--", alpha = alpha, zorder = 1)
 
     # Axes
     plot.xlim(min_x, max_x)
