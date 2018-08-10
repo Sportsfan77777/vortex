@@ -162,10 +162,10 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-colors = ["#d11d1d", "#ef890b", "k", "#699cef", "#430aef"]
+colors = ["#d11d1d", "#ef890b", "#699cef", "#430aef", "k"]
 
-alphas = [alpha, alpha, 1, 1, 1]
-linestyles = ["--", "--", "-", "-", "-"]
+alphas = [alpha, alpha, alpha, alpha, 1]
+linestyles = ["--", "--", "-", "-", "-."]
 linewidths = [linewidth, linewidth, linewidth + 1, linewidth + 1, linewidth]
 
 ##### PLOTTING #####
