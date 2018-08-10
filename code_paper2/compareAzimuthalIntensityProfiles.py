@@ -162,11 +162,11 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-colors = ["#d11d1d", "#ef890b", "#699cef", "#430aef", "k"]
+colors = ["#d11d1d", "#ef890b", "#4385ef", "#430aef", "k"]
 
 alphas = [alpha, alpha, alpha, alpha, 1]
-linestyles = ["--", "--", "-", "-", "-."]
-linewidths = [linewidth, linewidth, linewidth + 1, linewidth + 1, linewidth]
+linestyles = ["--", "--", "-", "-", "-"]
+linewidths = [linewidth, linewidth, linewidth + 1, linewidth + 1, linewidth + 1]
 
 ##### PLOTTING #####
 def make_plot(frame, show = False):
@@ -226,7 +226,7 @@ def make_plot(frame, show = False):
     plot.title("%s" % (title), fontsize = fontsize + 1)
 
     # Legend
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.24, 0.94)) # outside of plot
+    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
 
     # Extra Annotation (Location, Legend Label)
     center_x = 1.34 * plot.xlim()[-1]
