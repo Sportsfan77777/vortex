@@ -184,7 +184,7 @@ def make_plot(frame, show = False):
         azimuthal_radius, azimuthal_profile = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
         x = theta * (180.0 / np.pi) - 180.0
-        plot.plot(x, azimuthal_profile, linewidth = linewidths[i], c = colors[i], alpha = alphas[i], linestyle = linestyles[i], label = "%d" % beam_i)
+        plot.plot(x, azimuthal_profile, linewidth = linewidths[i], c = colors[i], alpha = alphas[i], linestyle = linestyles[i], label = label_i)
 
     # Mark Planet (get shift first)
     shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
@@ -229,7 +229,7 @@ def make_plot(frame, show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.24, 0.94)) # outside of plot
 
     # Extra Annotation (Location, Legend Label)
-    center_x = 1.28 * plot.xlim()[-1]
+    center_x = 1.34 * plot.xlim()[-1]
     top_y = plot.ylim()[-1]
 
     line = r"$\mathrm{Beam\ Diameters}$"
