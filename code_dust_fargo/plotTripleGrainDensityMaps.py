@@ -87,7 +87,7 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
                          help = 'use contours or not (default: do not use contours)')
     parser.add_argument('--low', dest = "low_contour", type = float, default = 0.9,
-                         help = 'lowest contour (default: 1.1)')
+                         help = 'lowest contour (default: 0.9)')
     parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
                          help = 'highest contour (default: 3.5)')
     parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
