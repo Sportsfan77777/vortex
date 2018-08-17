@@ -196,18 +196,13 @@ def make_plot(frame, show = False):
     else:
         if shift < -len(theta):
             shift += len(theta)
-        planet_loc = theta[shift] * (180.0 / np.pi) - 180.0
+        planet_loc = theta[shift] * (180.0 / np.pi)
     plot.scatter(planet_loc, 0, c = "k", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
-    if taper_time < 10.1:
-        # T = 10
-        max_x = 60
-    else:
-        # T = 1000
-        max_x = 180
-    plot.xlim(-max_x, max_x)
-    angles = np.linspace(-max_x, max_x, 7)
+    min_x = 0; max_x = 360
+    plot.xlim(min_x, max_x)
+    angles = np.linspace(min_x, max_x, 7)
     plot.xticks(angles)
 
     if max_y is None:
