@@ -212,7 +212,7 @@ def make_plot(show = False):
     plot.xticks(xticks)
 
     plot.xlabel(r"$\mathrm{Peak\ Offsets\ (degrees)}$", fontsize = fontsize)
-    plot.ylabel(r"$\mathrm{Frequency}$", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{Cumulative Fraction}$", fontsize = fontsize)
     #plot.title("")
 
     # Legend
