@@ -164,9 +164,8 @@ min_x = -90; max_x = 90
 min_y = 0; max_y = 1
 
 data = np.zeros((len(beams), len(frame_range)))
-colors = ["b", "g", "y", "k"]
 
-colors = ["#d11d1d", "#ef890b", "#4385ef", "#430aef"]
+colors = ["#d11d1d", "#ef890b", "#4385ef", "#430aef"] # Red, Orange, Blue, Purple
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 5), dpi = dpi)
@@ -179,7 +178,7 @@ def make_plot(show = False):
     # Plot
     for i, beam_i in enumerate(beams[::-1]):
         arc_beam_i = beam_i / distance
-        label_i = r"$%.03f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
+        label_i = r"$%.02f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
 
         data_i = data[i]
         if cumulative:
@@ -212,7 +211,7 @@ def make_plot(show = False):
     plot.xticks(xticks)
 
     plot.xlabel(r"$\mathrm{Peak\ Offsets\ (degrees)}$", fontsize = fontsize)
-    plot.ylabel(r"$\mathrm{Cumulative Fraction}$", fontsize = fontsize)
+    plot.ylabel(r"$\mathrm{Cumulative\ Fraction}$", fontsize = fontsize)
     #plot.title("")
 
     # Legend
