@@ -166,23 +166,28 @@ min_y = 0; max_y = 1
 data = np.zeros((len(beams), len(frame_range)))
 colors = ["b", "g", "y", "k"]
 
+colors = ["#d11d1d", "#ef890b", "#4385ef", "#430aef"]
+
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 5), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Get Data
-    for i, (beam_i, threshold_i) in enumerate(zip(beams, thresholds)):
+    for i, (beam_i, threshold_i) in enumerate(zip(beams[::-1], thresholds[::-1])):
         data[i] = pickle.load(open("../beam%03d/id%04d_b%02d_t%02d_intensityPeaks.p" % (beam_i, id_number, beam_i, int(round(100.0 * threshold_i, 0))), "rb"))
 
     # Plot
-    for i, beam_i in enumerate(beams):
+    for i, beam_i in enumerate(beams[::-1]):
+        arc_beam_i = beam_i / distance
+        label_i = r"$%.03f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
+
         data_i = data[i]
         if cumulative:
             bins = np.linspace(min_x - 10, max_x + 10, 201) # Make this parameters
-            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, zorder = 99, cumulative = True)
+            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = label_i, zorder = 99, cumulative = True)
         else:
             bins = np.linspace(min_x - 10, max_x + 10, 21) # Make this parameters
-            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = "%d" % beam_i, zorder = 99)
+            hist = plot.hist(data_i, bins = bins, normed = True, color = colors[i], histtype = 'step', linewidth = linewidth, label = label_i, zorder = 99)
 
     # Minor Guidelines
     vertical = np.linspace(-30, 30, 7)
