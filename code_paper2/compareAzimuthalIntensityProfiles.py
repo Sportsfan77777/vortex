@@ -38,8 +38,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
-    parser.add_argument('-b', dest = "beams", nargs = '+', type = int, default = [1, 10, 20, 30, 40],
-                         help = 'list of beams to compare (in AU) (default: [1, 10, 20, 30, 40])')
+    parser.add_argument('-b', dest = "beams", nargs = '+', type = int, default = [10, 20, 30, 40],
+                         help = 'list of beams to compare (in AU) (default: [10, 20, 30, 40])')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityProfiles",
@@ -176,14 +176,16 @@ def make_plot(frame, show = False):
     ### Data ###
     for i, beam_i in enumerate(beams[::-1]):
         arc_beam_i = beam_i / distance
-        label_i = r"$%.03f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
+        label_i = r"$%.03f^{\prime\prime} (%2d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
 
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "../beam%03d" % beam_i)
         if normalize:
             intensity_polar /= np.max(intensity_polar)
         azimuthal_radius, azimuthal_profile = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
+        if normalize:
+            azimuthal_profile /= np.max(azimuthal_profile)
 
-        x = theta * (180.0 / np.pi) - 180.0
+        x = theta * (180.0 / np.pi)
         plot.plot(x, azimuthal_profile, linewidth = linewidths[i], c = colors[i], alpha = alphas[i], linestyle = linestyles[i], label = label_i)
 
     # Mark Planet (get shift first)
@@ -229,7 +231,7 @@ def make_plot(frame, show = False):
     plot.legend(loc = "upper right", bbox_to_anchor = (1.38, 0.94)) # outside of plot
 
     # Extra Annotation (Location, Legend Label)
-    center_x = 1.36 * plot.xlim()[-1]
+    center_x = 1.38 * plot.xlim()[-1]
     top_y = plot.ylim()[-1]
 
     line = r"$\mathrm{Beam\ Diameters}$"
