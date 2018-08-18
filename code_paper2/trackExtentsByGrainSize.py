@@ -200,6 +200,8 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
+colors = ['#240f77', '#519ba3', '#197229', '#d8db20'] # Dark Blue, Slate Blue, Green, Ugly Yellow
+
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
@@ -221,8 +223,8 @@ def make_plot(show = False):
     if compare:
         comparisons = comparison_dictionary[threshold]
         for i, extent_i in enumerate(comparisons[::-1]):
-            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H", clip_on = False) # Left Marker
-            plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H", clip_on = False) # Right Marker
+            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H") # Left Marker
+            plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H", zorder = 99, clip_on = False) # Right Marker
 
     # Axes
     plot.xlim(x[0], x[-1])
