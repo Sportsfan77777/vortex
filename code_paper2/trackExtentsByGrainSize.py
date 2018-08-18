@@ -220,11 +220,13 @@ def make_plot(show = False):
     # Comparisons
     if compare:
         comparisons = comparison_dictionary[threshold]
-        for i, extent_i in enumerate(comparisons):
-            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H") # Left Marker
-            plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H") # Right Marker
+        for i, extent_i in enumerate(comparisons[::-1]):
+            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H", clip_on = False) # Left Marker
+            plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H", clip_on = False) # Right Marker
 
     # Axes
+    plot.xlim(x[0], x[-1])
+
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
     plot.ylim(0, 360)
