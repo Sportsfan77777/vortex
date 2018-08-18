@@ -36,8 +36,8 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 # Grain Sizes for Extent Comparison
-sizes = np.array([1, 0.3, 0.1, 0.03, 0.01, 0.0001])
-grain_sizes = np.array(["cm", "hcm", "mm", "hmm", "hum", "um"])
+sizes = np.array([1, 0.3, 0.1, 0.03]) #, 0.01, 0.0001])
+grain_sizes = np.array(["cm", "hcm", "mm", "hmm"]) #, "hum", "um"])
 
 # Reverse
 sizes = sizes[::-1]
@@ -71,6 +71,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('-t', dest = "threshold", type = float, default = 0.5,
                          help = 'threshold for measuring extent (default: 0.5)')
+
+    parser.add_argument('--compare', dest = "compare", action = 'store_true', default = False,
+                         help = 'compare the elongated vortex extents to the concentrated ones at the same threshold (default: do not compare)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -136,6 +139,12 @@ id_number = args.id_number
 version = args.version
 
 threshold = args.threshold
+
+compare = args.compare
+comparison_dictionary = {}
+comparison_dictionary[0.3] = [5.1, 14.5, 59.9, 129.0]
+comparison_dictionary[0.4] = [4.5, 11.5, 50.6, 100.3]
+comparison_dictionary[0.5] = [4.0, 9.4, 40.7, 81.6]
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -207,6 +216,13 @@ def make_plot(show = False):
 
         plot.plot(x, y, c = colors[i], linewidth = linewidth, alpha = alpha)
         plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth, label = size_label)
+
+    # Comparisons
+    if compare:
+        comparisons = comparison_dictionary[threshold]
+        for i, extent_i in enumerate(comparisons):
+            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H") # Left Marker
+            plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H") # Right Marker
 
     # Axes
     angles = np.linspace(0, 360, 7)
