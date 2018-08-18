@@ -237,7 +237,7 @@ def make_plot(show = False):
 
     # Annotate Axes
     plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
-    plot.ylabel(r"$\phi_\mathrm{extent}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.ylabel(r"$\Delta \phi$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
 
