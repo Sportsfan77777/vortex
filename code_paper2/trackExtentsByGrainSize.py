@@ -200,7 +200,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
           '#9467bd', '#8c564b', '#e377c2', '#7f7f7f',
           '#bcbd22', '#17becf']
 
-colors = ['#240f77', '#519ba3', '#197229', '#d8db20'] # Dark Blue, Slate Blue, Green, Ugly Yellow
+colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slate Blue, Dark Blue
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
