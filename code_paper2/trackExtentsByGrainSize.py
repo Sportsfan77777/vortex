@@ -202,6 +202,8 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slate Blue, Dark Blue
 
+colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
+
 def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
