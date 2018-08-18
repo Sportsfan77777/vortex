@@ -239,10 +239,11 @@ def make_plot(show = False):
     plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
     plot.ylabel(r"$\Delta \phi$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+    #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
+    plot.legend(loc = "upper left") # outside of plot
 
     # Title
-    title = r"Azimuthal Extents"
+    title = r"$\mathrm{Azimuthal\ Extents}$"
     plot.title("%s" % (title), fontsize = fontsize + 3)
 
     # Save, Show, and Close
