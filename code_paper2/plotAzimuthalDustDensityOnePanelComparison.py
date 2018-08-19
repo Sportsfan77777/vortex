@@ -226,14 +226,20 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     ### Plot ###
     # Profiles
     x = theta * (180.0 / np.pi) - 180.0
-    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
+    if num_profiles > 1:
+        for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
+            plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
+    else:
+        plot.plot(x, azimuthal_profiles1, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
 
     # Add a beak in the legend
     plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
 
-    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
+    if num_profiles > 1:
+        for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
+            plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
+    else:
+        plot.plot(x, azimuthal_profiles2, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
 
     # Plot analytic
     middle_i = (num_profiles - 1) / 2; radius = azimuthal_radii1[middle_i] # middle
@@ -291,19 +297,21 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Legend
     if frame_i == 2:
         plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
+    if frame_i == 1:
+        plot.legend(loc = "upper left") # outside of plot
 
     # Extra Annotation
     rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f \ r_\mathrm{p}$" % azimuthal_radii1[(num_profiles - 1) / 2]
     rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f \ r_\mathrm{p}$" % azimuthal_radii2[(num_profiles - 1) / 2]
-    plot.text(-170, 0.90 * plot.ylim()[-1], rc_line1, fontsize = fontsize, horizontalalignment = 'left')
-    plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
+    #plot.text(-170, 0.90 * plot.ylim()[-1], rc_line1, fontsize = fontsize, horizontalalignment = 'left')
+    #plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
 
     if frame_i == 2:    
         center_x = 1.34 * plot.xlim()[-1]
         top_y = plot.ylim()[-1]
 
         line1 = "Radii"
-        plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize, horizontalalignment = 'center')
+        #plot.text(center_x, 0.95 * top_y, line1, fontsize = fontsize, horizontalalignment = 'center')
 
     # Title
     #title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
@@ -311,7 +319,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     stokes_number = util.get_stokes_number(size)
 
     title = r"%s$\mathrm{-size}$ $\mathrm{(St}_\mathrm{0}$ $=$ $%.03f \mathrm{)}$" % (size_label, stokes_number)
-    plot.title("%s" % (title), fontsize = fontsize + 1)
+    plot.title("%s" % (title), fontsize = fontsize + 1, y = 1.015)
     
 def make_plot(show = False):
     # Set up figure
