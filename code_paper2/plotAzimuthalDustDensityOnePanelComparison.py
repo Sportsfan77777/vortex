@@ -234,14 +234,15 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         plot.plot(x, azimuthal_profiles1, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
 
     # Add a beak in the legend
-    plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
+    if num_profiles > 1:
+        plot.plot([0.1, 0.1], [0.2, 0.2], c = 'white', label = "\t")
 
     if num_profiles > 1:
         for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii2, azimuthal_profiles2)):
             plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
     else:
         i = 1
-        plot.plot(x, azimuthal_profiles2, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
+        plot.plot(x, azimuthal_profiles2, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
 
     # Plot analytic
     if num_profiles > 1:
@@ -260,7 +261,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
 
     # Mask outside vortex and plot
     masked_i = np.abs(x) <= (dtheta_a / 2.0); masked_x = x[masked_i]; masked_y = analytic[masked_i]
-    plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
+    plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k", label = r"$\mathrm{Analytic}$")
 
     # Mark Planet
     if shift1 is None:
@@ -276,8 +277,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         if shift2 < -len(theta):
             shift2 += len(theta)
         planet_loc2 = theta[shift2] * (180.0 / np.pi) - 180.0
-    plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
-    plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
+    #plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
+    #plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
     max_x = 180
@@ -301,14 +302,14 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
 
     # Legend
-    if frame_i == 2:
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
+    #if frame_i == 2:
+    #    plot.legend(loc = "upper right", bbox_to_anchor = (1.34, 0.94)) # outside of plot
     if frame_i == 1:
         plot.legend(loc = "upper left") # outside of plot
 
     # Extra Annotation
-    rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f \ r_\mathrm{p}$" % azimuthal_radii1[(num_profiles - 1) / 2]
-    rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f \ r_\mathrm{p}$" % azimuthal_radii2[(num_profiles - 1) / 2]
+    #rc_line1 = r"$r_\mathrm{c,\ T=10} = %.02f \ r_\mathrm{p}$" % azimuthal_radii1[(num_profiles - 1) / 2]
+    #rc_line2 = r"$r_\mathrm{c,\ T=1000} = %.02f \ r_\mathrm{p}$" % azimuthal_radii2[(num_profiles - 1) / 2]
     #plot.text(-170, 0.90 * plot.ylim()[-1], rc_line1, fontsize = fontsize, horizontalalignment = 'left')
     #plot.text(-170, 0.80 * plot.ylim()[-1], rc_line2, fontsize = fontsize, horizontalalignment = 'left')
 
