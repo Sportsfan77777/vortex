@@ -200,8 +200,11 @@ colors2 = ['#0366a8', '#0609ef', '#370282']
 
 dashes = [[8, 4], [10000, 1], [3, 3]]
 
-labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
-labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=750}$", r"$\mathrm{+0.50\ h}$"]
+#labels1 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=10}$", r"$\mathrm{+0.50\ h}$"]
+#labels2 = [r"$\mathrm{-0.50\ h}$", r"$r_\mathrm{c,\ T=750}$", r"$\mathrm{+0.50\ h}$"]
+
+labels1 = [r"$\mathrm{-0.50\ h}$", r"$T\ =\ 10$", r"$\mathrm{+0.50\ h}$"]
+labels2 = [r"$\mathrm{-0.50\ h}$", r"$T\ =\ 750$", r"$\mathrm{+0.50\ h}$"]
 
 def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     # Convert size to number
