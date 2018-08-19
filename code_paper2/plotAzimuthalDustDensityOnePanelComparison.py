@@ -236,7 +236,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors2[i], alpha = alpha, label = labels2[i])
 
     # Plot analytic
-    middle_i = (num_profiles - 1) / 2; radius = azimuthal_radii[middle_i] # middle
+    middle_i = (num_profiles - 1) / 2; radius = azimuthal_radii1[middle_i] # middle
     #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
     max_density = np.max(azimuthal_profiles1[middle_i])
 
@@ -247,8 +247,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
     # Mask outside vortex and plot
-    masked_i = np.abs(x) <= (dtheta_a / 2.0)
-    masked_x = x[masked_i]; masked_y = analytic[masked_i]
+    masked_i = np.abs(x) <= (dtheta_a / 2.0); masked_x = x[masked_i]; masked_y = analytic[masked_i]
     plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k")
 
     # Mark Planet
