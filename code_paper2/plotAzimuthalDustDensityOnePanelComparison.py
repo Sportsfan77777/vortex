@@ -263,7 +263,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
     # Mask outside vortex and plot
-    masked_i = np.abs(x) <= (dtheta_a / 2.0); masked_x = x[masked_i]; masked_y = analytic[masked_i]
+    masked_i = np.abs(x - 180.0) <= (dtheta_a / 2.0); masked_x = x[masked_i]; masked_y = analytic[masked_i]
     plot.plot(masked_x, masked_y, linewidth = linewidth, linestyle = "--", c = "k", label = r"$\mathrm{Analytic}$")
 
     # Mark Planet
@@ -284,9 +284,9 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     #plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
 
     # Axes
-    max_x = 180
-    plot.xlim(-max_x, max_x)
-    angles = np.linspace(-max_x, max_x, 7)
+    min_x = 0; max_x = 360
+    plot.xlim(min_x, max_x)
+    angles = np.linspace(min_x, max_x, 7)
     plot.xticks(angles)
 
     if max_y is None:
