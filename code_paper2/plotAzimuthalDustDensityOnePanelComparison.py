@@ -216,7 +216,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         shift1 = az.get_azimuthal_peak(density1, fargo_par)
 
         threshold = util.get_threshold(size)
-        shift2 = az.get_lookup_shift(frame_range[1], directory = "../taper750/%s-size")
+        shift2 = az.get_lookup_shift(frame_range[1], directory = "../taper750/%s-size" % size_name)
     else:
         shift1 = None; shift2 = None
 
