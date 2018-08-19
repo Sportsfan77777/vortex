@@ -228,7 +228,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
 
     ### Plot ###
     # Profiles
-    x = theta * (180.0 / np.pi) - 180.0
+    x = theta * (180.0 / np.pi)
     if num_profiles > 1:
         for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii1, azimuthal_profiles1)):
             plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
@@ -272,14 +272,14 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     else:
         if shift1 < -len(theta):
             shift1 += len(theta)
-        planet_loc1 = theta[shift1] * (180.0 / np.pi) - 180.0
+        planet_loc1 = theta[shift1] * (180.0 / np.pi)
 
     if shift2 is None:
         planet_loc2 = theta[0]
     else:
         if shift2 < -len(theta):
             shift2 += len(theta)
-        planet_loc2 = theta[shift2] * (180.0 / np.pi) - 180.0
+        planet_loc2 = theta[shift2] * (180.0 / np.pi)
     #plot.scatter(planet_loc1, 0, c = "r", s = 150, marker = "D", zorder = 100) # planet
     #plot.scatter(planet_loc2, 0, c = "b", s = 150, marker = "D", zorder = 100) # planet
 
@@ -299,7 +299,8 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     orbit = (time / (2 * np.pi)) * frame
     current_mass = util.get_current_mass(orbit, taper_time, planet_mass = planet_mass)
 
-    plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    #plot.xlabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     if frame_i == 1:
         plot.ylabel(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize)
