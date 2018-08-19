@@ -44,7 +44,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Directory Selection
     parser.add_argument('--dir1', dest = "directory1", default = '../taper10',
                          help = 'select first directory to compare vorticity (first is for T = 10, second is for T = 10) (default: ../taper10)')
-    parser.add_argument('--dir2', dest = "directory2", default = '../taper1000',
+    parser.add_argument('--dir2', dest = "directory2", default = '../taper750',
                          help = 'select second directory to compare vorticity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
 
     parser.add_argument('-g', dest = "grain_size", default = "cm",
@@ -68,8 +68,8 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--shift', dest = "center", default = "lookup",
+                         help = 'center options for T > 100: threshold, away (from minimum), lookup, off (default: lookup)')
 
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
@@ -104,7 +104,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-default_directory = "../taper1000/%s-size/" % (args.grain_size)
+default_directory = "../taper750/%s-size/" % (args.grain_size)
 fargo_par = util.get_pickled_parameters(directory = default_directory)
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -202,7 +202,7 @@ def add_to_plot(frame, fig, ax, frame_i):
     if frame_i == 1:
         taper_time = 10
     else:
-        taper_time = 1000
+        taper_time = 750
 
     # Change directories
     cwd = os.getcwd()
@@ -221,14 +221,21 @@ def add_to_plot(frame, fig, ax, frame_i):
         if taper_time < 10.1:
             shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
         else:
-            threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
+            if center == "lookup":
+                shift_c = az.get_lookup_shift(frame)
+            elif option == "away":
+                shift_c = az.shift_away_from_minimum(dust_density, fargo_par)
+            elif center == "threshold":
+                threshold = util.get_threshold(size)
+                shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero / 100.0)
+            else:
+                shift_c = 0 # Do not center
         vorticity = np.roll(vorticity, shift_c)
         density = np.roll(density, shift_c)
 
     ### Plot ###
     x = rad
-    y = theta * (180.0 / np.pi) - 180.0
+    y = theta * (180.0 / np.pi)
     result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     #if frame_i == 2:
@@ -242,10 +249,11 @@ def add_to_plot(frame, fig, ax, frame_i):
         plot.contour(x, y, np.transpose(density), levels = levels, origin = 'upper', linewidths = 1, colors = colors, alpha = 0.8)
 
     # Axes
+    y_min = 0; y_max = 360
     plot.xlim(x_min, x_max)
-    plot.ylim(-180, 180)
+    plot.ylim(y_min, y_max)
 
-    angles = np.linspace(-180, 180, 7)
+    angles = np.linspace(y_min, y_max, 7)
     plot.yticks(angles)
 
     # Annotate Axes
@@ -262,7 +270,7 @@ def add_to_plot(frame, fig, ax, frame_i):
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     if frame_i == 1:
-        plot.ylabel(r"$\phi - \phi_\mathrm{center}$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+        plot.ylabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
