@@ -259,7 +259,7 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
     aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
     S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
 
-    analytic = np.array([az.get_analytic_profile(angle, r_a, dr_a, dtheta_a, aspect_ratio, S) for angle in x])
+    analytic = np.array([az.get_analytic_profile(angle, r_a, dr_a, dtheta_a, aspect_ratio, S) for angle in (x - 180.0)])
     analytic = analytic / np.max(analytic) * max_density # Normalize and re-scale to max density
 
     # Mask outside vortex and plot
