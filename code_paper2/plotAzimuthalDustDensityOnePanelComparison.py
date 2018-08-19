@@ -244,9 +244,13 @@ def add_to_plot(frame, fig, ax, size_name, num_frames, frame_i):
         plot.plot(x, azimuthal_profiles2, linewidth = linewidth, dashes = dashes[i], c = colors1[i], alpha = alpha, label = labels1[i])
 
     # Plot analytic
-    middle_i = (num_profiles - 1) / 2; radius = azimuthal_radii1[middle_i] # middle
-    #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
-    max_density = np.max(azimuthal_profiles1[middle_i])
+    if num_profiles > 1
+        middle_i = (num_profiles - 1) / 2; radius = azimuthal_radii1[middle_i] # middle
+        #center_density = azimuthal_profiles[middle_i][(len(azimuthal_profiles[middle_i]) - 1) / 2]
+        max_density = np.max(azimuthal_profiles1[middle_i])
+    else:
+        radius = azimuthal_radii1
+        max_density = np.max(azimuthal_profiles1)
 
     aspect_ratio = (r_a / dr_a) * (dtheta_a * np.pi / 180.0) # (r / dr) * d\theta
     S = util.get_stokes_number(size) / (diffusion_factor * viscosity / scale_height**2) # St / \alpha
