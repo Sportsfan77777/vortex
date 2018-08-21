@@ -300,7 +300,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
         plot.text(left_x, line_y + 1.2 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
         plot.text(left_x, line_y + 0.2 * linebreak, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
     elif frame_i == 2:
-        line3 = r"$%.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
+        line3 = r"$%.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
         plot.text(right_x, line_y + 0.7 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
