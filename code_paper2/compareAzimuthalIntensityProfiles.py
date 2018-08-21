@@ -189,7 +189,11 @@ def make_plot(frame, show = False):
         plot.plot(x, azimuthal_profile, linewidth = linewidths[i], c = colors[i], alpha = alphas[i], linestyle = linestyles[i], label = label_i)
 
     # Mark Planet (get shift first)
-    shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
+    if taper_time > 99.9:
+        shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
+    else:
+        dust_density = util.read_data(frame, 'dust', fargo_par directory = "../../../cm-size")
+        shift = az.get_azimuthal_peak(dust_density, fargo_par, directory = "../../../cm-size")
 
     if shift is None:
         planet_loc = theta[0]
