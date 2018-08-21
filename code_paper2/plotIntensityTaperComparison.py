@@ -295,13 +295,17 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     left_x = -1.2 * box_size; line_y = 1.24 * box_size; linebreak = 0.2 * box_size
     right_x = 1.2 * box_size
     if frame_i == 1:
+        #line1 = r'$M_p = %d$ $M_J$' % planet_mass
+        #line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
+        #plot.text(left_x, line_y + 1.2 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
+        #plot.text(left_x, line_y + 0.2 * linebreak, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
         line1 = r'$M_p = %d$ $M_J$' % planet_mass
-        line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
-        plot.text(left_x, line_y + 1.2 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
-        plot.text(left_x, line_y + 0.2 * linebreak, line2, horizontalalignment = 'left', fontsize = fontsize + 2)
+        plot.text(left_x, line_y + 0.2 * linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 2)
     elif frame_i == 2:
-        line3 = r"$%.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
-        plot.text(right_x, line_y + 0.7 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+        #line3 = r"$%.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
+        #plot.text(right_x, line_y + 0.7 * linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 2)
+        line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
+        plot.text(right_x, line_y + 0.2 * linebreak, line2, horizontalalignment = 'right', fontsize = fontsize + 2)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if colorbar:
@@ -334,8 +338,8 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    #title = r"$\mathrm{Beam:\ }\ \ %.03f^{\prime\prime} \times \ \ %.03f^{\prime\prime}$" % (arc_beam, arc_beam)
-    title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
+    title = r"$\mathrm{Beam:\ }\ \ %.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
+    #title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
     fig.suptitle(title, y = 0.99, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
