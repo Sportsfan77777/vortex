@@ -227,14 +227,15 @@ def make_plot(frame, show = False):
     plot.title("%s" % (title), fontsize = fontsize + 1)
 
     # Legend
-    plot.legend(loc = "upper right", bbox_to_anchor = (1.38, 0.94)) # outside of plot
+    #plot.legend(loc = "upper right", bbox_to_anchor = (1.38, 0.94)) # outside of plot
+    plot.legend(loc = "upper left")
 
     # Extra Annotation (Location, Legend Label)
     center_x = 1.38 * plot.xlim()[-1]
     top_y = plot.ylim()[-1]
 
     line = r"$\mathrm{Beam\ Diameters}$"
-    plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
+    #plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Save, Show, and Close
     plot.tight_layout()
