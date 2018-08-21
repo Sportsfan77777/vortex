@@ -192,7 +192,7 @@ def make_plot(frame, show = False):
     if taper_time > 99.9:
         shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
     else:
-        dust_density = util.read_data(frame, 'dust', fargo_par directory = "../../../cm-size")
+        dust_density = util.read_data(frame, 'dust', fargo_par, directory = "../../../cm-size")
         shift = az.get_azimuthal_peak(dust_density, fargo_par, directory = "../../../cm-size")
 
     if shift is None:
