@@ -341,7 +341,7 @@ def make_plot(show = False):
     title = r"$%.02f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam, args.beam_size)
     #title = r"$\mathrm{Beam:\ }\ %.02f^{\prime\prime} \times \ \ %.02f^{\prime\prime}$" % (arc_beam, arc_beam)
     #title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
-    fig.suptitle(title, y = 0.92, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
+    fig.suptitle(title, y = 0.93, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
     # Save and Close
     plot.tight_layout()
