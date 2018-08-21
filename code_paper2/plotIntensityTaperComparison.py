@@ -44,7 +44,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
     # Directory Selection
     parser.add_argument('--dir1', dest = "directory1", default = '../taper10',
                          help = 'select first directory to compare intensity (first is for T = 10, second is for T = 10) (default: ../taper10)')
-    parser.add_argument('--dir2', dest = "directory2", default = '../taper1000',
+    parser.add_argument('--dir2', dest = "directory2", default = '../taper750',
                          help = 'select second directory to compare intensity (first is for T = 10, second is for T = 1000) (default: ../taper1000)')
 
     parser.add_argument('-w', dest = "wavelength", type = float, default = 870,
@@ -100,7 +100,7 @@ def new_argument_parser(description = "Plot dust density maps for four grain siz
 args = new_argument_parser().parse_args()
 
 ### Get ID%04d Parameters ###
-default_directory = "taper1000/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)
+default_directory = "taper750/synthetic/lambda%04d/beam%03d" % (args.wavelength, args.beam_size)
 
 fn = "../%s/id%04d_par.p" % (default_directory, args.id_number)
 fargo_par = pickle.load(open(fn, "rb"))
@@ -193,7 +193,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
     if frame_i == 1:
         taper_time = 10
     else:
-        taper_time = 1000
+        taper_time = 750
 
     # Change directories
     cwd = os.getcwd()
