@@ -176,7 +176,7 @@ def make_plot(frame, show = False):
     ### Data ###
     for i, beam_i in enumerate(beams[::-1]):
         arc_beam_i = beam_i / distance
-        label_i = r"$%.03f^{\prime\prime} (%2d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
+        label_i = r"$%.02f^{\prime\prime} (%2d \mathrm{\ AU})$" % (arc_beam_i, beam_i)
 
         intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = "../beam%03d" % beam_i)
         if normalize:
