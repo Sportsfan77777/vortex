@@ -389,7 +389,8 @@ def full_procedure(frame):
     density, sizes = retrieve_density(frame, size_names)
 
     density, sizes = polish(density, sizes, scale = scale)
-    density = center_vortex(density, frame)
+    if shift is not "off":
+        density = center_vortex(density, frame)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
 
     if interpolate:
