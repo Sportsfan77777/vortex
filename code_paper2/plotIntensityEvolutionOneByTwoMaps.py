@@ -298,7 +298,7 @@ def make_plot(show = False):
     frame_str = frame_str[:-1] # Trim last '_'
 
     #### Finish Plot ####
-    title = r"$%.02f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam, beam_size)
+    title = r"$%.02f^{\prime\prime} (%d \mathrm{\ AU})$" % (arc_beam, beam_size * planet_radius)
     #title = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (old_num_rad, old_num_theta)
     fig.suptitle(title, y = 0.93, verticalalignment = "bottom", bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 4)
 
