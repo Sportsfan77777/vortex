@@ -227,6 +227,7 @@ def make_plot(show = False):
         for i, extent_i in enumerate(comparisons[::-1]):
             plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H") # Left Marker
             plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H", zorder = 99, clip_on = False) # Right Marker
+            plot.plot([x[0], x[-1]], extent_i, c = colors[i], zorder = 2) # Line
 
     # Axes
     plot.xlim(x[0], x[-1])
@@ -244,7 +245,7 @@ def make_plot(show = False):
 
     # Title
     title = r"$\mathrm{Azimuthal\ Extents}$"
-    plot.title("%s" % (title), fontsize = fontsize + 3)
+    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     # Save, Show, and Close
     if version is None:
