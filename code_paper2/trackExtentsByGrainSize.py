@@ -225,9 +225,9 @@ def make_plot(show = False):
     if compare:
         comparisons = comparison_dictionary[threshold]
         for i, extent_i in enumerate(comparisons[::-1]):
-            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H") # Left Marker
+            plot.scatter(x[0], extent_i, c = colors[i], s = 100, marker = "H", zorder = 5) # Left Marker
             plot.scatter(x[-1], extent_i, c = colors[i], s = 100, marker = "H", zorder = 99, clip_on = False) # Right Marker
-            plot.plot([x[0], x[-1]], extent_i, c = colors[i], zorder = 2) # Line
+            plot.plot([x[0], x[-1]], [extent_i, extent_i], linestyle = "--", c = colors[i], zorder = 2) # Dashed line ine
 
     # Axes
     plot.xlim(x[0], x[-1])
