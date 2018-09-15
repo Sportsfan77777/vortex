@@ -213,7 +213,7 @@ def add_to_plot(frame, fig, ax, num_sizes, frame_i):
 
     dust_density = util.read_data(frame, 'dust', dust_fargo_par, id_number = id_number, directory = "../cm-size")
 
-    # Shift gas density with center of dust density
+    # Shift gas density with peak or lookup shift
     if taper_time < 100:
         shift = az.get_azimuthal_peak(dust_density, fargo_par)
     else:
