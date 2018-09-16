@@ -183,7 +183,7 @@ def make_plot(frame, show = False):
     dust_density = util.read_data(frame, 'dust', dust_fargo_par, id_number = id_number, directory = "../../../cm-size")
 
     # Shift gas density with center of dust density
-    shift = az.get_azimuthal_center(dust_density, dust_fargo_par, threshold = 10.0 * gas_surface_density_zero / 100.0)
+    shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
 
     # Normalize
     if normalize:
