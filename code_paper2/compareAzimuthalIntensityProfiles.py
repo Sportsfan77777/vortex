@@ -64,6 +64,9 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
+
+    parser.add_argument('-a', dest = "annotate", action = 'store_true', default = False,
+                         help = 'annotate peak offsets at different thresholds (default: do not annotate)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -146,6 +149,8 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
+annotate = args.annotate
+
 # Plot Parameters (constant)
 fontsize = args.fontsize
 labelsize = args.labelsize
@@ -159,6 +164,15 @@ rc['ytick.labelsize'] = labelsize
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
+
+###############################################################################
+
+### Peak Offsets ###
+frames = pickle.load(open("..beam010/id%04d_b10_t40_intensityFrames.p" % (id_number), 'rb'))
+offsets1 = pickle.load(open("..beam010/id%04d_b10_t40_intensityPeaks.p" % (id_number), 'rb'))
+offsets2 = pickle.load(open("..beam020/id%04d_b20_t50_intensityPeaks.p" % (id_number), 'rb'))
+offsets3 = pickle.load(open("..beam030/id%04d_b30_t60_intensityPeaks.p" % (id_number), 'rb'))
+offsets4 = pickle.load(open("..beam040/id%04d_b40_t70_intensityPeaks.p" % (id_number), 'rb'))
 
 ###############################################################################
 
@@ -228,7 +242,10 @@ def make_plot(frame, show = False):
 
     # Legend
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.38, 0.94)) # outside of plot
-    plot.legend(loc = "upper left")
+    if annotate:
+        pass
+    else:
+        plot.legend(loc = "upper left")
 
     # Extra Annotation (Location, Legend Label)
     center_x = 1.38 * plot.xlim()[-1]
@@ -236,6 +253,22 @@ def make_plot(frame, show = False):
 
     line = r"$\mathrm{Beam\ Diameters}$"
     #plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
+
+    # Annotate Peak Offsets
+    if annotate:
+        this_frame = np.searchsorted(frames, frame)
+        offset_t3 = offsets1[this_frame]; offset2 = offsets2[this_frame]; offset3 = offsets3[this_frame]; offset4 = offsets4[this_frame]
+
+        line4 = "b = 40: %.1f" % (offset4)
+        line3 = "b = 30: %.1f" % (offset3)
+        line2 = "b = 20: %.1f" % (offset2)
+        line1 = "b = 10: %.1f" % (offset1)
+
+        start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
+        plot.text(180, start_y + 3.0 * linebreak, line4, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 2.0 * linebreak, line3, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 1.0 * linebreak, line2, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 0.0 * linebreak, line1, fontsize = fontsize, horizontalalignment = 'center')
 
     # Save, Show, and Close
     plot.tight_layout()
