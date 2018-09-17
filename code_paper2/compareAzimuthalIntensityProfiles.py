@@ -168,11 +168,11 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 ### Peak Offsets ###
-frames = pickle.load(open("..beam010/id%04d_b10_t40_intensityFrames.p" % (id_number), 'rb'))
-offsets1 = pickle.load(open("..beam010/id%04d_b10_t40_intensityPeaks.p" % (id_number), 'rb'))
-offsets2 = pickle.load(open("..beam020/id%04d_b20_t50_intensityPeaks.p" % (id_number), 'rb'))
-offsets3 = pickle.load(open("..beam030/id%04d_b30_t60_intensityPeaks.p" % (id_number), 'rb'))
-offsets4 = pickle.load(open("..beam040/id%04d_b40_t70_intensityPeaks.p" % (id_number), 'rb'))
+frames = pickle.load(open("../beam010/id%04d_b10_t40_intensityFrames.p" % (id_number), 'rb'))
+offsets1 = pickle.load(open("../beam010/id%04d_b10_t40_intensityPeaks.p" % (id_number), 'rb'))
+offsets2 = pickle.load(open("../beam020/id%04d_b20_t50_intensityPeaks.p" % (id_number), 'rb'))
+offsets3 = pickle.load(open("../beam030/id%04d_b30_t60_intensityPeaks.p" % (id_number), 'rb'))
+offsets4 = pickle.load(open("../beam040/id%04d_b40_t70_intensityPeaks.p" % (id_number), 'rb'))
 
 ###############################################################################
 
