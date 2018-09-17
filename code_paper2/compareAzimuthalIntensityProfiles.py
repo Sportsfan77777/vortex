@@ -272,7 +272,7 @@ def make_plot(frame, show = False):
 
     if annotate:
         this_frame = np.searchsorted(frames, frame)
-        offset1 = offsets1[this_frame - 3], offset1 = offsets1[this_frame - 2]; offset2 = offsets1[this_frame - 1]; offset3 = offsets1[this_frame]; offset4 = offsets1[this_frame + 1], offset4 = offsets1[this_frame + 2]
+        offset0 = offsets1[this_frame - 3]; offset1 = offsets1[this_frame - 2]; offset2 = offsets1[this_frame - 1]; offset3 = offsets1[this_frame]; offset4 = offsets1[this_frame + 1], offset5 = offsets1[this_frame + 2]
 
         line5 = "t = %d: %.1f (%.1f)" % (frame + 2, offset5, offset5 - offset4)
         line4 = "t = %d: %.1f (%.1f)" % (frame + 1, offset4, offset4 - offset3)
