@@ -255,9 +255,9 @@ def make_plot(frame, show = False):
     #plot.text(center_x, 0.95 * top_y, line, fontsize = fontsize - 1, horizontalalignment = 'center')
 
     # Annotate Peak Offsets
-    if annotate:
+    if False:
         this_frame = np.searchsorted(frames, frame)
-        offset_t3 = offsets1[this_frame]; offset2 = offsets2[this_frame]; offset3 = offsets3[this_frame]; offset4 = offsets4[this_frame]
+        offset1 = offsets1[this_frame]; offset2 = offsets2[this_frame]; offset3 = offsets3[this_frame]; offset4 = offsets4[this_frame]
 
         line4 = "b = 40: %.1f" % (offset4)
         line3 = "b = 30: %.1f" % (offset3)
@@ -265,6 +265,23 @@ def make_plot(frame, show = False):
         line1 = "b = 10: %.1f" % (offset1)
 
         start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
+        plot.text(180, start_y + 3.0 * linebreak, line4, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 2.0 * linebreak, line3, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 1.0 * linebreak, line2, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 0.0 * linebreak, line1, fontsize = fontsize, horizontalalignment = 'center')
+
+    if annotate:
+        this_frame = np.searchsorted(frames, frame)
+        offset1 = offsets1[this_frame - 3], offset1 = offsets1[this_frame - 2]; offset2 = offsets1[this_frame - 1]; offset3 = offsets1[this_frame]; offset4 = offsets1[this_frame + 1], offset4 = offsets1[this_frame + 2]
+
+        line5 = "t = %d: %.1f (%.1f)" % (frame + 2, offset5, offset5 - offset4)
+        line4 = "t = %d: %.1f (%.1f)" % (frame + 1, offset4, offset4 - offset3)
+        line3 = "t = %d: %.1f (%.1f)" % (frame - 0, offset3, offset3 - offset2)
+        line2 = "t = %d: %.1f (%.1f)" % (frame - 1, offset2, offset2 - offset1)
+        line1 = "t = %d: %.1f (%.1f)" % (frame - 2, offset1, offset1 - offset0)
+
+        start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
+        plot.text(180, start_y + 4.0 * linebreak, line5, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(180, start_y + 3.0 * linebreak, line4, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(180, start_y + 2.0 * linebreak, line3, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(180, start_y + 1.0 * linebreak, line2, fontsize = fontsize, horizontalalignment = 'center')
