@@ -272,7 +272,7 @@ def make_plot(frame, show = False):
 
     if annotate:
         this_frame = np.searchsorted(frames, frame)
-        offset0 = offsets1[this_frame - 3]; offset1 = offsets1[this_frame - 2]; offset2 = offsets1[this_frame - 1]; offset3 = offsets1[this_frame]; offset4 = offsets1[this_frame + 1], offset5 = offsets1[this_frame + 2]
+        offset0 = offsets1[this_frame - 3]; offset1 = offsets1[this_frame - 2]; offset2 = offsets1[this_frame - 1]; offset3 = offsets1[this_frame]; offset4 = offsets1[this_frame + 1]; offset5 = offsets1[this_frame + 2]
 
         line5 = "t = %d: %.1f (%.1f)" % (frame + 2, offset5, offset5 - offset4)
         line4 = "t = %d: %.1f (%.1f)" % (frame + 1, offset4, offset4 - offset3)
@@ -281,11 +281,11 @@ def make_plot(frame, show = False):
         line1 = "t = %d: %.1f (%.1f)" % (frame - 2, offset1, offset1 - offset0)
 
         start_y = 0.08 * plot.ylim()[-1]; linebreak = 0.08 * plot.ylim()[-1]
-        plot.text(180, start_y + 4.0 * linebreak, line5, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(180, start_y + 3.0 * linebreak, line4, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 4.0 * linebreak, line1, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 3.0 * linebreak, line2, fontsize = fontsize, horizontalalignment = 'center')
         plot.text(180, start_y + 2.0 * linebreak, line3, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(180, start_y + 1.0 * linebreak, line2, fontsize = fontsize, horizontalalignment = 'center')
-        plot.text(180, start_y + 0.0 * linebreak, line1, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 1.0 * linebreak, line4, fontsize = fontsize, horizontalalignment = 'center')
+        plot.text(180, start_y + 0.0 * linebreak, line5, fontsize = fontsize, horizontalalignment = 'center')
 
     # Save, Show, and Close
     plot.tight_layout()
