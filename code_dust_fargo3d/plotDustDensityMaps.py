@@ -71,7 +71,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMaps%d",
                          help = 'save directory (default: dustDensityMaps%d)')
-    parser.add_argument('-n', dest = "dust_number", default = "1",
+    parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
                          help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
 
     # Plot Parameters (variable)
