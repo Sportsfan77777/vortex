@@ -152,6 +152,9 @@ else:
     print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
     exit()
 
+# Number of Cores 
+num_cores = args.num_cores
+
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
