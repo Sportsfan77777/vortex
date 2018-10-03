@@ -250,13 +250,23 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("../../outputs/fargo_dusty", 'gas', 1).get_field(field)
+    density = Fields("../../outputs/fargo_dusty", 'gas', 1).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
     result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
+
+    # Axes
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, 360)
+
+    angles = np.linspace(0, 360, 7)
+    plot.yticks(angles)
 
     # Save, Show, and Close
     if version is None:
