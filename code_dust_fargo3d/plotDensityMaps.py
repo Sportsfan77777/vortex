@@ -48,6 +48,9 @@ import util
 import azimuthal as az
 from readTitle import readTitle
 
+from advanced import Parameters
+from reader import Fields
+
 from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
@@ -56,7 +59,7 @@ for key in cmaps:
 
 ### Input Parameters ###
 
-def new_argument_parser(description = "Plot dust density maps."):
+def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
@@ -111,6 +114,12 @@ def new_argument_parser(description = "Plot dust density maps."):
 args = new_argument_parser().parse_args()
 
 ### Get Fargo Parameters ###
+p = Parameters()
+
+num_rad = p.nx; num_theta = p.ny
+r_min = p.ymin; r_max = p.ymax
+
+"""
 fargo_par = util.get_pickled_parameters()
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -127,6 +136,7 @@ scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
 
 size = fargo_par["PSIZE"]
+"""
 
 ### Get Input Parameters ###
 
@@ -140,6 +150,16 @@ else:
     print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
     exit()
 
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+"""
 # Number of Cores 
 num_cores = args.num_cores
 
@@ -180,6 +200,7 @@ dpi = args.dpi
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
+"""
 
 ###############################################################################
 
@@ -193,6 +214,32 @@ def generate_colors(n):
 ##### PLOTTING #####
 
 def make_plot(frame, show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
+
+    # Data
+    field = "dens"
+    density = Fields("../../outputs/fargo_dusty", 'gas', 1).get_field(field)
+
+    ### Plot ###
+    x = rad
+    y = theta * (180.0 / np.pi)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+
+    # Save, Show, and Close
+    if version is None:
+        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+    else:
+        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+def old_make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
