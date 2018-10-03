@@ -250,7 +250,7 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("../../outputs/fargo_dusty", 'gas', 1).get_field(field).reshape(num_rad, num_theta)
+    density = Fields("../../outputs/fargo_dusty", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
     ### Plot ###
@@ -261,12 +261,32 @@ def make_plot(frame, show = False):
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
+    if use_contours:
+        levels = np.linspace(low_contour, high_contour, num_levels)
+        colors = generate_colors(num_levels)
+        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+
     # Axes
     plot.xlim(x_min, x_max)
     plot.ylim(0, 360)
 
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
+
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
+
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+    #title = readTitle()
+
+    unit = "r_\mathrm{p}"
+    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
