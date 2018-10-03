@@ -119,6 +119,8 @@ p = Parameters()
 num_rad = p.nx; num_theta = p.ny
 r_min = p.ymin; r_max = p.ymax
 
+surface_density_zero = p.sigma0
+
 """
 fargo_par = util.get_pickled_parameters()
 
@@ -246,6 +248,7 @@ def make_plot(frame, show = False):
     # Data
     field = "dens"
     density = Fields("../../outputs/fargo_dusty", 'gas', 1).get_field(field)
+    normalized_density = density / surface_density_zero
 
     ### Plot ###
     x = rad
