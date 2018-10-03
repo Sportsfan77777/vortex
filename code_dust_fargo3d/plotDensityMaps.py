@@ -156,8 +156,33 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 # Plot Parameters (variable)
+show = args.show
+
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
+
+version = args.version
+if args.r_lim is None:
+    x_min = r_min; x_max = r_max
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+center = args.center
+
+# Plot Parameters (contours)
+use_contours = args.use_contours
+low_contour = args.low_contour
+high_contour = args.high_contour
+num_levels = args.num_levels
+if num_levels is None:
+    separation = args.separation
+    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
+# Plot Parameters (constant)
+cmap = args.cmap
+clim = [0, args.cmax]
+
+fontsize = args.fontsize
+dpi = args.dpi
 
 """
 # Number of Cores 
