@@ -116,7 +116,7 @@ args = new_argument_parser().parse_args()
 ### Get Fargo Parameters ###
 p = Parameters()
 
-num_rad = p.nx; num_theta = p.ny
+num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
@@ -143,14 +143,7 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -250,7 +243,7 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("../../outputs/fargo_dusty", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
     ### Plot ###

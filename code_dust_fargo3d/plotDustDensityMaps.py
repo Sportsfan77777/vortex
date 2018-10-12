@@ -59,7 +59,7 @@ for key in cmaps:
 
 ### Input Parameters ###
 
-def new_argument_parser(description = "Plot gas density maps."):
+def new_argument_parser(description = "Plot dust density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
@@ -118,10 +118,11 @@ args = new_argument_parser().parse_args()
 ### Get Fargo Parameters ###
 p = Parameters()
 
-num_rad = p.nx; num_theta = p.ny
+num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
+dust_surface_density_zero = p.sigma0 * p.epsilon
 
 """
 fargo_par = util.get_pickled_parameters()
@@ -145,14 +146,7 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -254,7 +248,7 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("../../outputs/fargo_dusty", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+    density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
     ### Plot ###
@@ -318,7 +312,7 @@ def old_make_plot(frame, show = False):
             threshold = util.get_threshold(size)
             shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
         density = np.roll(density, shift_c)
-    normalized_density = density / surface_density_zero
+    normalized_density = density / dust_surface_density_zero
 
     ### Plot ###
     x = rad
@@ -329,9 +323,10 @@ def old_make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     if use_contours:
+        gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
