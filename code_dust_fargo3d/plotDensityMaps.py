@@ -121,6 +121,11 @@ r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
 
+planet_mass = 1.0
+taper_time = p.masstaper
+
+dt = p.ninterm * p.dt
+
 """
 fargo_par = util.get_pickled_parameters()
 
@@ -267,19 +272,21 @@ def make_plot(frame, show = False):
     plot.yticks(angles)
 
     # Annotate Axes
-    #time = fargo_par["Ninterm"] * fargo_par["DT"]
-    #orbit = (time / (2 * np.pi)) * frame
+    orbit = (dt / (2 * np.pi)) * frame
 
-    #if orbit >= taper_time:
-    #    current_mass = planet_mass
-    #else:
-    #    current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
+
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
 
     # Save, Show, and Close
     if version is None:
