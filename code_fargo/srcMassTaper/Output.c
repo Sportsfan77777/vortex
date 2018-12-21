@@ -13,6 +13,8 @@ static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
 extern real     LostMass, OmegaFrame;
 extern boolean  Write_Density, Write_Velocity, IsDisk;
 
+extern real     Recent_dt;
+
 void EmptyPlanetSystemFile (sys)
 PlanetarySystem *sys;
 {
