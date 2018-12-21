@@ -220,4 +220,25 @@ PolarGrid   *dens, *gasvr, *gasvt, *label;
   }
 }
 
+void WriteDTFile(TimeStep)
+int TimeStep;
+{
+  FILE *output;
+  char name[256];
+
+  if (!CPU_Master) return; // Only write one file
+
+  printf ("Updating 'timesteps.dat'...");
+  fflush (stdout);
+  sprintf (name, "%stimesteps.dat", OUTPUTDIR);
+  output = fopenp (name, "a");
+
+  // What is slowing things down and how much???
+  fprintf (output, "%d\t%.9f\t%.9f\n", TimeStep, PhysicalTime, Recent_dt);
+
+  fclose (output);
+  printf ("done\n");
+  fflush (stdout);
+}
+
  
