@@ -218,7 +218,7 @@ def make_plot(frame, show = False):
     delta_t = cfl_max / cfl
 
     critical_location = np.unravel_index(np.argmin(delta_t), np.shape(delta_t))
-    print min(delta_t)
+    print min(delta_t), critical_location
 
     ### Plot ###
     x = rad
