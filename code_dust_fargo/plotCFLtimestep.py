@@ -226,7 +226,7 @@ def make_plot(frame, show = False):
     # Print min at each radius
     minima = np.min(delta_t, axis = 0)
     for i, (rad_i, min_i) in enumerate(zip(rad, minima)):
-        if i % 10 == 0:
+        if i % 4 == 0:
           print rad_i, min_i
 
     ### Plot ###
