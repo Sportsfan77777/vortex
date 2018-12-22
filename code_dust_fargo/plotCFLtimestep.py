@@ -212,7 +212,7 @@ def make_plot(frame, show = False):
 
     delta_r = rad[1] - rad[0]
     r_delta_theta = (rad * (theta[1] - theta[0]))[:, None]
-    cfl = radial_velocity / (delta_r) + azimuthal_velocity / (r_delta_theta)
+    cfl = np.abs(radial_velocity) / (delta_r) + np.abs(azimuthal_velocity) / (r_delta_theta)
 
     cfl_max = fargo_par["cfl"]
     delta_t = cfl_max / cfl
