@@ -214,7 +214,7 @@ def make_plot(frame, show = False):
     r_delta_theta = (rad * (theta[1] - theta[0]))[:, None]
     cfl = np.abs(radial_velocity) / (delta_r) + np.abs(azimuthal_velocity) / (r_delta_theta)
 
-    cfl_max = fargo_par["cfl"]
+    cfl_max = 0.4
     delta_t = cfl_max / cfl
 
     critical_location = np.unravel_index(np.argmin(delta_t), np.shape(delta_t))
