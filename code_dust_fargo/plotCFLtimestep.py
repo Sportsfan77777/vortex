@@ -219,7 +219,15 @@ def make_plot(frame, show = False):
 
     critical_location = np.unravel_index(np.argmin(delta_t), np.shape(delta_t))
     critical_location = (rad[critical_location[0]], theta[critical_location[1]]) # convert to rad and theta
+
+    # Print Overall Min
     print np.min(delta_t), critical_location
+
+    # Print min at each radius
+    minima = np.min(delta_t, axis = 0)
+    for i, (rad_i, min_i) in enumerate(zip(rad, minima)):
+        if i % 10 == 0:
+          print rad_i, min_i
 
     ### Plot ###
     x = rad
