@@ -120,8 +120,7 @@ jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 taper_time = fargo_par["MassTaper"]
 
-surface_density_zero = fargo_par["Sigma0"] / 100.0
-gas_surface_density_zero = fargo_par["Sigma0"]
+surface_density_zero = fargo_par["Sigma0"]
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
