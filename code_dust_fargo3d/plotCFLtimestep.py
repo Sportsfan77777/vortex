@@ -68,6 +68,8 @@ def new_argument_parser(description = "Plot residual velocity maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "residualVelocityMaps",
                          help = 'save directory (default: residualVelocityMaps)')
+    parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
+                         help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -152,6 +154,8 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+dust_number = args.dust_number
+
 # Plot Parameters (variable)
 show = args.show
 
@@ -203,6 +207,11 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
+    field = "dens"
+    density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+    normalized_density = density / surface_density_zero
+
+
     gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     radial_velocity = (fromfile("gasdvrad%d.dat" % frame).reshape(num_rad, num_theta))
