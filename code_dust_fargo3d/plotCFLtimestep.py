@@ -208,14 +208,19 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
+    field = "dens"
+    density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+    normalized_density = density / dust_surface_density_zero
 
-    gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
-    radial_velocity = (fromfile("gasdvrad%d.dat" % frame).reshape(num_rad, num_theta))
-    azimuthal_velocity = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta))
+    field = "vx" # radial
+    radial_velocity = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+
+    field = "vy" # azimuthal
+    azimuthal_velocity = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+
     if center:
         if taper_time < 10.1:
             shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
