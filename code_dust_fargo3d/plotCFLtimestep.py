@@ -190,8 +190,8 @@ fontsize = args.fontsize
 dpi = args.dpi
 
 ### Add new parameters to dictionary ###
-fargo_par["rad"] = rad
-fargo_par["theta"] = theta
+#fargo_par["rad"] = rad
+#fargo_par["theta"] = theta
 
 ###############################################################################
 
