@@ -224,10 +224,8 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / gas_surface_density_zero
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
-
-    normalized_density = gas_density / gas_surface_density_zero
     normalized_density = density / dust_surface_density_zero
 
     # Shift
