@@ -120,8 +120,9 @@ jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 taper_time = fargo_par["MassTaper"]
 
-surface_density_zero = fargo_par["Sigma0"] / 100.0
-disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+gas_surface_density_zero = fargo_par["Sigma0"]
+dust_surface_density_zero = fargo_par["Sigma0"] / 100.0
+disk_mass = 2 * np.pi * gas_surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
 viscosity = fargo_par["Viscosity"]
@@ -225,7 +226,9 @@ def make_plot(frame, show = False):
     # Data
     gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
-    normalized_density = density / surface_density_zero
+
+    normalized_density = gas_density / gas_surface_density_zero
+    normalized_density = density / dust_surface_density_zero
 
     # Shift
     if center is "off":
