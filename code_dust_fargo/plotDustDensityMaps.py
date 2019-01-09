@@ -184,7 +184,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None, grain = None):
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -198,7 +198,7 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
     elif option == "away":
        shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
     elif option == "lookup":
-       shift_c = az.get_lookup_shift(frame, directory = "../%s-size" % grain)
+       shift_c = az.get_lookup_shift(frame)
     else:
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
@@ -230,10 +230,10 @@ def make_plot(frame, show = False):
     # Shift
     if center is "off":
        shift_c = 0
-    elif center.startswith("cm"):
-       normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame, grain = grain)
+    #elif center.startswith("cm"):
+    #   normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame)
     else:
-       normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame, grain = grain)
+       normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame)
     gas_density = np.roll(gas_density, shift_c)
 
     ### Plot ###
