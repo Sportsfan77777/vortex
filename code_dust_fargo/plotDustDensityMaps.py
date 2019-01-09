@@ -77,8 +77,8 @@ def new_argument_parser(description = "Plot dust density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--shift', dest = "center", default = "off",
+                         help = 'center options: threshold, cm-threshold, away (from minimum), cm-away, peak, cm-peak, lookup (default: do not center)')
 
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
@@ -93,8 +93,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
+                         help = 'color map (default: inferno)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'maximum density in colorbar (default: 10 for hcm+, 2.5 otherwise)')
 
@@ -182,6 +182,32 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+### Helper Functions ###
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None, grain = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame, directory = "../%s-size" % grain)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_density = np.roll(normalized_density, shift_c)
+    return shifted_density, shift_c
+
+###############################################################################
+
 def generate_colors(n):
     c = ['k', 'b', 'firebrick']
     colors = []
@@ -199,14 +225,16 @@ def make_plot(frame, show = False):
     # Data
     gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
-    if center:
-        if taper_time < 10.1:
-            shift_c = az.get_azimuthal_peak(density, fargo_par)
-        else:
-            threshold = util.get_threshold(size)
-            shift_c = az.get_azimuthal_center(density, fargo_par, threshold = threshold * surface_density_zero)
-        density = np.roll(density, shift_c)
     normalized_density = density / surface_density_zero
+
+    # Shift
+    if center is "off":
+       shift_c = 0
+    elif center.startswith("cm"):
+       normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame, grain = grain)
+    else:
+       normalized_density, shift_c = shift_density(normalized_density, this_fargo_par, option = center, frame = frame, grain = grain)
+    gas_density = np.roll(gas_density, shift_c)
 
     ### Plot ###
     x = rad
