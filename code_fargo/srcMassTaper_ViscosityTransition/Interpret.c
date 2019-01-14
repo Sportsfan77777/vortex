@@ -27,6 +27,7 @@ boolean         Write_Density = YES, Write_Velocity = YES, Indirect_Term = YES;
 boolean         FakeAccretion = NO;
 boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 boolean         Evanescent = NO;
+boolean         DeadZone = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -203,6 +204,10 @@ char *filename;
   if ((*TAPERPROFILE == 's') || (*TAPERPROFILE == 'S')) SinSquaredTaper = YES;
   else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
   else {}
+
+  // #### NEW VARIABLE FOR DEAD ZONE #### //
+  if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
+
 }
 
 void PrintUsage (execname)

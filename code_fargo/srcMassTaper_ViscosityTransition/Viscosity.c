@@ -29,6 +29,10 @@ real FViscosity (rad)
     viscosity = ALPHAVISCOSITY*GLOBAL_SOUNDSPEED[i]*\
       GLOBAL_SOUNDSPEED[i]*pow(rad, 1.5);
   }
+  if (DeadZone) {
+    viscosity *= (1.0 - 0.5 * (1.0 - VISCOSITYRATIO) * (1.0 - tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH)))
+  }
+  
   rmin = CAVITYRADIUS-CAVITYWIDTH*ASPECTRATIO;
   rmax = CAVITYRADIUS+CAVITYWIDTH*ASPECTRATIO;
   scale = 1.0+(PhysicalTime-PhysicalTimeInitial)*LAMBDADOUBLING;
