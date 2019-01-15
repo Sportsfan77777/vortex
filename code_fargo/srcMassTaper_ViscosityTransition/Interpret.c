@@ -205,8 +205,9 @@ char *filename;
   else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
   else {}
 
-  // #### NEW VARIABLE FOR DEAD ZONE #### //
+  // #### NEW VARIABLES FOR DEAD ZONE #### //
   if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
+  if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
 
 }
 
