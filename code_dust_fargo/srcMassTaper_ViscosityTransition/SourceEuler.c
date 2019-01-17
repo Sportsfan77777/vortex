@@ -572,6 +572,7 @@ real dt;
         for (j = 0; j < ns; j++){
     l = j+i*ns;
     ts[l]=2.813e-6*PSize/rho[l]*PI/2.;
+    if (ts[l] > MAXSTOKESNUMBER) ts[l] = MAXSTOKESNUMBER; /* added maximum stokes number to prevent timestep from slowing down */
         }
       }
     } 

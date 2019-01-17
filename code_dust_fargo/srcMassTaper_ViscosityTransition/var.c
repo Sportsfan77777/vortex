@@ -106,6 +106,6 @@ InitVariables()
   var("INNERDEADZONEWIDTH", &INNERDEADZONEWIDTH, REAL, NO, "0.05");
   var("VISCOSITYRATIO", &VISCOSITYRATIO, REAL, NO, "0.01");
   // Maximum Stokes number (to make SFTA work in planet gap)
-  var("MAXSTOKESNUMBER", &MAXSTOKESNUMBER, REAL, NO, "0.0");
+  var("MAXSTOKESNUMBER", &MAXSTOKESNUMBER, REAL, NO, "100000.0");
 }
 
