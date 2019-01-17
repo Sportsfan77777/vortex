@@ -60,10 +60,10 @@ real DFViscosity (rad)
       DGLOBAL_SOUNDSPEED[i]*pow(rad, 1.5);
   }
   if (DeadZone) {
-    viscosity *= (1.0 - 0.5 * (1.0 - VISCOSITYRATIO) * (1.0 - tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH)));
+    dviscosity *= (1.0 - 0.5 * (1.0 - VISCOSITYRATIO) * (1.0 - tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH)));
   }
   if (FullDeadZone) {
-    viscosity *= (1.0 + 0.5 * (1.0 - VISCOSITYRATIO) * (tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH) - tanh((rad - INNERDEADZONERADIUS) / INNERDEADZONEWIDTH)));
+    dviscosity *= (1.0 + 0.5 * (1.0 - VISCOSITYRATIO) * (tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH) - tanh((rad - INNERDEADZONERADIUS) / INNERDEADZONEWIDTH)));
   }
 
   rmin = CAVITYRADIUS-CAVITYWIDTH*DASPECTRATIO;

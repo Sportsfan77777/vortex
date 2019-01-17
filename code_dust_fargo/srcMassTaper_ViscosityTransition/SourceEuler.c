@@ -507,7 +507,7 @@ real dt;
       fdifftp[l]=-viscosity*(rho[ljp]+rho[l])/2.*(drho[ljp]/rho[ljp]-drho[l]/rho[l])*invdtheta/Rmed[i];
 
       if (ExtraFiles == YES) {
-        diag3[l]=-viscosityp*(long(drho[lip]/rho[lip])-log(drho[l]/rho[l]))/(log(Rmed[i+1])-log(Rmed[i]))/Rsup[i];
+        //diag3[l]=-viscosityp*(long(drho[lip]/rho[lip])-log(drho[l]/rho[l]))/(log(Rmed[i+1])-log(Rmed[i]))/Rsup[i];
       }
     }
   } 
