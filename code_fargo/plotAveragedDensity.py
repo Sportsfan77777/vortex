@@ -151,7 +151,7 @@ def make_plot(frame, show = False):
     result = plot.plot(x, y, linewidth = linewidth)
 
     # Axes
-    if max_y is None:
+    if args.max_y is None:
         max_y = 1.1 * max(y)
 
     plot.xlim(x_min, x_max)
