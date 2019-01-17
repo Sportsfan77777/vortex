@@ -47,7 +47,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
                          help = 'save directory (default: gasDensityMaps)')
 
     # Plot Parameters (variable)
