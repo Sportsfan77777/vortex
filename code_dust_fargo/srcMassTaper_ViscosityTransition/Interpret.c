@@ -30,6 +30,8 @@ boolean         Evanescent = NO; Mixed = NO;
 boolean         VortexDiffusion = NO;
 boolean         GasCFL = NO;
 boolean         ExtraFiles = NO;
+boolean         DeadZone = NO;
+boolean         FullDeadZone = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -225,11 +227,16 @@ char *filename;
   // #### NEW VORTEX DIFFUSION VARIABLES #### //
   if ((*VORTEXDIFFUSION == 'Y') || (*VORTEXDIFFUSION == 'y')) VortexDiffusion = YES;
   
-  // #### NEW CFL VARAIBLES #### //
+  // #### NEW CFL VARAIBLES --- it doesn't help! #### //
   if ((*GASCFL == 'y') || (*GASCFL=='Y')) GasCFL = YES;
 
   // #### NEW VARIABLE TO GET RID OF DIAGNOSTICS #### //
   if ((*EXTRAFILES == 'y') || (*EXTRAFILES=='Y')) ExtraFiles = YES;
+
+  // #### NEW VARIABLE FOR DEAD ZONE #### //
+  if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
+  if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
+
 }
 
 void PrintUsage (execname)
