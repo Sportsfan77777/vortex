@@ -147,7 +147,7 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     x = rad
-    y = averagedDensity
+    y = normalized_density
     result = plot.plot(x, y, linewidth = linewidth)
 
     # Axes
@@ -268,34 +268,3 @@ def old_make_plot(frame, show = False):
     i = frame
     choose_axis(i, "normal")
     choose_axis(i, "zoom")
-
-##### Plot One File or All Files #####
-
-if len(sys.argv) > 1:
-    frame_number = int(sys.argv[1])
-    if frame_number == -1:
-        # Plot Sample
-        max_frame = util.find_max_frame()
-        sample = np.linspace(10, max_frame, 10) # 10 evenly spaced frames
-        for i in sample:
-            make_plot(i)
-    else:
-        # Plot Single
-        make_plot(frame_number, show = True)
-else:
-    # Search for maximum frame
-    density_files = glob.glob("gasdens*.dat")
-    max_frame = find_max_frame()
-    num_frames = max_frame + 1
-
-    #for i in range(num_frames):
-    #    make_plot(i)
-
-    #### ADD TRY + CATCH BLOCK HERE!!!!! ####
-
-    p = Pool() # default number of processes is multiprocessing.cpu_count()
-    p.map(make_plot, range(num_frames))
-    p.terminate()
-
-    #### Make Movies ####
-    #make_movies()
