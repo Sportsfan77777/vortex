@@ -33,6 +33,7 @@ movie_dictionary = {}
 movie_dictionary["density"] = "densityMap_"
 movie_dictionary["dustDensity"] = "dustDensityMap_"
 movie_dictionary["polarDensity"] = "polarDensityMap_"
+movie_dictionary["averagedDensity"] = "averagedDensity_"
 movie_dictionary["azimuthalDensity"] = "azimuthalDensityProfiles_"
 movie_dictionary["bothDensity"] = "bothDensityMaps_"
 movie_dictionary["intensity"] = "intensityMap_"
