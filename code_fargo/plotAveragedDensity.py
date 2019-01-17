@@ -121,8 +121,6 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 
 # Plot Parameters (constant)
-max_y = args.max_y
-
 fontsize = args.fontsize
 linewidth = args.linewidth
 dpi = args.dpi
@@ -155,6 +153,8 @@ def make_plot(frame, show = False):
         x_min_i = np.searchsorted(x, x_min)
         x_max_i = np.searchsorted(x, x_max)
         max_y = 1.1 * max(y[x_min_i : x_max_i])
+    else:
+        max_y = args.max_y
 
     plot.xlim(x_min, x_max)
     plot.ylim(0, max_y)
