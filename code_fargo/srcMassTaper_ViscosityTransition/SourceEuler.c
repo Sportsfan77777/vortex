@@ -396,7 +396,7 @@ real deltaT;
   int ideb=0, jdeb=0;
   real itdbg1=0., itdbg2=0., itdbg3=0., itdbg4=0., itdbg5=0., mdtdbg=0.;
   /* debugging variables */
-  real *vt, *vr, dxrad, dxtheta, dvr, dvt, viscr=0., visct=0.;
+  real *vt, *vr, *rho, dxrad, dxtheta, dvr, dvt, viscr=0., visct=0.;
   ns = Vtheta->Nsec;
   nr = Vtheta->Nrad;
   vt = Vtheta->Field;
