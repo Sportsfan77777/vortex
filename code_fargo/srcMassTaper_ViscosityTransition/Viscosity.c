@@ -18,7 +18,7 @@ which is taken into account by the calling function.
 
 static PolarGrid *DivergenceVelocity, *DRR, *DRP, *DPP, *TAURR, *TAUPP, *TAURP;
 
-real FViscosity (rad)
+real FViscosity (rad, density)
      real rad;
 {
   real viscosity, rmin, rmax, scale;
@@ -34,6 +34,9 @@ real FViscosity (rad)
   }
   if (FullDeadZone) {
     viscosity *= (1.0 + 0.5 * (1.0 - VISCOSITYRATIO) * (tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH) - tanh((rad - INNERDEADZONERADIUS) / INNERDEADZONEWIDTH)));
+  }
+  if (EvolvingDeadZone) {
+    viscosity *= (1.0 - 0.5 * (1.0 - VISCOSITYRATIO) * (1.0 - tanh((density - (EVOLVINGDEADZONETHRESHOLD * SIGMA0)) / (EVOLVINGDEADZONEWIDTH * SIGMA0) )));
   }
 
   rmin = CAVITYRADIUS-CAVITYWIDTH*ASPECTRATIO;
@@ -135,20 +138,22 @@ real DeltaT;
   {
 #pragma omp for nowait
     for (i = 0; i < nr; i++) {	/* TAUrr and TAUpp computation */
-      viscosity = FViscosity (Rmed[i]);
+      //viscosity = FViscosity (Rmed[i]); /// <<<==== Old Viscosity!
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
+  viscosity = FViscosity (Rmed[i], rho[l]);
 	Trr[l] = 2.0*rho[l]*viscosity*(Drr[l]-onethird*divergence[l]);
 	Tpp[l] = 2.0*rho[l]*viscosity*(Dpp[l]-onethird*divergence[l]);
       }
     }
 #pragma omp for
     for (i = 1; i < nr; i++) {	/* TAUrp computation */
-      viscosity = FViscosity (Rinf[i]);
+      //viscosity = FViscosity (Rmed[i]); /// <<<==== Old Viscosity!
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
 	lim = l-ns;
 	ljm = l-1;
+  viscosity = FViscosity (Rmed[i], rho[l]);
 	if (j == 0) ljm = i*ns+ns-1;
 	ljmim=ljm-ns;
 	Trp[l] = 2.0*0.25*(rho[l]+rho[lim]+rho[ljm]+rho[ljmim])*viscosity*Drp[l];

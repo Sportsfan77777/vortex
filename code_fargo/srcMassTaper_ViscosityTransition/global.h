@@ -18,7 +18,7 @@ real SOUNDSPEED[MAX1D];
 real GLOBAL_SOUNDSPEED[MAX1D];
 boolean Merge, AdvecteLabel, FakeSequential, MonitorIntegral, debug, OnlyInit;
 boolean	GotoNextOutput, StoreSigma, ViscosityAlpha, RocheSmoothing;
-boolean CentrifugalBalance, ExcludeHill, SloppyCFL, Stockholm, DeadZone, FullDeadZone;
+boolean CentrifugalBalance, ExcludeHill, SloppyCFL, Stockholm, DeadZone, FullDeadZone, EvolvingDeadZone;
 MPI_Status fargostat;
 PolarGrid *CellAbscissa, *CellOrdinate;
 PolarGrid *RhoStar, *RhoInt, *Potential;

@@ -208,6 +208,7 @@ char *filename;
   // #### NEW VARIABLES FOR DEAD ZONE #### //
   if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
   if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
+  if ((*EVOLVINGDEADZONE == 'y') || (*EVOLVINGDEADZONE=='Y')) EvolvingDeadZone = YES;
 
 }
 
