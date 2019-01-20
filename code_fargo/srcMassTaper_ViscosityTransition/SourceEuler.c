@@ -178,7 +178,7 @@ PlanetarySystem *sys;
   if (IsDisk == YES) {
     CommunicateBoundaries (Rho,Vrad,Vtheta,Label);
     if (SloppyCFL == YES) 
-      gastimestepcfl = ConditionCFL (Vrad, Vtheta, DT-dtemp);
+      gastimestepcfl = ConditionCFL (Rho, Vrad, Vtheta, DT-dtemp);
   }
   MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
   dt = DT / (real)GasTimeStepsCFL;
@@ -191,7 +191,7 @@ PlanetarySystem *sys;
       CommunicateBoundaries (Rho,Vrad,Vtheta,Label);
       if (SloppyCFL == NO) {
         	gastimestepcfl = 1;
-        	gastimestepcfl = ConditionCFL (Vrad, Vtheta, DT-dtemp);
+        	gastimestepcfl = ConditionCFL (Rho, Vrad, Vtheta, DT-dtemp);
         	MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
         	dt = (DT-dtemp)/(real)GasTimeStepsCFL;
           Recent_dt = dt;
@@ -386,8 +386,8 @@ real dt;
   }
 }
 		   		   
-int ConditionCFL (Vrad, Vtheta, deltaT)
-PolarGrid *Vrad, *Vtheta;
+int ConditionCFL (Rho, Vrad, Vtheta, deltaT)
+PolarGrid *Rho, *Vrad, *Vtheta;
 real deltaT;
 {
   static real Vresidual[MAX1D], Vmoy[MAX1D];
