@@ -36,7 +36,7 @@ real FViscosity (rad, density)
     viscosity *= (1.0 + 0.5 * (1.0 - VISCOSITYRATIO) * (tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH) - tanh((rad - INNERDEADZONERADIUS) / INNERDEADZONEWIDTH)));
   }
   if (EvolvingDeadZone) {
-    viscosity *= (1.0 - 0.5 * (1.0 - VISCOSITYRATIO) * (1.0 - tanh((density - (EVOLVINGDEADZONETHRESHOLD * SIGMA0)) / (EVOLVINGDEADZONEWIDTH * SIGMA0) )));
+    viscosity *= (VISCOSITYRATIO + 0.5 * (1.0 - tanh((density - (EVOLVINGDEADZONETHRESHOLD * SIGMA0)) / (EVOLVINGDEADZONEWIDTH * SIGMA0))));
   }
 
   rmin = CAVITYRADIUS-CAVITYWIDTH*ASPECTRATIO;
