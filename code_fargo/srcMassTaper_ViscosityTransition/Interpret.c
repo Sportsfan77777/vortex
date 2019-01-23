@@ -27,7 +27,7 @@ boolean         Write_Density = YES, Write_Velocity = YES, Indirect_Term = YES;
 boolean         FakeAccretion = NO;
 boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 boolean         Evanescent = NO;
-boolean         DeadZone = NO, FullDeadZone = NO;
+boolean         DeadZone = NO, FullDeadZone = NO, EvolvingDeadZone = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
