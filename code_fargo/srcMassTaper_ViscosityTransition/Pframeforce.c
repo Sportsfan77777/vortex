@@ -272,9 +272,9 @@ PolarGrid *Rho, *Vr, *Vt;
       ri= Rinf[i];
     }
     // viscosity = FViscosity (r); /// <<<==== Old Viscosity!
+    viscosity = FViscosity (r, SigmaMed[i]); // Note: dens[l] has not been set yet.
     for (j = 0; j < ns; j++) {
       l = j+i*ns;
-      viscosity = FViscosity (r, dens[l]);
       rg = r;
       omega = sqrt(G*1.0/rg/rg/rg);
       vt[l] = omega*r*\
