@@ -53,8 +53,8 @@ real FViscosity (rad, density, write)
   /// ### Output ### ///
   if (write == 0) {
     if ( (fabs(rad - 1.00) < 0.01) || (fabs(rad - 1.25) < 0.01) || (fabs(rad - 1.50) < 0.01) || (fabs(rad - 1.75) < 0.01) ||
-         (fabs(rad - 2.00) < 0.01) || (fabs(rad - 2.25) < 0.01) || (fabs(rad - 2.50) < 0.01) {
-          WriteViscosityFile(rad, viscosity)
+         (fabs(rad - 2.00) < 0.01) || (fabs(rad - 2.25) < 0.01) || (fabs(rad - 2.50) < 0.01)) {
+          WriteViscosityFile(rad, viscosity);
     }
   }
   return viscosity;
