@@ -95,5 +95,7 @@ InitVariables()
   var("CFLIN", &CFLIN, REAL, NO, "0.0");
   var("CFLOUT", &CFLOUT, REAL, NO, "100000.0");
   var("GASCFL", GASCFL, STRING, NO, "NO");
+  // Extra Files
+  var("EXTRAFILES", EXTRAFILES, STRING, NO, "NO");
 }
 

@@ -18,8 +18,8 @@ which is taken into account by the calling function.
 
 static PolarGrid *DivergenceVelocity, *DRR, *DRP, *DPP, *TAURR, *TAUPP, *TAURP, *DDivergenceVelocity, *DDRR, *DDRP, *DDPP, *DTAURR, *DTAUPP, *DTAURP;
 
-real FViscosity (rad)
-     real rad;
+real FViscosity (rad, density)
+     real rad, density;
 {
   real viscosity, rmin, rmax, scale;
   int i=0;
@@ -35,6 +35,9 @@ real FViscosity (rad)
   if (FullDeadZone) {
     viscosity *= (1.0 + 0.5 * (1.0 - VISCOSITYRATIO) * (tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH) - tanh((rad - INNERDEADZONERADIUS) / INNERDEADZONEWIDTH)));
   }
+  if (EvolvingDeadZone) {
+    viscosity *= (VISCOSITYRATIO + 0.5 * (1.0 - tanh((density - (EVOLVINGDEADZONETHRESHOLD * SIGMA0)) / (EVOLVINGDEADZONEWIDTH * SIGMA0))));
+  }
 
   rmin = CAVITYRADIUS-CAVITYWIDTH*ASPECTRATIO;
   rmax = CAVITYRADIUS+CAVITYWIDTH*ASPECTRATIO;
@@ -48,8 +51,8 @@ real FViscosity (rad)
   return viscosity;
 }
  
-real DFViscosity (rad)
-     real rad;
+real DFViscosity (rad, density)
+     real rad, density;
 {
   real dviscosity, rmin, rmax, scale;
   int i=0;
@@ -64,6 +67,9 @@ real DFViscosity (rad)
   }
   if (FullDeadZone) {
     dviscosity *= (1.0 + 0.5 * (1.0 - VISCOSITYRATIO) * (tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH) - tanh((rad - INNERDEADZONERADIUS) / INNERDEADZONEWIDTH)));
+  }
+  if (EvolvingDeadZone) {
+    dviscosity *= (VISCOSITYRATIO + 0.5 * (1.0 - tanh((density - (EVOLVINGDEADZONETHRESHOLD * SIGMA0)) / (EVOLVINGDEADZONEWIDTH * SIGMA0))));
   }
 
   rmin = CAVITYRADIUS-CAVITYWIDTH*DASPECTRATIO;
@@ -211,10 +217,12 @@ real DeltaT;
   {
 #pragma omp for nowait
     for (i = 0; i < nr; i++) {	/* TAUrr and TAUpp computation */
-      viscosity = FViscosity (Rmed[i]);
-      dviscosity = DFViscosity (Rmed[i]);
+      //viscosity = FViscosity (Rmed[i]); /// <<<==== Old Viscosity!
+      //dviscosity = DFViscosity (Rmed[i]); /// <<<==== Old Viscosity!
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
+  viscosity = FViscosity (Rmed[i], rho[l]);
+  dviscosity = DFViscosity (Rmed[i], rho[l]);
 	Trr[l] = 2.0*rho[l]*viscosity*(Drr[l]-onethird*divergence[l]);
 	Tpp[l] = 2.0*rho[l]*viscosity*(Dpp[l]-onethird*divergence[l]);
 	dTrr[l] = 2.0*drho[l]*dviscosity*(dDrr[l]-onethird*ddivergence[l]);
@@ -223,12 +231,14 @@ real DeltaT;
     }
 #pragma omp for
     for (i = 1; i < nr; i++) {	/* TAUrp computation */
-      viscosity = FViscosity (Rmed[i]);
-      dviscosity = DFViscosity (Rmed[i]);
+      //viscosity = FViscosity (Rmed[i]); /// <<<==== Old Viscosity!
+      //dviscosity = DFViscosity (Rmed[i]); /// <<<==== Old Viscosity!
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
 	lim = l-ns;
 	ljm = l-1;
+  viscosity = FViscosity (Rmed[i], rho[l]);
+  dviscosity = DFViscosity (Rmed[i], rho[l]);
 	if (j == 0) ljm = i*ns+ns-1;
 	ljmim=ljm-ns;
 	Trp[l] = 2.0*0.25*(rho[l]+rho[lim]+rho[ljm]+rho[ljmim])*viscosity*Drp[l];

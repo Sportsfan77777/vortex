@@ -300,8 +300,10 @@ PolarGrid *Rho, *Vr, *Vt, *DRho, *DVr, *DVt;
       r = Rmed[i];
       ri= Rinf[i];
     }
-    viscosity = FViscosity (r);
-    Dviscosity = DFViscosity (r);
+    //viscosity = FViscosity (r); /// <<<==== Old Viscosity!
+    //Dviscosity = DFViscosity (r); /// <<<==== Old Viscosity!
+    viscosity = FViscosity (r, SigmaMed[i]);
+    Dviscosity = DFViscosity (r, SigmaMed[i]);
     for (j = 0; j < ns; j++) {
       l = j+i*ns;
       rg = r;

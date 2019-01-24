@@ -460,21 +460,22 @@ real dt;
     dtheta = 2.0*PI/(real)ns;
     invdtheta = 1.0/dtheta;
 
-    // Set Background Diffusion Rate (can be parameter or just gas viscosity)
-    if (VORTEXDIFFUSIONBACKGROUND == -1) {
-      viscosityp = FViscosity (Rsup[i]);
-      viscosity = FViscosity (Rmed[i]);
-    }
-    else {
-      viscosityp = VORTEXDIFFUSIONBACKGROUND;
-      viscosity = VORTEXDIFFUSIONBACKGROUND;
-    }
-
     for (j = 0; j < ns; j++){
       l = j+i*ns;
       lip = l+ns;
       ljp = l+1;
       if (j == ns-1) ljp = i*ns;
+
+      // Set Background Diffusion Rate (can be parameter or just gas viscosity)
+      if (VORTEXDIFFUSIONBACKGROUND == -1) {
+        viscosityp = FViscosity (Rsup[i], rho[l]);
+        viscosity = FViscosity (Rmed[i], rho[l]);
+      }
+      else {
+        viscosityp = VORTEXDIFFUSIONBACKGROUND;
+        viscosity = VORTEXDIFFUSIONBACKGROUND;
+      }
+
       /* Adding Separate Vortex Diffusion */
       if (VortexDiffusion == YES && PhysicalTime > (2.0 * M_PI * DIFFUSIONTIME)) {
         if (Rmed[i] > VORTEXDIFFIN && Rmed[i] < VORTEXDIFFOUT) {
@@ -486,13 +487,13 @@ real dt;
           }
           else if (dust_overdensity > VORTEXDIFFUSIONLOWERTHRESHOLD) {
             // Ramp: e^(log(10^4) (sin((pi / 2)(x-1.5) / 0.5))^2) 
-            viscosityp = FViscosity (Rsup[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rsup[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
-            viscosity = FViscosity (Rmed[i]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
+            viscosityp = FViscosity (Rsup[i], rho[l]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rsup[i], rho[l])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
+            viscosity = FViscosity (Rmed[i], rho[l]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i], rho[l])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
           }
           else {
             if (VORTEXDIFFUSIONBACKGROUND == -1) {
-              viscosityp = FViscosity (Rsup[i]);
-              viscosity = FViscosity (Rmed[i]);
+              viscosityp = FViscosity (Rsup[i], rho[l]);
+              viscosity = FViscosity (Rmed[i], rho[l]);
             }
             else {
               viscosityp = VORTEXDIFFUSIONBACKGROUND;

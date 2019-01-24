@@ -56,7 +56,7 @@ for key in cmaps:
 
 ### Input Parameters ###
 
-def new_argument_parser(description = "Plot dust density maps."):
+def new_argument_parser(description = "Plot residual velocity maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
@@ -66,8 +66,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "residualVelocityMaps",
+                         help = 'save directory (default: residualVelocityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -93,10 +93,10 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
-                         help = 'maximum density in colorbar (default: 2)')
+    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
+                         help = 'color map (default: seismic)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.5,
+                         help = 'minimum and maximum in colorbar (default: 0.5)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -120,7 +120,8 @@ jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 taper_time = fargo_par["MassTaper"]
 
-surface_density_zero = fargo_par["Sigma0"]
+surface_density_zero = fargo_par["Sigma0"] / 100.0
+gas_surface_density_zero = fargo_par["Sigma0"]
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
@@ -131,14 +132,7 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -172,7 +166,8 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+cmax = args.cmax
+clim = [-cmax, cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -180,32 +175,6 @@ dpi = args.dpi
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
-
-###############################################################################
-
-### Helper Functions ###
-
-def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
-    """ shift density based on option """
-    if reference_density is None:
-       reference_density = normalized_density
-
-    # Options
-    if option == "peak":
-       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
-    elif option == "threshold":
-       threshold = util.get_threshold(fargo_par["PSIZE"])
-       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
-    elif option == "away":
-       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
-    elif option == "lookup":
-       shift_c = az.get_lookup_shift(frame)
-    else:
-       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
-
-    # Shift
-    shifted_density = np.roll(normalized_density, shift_c)
-    return shifted_density, shift_c
 
 ###############################################################################
 
@@ -224,29 +193,46 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    normalized_density = density / surface_density_zero
+    gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    radial_velocity = (fromfile("gasdvrad%d.dat" % frame).reshape(num_rad, num_theta))
+    azimuthal_velocity = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta))
+    if center:
+        if taper_time < 10.1:
+            shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
+        else:
+            threshold = util.get_threshold(size) * 1.5
+            shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero)
+        radial_velocity = np.roll(radial_velocity, shift_c)
+        azimuthal_velocity = np.roll(azimuthal_velocity, shift_c)
 
-    # Shift
-    if center is "off":
-       shift_c = 0
-    #elif center.startswith("cm"):
-    #   normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame)
-    else:
-       normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame)
+    # Calculate Limiting Velocity
+    d_rad = np.diff(rad)
+    d_theta = np.diff(theta)
+
+    dv_rad = np.diff(v_rad, axis = 1)
+    print np.max(dv_rad)
+    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
+    print np.max(dv_theta)
+
+    r_maxes = np.max(dv_rad, axis = 1)
+    t_maxes = np.max(dv_theta, axis = 1)
+
+    for (r_i, r_max_i, t_max_i) in zip(rad[1:], r_maxes, t_maxes):
+        print r_i, r_max_i, t_max_i
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(limiting_velocity_grid), cmap = cmap)
 
     fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    #result.set_clim(clim[0], clim[1])
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(gas_density / gas_surface_density_zero), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
@@ -294,9 +280,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/limitingVelocity_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_limitingVelocity_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:

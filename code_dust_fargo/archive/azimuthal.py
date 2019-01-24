@@ -144,7 +144,7 @@ def get_profiles(density, fargo_par, args, normalize = False, shift = None):
         density /= surface_density_zero
 
     if shift is not None:
-        density = np.roll(density, shift, axis = -1)
+        density = np.roll(density, shift)
 
     # Find Peak in Radial Profile (in Outer Disk)
     averagedDensity = np.average(density, axis = 1)
