@@ -13,7 +13,7 @@ static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
 extern real     LostMass, OmegaFrame;
 extern boolean  Write_Density, Write_Velocity, IsDisk;
 
-extern real     Recent_dt;
+extern real     Recent_dt, printTimeStep;
 
 void EmptyPlanetSystemFile (sys)
 PlanetarySystem *sys;
@@ -237,6 +237,26 @@ int TimeStep;
 
   // What is slowing things down and how much???
   fprintf (output, "%d\t%.9f\t%.9f\n", TimeStep, PhysicalTime, Recent_dt);
+
+  fclose (output);
+  printf ("done\n");
+  fflush (stdout);
+}
+
+void WriteViscosityFile(rad, nu)
+real rad, nu;
+{
+  FILE *output;
+  char name[256];
+
+  if (!CPU_Master) return; // Only write one file
+  printf ("Updating 'viscosity.dat'...");
+  fflush (stdout);
+  sprintf (name, "%sviscosity.dat", OUTPUTDIR);
+  output = fopenp (name, "a");
+
+  // What is the viscosity at (a) 1.00, (b) 1.25, (c) 1.50, (d) 1.75, (e) 2.00, (f) 2.25, (g) 2.50?
+  fprintf (output, "%.9f\t%.9f\n", rad, nu);
 
   fclose (output);
   printf ("done\n");

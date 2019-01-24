@@ -18,8 +18,9 @@ which is taken into account by the calling function.
 
 static PolarGrid *DivergenceVelocity, *DRR, *DRP, *DPP, *TAURR, *TAUPP, *TAURP;
 
-real FViscosity (rad, density)
-     real rad;
+real FViscosity (rad, density, write)
+     real rad, density;
+     int write;
 {
   real viscosity, rmin, rmax, scale;
   int i=0;
@@ -47,6 +48,14 @@ real FViscosity (rad, density)
   if (rad < rmin) viscosity *= CAVITYRATIO;
   if ((rad >= rmin) && (rad <= rmax)) {
     viscosity *= exp((rmax-rad)/(rmax-rmin)*log(CAVITYRATIO));
+  }
+
+  /// ### Output ### ///
+  if (write == 0) {
+    if ( (fabs(rad - 1.00) < 0.01) || (fabs(rad - 1.25) < 0.01) || (fabs(rad - 1.50) < 0.01) || (fabs(rad - 1.75) < 0.01) ||
+         (fabs(rad - 2.00) < 0.01) || (fabs(rad - 2.25) < 0.01) || (fabs(rad - 2.50) < 0.01) {
+          WriteViscosityFile(rad, viscosity)
+    }
   }
   return viscosity;
 }
@@ -141,7 +150,7 @@ real DeltaT;
       //viscosity = FViscosity (Rmed[i]); /// <<<==== Old Viscosity!
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
-  viscosity = FViscosity (Rmed[i], rho[l]);
+  viscosity = FViscosity (Rmed[i], rho[l], 1);
 	Trr[l] = 2.0*rho[l]*viscosity*(Drr[l]-onethird*divergence[l]);
 	Tpp[l] = 2.0*rho[l]*viscosity*(Dpp[l]-onethird*divergence[l]);
       }
@@ -153,7 +162,7 @@ real DeltaT;
 	l = j+i*ns;
 	lim = l-ns;
 	ljm = l-1;
-  viscosity = FViscosity (Rmed[i], rho[l]);
+  viscosity = FViscosity (Rmed[i], rho[l], 1);
 	if (j == 0) ljm = i*ns+ns-1;
 	ljmim=ljm-ns;
 	Trp[l] = 2.0*0.25*(rho[l]+rho[lim]+rho[ljm]+rho[ljmim])*viscosity*Drp[l];

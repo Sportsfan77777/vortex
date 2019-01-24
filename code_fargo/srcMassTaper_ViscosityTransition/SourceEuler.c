@@ -442,7 +442,7 @@ real deltaT;
       invdt4 = max2(dvr/dxrad,dvt/dxtheta);
       invdt4*= 4.0*CVNR*CVNR;
       if ( ViscosityAlpha || (VISCOSITY != 0.0) )
-	invdt5 = FViscosity(Rmed[i], rho[l])*4./pow(min2(dxrad,dxtheta),2);
+	invdt5 = FViscosity(Rmed[i], rho[l], 1)*4./pow(min2(dxrad,dxtheta),2);
       dt = CFLSECURITY/sqrt(invdt1*invdt1+invdt2*invdt2+invdt3*invdt3+\
 			    invdt4*invdt4+invdt5*invdt5);
       if (dt < newdt) {
