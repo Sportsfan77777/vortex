@@ -32,6 +32,7 @@ boolean         GasCFL = NO;
 boolean         ExtraFiles = NO;
 boolean         DeadZone = NO;
 boolean         FullDeadZone = NO;
+boolean         EvolvingDeadZone = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -236,6 +237,7 @@ char *filename;
   // #### NEW VARIABLE FOR DEAD ZONE #### //
   if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
   if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
+  if ((*EVOLVINGDEADZONE == 'y') || (*EVOLVINGDEADZONE=='Y')) EvolvingDeadZone = YES;
 
 }
 
