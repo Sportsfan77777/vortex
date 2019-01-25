@@ -179,11 +179,10 @@ def make_plot(frame, show = False):
         print r_i, r_max_i, t_max_i
 
     ### Plot ###
-    x = rad
-    y1 = r_maxes
-    y2 = t_maxes
-    result1 = plot.plot(x, y1, c = "firebrick", linewidth = linewidth, label = r"$v_{r}$")
-    result2 = plot.plot(x, y2, c = "b", linewidth = linewidth, label = r"$v_{r}$")
+    x = rad; x2 = rad[1:]
+    y1 = r_maxes; y2 = t_maxes
+    result1 = plot.plot(x1, y1, c = "firebrick", linewidth = linewidth, label = r"$v_{r}$")
+    result2 = plot.plot(x2, y2, c = "b", linewidth = linewidth, label = r"$v_{r}$")
 
     # Axes
     if args.max_y is None:
