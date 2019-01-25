@@ -167,9 +167,9 @@ def make_plot(frame, show = False):
     d_rad = np.diff(rad)
     d_theta = np.diff(theta)
 
-    dv_rad = np.diff(v_rad, axis = 1)
+    dv_rad = np.diff(radial_velocity, axis = 1)
     print np.max(dv_rad)
-    dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
+    dv_theta = np.diff(rad[:, None] * azimuthal_velocity, axis = 0)
     print np.max(dv_theta)
 
     r_maxes = np.max(dv_rad, axis = 1)
