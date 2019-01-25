@@ -77,29 +77,14 @@ def new_argument_parser(description = "Plot residual velocity maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
-
-    # Plot Parameters (contours)
-    parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
-                         help = 'use contours or not (default: do not use contours)')
-    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.1,
-                         help = 'lowest contour (default: 1.1)')
-    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
-                         help = 'highest contour (default: 3.5)')
-    parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
-                         help = 'number of contours (choose this or separation) (default: None)')
-    parser.add_argument('--separation', dest = "separation", type = int, default = 0.1,
-                         help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+                         help = 'maximum density (default: 1.1 times the max)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
-                         help = 'color map (default: seismic)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.5,
-                         help = 'minimum and maximum in colorbar (default: 0.5)')
-
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -153,23 +138,10 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
-
-# Plot Parameters (contours)
-use_contours = args.use_contours
-low_contour = args.low_contour
-high_contour = args.high_contour
-num_levels = args.num_levels
-if num_levels is None:
-    separation = args.separation
-    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
 # Plot Parameters (constant)
-cmap = args.cmap
-cmax = args.cmax
-clim = [-cmax, cmax]
-
 fontsize = args.fontsize
+linewidth = args.linewidth
 dpi = args.dpi
 
 ### Add new parameters to dictionary ###
@@ -177,13 +149,6 @@ fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
 ###############################################################################
-
-def generate_colors(n):
-    c = ['k', 'b', 'firebrick']
-    colors = []
-    for i in range(n):
-        colors.append(c[i % len(c)])
-    return colors
 
 ##### PLOTTING #####
 
@@ -197,14 +162,6 @@ def make_plot(frame, show = False):
     dust_density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     radial_velocity = (fromfile("gasdvrad%d.dat" % frame).reshape(num_rad, num_theta))
     azimuthal_velocity = (fromfile("gasdvtheta%d.dat" % frame).reshape(num_rad, num_theta))
-    if center:
-        if taper_time < 10.1:
-            shift_c = az.get_azimuthal_peak(dust_density, fargo_par)
-        else:
-            threshold = util.get_threshold(size) * 1.5
-            shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero)
-        radial_velocity = np.roll(radial_velocity, shift_c)
-        azimuthal_velocity = np.roll(azimuthal_velocity, shift_c)
 
     # Calculate Limiting Velocity
     d_rad = np.diff(rad)
@@ -223,23 +180,21 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(limiting_velocity_grid), cmap = cmap)
-
-    fig.colorbar(result)
-    #result.set_clim(clim[0], clim[1])
-
-    if use_contours:
-        levels = np.linspace(low_contour, high_contour, num_levels)
-        colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(gas_density / gas_surface_density_zero), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+    y1 = r_maxes
+    y2 = t_maxes
+    result1 = plot.plot(x, y1, c = "firebrick", linewidth = linewidth, label = r"$v_{r}$")
+    result2 = plot.plot(x, y2, c = "b", linewidth = linewidth, label = r"$v_{r}$")
 
     # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
+    if args.max_y is None:
+        x_min_i = np.searchsorted(x, x_min)
+        x_max_i = np.searchsorted(x, x_max)
+        max_y = 1.1 * max(y[x_min_i : x_max_i])
+    else:
+        max_y = args.max_y
 
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, max_y)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
@@ -254,7 +209,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.ylabel(r"Velocity Condition", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
