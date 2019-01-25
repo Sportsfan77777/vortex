@@ -202,7 +202,7 @@ def make_plot(frame, show = False):
 
     if log:
        plot.yscale('log')
-       plot.ylim(10**(-3), 10**(1))
+       plot.ylim(10**(-4), 10**(1))
     else:
        plot.ylim(0, max_y)
 
