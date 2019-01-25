@@ -184,6 +184,8 @@ def make_plot(frame, show = False):
     result1 = plot.plot(x1, y1, c = "firebrick", linewidth = linewidth, label = r"$v_{r}$")
     result2 = plot.plot(x2, y2, c = "b", linewidth = linewidth, label = r"$v_{r}$")
 
+    plot.legend(loc = "upper right")
+
     # Axes
     if args.max_y is None:
         x_min_i = np.searchsorted(x1, x_min)
@@ -230,7 +232,6 @@ def make_plot(frame, show = False):
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
     plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
-
 
     # Save, Show, and Close
     if version is None:
