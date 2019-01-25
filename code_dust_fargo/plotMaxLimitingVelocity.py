@@ -66,8 +66,8 @@ def new_argument_parser(description = "Plot residual velocity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "limitingVelocity",
-                         help = 'save directory (default: limitingVelocity)')
+    parser.add_argument('--dir', dest = "save_directory", default = "maxLimitingVelocity",
+                         help = 'save directory (default: maxLimitingVelocity)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -221,9 +221,6 @@ def make_plot(frame, show = False):
     for (r_i, r_max_i, t_max_i) in zip(rad[1:], r_maxes, t_maxes):
         print r_i, r_max_i, t_max_i
 
-    #limiting_velocity_grid = [np.max([dv_rad, dv_theta], axis = 0)]
-    limiting_velocity_grid = dv_rad
-
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
@@ -283,9 +280,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/limitingVelocity_%04d.png" % (save_directory, frame)
+        save_fn = "%s/maxLimitingVelocity_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_limitingVelocity_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_maxLimitingVelocity_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
