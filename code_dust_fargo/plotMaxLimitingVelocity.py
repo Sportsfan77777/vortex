@@ -79,6 +79,9 @@ def new_argument_parser(description = "Plot residual velocity maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
+
+    parser.add_argument('--log', dest = "log", action = 'store_true', default = False,
+                         help = 'plot y-axis on log scale (default: do not plot on log scale)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -138,6 +141,7 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
+log = args.log
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -195,7 +199,12 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+
+    if log:
+       plot.yscale('log')
+       plot.ylim(10**(-3), 10**(1))
+    else:
+       plot.ylim(0, max_y)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
