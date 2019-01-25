@@ -45,6 +45,8 @@ movie_dictionary["diffDensity"] = "diffDensityMap_"
 movie_dictionary["tripleDensity"] = "multigrainDensityMaps_"
 movie_dictionary["radialPressure"] = "radialPressureGradientMap_"
 movie_dictionary["azimuthalPressure"] = "azimuthalPressureGradientMap_"
+movie_dictionary["limitingVelocity"] = "limitingVelocityMap_"
+movie_dictionary["maxLimitingVelocity"] = "axLimitingVelocity_"
 
 ###############################################################################
 

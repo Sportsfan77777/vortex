@@ -182,7 +182,7 @@ def make_plot(frame, show = False):
     x1 = rad; x2 = rad[1:]
     y1 = r_maxes; y2 = t_maxes
     result1 = plot.plot(x1, y1, c = "firebrick", linewidth = linewidth, label = r"$v_{r}$")
-    result2 = plot.plot(x2, y2, c = "b", linewidth = linewidth, label = r"$v_{r}$")
+    result2 = plot.plot(x2, y2, c = "b", linewidth = linewidth, label = r"$v_{\phi}$")
 
     plot.legend(loc = "upper right")
 
