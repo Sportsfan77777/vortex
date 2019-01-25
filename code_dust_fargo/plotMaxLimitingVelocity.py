@@ -188,7 +188,7 @@ def make_plot(frame, show = False):
     if args.max_y is None:
         x_min_i = np.searchsorted(x1, x_min)
         x_max_i = np.searchsorted(x1, x_max)
-        max_y = 1.1 * max(y[x_min_i : x_max_i])
+        max_y = 1.1 * max(max(y1[x_min_i : x_max_i]), max(y2[x_min_i : x_max_i]))
     else:
         max_y = args.max_y
 
