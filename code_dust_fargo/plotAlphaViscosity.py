@@ -124,7 +124,7 @@ surface_density_zero = fargo_par["Sigma0"]
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
-alpha_viscosity = fargo_par["AlphaViscosity"]
+viscosity = fargo_par["AlphaViscosity"]
 
 viscosity_ratio = fargo_par["ViscosityRatio"]
 threshold = fargo_par["EvolvingDeadZoneThreshold"]
@@ -240,7 +240,7 @@ def make_plot(frame, show = False):
        normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame)
 
     # Convert to Alpha
-    alpha_viscosity_map = alpha_viscosity * (viscosity_ratio + 0.5 * (1 - np.tanh((normalized_density - threshold) / width)))
+    alpha_viscosity_map = viscosity * (viscosity_ratio + 0.5 * (1 - np.tanh((normalized_density - threshold) / width)))
     log_alpha_viscosity_map = np.log10(alpha_viscosity_map)
 
     ### Plot ###
