@@ -66,7 +66,7 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "alphaViscosityMaps",
                          help = 'save directory (default: gasDensityMaps)')
 
     # Plot Parameters (variable)
@@ -93,8 +93,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
+                         help = 'color map (default: seismic)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
                          help = 'maximum density in colorbar (default: 2)')
 
@@ -124,7 +124,11 @@ surface_density_zero = fargo_par["Sigma0"]
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
-viscosity = fargo_par["Viscosity"]
+viscosity = fargo_par["AlphaViscosity"]
+
+viscosity_ratio = fargo_par["ViscosityRatio"]
+threshold = fargo_par["EvolvingDeadZoneThreshold"]
+width = fargo_par["EvolvingDeadZoneWidth"]
 
 size = fargo_par["PSIZE"]
 
@@ -235,13 +239,17 @@ def make_plot(frame, show = False):
     else:
        normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame)
 
+    # Convert to Alpha
+    alpha_viscosity_map = alpha_viscosity * (viscosity_ratio + 0.5 * (1 - np.tanh((normalized_density - threshold) / width)))
+    log_alpha_viscosity_map = np.log10(alpha_viscosity_map)
+
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(log_alpha_viscosity_map), cmap = cmap)
 
     fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    #result.set_clim(clim[0], clim[1])
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
@@ -294,9 +302,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/alphaViscosityMap_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_alphaViscosityMap_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
