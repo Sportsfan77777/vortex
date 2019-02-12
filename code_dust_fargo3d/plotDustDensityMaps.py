@@ -250,7 +250,7 @@ def make_plot(frame, show = False):
     field = "dens"
 
     gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
-    normalized_gas_density = density / surface_density_zero
+    normalized_gas_density = gas_density / surface_density_zero
 
     density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / dust_surface_density_zero
