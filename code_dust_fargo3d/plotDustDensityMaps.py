@@ -128,9 +128,9 @@ dust_surface_density_zero = p.sigma0 * p.epsilon
 planet_mass = 1e-3
 taper_time = p.masstaper
 
-"""
 fargo_par = util.get_pickled_parameters()
 
+"""
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
@@ -231,7 +231,6 @@ dpi = args.dpi
 """
 
 ### Add new parameters to dictionary ###
-fargo_par = {}
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
