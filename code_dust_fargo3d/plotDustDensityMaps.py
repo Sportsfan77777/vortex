@@ -231,6 +231,7 @@ dpi = args.dpi
 """
 
 ### Add new parameters to dictionary ###
+fargo_par = {}
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
