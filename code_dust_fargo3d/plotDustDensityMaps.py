@@ -233,7 +233,7 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 def generate_colors(n):
-    c = ['k', 'b', 'firebrick']
+    c = ['yellow', 'b', 'firebrick', 'w', 'green']
     colors = []
     for i in range(n):
         colors.append(c[i % len(c)])
