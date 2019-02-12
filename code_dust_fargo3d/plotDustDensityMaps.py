@@ -38,6 +38,7 @@ import math
 import numpy as np
 
 import matplotlib
+#matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -285,6 +286,9 @@ def make_plot(frame, show = False):
     #    current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
     #title = readTitle()
+
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
