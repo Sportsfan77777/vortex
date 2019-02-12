@@ -277,8 +277,8 @@ def make_plot(frame, show = False):
     plot.yticks(angles)
 
     # Annotate Axes
-    #time = fargo_par["Ninterm"] * fargo_par["DT"]
-    #orbit = (time / (2 * np.pi)) * frame
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
 
     if orbit >= taper_time:
         current_mass = planet_mass
