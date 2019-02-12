@@ -258,7 +258,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_gas_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -266,7 +266,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
