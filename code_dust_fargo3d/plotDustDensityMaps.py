@@ -125,6 +125,9 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
+planet_mass = 1e-3
+taper_time = p.masstaper
+
 """
 fargo_par = util.get_pickled_parameters()
 
@@ -277,7 +280,7 @@ def make_plot(frame, show = False):
     plot.yticks(angles)
 
     # Annotate Axes
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    time = p.ninterm * p.dt
     orbit = (time / (2 * np.pi)) * frame
 
     if orbit >= taper_time:
