@@ -228,11 +228,11 @@ clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
+"""
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
-"""
 
 ###############################################################################
 
@@ -286,8 +286,8 @@ def make_plot(frame, show = False):
     normalized_density = density / dust_surface_density_zero
 
     if center:
-        normalized_density = shift_density(normalized_density, reference_density = normalized_gas_density)
-        normalized_gas_density = shift_density(normalized_gas_density, reference_density = normalized_gas_density)
+        normalized_density = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
+        normalized_gas_density = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
     ### Plot ###
     x = rad
