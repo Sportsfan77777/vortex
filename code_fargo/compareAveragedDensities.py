@@ -144,9 +144,13 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("%s/gasdens%d.dat" % (dir1, frame)).reshape(num_rad, num_theta))
-    averagedDensity = np.average(density, axis = 1)
-    normalized_density = averagedDensity / surface_density_zero
+    density1 = (fromfile("%s/gasdens%d.dat" % (dir1, frame)).reshape(num_rad, num_theta))
+    averagedDensity1 = np.average(density1, axis = 1)
+    normalized_density1 = averagedDensity1 / surface_density_zero
+
+    density2 = (fromfile("%s/gasdens%d.dat" % (dir2, frame)).reshape(num_rad, num_theta))
+    averagedDensity2 = np.average(density2, axis = 1)
+    normalized_density2 = averagedDensity2 / surface_density_zero
 
     ### Plot ###
     x = rad
