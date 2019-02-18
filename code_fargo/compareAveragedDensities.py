@@ -48,8 +48,12 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--dir1', dest = "dir1", default = ".",
                          help = 'save directory (default: .)')
-    parser.add_argument('--dir2', dest = "dir2", default = "../../new_jupiter/taper750/cm-size/",
-                         help = 'save directory (default: ../../new_jupiter/taper750/cm-size/)')
+    #parser.add_argument('--dir2', dest = "dir2", default = "../../new_jupiter/taper750/cm-size/",
+    #                     help = 'save directory (default: ../../new_jupiter/taper750/cm-size/)')
+    parser.add_argument('--dir2', dest = "dir2", default = "../fake_accretion_low_res",
+                         help = 'save directory (default: ../fake_accretion_low_res)')
+    parser.add_argument('--dir3', dest = "dir3", default = "../real_accretion_low_res",
+                         help = 'save directory (default: ../real_accretion_low_res)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensityComparisons",
@@ -107,6 +111,7 @@ frame_range = util.get_frame_range(args.frames)
 
 dir1 = args.dir1
 dir2 = args.dir2
+dir3 = args.dir3
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -155,12 +160,18 @@ def make_plot(frame, show = False):
     averagedDensity2 = np.average(density2, axis = 1)
     normalized_density2 = averagedDensity2 / surface_density_zero
 
+    density3 = (fromfile("%s/gasdens%d.dat" % (dir3, frame)).reshape(num_rad, num_theta))
+    averagedDensity3 = np.average(density3, axis = 1)
+    normalized_density3 = averagedDensity3 / surface_density_zero
+
     ### Plot ###
     x = rad
     y1 = normalized_density1
     y2 = normalized_density2
+    y3 = normalized_density3
     result = plot.plot(x, y1, linewidth = linewidth, label = "no accretion")
-    result = plot.plot(x, y2, linewidth = linewidth, label = "accretion")
+    result = plot.plot(x, y2, linewidth = linewidth, label = "fake accretion")
+    result = plot.plot(x, y3, linewidth = linewidth, label = "real accretion")
 
     plot.legend(loc = "upper right")
 
