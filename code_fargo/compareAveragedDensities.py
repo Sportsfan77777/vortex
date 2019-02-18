@@ -162,6 +162,8 @@ def make_plot(frame, show = False):
     result = plot.plot(x, y1, linewidth = linewidth, label = "no accretion")
     result = plot.plot(x, y2, linewidth = linewidth, label = "accretion")
 
+    plot.legend(loc = "top right")
+
     # Axes
     if args.max_y is None:
         x_min_i = np.searchsorted(x, x_min)
