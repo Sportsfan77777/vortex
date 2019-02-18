@@ -47,9 +47,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     parser.add_argument('--dir1', dest = "dir1", default = ".",
-                         help = 'save directory (default: averagedDensityComparisons)')
-    parser.add_argument('--dir2', dest = "dir2", default = ".",
-                         help = 'save directory (default: averagedDensityComparisons)')
+                         help = 'save directory (default: .)')
+    parser.add_argument('--dir2', dest = "dir2", default = "../../new_jupiter/taper750/cm-size/",
+                         help = 'save directory (default: ../../new_jupiter/taper750/cm-size/)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensityComparisons",
@@ -104,6 +104,9 @@ except:
 
 # Frames
 frame_range = util.get_frame_range(args.frames)
+
+dir1 = args.dir1
+dir2 = args.dir2
 
 # Number of Cores 
 num_cores = args.num_cores
