@@ -10,148 +10,222 @@ python plotAveragedDensity.py <== plot all frames and make a movie
 
 """
 
-import sys
-import os
-import subprocess
-import glob
-import pickle
+import sys, os, subprocess
+import pickle, glob
 from multiprocessing import Pool
-import time
+import argparse
 
 import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('Agg')
-from matplotlib import rc
+from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
-from pylab import rcParams # replace with rc ???
+from pylab import rcParams
 from pylab import fromfile
 
+import util
+import azimuthal as az
 from readTitle import readTitle
 
-name = "singleMode"
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
 
-base_directory = pickle.load(open("base_dir.p", "rb"))
+###############################################################################
 
-directories = ["one_jupiter/visc7/taper500", "one_jupiter/visc7/taper1000", "five_jupiters/visc6/taper1000", "five_jupiters/visc6/parabolicTaper1000", "five_jupiters/visc7/template"]
-#frame_numbers = [165, 290, 162, 245, 144]
-frame_numbers = [205, 335, 202, 310, 176]
-#frame_numbers = [235, 430, 230, 420, 200]
-save_directory = "./"
+### Input Parameters ###
 
-# Pre-pend Base Directory
-directories = [base_directory + d for d in directories]
+def new_argument_parser(description = "Plot gas density maps."):
+    parser = argparse.ArgumentParser()
 
-# Store Current Directory for Later
-working_directory = os.getcwd()
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
 
-# Keep track of xs and ys, and titles as labels
-xs = []
-ys = []
-titles = []
+    parser.add_argument('--dir1', dest = "dir1", default = ".",
+                         help = 'save directory (default: averagedDensityComparisons)')
+    parser.add_argument('--dir2', dest = "dir2", default = ".",
+                         help = 'save directory (default: averagedDensityComparisons)')
 
-for (directory, frame) in zip(directories, frame_numbers):
-    os.chdir(directory)
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "averagedDensityComparisons",
+                         help = 'save directory (default: averagedDensityComparisons)')
 
-    ### Get FARGO Parameters ###
-    # Create param file if it doesn't already exist
-    param_fn = "params.p"
-    if not os.path.exists(param_fn):
-        command = "python pickleParameters.py"
-        split_command = command.split()
-        subprocess.Popen(split_command)
-        time.delay(2) # delay two seconds to give time for command to execute (to pickle parameters)
-    fargo_par = pickle.load(open(param_fn, "rb"))
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    num_rad = np.loadtxt("dims.dat")[-2]
-    num_theta = np.loadtxt("dims.dat")[-1]
+    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
+                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+                         help = 'maximum density (default: 1.1 times the max)')
+    
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'fontsize of plot annotations (default: 3)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
 
-    rad = np.loadtxt("used_rad.dat")[:-1]
-    theta = np.linspace(0, 2 * np.pi, num_theta)
+    return parser
 
-    surface_density = float(fargo_par["Sigma0"])
-    scale_height = float(fargo_par["AspectRatio"])
+###############################################################################
 
-    # Get Data
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    averagedDensity = np.average(density, axis = 1) / surface_density
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
 
-    this_title = readTitle()
+### Get Fargo Parameters ###
+fargo_par = util.get_pickled_parameters(directory = args.dir1)
 
-    # Add Data to Collective
-    xs.append(rad)
-    ys.append(averagedDensity)
-    titles.append(this_title)
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+try:
+    viscosity = fargo_par["Viscosity"]
+except:
+    viscosity = fargo_par["AlphaViscosity"]
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = util.get_frame_range(args.frames)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+version = args.version
+if args.r_lim is None:
+    x_min = r_min; x_max = r_max
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+
+# Plot Parameters (constant)
+fontsize = args.fontsize
+linewidth = args.linewidth
+dpi = args.dpi
+
+### Add new parameters to dictionary ###
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
+
+###############################################################################
 
 ##### PLOTTING #####
 
-os.chdir(working_directory)
+def make_plot(frame, show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
 
-# Plot Parameters
-rcParams['figure.figsize'] = 5, 10
-my_dpi = 100
+    # Data
+    density = (fromfile("%s/gasdens%d.dat" % (dir1, frame)).reshape(num_rad, num_theta))
+    averagedDensity = np.average(density, axis = 1)
+    normalized_density = averagedDensity / surface_density_zero
 
-alpha = 0.7
-linewidth = 4
+    ### Plot ###
+    x = rad
+    y1 = normalized_density1
+    y2 = normalized_density2
+    result = plot.plot(x, y1, linewidth = linewidth)
+    result = plot.plot(x, y2, linewidth = linewidth)
 
-fontsize = 14
+    # Axes
+    if args.max_y is None:
+        x_min_i = np.searchsorted(x, x_min)
+        x_max_i = np.searchsorted(x, x_max)
+        max_y = 1.1 * max(y1[x_min_i : x_max_i])
+    else:
+        max_y = args.max_y
 
-def make_plot(show = False):
-    # For each frame, make two plots (one with normal 'r' and one with '(r - 1) / h')
-    def choose_axis(i, axis):
-        # Orbit Number
-        time = float(fargo_par["Ninterm"]) * float(fargo_par["DT"])
-        orbit = int(round(time / (2 * np.pi), 0)) * i
+    plot.xlim(x_min, x_max)
+    plot.ylim(0, max_y)
 
-        # Set up figure
-        fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    # Annotate Axes
+    time = fargo_par["Ninterm"] * fargo_par["DT"]
+    orbit = (time / (2 * np.pi)) * frame
 
-        # Axis
-        if axis == "zoom":
-            x = (rad - 1) / scale_height
-            prefix = "zoom_"
-            plot.xlim(0, 20)
-            plot.ylim(0, 1.2)
-            xlabel = r"($r - r_p$) $/$ $h$"
-        else:
-            x = rad
-            prefix = ""
-            plot.xlim(0.5, 2.5)
-            plot.ylim(0, 2.5)
-            xlabel = "Radius"
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-        ### Plot ###
+    #title = readTitle()
 
-        # Different Radial Profiles
-        for (this_x, this_y, frame, this_title) in zip(xs, ys, frame_numbers, titles):
-            if axis == "zoom":
-                this_x = (this_x - 1) / scale_height
-            label = "%s for %d" % (this_title, frame)
-            plot.plot(this_x, this_y, label = label, linewidth = linewidth, alpha = alpha)
+    unit = "r_\mathrm{p}"
+    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
 
-        # Initial Profile (for comparison)
-        y = [x_i**(-1) for x_i in rad]
-        plot.plot(x, y, linewidth = linewidth - 1, color = "black", linestyle = "--", alpha = alpha)
+    #if title is None:
+    #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    #else:
+    #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
-        # Annotate
-        plot.xlabel(xlabel, fontsize = fontsize)
-        plot.ylabel("Azimuthally Averaged Density", fontsize = fontsize)
-        plot.title("%s" % (name), fontsize = fontsize + 1)
+    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    y_text = 1.14
 
-        plot.legend(loc = "upper right", bbox_to_anchor = (1.36, 1.0)) # outside of plot
+    title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-        # Save and Close
-        plot.savefig("%savg_density_%s.png" % (prefix, name), bbox_inches = 'tight', dpi = my_dpi)
-        if show:
-            plot.show()
-        plot.close(fig) # Close Figure (to avoid too many figures)
+    # Text
+    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
+    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
+    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
-    i = frame
-    choose_axis(i, "normal")
-    choose_axis(i, "zoom")
 
-##### Plot One File or All Files #####
+    # Save, Show, and Close
+    if version is None:
+        save_fn = "%s/averagedDensity_%04d.png" % (save_directory, frame)
+    else:
+        save_fn = "%s/v%04d_averagedDensity_%04d.png" % (save_directory, version, frame)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
-make_plot(show = True)
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+##### Make Plots! #####
+
+# Iterate through frames
+
+if len(frame_range) == 1:
+    make_plot(frame_range[0], show = show)
+else:
+    if num_cores > 1:
+        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
+        p.map(make_plot, frame_range)
+        p.terminate()
+    else:
+        for frame in frame_range:
+            make_plot(frame)
