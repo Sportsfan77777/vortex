@@ -98,10 +98,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1.4,
-                         help = 'maximum density in colorbar (default: 1.4)')
+    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
+                         help = 'color map (default: seismic)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.5,
+                         help = 'maximum density in colorbar (default: 0.5)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
