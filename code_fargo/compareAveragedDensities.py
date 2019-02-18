@@ -159,8 +159,8 @@ def make_plot(frame, show = False):
     x = rad
     y1 = normalized_density1
     y2 = normalized_density2
-    result = plot.plot(x, y1, linewidth = linewidth)
-    result = plot.plot(x, y2, linewidth = linewidth)
+    result = plot.plot(x, y1, linewidth = linewidth, label = "no accretion")
+    result = plot.plot(x, y2, linewidth = linewidth, label = "accretion")
 
     # Axes
     if args.max_y is None:
