@@ -273,6 +273,7 @@ def make_plot(frame, show = False):
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
         plot.contour(x, y, np.transpose(gas_density1), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(gas_density2), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
