@@ -18,16 +18,11 @@ def new_argument_parser(description = "Make a new job script."):
                          help = 'number of nodes (default: 1)')
     parser.add_argument('-c', dest = "num_cpus", type = int, default = 1,
                          help = 'number of cpus per node (default: 1)')
-    parser.add_argument('-h', dest = "num_hours", type = int, default = 1,
+    parser.add_argument('-t', dest = "num_hours", type = int, default = 1,
                          help = 'number of walltime hours (default: 1)')
-    
+
     parser.add_argument('-m', dest = "mem", type = int, default = None,
                          help = 'memory in gb (default: 6 per cpu)')
-
-    parser.add_argument('--err', dest = "err_name", default = "err_%I",
-                         help = 'job error file name (default: err_%I)')
-    parser.add_argument('--out', dest = "out_name", default = "out_%I",
-                         help = 'job output file name (default: out_%I)')
 
     parser.add_argument('-q', dest = "queue", default = "medium",
                          help = 'queue (default: medium)')
