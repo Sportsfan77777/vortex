@@ -237,6 +237,8 @@ def make_plot(frame, show = False):
        shift_c = 0
     #elif center.startswith("cm"):
     #   normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame)
+    elif center is "away":
+       normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, reference_density = gas_density, frame = frame)
     else:
        normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame)
     gas_density = np.roll(gas_density, shift_c)
