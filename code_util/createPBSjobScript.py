@@ -3,8 +3,8 @@ makes a new job script
 
 """
 
+import os
 import argparse
-
 
 def new_argument_parser(description = "Make a new job script."):
     parser = argparse.ArgumentParser()
