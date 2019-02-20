@@ -24,8 +24,8 @@ def new_argument_parser(description = "Make a new job script."):
     parser.add_argument('-m', dest = "mem", type = int, default = None,
                          help = 'memory in gb (default: 6 per cpu)')
 
-    parser.add_argument('-q', dest = "queue", default = "medium",
-                         help = 'queue (default: medium)')
+    parser.add_argument('-q', dest = "queue", default = "standard",
+                         help = 'queue (default: standard)')
     parser.add_argument('--name', dest = "name", default = None,
                          help = 'queue (default: fn)')
 
