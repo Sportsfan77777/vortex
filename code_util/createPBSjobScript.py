@@ -18,6 +18,8 @@ def new_argument_parser(description = "Make a new job script."):
                          help = 'number of nodes (default: 1)')
     parser.add_argument('-c', dest = "num_cpus", type = int, default = 1,
                          help = 'number of cpus per node (default: 1)')
+    parser.add_argument('-m', dest = "mem", type = int, default = None,
+                         help = 'memory in gb (default: 6 per cpu)')
 
     parser.add_argument('--err', dest = "err_name", default = "err_%I",
                          help = 'job error file name (default: err_%I)')
@@ -66,6 +68,10 @@ args.output = "%s.out" % args.output
 
 # Cores
 args.num_cores = args.num_nodes * args.num_cpus
+
+# Memory
+if args.mem is None:
+    args.mem = 6 * args.num_cpus
 
 # GPUs
 args.gpu_string = ""
