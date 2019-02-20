@@ -181,7 +181,7 @@ if cmax is None:
         cmax = 10
     else:
         cmax = 2.5
-clim = [0, cmax]
+clim = [-cmax, cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
