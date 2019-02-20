@@ -18,6 +18,9 @@ def new_argument_parser(description = "Make a new job script."):
                          help = 'number of nodes (default: 1)')
     parser.add_argument('-c', dest = "num_cpus", type = int, default = 1,
                          help = 'number of cpus per node (default: 1)')
+    parser.add_argument('-h', dest = "num_hours", type = int, default = 1,
+                         help = 'number of walltime hours (default: 1)')
+    
     parser.add_argument('-m', dest = "mem", type = int, default = None,
                          help = 'memory in gb (default: 6 per cpu)')
 
