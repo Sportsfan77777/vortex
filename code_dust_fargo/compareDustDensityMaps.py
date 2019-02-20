@@ -246,7 +246,8 @@ def make_plot(frame, show = False):
 
     # Shift
     if center is "off":
-       shift_c = 0
+       shift_c1 = 0
+       shift_c2 = 0
     #elif center.startswith("cm"):
     #   normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame)
     elif center is "away":
@@ -258,10 +259,12 @@ def make_plot(frame, show = False):
     gas_density1 = np.roll(gas_density1, shift_c1)
     gas_density2 = np.roll(gas_density2, shift_c2)
 
+    diff_density = normalized_density1 - normalized_density2
+
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(diff_density), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -269,7 +272,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(gas_density1), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
