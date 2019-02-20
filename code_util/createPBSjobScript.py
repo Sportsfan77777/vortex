@@ -18,8 +18,6 @@ def new_argument_parser(description = "Make a new job script."):
                          help = 'number of nodes (default: 1)')
     parser.add_argument('-c', dest = "num_cpus", type = int, default = 1,
                          help = 'number of cpus per node (default: 1)')
-    parser.add_argument('-c', dest = "num_cpus", type = int, default = 1,
-                         help = 'number of cpus per node (default: 1)')
 
     parser.add_argument('--err', dest = "err_name", default = "err_%I",
                          help = 'job error file name (default: err_%I)')
