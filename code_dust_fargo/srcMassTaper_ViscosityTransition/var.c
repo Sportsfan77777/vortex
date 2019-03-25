@@ -109,7 +109,8 @@ InitVariables()
   var("EVOLVINGDEADZONE", EVOLVINGDEADZONE, STRING, NO, "NO");
   var("EVOLVINGDEADZONETHRESHOLD", &EVOLVINGDEADZONETHRESHOLD, REAL, NO, "0.5"); // At 20 AU, Sigma0 = 30 g, 
   var("EVOLVINGDEADZONEWIDTH", &EVOLVINGDEADZONEWIDTH, REAL, NO, "0.16667");
-  // Maximum Stokes number (to make SFTA work in planet gap)
+  // Constant and Maximum Stokes number (to make SFTA work in planet gap)
+  var("CONSTANTSTOKESNUMBER", CONSTANTSTOKESNUMBER, STRING, NO, "NO");
   var("MAXSTOKESNUMBER", &MAXSTOKESNUMBER, REAL, NO, "1.0");
 }
 
