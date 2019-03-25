@@ -192,6 +192,7 @@ PolarGrid *Vrad, *Rhod, *Rhog;
       if(NELSONBOUNDD){
 	if(GasDcouple == YES){		/* GasDcouple means it is dust and we should use dust drift speed*/
 	  tstop=2.813e-6*PSize/rhog[l]*PI/2.;
+    if (ConstantStokesNumber) tstop = 2.813e-6*PSize/SIGMA0*PI/2.; /* added constant stokes number to prevent timestep from slowing down */
     if (tstop > MAXSTOKESNUMBER) tstop = MAXSTOKESNUMBER; /* added maximum stokes number to prevent timestep from slowing down */
 	  ita=-(AspectRatio(Rmed[i]) * AspectRatio(Rmed[i]) * pow(Rmed[i], 2.*FLARINGINDEX))*(2.*FLARINGINDEX-1.0-SIGMASLOPE);
           vri = 3.*(-FViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX)/tstop-ita*sqrt(G*1.0/Rmed[i]))/(tstop+1./tstop);

@@ -33,6 +33,7 @@ boolean         ExtraFiles = NO;
 boolean         DeadZone = NO;
 boolean         FullDeadZone = NO;
 boolean         EvolvingDeadZone = NO;
+boolean         ConstantStokesNumber = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -238,6 +239,9 @@ char *filename;
   if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
   if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
   if ((*EVOLVINGDEADZONE == 'y') || (*EVOLVINGDEADZONE=='Y')) EvolvingDeadZone = YES;
+
+  // #### NEW VARIABLE FOR CONSTANT STOKES NUMBER #### //
+  if ((*CONSTANTSTOKESNUMBER == 'y') || (*CONSTANTSTOKESNUMBER == 'Y')) ConstantStokesNumber = YES;
 
 }
 
