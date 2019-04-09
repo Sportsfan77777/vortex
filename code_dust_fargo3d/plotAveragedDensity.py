@@ -139,6 +139,7 @@ max_y = args.max_y
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
+linewidth = args.linewidth
 dpi = args.dpi
 
 ### Add new parameters to dictionary ###
@@ -177,8 +178,7 @@ def make_plot(frame, show = False):
     plot.ylim(0, max_y)
 
     # Annotate Axes
-    time = fargo_par["Ninterm"] * fargo_par["DT"]
-    orbit = (time / (2 * np.pi)) * frame
+    orbit = (dt / (2 * np.pi)) * frame
 
     if orbit >= taper_time:
         current_mass = planet_mass
