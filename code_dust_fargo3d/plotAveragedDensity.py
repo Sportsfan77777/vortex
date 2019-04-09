@@ -135,21 +135,9 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
-
-# Plot Parameters (contours)
-use_contours = args.use_contours
-low_contour = args.low_contour
-high_contour = args.high_contour
-num_levels = args.num_levels
-if num_levels is None:
-    separation = args.separation
-    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+max_y = args.max_y
 
 # Plot Parameters (constant)
-cmap = args.cmap
-clim = [0, args.cmax]
-
 fontsize = args.fontsize
 dpi = args.dpi
 
