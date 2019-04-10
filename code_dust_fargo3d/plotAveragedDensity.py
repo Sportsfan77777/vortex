@@ -191,7 +191,9 @@ def make_plot(frame, show = False):
         ### Plot ###
         x = rad
         y_fargo = normalized_density
-        result = plot.plot(x, y_fargo, linewidth = linewidth + 1, alpha = 0.6, zorder = 99)
+        result = plot.plot(x, y_fargo, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "fargo")
+
+        plot.legend()
 
     # Axes
     if args.max_y is None:
