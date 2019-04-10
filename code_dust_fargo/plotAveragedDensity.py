@@ -60,6 +60,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
+
+    parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
+                         help = 'plot density at t = 0 for reference (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -146,7 +149,16 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = normalized_density
-    result = plot.plot(x, y, linewidth = linewidth)
+    result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+
+    if args.zero:
+        density_zero = (fromfile("gasdens%d.dat" % 0).reshape(num_rad, num_theta))
+        averagedDensity_zero = np.average(density_zero, axis = 1)
+        normalized_density_zero = averagedDensity_zero / surface_density_zero
+
+        x = rad
+        y_zero = normalized_density_zero
+        result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
 
     # Axes
     if args.max_y is None:
