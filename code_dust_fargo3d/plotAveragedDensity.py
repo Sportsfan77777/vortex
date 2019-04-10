@@ -185,7 +185,7 @@ def make_plot(frame, show = False):
 
     if args.compare_to_fargo:
         density_fargo = (fromfile("../first_test_fargo_comparison/gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-        averagedDensity_fargo = np.average(density, axis = 1)
+        averagedDensity_fargo = np.average(density_fargo, axis = 1)
         normalized_density_fargo = averagedDensity_fargo / surface_density_zero
 
         ### Plot ###
