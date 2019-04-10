@@ -66,6 +66,9 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
+
+    parser.add_argument('--compare', dest = "compare_to_fargo", action = 'store_true', default = False,
+                         help = 'compare to fargo (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -179,6 +182,16 @@ def make_plot(frame, show = False):
         x = rad
         y_zero = normalized_density_zero
         result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
+
+    if args.compare_to_fargo:
+        density = (fromfile("../first_test_fargo_comparison/gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+        averagedDensity = np.average(density, axis = 1)
+        normalized_density = averagedDensity / surface_density_zero
+
+        ### Plot ###
+        x = rad
+        y_fargo = normalized_density
+        result = plot.plot(x, y_fargo, linewidth = linewidth + 1, alpha = 0.6, zorder = 99)
 
     # Axes
     if args.max_y is None:
