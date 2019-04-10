@@ -184,13 +184,13 @@ def make_plot(frame, show = False):
         result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
 
     if args.compare_to_fargo:
-        density = (fromfile("../first_test_fargo_comparison/gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-        averagedDensity = np.average(density, axis = 1)
-        normalized_density = averagedDensity / surface_density_zero
+        density_fargo = (fromfile("../first_test_fargo_comparison/gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+        averagedDensity_fargo = np.average(density, axis = 1)
+        normalized_density_fargo = averagedDensity_fargo / surface_density_zero
 
         ### Plot ###
         x = rad
-        y_fargo = normalized_density
+        y_fargo = normalized_density_fargo
         result = plot.plot(x, y_fargo, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "fargo")
 
         plot.legend()
