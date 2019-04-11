@@ -69,7 +69,10 @@ args.num_cores = args.num_nodes * args.num_cpus
 
 # Memory
 if args.mem is None:
-    args.mem = 6 * args.num_cpus
+    if args.gpu:
+        args.mem = 8 * args.num_cpus
+    else:
+        args.mem = 6 * args.num_cpus
 
 # GPUs
 args.gpu_string = ""
@@ -102,6 +105,10 @@ with open(args.fn, 'w') as f:
         f.write("module load fftw/2.1.5\n")
     if args.openmpi:
         f.write("module load openmpi\n")
+    if args.gpu:
+        f.write("module unload gcc/6.1.0\n")
+        f.write("module load mpich/ge/gcc/64/3.2.1\n")
+        f.write("module load cuda80/toolkit/8.0.61\n")
 
     # Line Break #
     f.write("\n")
