@@ -468,8 +468,8 @@ real dt;
 
       // Set Background Diffusion Rate (can be parameter or just gas viscosity)
       if (VORTEXDIFFUSIONBACKGROUND == -1) {
-        viscosityp = FViscosity (Rsup[i], rho[l]);
-        viscosity = FViscosity (Rmed[i], rho[l]);
+        viscosityp = FViscosity (Rsup[i], rho[l], drho[l]);
+        viscosity = FViscosity (Rmed[i], rho[l], drho[l]);
       }
       else {
         viscosityp = VORTEXDIFFUSIONBACKGROUND;
@@ -487,13 +487,13 @@ real dt;
           }
           else if (dust_overdensity > VORTEXDIFFUSIONLOWERTHRESHOLD) {
             // Ramp: e^(log(10^4) (sin((pi / 2)(x-1.5) / 0.5))^2) 
-            viscosityp = FViscosity (Rsup[i], rho[l]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rsup[i], rho[l])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
-            viscosity = FViscosity (Rmed[i], rho[l]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i], rho[l])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
+            viscosityp = FViscosity (Rsup[i], rho[l], drho[l]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rsup[i], rho[l], drho[l])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
+            viscosity = FViscosity (Rmed[i], rho[l], drho[l]) * exp(log(VORTEXDIFFUSIONCOEFFICIENT / FViscosity(Rmed[i], rho[l], drho[l])) * pow(sin((PI / 2) * (dust_overdensity - VORTEXDIFFUSIONLOWERTHRESHOLD) / (VORTEXDIFFUSIONTHRESHOLD - VORTEXDIFFUSIONLOWERTHRESHOLD)), 2));
           }
           else {
             if (VORTEXDIFFUSIONBACKGROUND == -1) {
-              viscosityp = FViscosity (Rsup[i], rho[l]);
-              viscosity = FViscosity (Rmed[i], rho[l]);
+              viscosityp = FViscosity (Rsup[i], rho[l], drho[l]);
+              viscosity = FViscosity (Rmed[i], rho[l], drho[l]);
             }
             else {
               viscosityp = VORTEXDIFFUSIONBACKGROUND;

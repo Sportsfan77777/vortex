@@ -32,7 +32,7 @@ boolean         GasCFL = NO;
 boolean         ExtraFiles = NO;
 boolean         DeadZone = NO;
 boolean         FullDeadZone = NO;
-boolean         EvolvingDeadZone = NO;
+boolean         EvolvingDeadZone = NO, DustDeadZone = NO, ComboDeadZone = NO;
 boolean         ConstantStokesNumber = NO;
 
 void
@@ -239,6 +239,8 @@ char *filename;
   if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
   if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
   if ((*EVOLVINGDEADZONE == 'y') || (*EVOLVINGDEADZONE=='Y')) EvolvingDeadZone = YES;
+  if ((*DUSTDEADZONE == 'y') || (*DUSTDEADZONE=='Y')) DustDeadZone = YES;
+  if ((*COMBODEADZONE == 'y') || (*COMBODEADZONE=='Y')) ComboDeadZone = YES;
 
   // #### NEW VARIABLE FOR CONSTANT STOKES NUMBER #### //
   if ((*CONSTANTSTOKESNUMBER == 'y') || (*CONSTANTSTOKESNUMBER == 'Y')) ConstantStokesNumber = YES;

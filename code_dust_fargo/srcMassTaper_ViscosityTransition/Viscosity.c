@@ -18,10 +18,10 @@ which is taken into account by the calling function.
 
 static PolarGrid *DivergenceVelocity, *DRR, *DRP, *DPP, *TAURR, *TAUPP, *TAURP, *DDivergenceVelocity, *DDRR, *DDRP, *DDPP, *DTAURR, *DTAUPP, *DTAURP;
 
-real FViscosity (rad, density)
-     real rad, density;
+real FViscosity (rad, gas_density, dust_density)
+     real rad, gas_density, dust_density;
 {
-  real viscosity, rmin, rmax, scale;
+  real viscosity, rmin, rmax, scale, density;
   int i=0;
   viscosity = VISCOSITY;
   if (ViscosityAlpha) {
@@ -29,6 +29,13 @@ real FViscosity (rad, density)
     viscosity = ALPHAVISCOSITY*GLOBAL_SOUNDSPEED[i]*\
       GLOBAL_SOUNDSPEED[i]*pow(rad, 1.5);
   }
+
+  // Choose Density (if necessary)
+  if (DustDeadZone) density = 100.0 * dust_density; // Scale to use the same prescription as the gas
+  else if (ComboDeadZone) density = gas_density + dust_density;
+  else density = gas_density;
+
+  // Chose Dead Zone (if necessary)
   if (DeadZone) {
     viscosity *= (1.0 - 0.5 * (1.0 - VISCOSITYRATIO) * (1.0 - tanh((rad - DEADZONERADIUS) / DEADZONEWIDTH)));
   }
@@ -221,7 +228,7 @@ real DeltaT;
       //dviscosity = DFViscosity (Rmed[i]); /// <<<==== Old Viscosity!
       for (j = 0; j < ns; j++) {
 	l = j+i*ns;
-  viscosity = FViscosity (Rmed[i], rho[l]);
+  viscosity = FViscosity (Rmed[i], rho[l], drho[l]);
   dviscosity = DFViscosity (Rmed[i], rho[l]);
 	Trr[l] = 2.0*rho[l]*viscosity*(Drr[l]-onethird*divergence[l]);
 	Tpp[l] = 2.0*rho[l]*viscosity*(Dpp[l]-onethird*divergence[l]);
@@ -237,7 +244,7 @@ real DeltaT;
 	l = j+i*ns;
 	lim = l-ns;
 	ljm = l-1;
-  viscosity = FViscosity (Rmed[i], rho[l]);
+  viscosity = FViscosity (Rmed[i], rho[l], drho[l]);
   dviscosity = DFViscosity (Rmed[i], rho[l]);
 	if (j == 0) ljm = i*ns+ns-1;
 	ljmim=ljm-ns;

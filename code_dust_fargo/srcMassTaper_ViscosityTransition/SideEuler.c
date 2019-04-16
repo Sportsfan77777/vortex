@@ -144,7 +144,7 @@ PolarGrid *Vrad, *Rho;
       vr[l] = 0.0; /* we just allow outflow [inwards] */
     }else{
       if(NELSONBOUND){
-	vri = -3.*FViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX); 
+	vri = -3.*FViscosity(Rmed[i], rho[l], rho[l] / 100.0)/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX); 
 	if(fabs(vr[l+ns])>fabs(vri))
 	  vr[l]=vri;
 	else
@@ -195,13 +195,13 @@ PolarGrid *Vrad, *Rhod, *Rhog;
     if (ConstantStokesNumber) tstop = 2.813e-6*PSize/SIGMA0*PI/2.; /* added constant stokes number to prevent timestep from slowing down */
     if (tstop > MAXSTOKESNUMBER) tstop = MAXSTOKESNUMBER; /* added maximum stokes number to prevent timestep from slowing down */
 	  ita=-(AspectRatio(Rmed[i]) * AspectRatio(Rmed[i]) * pow(Rmed[i], 2.*FLARINGINDEX))*(2.*FLARINGINDEX-1.0-SIGMASLOPE);
-          vri = 3.*(-FViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX)/tstop-ita*sqrt(G*1.0/Rmed[i]))/(tstop+1./tstop);
+          vri = 3.*(-FViscosity(Rmed[i], rhog[l], rho[l])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX)/tstop-ita*sqrt(G*1.0/Rmed[i]))/(tstop+1./tstop);
           if(fabs(vr[l+ns])>fabs(vri))
             vr[l]=vri;
           else
             vr[l]=vr[l+ns];
         }else{
-	  vri = -3.*DFViscosity(Rmed[i])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX);
+	  vri = -3.*DFViscosity(Rmed[i], rhog[l])/Rmed[i]*3.*(-SIGMASLOPE+1.+2.*FLARINGINDEX);
           if(fabs(vr[l+ns])>fabs(vri))
             vr[l]=vri;
           else
