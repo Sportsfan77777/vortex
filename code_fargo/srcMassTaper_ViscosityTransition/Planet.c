@@ -77,7 +77,7 @@ PlanetarySystem *sys;
 	  vxcell=(vrcell*xc-vtcell*yc)/Rmed[i];
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
 	  if (distance < frac1*RRoche) {
-      if (timestep >= 20)
+      if (PhysicalTime / 2.0 / M_PI >= 20)
           printf("%s", "1");
 	    deltaM = facc1*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
@@ -91,7 +91,7 @@ PlanetarySystem *sys;
 	    dMplanet     += deltaM;
 	  }
 	  if (distance < frac2*RRoche) {
-      if (timestep >= 20)
+      if (PhysicalTime / 2.0 / M_PI >= 20)
         printf("%s", "2");
 	    deltaM = facc2*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
