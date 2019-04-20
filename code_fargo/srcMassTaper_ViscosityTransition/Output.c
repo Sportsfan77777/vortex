@@ -230,7 +230,7 @@ int TimeStep;
 
   if (!CPU_Master) return; // Only write one file
 
-  printf ("Updating 'timesteps.dat'...");
+  printf ("_Updating 'timesteps dat'_");
   fflush (stdout);
   sprintf (name, "%stimesteps.dat", OUTPUTDIR);
   output = fopenp (name, "a");

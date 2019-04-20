@@ -77,6 +77,8 @@ PlanetarySystem *sys;
 	  vxcell=(vrcell*xc-vtcell*yc)/Rmed[i];
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
 	  if (distance < frac1*RRoche) {
+      if (timestep >= 20)
+          printf("%s", "1");
 	    deltaM = facc1*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
 	    if (i >= Max_or_active) deltaM = 0.0;
@@ -89,6 +91,8 @@ PlanetarySystem *sys;
 	    dMplanet     += deltaM;
 	  }
 	  if (distance < frac2*RRoche) {
+      if (timestep >= 20)
+        printf("%s", "2");
 	    deltaM = facc2*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
 	    if (i >= Max_or_active) deltaM = 0.0;
@@ -113,6 +117,7 @@ PlanetarySystem *sys;
       Mplanet  += dMplanet;
       //printf ("mpi reduce\n");
       //fflush (stdout);
+      fflush(stdout);
       if (FakeAccretion == YES) {
           // pass (get rid of disk material, but don't let it affect planet)
       }
