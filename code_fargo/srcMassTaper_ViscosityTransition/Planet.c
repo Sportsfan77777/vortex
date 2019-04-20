@@ -15,7 +15,7 @@ real dt;
 PolarGrid *Rho, *Vrad, *Vtheta;
 PlanetarySystem *sys;
 {
-  real RRoche, Rplanet, distance, dx, dy, deltaM, angle, temp;
+  real RRoche, Rplanet, distance, dx, dy, deltaM, angle, timestep_a, temp;
   int i_min,i_max, j_min, j_max, i, j, l, jf, ns, nr, lip, ljp, k;
   real Xplanet, Yplanet, Mplanet, VXplanet, VYplanet;
   real facc, facc1, facc2, frac1, frac2; /* We adopt the same notations as W. Kley */
@@ -29,6 +29,9 @@ PlanetarySystem *sys;
   ord    = CellOrdinate->Field;
   vrad   = Vrad->Field;
   vtheta = Vtheta->Field;
+
+  timestep_a = PhysicalTime / 2.0 / M_PI;
+
   for (k=0; k < sys->nb; k++) {
     if (sys->acc[k] > 1e-10) {
       dMplanet = dPxPlanet = dPyPlanet = 0.0;
@@ -77,7 +80,7 @@ PlanetarySystem *sys;
 	  vxcell=(vrcell*xc-vtcell*yc)/Rmed[i];
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
 	  if (distance < frac1*RRoche) {
-      if (PhysicalTime / 2.0 / M_PI >= 20)
+      if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
           printf("%s", "1");
 	    deltaM = facc1*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
@@ -91,7 +94,7 @@ PlanetarySystem *sys;
 	    dMplanet     += deltaM;
 	  }
 	  if (distance < frac2*RRoche) {
-      if (PhysicalTime / 2.0 / M_PI >= 20)
+      if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
         printf("%s", "2");
 	    deltaM = facc2*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
@@ -117,6 +120,8 @@ PlanetarySystem *sys;
       Mplanet  += dMplanet;
       //printf ("mpi reduce\n");
       //fflush (stdout);
+      if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
+        printf("Q");
       fflush(stdout);
       if (FakeAccretion == YES) {
           // pass (get rid of disk material, but don't let it affect planet)
