@@ -30,7 +30,7 @@ PlanetarySystem *sys;
   vrad   = Vrad->Field;
   vtheta = Vtheta->Field;
 
-  timestep_a = PhysicalTime / 2.0 / M_PI;
+  timestep_a = PhysicalTime * 1.0;
 
   for (k=0; k < sys->nb; k++) {
     if (sys->acc[k] > 1e-10) {
