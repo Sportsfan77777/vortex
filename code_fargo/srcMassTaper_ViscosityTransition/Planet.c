@@ -107,6 +107,7 @@ PlanetarySystem *sys;
 #pragma omp atomic
 	    dMplanet     += deltaM;
 	  }
+    printf("Q");
 	}
       }
       MPI_Allreduce (&dMplanet, &temp, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -121,7 +122,7 @@ PlanetarySystem *sys;
       //printf ("mpi reduce\n");
       //fflush (stdout);
       //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
-        printf("Q");
+        //printf("Q");
       fflush(stdout);
       if (FakeAccretion == YES) {
           // pass (get rid of disk material, but don't let it affect planet)
