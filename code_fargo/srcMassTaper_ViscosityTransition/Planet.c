@@ -15,8 +15,8 @@ real dt;
 PolarGrid *Rho, *Vrad, *Vtheta;
 PlanetarySystem *sys;
 {
-  real RRoche, Rplanet, distance, dx, dy, deltaM, angle, timestep_a, temp;
-  int i_min,i_max, j_min, j_max, i, j, l, jf, ns, nr, lip, ljp, k;
+  real RRoche, Rplanet, distance, dx, dy, deltaM, angle, temp;
+  int i_min,i_max, j_min, j_max, i, j, l, jf, ns, nr, lip, ljp, k, count_cells, count1, count2, timestep_a;
   real Xplanet, Yplanet, Mplanet, VXplanet, VYplanet;
   real facc, facc1, facc2, frac1, frac2; /* We adopt the same notations as W. Kley */
   real *dens, *abs, *ord, *vrad, *vtheta;
@@ -29,8 +29,16 @@ PlanetarySystem *sys;
   ord    = CellOrdinate->Field;
   vrad   = Vrad->Field;
   vtheta = Vtheta->Field;
+  FILE *planet_file;
+  char[256] name;
 
-  timestep_a = PhysicalTime * 1.0;
+  timestep_a = floor(PhysicalTime / 2.0 / M_PI);
+  count_cells = 0;
+  count1 = 0;
+  count2 = 0;
+
+  sprintf (name, "%splanet%d.dat", OUTPUTDIR, timestep_a);
+  planet_file = fopenp (name, "a");
 
   for (k=0; k < sys->nb; k++) {
     if (sys->acc[k] > 1e-10) {
@@ -79,9 +87,15 @@ PlanetarySystem *sys;
 	  vrcell=0.5*(vrad[l]+vrad[lip]);
 	  vxcell=(vrcell*xc-vtcell*yc)/Rmed[i];
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
+
+    fprintf(planet_file, "\nAccreting Cell: (%.4f, %.4f) Q ", xc, yc);
+    count_cells++;
+
 	  if (distance < frac1*RRoche) {
       //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
-          printf("%s", "1");
+          //printf("%s", "1");
+          fprintf(planet_file, "1 ");
+          count1++;
 	    deltaM = facc1*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
 	    if (i >= Max_or_active) deltaM = 0.0;
@@ -95,7 +109,8 @@ PlanetarySystem *sys;
 	  }
 	  if (distance < frac2*RRoche) {
       //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
-        printf("%s", "2");
+        //printf("%s", "2");
+        fprintf(planet_file, "2 ");
 	    deltaM = facc2*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
 	    if (i >= Max_or_active) deltaM = 0.0;
@@ -107,7 +122,7 @@ PlanetarySystem *sys;
 #pragma omp atomic
 	    dMplanet     += deltaM;
 	  }
-    printf("Q");
+    //printf("Q");
 	}
       }
       MPI_Allreduce (&dMplanet, &temp, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -138,7 +153,9 @@ PlanetarySystem *sys;
       }
     }
   }
-  printf("W");
+  //printf("W");
+  fprintf(planet_file, "Number of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
+  fclose(planet_file);
 }
 
 
