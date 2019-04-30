@@ -37,7 +37,7 @@ PlanetarySystem *sys;
   count1 = 0;
   count2 = 0;
 
-  sprintf (name, "%splanet%d.dat", OUTPUTDIR, timestep_a);
+  sprintf (name, "%saccretion%d.dat", OUTPUTDIR, timestep_a);
   planet_file = fopenp (name, "a");
 
   for (k=0; k < sys->nb; k++) {
