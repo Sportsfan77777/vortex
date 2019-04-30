@@ -88,7 +88,7 @@ PlanetarySystem *sys;
 	  vxcell=(vrcell*xc-vtcell*yc)/Rmed[i];
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
 
-    fprintf(planet_file, "\nAccreting Cell: (%.4f, %.4f) Q ", xc, yc);
+    fprintf(planet_file, "\nQ: (%.4f, %.4f) ", xc, yc);
     count_cells++;
 
 	  if (distance < frac1*RRoche) {
@@ -111,6 +111,7 @@ PlanetarySystem *sys;
       //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
         //printf("%s", "2");
         fprintf(planet_file, "2 ");
+        count2++;
 	    deltaM = facc2*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
 	    if (i >= Max_or_active) deltaM = 0.0;
@@ -154,7 +155,7 @@ PlanetarySystem *sys;
     }
   }
   //printf("W");
-  fprintf(planet_file, "Number of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
+  fprintf(planet_file, "\nNumber of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
   fclose(planet_file);
 }
 
