@@ -30,7 +30,7 @@ PlanetarySystem *sys;
   vrad   = Vrad->Field;
   vtheta = Vtheta->Field;
   FILE *planet_file;
-  char[256] name;
+  char name[256];
 
   timestep_a = floor(PhysicalTime / 2.0 / M_PI);
   count_cells = 0;
