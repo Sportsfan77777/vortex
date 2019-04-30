@@ -68,6 +68,10 @@ PlanetarySystem *sys;
       j_max =(int)((real)ns/2.0/PI*(angle + 2.0*RRoche/Rplanet));
       PxPlanet = Mplanet*VXplanet;
       PyPlanet = Mplanet*VYplanet;
+
+      fprintf(planet_file, "\nPlanet: <%.4f, %.4f> at %.4f\n", 1000.0 * Mplanet, RRoche, Rplanet);
+      fprintf(planet_file, "\ni: <%d to %d>; j: <%d to %d>\n", i_min, i_max, j_min, j_max);
+
 #pragma omp parallel for private(j,jf,vrcell,vtcell,vxcell,vycell,l,lip,ljp,xc,yc,dx,dy,distance,deltaM) shared(dPxPlanet, dPyPlanet, dMplanet)
       for (i = i_min; i <= i_max; i++) {
 	for (j = j_min; j <= j_max; j++) {
