@@ -221,8 +221,8 @@ def get_excess_mass(args):
 ## Use These Frames ##
 rate = 1 # 5 works better, but is very slow
 start = 50
-max_frame = util.find_max_frame()
-frame_range = np.array(range(start, max_frame + 1, rate))
+max_frame = 100 #util.find_max_frame()
+#frame_range = np.array(range(start, max_frame + 1, rate))
 
 #mass_over_time = np.zeros(len(frame_range))
 #peak_over_time = np.zeros(len(frame_range))
