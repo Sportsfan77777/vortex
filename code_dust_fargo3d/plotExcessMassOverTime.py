@@ -98,6 +98,7 @@ planet_mass = 1.0
 taper_time = p.masstaper
 
 viscosity = p.nu
+scale_height = p.aspectratio
 
 dt = p.ninterm * p.dt
 
@@ -218,8 +219,8 @@ def get_excess_mass(args):
 ###############################################################################
 
 ## Use These Frames ##
-rate = 10 # 5 works better, but is very slow
-start = 10
+rate = 1 # 5 works better, but is very slow
+start = 50
 max_frame = util.find_max_frame()
 frame_range = np.array(range(start, max_frame + 1, rate))
 
@@ -250,7 +251,7 @@ pickle.dump(np.array(mass_over_time), open("excess_mass_values_taper%d.p" % tape
 
 def make_plot(show = False):
     # Figure
-    fig = plot.figure(figsize = (700 / my_dpi, 600 / my_dpi), dpi = my_dpi)
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     # Curves
     plot.plot(frame_range, mass_over_time, linewidth = linewidth)
@@ -261,10 +262,10 @@ def make_plot(show = False):
     #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
 
     # Annotate
-    this_title = readTitle()
+    #this_title = readTitle()
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Excess Mass", fontsize = fontsize)
-    plot.title(this_title, fontsize = fontsize)
+    #plot.title(this_title, fontsize = fontsize)
 
     #plot.legend(loc = "upper right")
 
