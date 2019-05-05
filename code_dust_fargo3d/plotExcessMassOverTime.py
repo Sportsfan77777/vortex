@@ -259,6 +259,9 @@ p.terminate()
 max_mass = np.max(mass_over_time)
 max_peak = np.max(peak_over_time)
 
+max_mass_compare = np.max(mass_over_time_compare)
+max_peak_compare = np.max(peak_over_time_compare)
+
 ## Pickle to combine later ##
 
 pickle.dump(np.array(frame_range), open("excess_mass_frames_taper%d.p" % taper_time, "wb"))
