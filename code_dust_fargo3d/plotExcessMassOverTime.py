@@ -45,7 +45,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = '+',
+    parser.add_argument('--frames', type = int, nargs = '+', default = 345,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
@@ -180,7 +180,7 @@ def get_excess_mass(args):
     field = "dens"
     density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
     background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
-    
+
     diff_density = density - background_density
     diff_density[diff_density < 0] = 0 # only include excess
 
