@@ -273,6 +273,8 @@ def make_plot(show = False):
     plot.xlim(0, frame_range[-1])
     #plot.ylim(0.0, 1.0)
 
+    plot.yscale('log')
+
     # Save + Close
     plot.savefig("excessMass.png")
     plot.show()
