@@ -182,39 +182,53 @@ def get_excess_mass(args):
     density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
     background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
 
-    diff_density = density - background_density
-    diff_density[diff_density < 0] = 0 # only include excess
+    fargo_directory = "taper750_fargo_comparison"
+    density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
+    background_density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / surface_density_zero
 
-    # Extract Near Vortex
-    averagedDensity = np.average(density, axis = 1)
-    peak_rad, peak_density = find_peak(averagedDensity)
+    def helper(density, background_density):
+        diff_density = density - background_density
+        diff_density[diff_density < 0] = 0 # only include excess
 
-    vortex_start = np.max([1.0, peak_rad - 5.0 * scale_height])
-    vortex_end = peak_rad + 5.0 * scale_height
+        # Extract Near Vortex
+        averagedDensity = np.average(density, axis = 1)
+        peak_rad, peak_density = find_peak(averagedDensity)
 
-    vortex_start_i = np.searchsorted(rad, vortex_start)
-    vortex_end_i = np.searchsorted(rad, vortex_end)
+        vortex_start = np.max([1.0, peak_rad - 5.0 * scale_height])
+        vortex_end = peak_rad + 5.0 * scale_height
 
-    vortex_rad = rad[vortex_start_i : vortex_end_i]
-    vortex_diff_density = diff_density[vortex_start_i : vortex_end_i]
+        vortex_start_i = np.searchsorted(rad, vortex_start)
+        vortex_end_i = np.searchsorted(rad, vortex_end)
 
-    vortex_excess = np.average(vortex_diff_density, axis = 1)
+        vortex_rad = rad[vortex_start_i : vortex_end_i]
+        vortex_diff_density = diff_density[vortex_start_i : vortex_end_i]
 
-    # Add up mass
-    dr = rad[1] - rad[0] # assumes arithmetic grid
-    d_phi = theta[1] - theta[0]
+        vortex_excess = np.average(vortex_diff_density, axis = 1)
 
-    excess_mass = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_diff_density)
+        # Add up mass
+        dr = rad[1] - rad[0] # assumes arithmetic grid
+        d_phi = theta[1] - theta[0]
+
+        excess_mass = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_diff_density)
+        return excess_mass, vortex_excess
+
+    excess_mass, vortex_excess = helper(density, background_density)
+    excess_mass_compare, vortex_excess_compare = helper(density_compare, background_density_compare)
 
     # Get Peak
     peak_diff_density = np.max(vortex_excess)
+    peak_diff_density_compare = np.max(vortex_excess_compare)
 
     # Print Update
     print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
+    print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
 
     # Store Data
     mass_over_time[i] = excess_mass
     peak_over_time[i] = peak_diff_density
+
+    mass_over_time_compare[i] = excess_mass_compare
+    peak_over_time_compare[i] = peak_diff_density_compare
 
 ###############################################################################
 
@@ -229,6 +243,9 @@ max_frame = 100 #util.find_max_frame()
 
 mass_over_time = mp_array("d", len(frame_range))
 peak_over_time = mp_array("d", len(frame_range))
+
+mass_over_time_compare = mp_array("d", len(frame_range))
+peak_over_time_compare = mp_array("d", len(frame_range))
 
 #for i, frame in enumerate(frame_range):
 #    get_excess_mass((i, frame))
@@ -256,10 +273,12 @@ def make_plot(show = False):
     # Curves
     plot.plot(frame_range, mass_over_time, linewidth = linewidth)
     #plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
+    plot.plot(frame_range, mass_over_time_compare, linewidth = linewidth, label = "fargo")
 
     # Reference Lines
     plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
     #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
+    plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
 
     # Annotate
     #this_title = readTitle()
@@ -267,7 +286,7 @@ def make_plot(show = False):
     plot.ylabel("Excess Mass", fontsize = fontsize)
     #plot.title(this_title, fontsize = fontsize)
 
-    #plot.legend(loc = "upper right")
+    plot.legend(loc = "upper left")
 
     # Limits
     plot.xlim(0, frame_range[-1])
