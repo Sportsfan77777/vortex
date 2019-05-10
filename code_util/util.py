@@ -106,7 +106,7 @@ def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'density', direc
 
     # Dictionary
     basenames = {}
-    basenames['density'] = "gasdens%d_%d.dat"; basenames['vx'] = "gasvx%d_%d.dat"; basenames['vy'] = "gasvx%d_%d.dat"; basenames['energy'] = "gasenergy%d_%d.dat"
+    basenames['density'] = "gasdens%d_%d.dat"; basenames['vx'] = "gasvx%d_%d.dat"; basenames['vy'] = "gasvy%d_%d.dat"; basenames['energy'] = "gasenergy%d_%d.dat"
 
     data = np.zeros((num_rad, num_theta))
     for i in range(num_cores):
@@ -136,7 +136,7 @@ def save_merged_data(frame, num_cores, num_rad, num_theta, directory = ".", dele
 
         # Dictionary
         basenames = {}
-        basenames['density'] = "gasdens%d.dat"; basenames['vx'] = "gasvx%d.dat"; basenames['vy'] = "gasvx%d.dat"; basenames['energy'] = "gasenergy%d.dat"
+        basenames['density'] = "gasdens%d.dat"; basenames['vx'] = "gasvx%d.dat"; basenames['vy'] = "gasvy%d.dat"; basenames['energy'] = "gasenergy%d.dat"
 
         basename = basenames[fn] % frame
         data.tofile(basename, format = "%f")
