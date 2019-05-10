@@ -99,14 +99,14 @@ def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
         data /= (surface_density_zero / 100.0)
     return data
 
-def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory = "."):
+def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'density', directory = "."):
     """ read data for outputs that were not merged """
 
     grid_names = "grid%03d.inf"
 
     # Dictionary
     basenames = {}
-    basenames['gas'] = "gasdens%d_%d.dat"
+    basenames['density'] = "gasdens%d_%d.dat"; basenames['vx'] = "gasvx%d_%d.dat"; basenames['vy'] = "gasvx%d_%d.dat"; basenames['energy'] = "gasenergy%d_%d.dat"
 
     data = np.zeros((num_rad, num_theta))
     for i in range(num_cores):
@@ -124,17 +124,18 @@ def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory
 
     return data
 
-def save_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory = "."):
-    data = read_merged_data(frame, num_cores, num_rad, num_theta, fn = fn)
+def save_merged_data(frame, num_cores, num_rad, num_theta, directory = "."):
+    """ save unmerged data in a merged format """
+    fns = ['density', 'vx', 'vy', 'energy']
+    for fn in fns:
+        data = read_merged_data(frame, num_cores, num_rad, num_theta, fn = fn)
 
-    # Dictionary
-    basenames = {}
-    basenames['gas'] = "gasdens%d.dat"
+        # Dictionary
+        basenames = {}
+        basenames['gas'] = "gasdens%d.dat"
 
-    basename = basenames[fn] % frame
-    data.tofile(basename, format = "%f")
-
-    return data
+        basename = basenames[fn] % frame
+        data.tofile(basename, format = "%f")
 
 def get_size(size_name):
     """ return number corresponding to size name """
