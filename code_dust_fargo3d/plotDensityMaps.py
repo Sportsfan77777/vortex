@@ -163,6 +163,7 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 merge = args.merge
+dat = args.dat
 
 # Plot Parameters (variable)
 show = args.show
