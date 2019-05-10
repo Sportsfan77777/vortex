@@ -124,6 +124,17 @@ def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory
 
     return data
 
+def save_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory = "."):
+    data = read_merged_data(frame, num_cores, num_rad, num_theta, fn = fn)
+
+    # Dictionary
+    basenames = {}
+    basenames['gas'] = "gasdens%d.dat"
+
+    basename = basenames[fn] % frame
+    data.tofile(basename, format = "%.f")
+
+    return data
 
 def get_size(size_name):
     """ return number corresponding to size name """
