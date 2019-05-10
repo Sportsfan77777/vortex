@@ -102,7 +102,7 @@ def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
 def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory = "."):
     """ read data for outputs that were not merged """
 
-    grid_name = "grid%03d.inf"
+    grid_names = "grid%03d.inf"
 
     # Dictionary
     basenames = {}
@@ -110,7 +110,7 @@ def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory
 
     data = np.zeros((num_rad, num_theta))
     for i in range(num_cores):
-        grid_name = grid_name % i
+        grid_name = grid_names % i
         basename = basenames[fn] % (frame, i)
 
         # Get size of each file
@@ -132,7 +132,7 @@ def save_merged_data(frame, num_cores, num_rad, num_theta, fn = 'gas', directory
     basenames['gas'] = "gasdens%d.dat"
 
     basename = basenames[fn] % frame
-    data.tofile(basename, format = "%.f")
+    data.tofile(basename, format = "%f")
 
     return data
 
