@@ -71,6 +71,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
                          help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('-m', dest = "merge", type = int, default = 0,
+                         help = 'number of cores needed to merge data outputs (default: 0)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -157,6 +159,8 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+merge = args.merge
 
 # Plot Parameters (variable)
 show = args.show
@@ -247,8 +251,12 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    field = "dens"
-    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+    if merge > 0:
+        num_merged_cores = merge
+        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+    else:
+        field = "dens"
+        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
     ### Plot ###
