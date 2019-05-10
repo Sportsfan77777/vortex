@@ -71,6 +71,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
                          help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dat', dest = "dat", action = 'store_true', default = False,
+                         help = 'use .dat output files (default: do not use dat)')
     parser.add_argument('-m', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
@@ -254,6 +256,8 @@ def make_plot(frame, show = False):
     if merge > 0:
         num_merged_cores = merge
         density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+    elif dat:
+        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     else:
         field = "dens"
         density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
