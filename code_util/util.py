@@ -99,7 +99,7 @@ def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
         data /= (surface_density_zero / 100.0)
     return data
 
-def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'density', directory = "."):
+def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'density', directory = ".", delete = False):
     """ read data for outputs that were not merged """
 
     grid_names = "grid%03d.inf"
@@ -122,13 +122,17 @@ def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'density', direc
         # Read data from each file
         data[start_i : end_i] = (fromfile(basename).reshape(num_rad_i, num_theta))
 
+        # Delete unmerged file
+        if delete:
+            os.remove(basename)
+
     return data
 
-def save_merged_data(frame, num_cores, num_rad, num_theta, directory = "."):
+def save_merged_data(frame, num_cores, num_rad, num_theta, directory = ".", delete = False):
     """ save unmerged data in a merged format """
     fns = ['density', 'vx', 'vy', 'energy']
     for fn in fns:
-        data = read_merged_data(frame, num_cores, num_rad, num_theta, fn = fn)
+        data = read_merged_data(frame, num_cores, num_rad, num_theta, fn = fn, delete = delete)
 
         # Dictionary
         basenames = {}
