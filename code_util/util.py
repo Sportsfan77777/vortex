@@ -136,7 +136,7 @@ def save_merged_data(frame, num_cores, num_rad, num_theta, directory = ".", dele
 
         # Dictionary
         basenames = {}
-        basenames['gas'] = "gasdens%d.dat"
+        basenames['density'] = "gasdens%d.dat"; basenames['vx'] = "gasvx%d.dat"; basenames['vy'] = "gasvx%d.dat"; basenames['energy'] = "gasenergy%d.dat"
 
         basename = basenames[fn] % frame
         data.tofile(basename, format = "%f")
