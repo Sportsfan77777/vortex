@@ -52,6 +52,10 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
                          help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dat', dest = "dat", action = 'store_true', default = False,
+                         help = 'use .dat output files (default: do not use dat)')
+    parser.add_argument('-m', dest = "merge", type = int, default = 0,
+                         help = 'number of cores needed to merge data outputs (default: 0)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -132,6 +136,9 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+merge = args.merge
+dat = args.dat
+
 # Plot Parameters (variable)
 show = args.show
 
@@ -164,8 +171,14 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    field = "dens"
-    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+    if merge > 0:
+        num_merged_cores = merge
+        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+    elif dat:
+        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    else:
+        field = "dens"
+        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
