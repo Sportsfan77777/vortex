@@ -125,7 +125,7 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-planet_mass = 1e-3
+planet_mass = 1.0
 taper_time = p.masstaper
 
 fargo_par = util.get_pickled_parameters()
@@ -277,17 +277,23 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    field = "dens"
-
-    gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+    if merge > 0:
+        num_merged_cores = merge
+        gas_density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta, fluid = 'dust%d' % dust_number)
+    elif dat:
+        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+        density = fromfile("dust%ddens%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
+    else:
+        field = "dens"
+        gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+        density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
-
-    density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
     normalized_density = density / dust_surface_density_zero
 
     if center:
-        normalized_density = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
-        normalized_gas_density = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
+        normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
+        normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
     ### Plot ###
     x = rad

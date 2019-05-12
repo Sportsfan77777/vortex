@@ -99,19 +99,19 @@ def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
         data /= (surface_density_zero / 100.0)
     return data
 
-def read_merged_data(frame, num_cores, num_rad, num_theta, fn = 'density', directory = ".", delete = False):
+def read_merged_data(frame, num_cores, num_rad, num_theta, fluid = 'gas', fn = 'density', directory = ".", delete = False):
     """ read data for outputs that were not merged """
 
     grid_names = "grid%03d.inf"
 
     # Dictionary
     basenames = {}
-    basenames['density'] = "gasdens%d_%d.dat"; basenames['vx'] = "gasvx%d_%d.dat"; basenames['vy'] = "gasvy%d_%d.dat"; basenames['energy'] = "gasenergy%d_%d.dat"
+    basenames['density'] = "%sdens%d_%d.dat"; basenames['vx'] = "%svx%d_%d.dat"; basenames['vy'] = "%svy%d_%d.dat"; basenames['energy'] = "%senergy%d_%d.dat"
 
     data = np.zeros((num_rad, num_theta))
     for i in range(num_cores):
         grid_name = grid_names % i
-        basename = basenames[fn] % (frame, i)
+        basename = basenames[fn] % (fluid, frame, i)
 
         # Get size of each file
         with open(grid_name, 'r') as f:
