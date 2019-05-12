@@ -74,6 +74,10 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'save directory (default: dustDensityMaps%d)')
     parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
                          help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
+    parser.add_argument('--dat', dest = "dat", action = 'store_true', default = False,
+                         help = 'use .dat output files (default: do not use dat)')
+    parser.add_argument('--merge', dest = "merge", type = int, default = 0,
+                         help = 'number of cores needed to merge data outputs (default: 0)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -161,6 +165,8 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 dust_number = args.dust_number
+merge = args.merge
+dat = args.dat
 
 # Plot Parameters (variable)
 show = args.show
