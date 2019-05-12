@@ -54,7 +54,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('--dat', dest = "dat", action = 'store_true', default = False,
                          help = 'use .dat output files (default: do not use dat)')
-    parser.add_argument('-m', dest = "merge", type = int, default = 0,
+    parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
     # Plot Parameters (variable)
