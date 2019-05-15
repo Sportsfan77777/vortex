@@ -132,6 +132,8 @@ dust_surface_density_zero = p.sigma0 * p.epsilon
 planet_mass = 1.0
 taper_time = p.masstaper
 
+dt = p.ninterm * p.dt
+
 fargo_par = util.get_pickled_parameters()
 
 """
@@ -322,13 +324,12 @@ def make_plot(frame, show = False):
     plot.yticks(angles)
 
     # Annotate Axes
-    time = p.ninterm * p.dt
-    orbit = (time / (2 * np.pi)) * frame
+    orbit = (dt / (2 * np.pi)) * frame
 
     if orbit >= taper_time:
         current_mass = planet_mass
     else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / (taper_time / 2.0 / np.pi))), 2) * planet_mass
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
     #title = readTitle()
 
