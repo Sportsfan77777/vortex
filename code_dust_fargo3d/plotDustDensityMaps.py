@@ -99,7 +99,7 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'highest contour (default: 3.5)')
     parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
                          help = 'number of contours (choose this or separation) (default: None)')
-    parser.add_argument('--separation', dest = "separation", type = int, default = 0.1,
+    parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
