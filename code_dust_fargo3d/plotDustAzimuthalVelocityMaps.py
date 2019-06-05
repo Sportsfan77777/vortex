@@ -276,6 +276,10 @@ def make_plot(frame, show = False):
         velocity = fromfile("dust%dvx%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
 
+    ## Subtract Keplerian Velocity ##
+    keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
+    velocity -= keplerian_velocity[:, np.newaxis]
+
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
