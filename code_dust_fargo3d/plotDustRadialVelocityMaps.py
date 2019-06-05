@@ -168,6 +168,13 @@ dust_number = args.dust_number
 merge = args.merge
 mpi = args.mpi
 
+if dust_number == 1:
+  size = p.invstokes1
+elif dust_number == 2:
+  size = p.invstokes2
+elif dust_number == 3:
+  size = p.invstokes3
+
 # Plot Parameters (variable)
 show = args.show
 
@@ -265,7 +272,7 @@ def make_plot(frame, show = False):
         gas_density = Fields("./", 'gas', frame).get_field("dens").reshape(num_rad, num_theta)
         velocity = Fields("./", 'dust%d' % dust_number, frame).get_field("vy").reshape(num_rad, num_theta)
     else:
-        gas_density = fromfile("dens%d.dat" % frame).reshape(num_rad, num_theta)
+        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
         velocity = fromfile("dust%dvy%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
 
