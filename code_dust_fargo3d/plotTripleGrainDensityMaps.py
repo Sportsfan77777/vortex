@@ -179,9 +179,9 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = r_min; x_max = r_max
+    y_min = r_min; y_max = r_max
 else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+    y_min = args.r_lim[0]; y_max = args.r_lim[1]
 center = args.center
 
 # Plot Parameters (contours)
@@ -363,7 +363,7 @@ def make_plot(frame, show = False):
            plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
 
         if number == 1:
-           plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), bbox=dict(facecolor = 'w', edgecolor = 'k', pad = 10.0), y = 1.08, fontsize = fontsize + 2)
+           plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), bbox=dict(facecolor = 'w', edgecolor = 'k', pad = 10.0), y = 1.08, fontsize = fontsize + 1)
 
         # Label
         left_x = plot.xlim()[0]; right_x = plot.xlim()[-1]; range_x = right_x - left_x; margin_x = 0.05 * range_x
@@ -372,7 +372,7 @@ def make_plot(frame, show = False):
         if number == 1:
            # Gas
            title = r"$\mathrm{Gas\ Density}$"
-           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+           #plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
         else:
            # Dust
            this_size = util.get_size(grain)
