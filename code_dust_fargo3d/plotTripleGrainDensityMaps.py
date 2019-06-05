@@ -132,12 +132,13 @@ dust_surface_density_zero = p.sigma0 * p.epsilon
 
 planet_mass = 1.0
 taper_time = p.masstaper
+viscosity = p.nu
 
 dt = p.ninterm * p.dt
 
-"""
 fargo_par = util.get_pickled_parameters()
 
+"""
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
@@ -309,8 +310,8 @@ def make_plot(frame, show = False):
         else:
             gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
             if i > 0:
-               density = fromfile("dust%ddens%d.dat" % (number, frame)).reshape(num_rad, num_theta)
-        normalized_gas_density = density / surface_density_zero
+               density = fromfile("dust%ddens%d.dat" % (i, frame)).reshape(num_rad, num_theta)
+        normalized_gas_density = gas_density / surface_density_zero
         if i > 0:
            normalized_density = density / dust_surface_density_zero
 
@@ -326,10 +327,11 @@ def make_plot(frame, show = False):
         if i == 0:
            cmap = 'viridis'
            result = ax.pcolormesh(x, y, np.transpose(normalized_gas_density), cmap = cmap)
-           fig.colorbar(result); result.clim(0, cmaxGas)
+           fig.colorbar(result); result.set_clim(0, cmaxGas)
         else:
+           cmap =  args.cmap
            result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
-           fig.colorbar(result); result.clim(0, cmax[i])
+           fig.colorbar(result); result.set_clim(0, cmax[i])
 
         if use_contours and i > 0:
             levels = np.linspace(low_contour, high_contour, num_levels)
@@ -373,6 +375,8 @@ def make_plot(frame, show = False):
            plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
         else:
            # Dust
+           this_size = util.get_size(grain)
+
            size_label = util.get_size_label(this_size)
            stokes_number = util.get_stokes_number(this_size)
 
@@ -391,7 +395,7 @@ def make_plot(frame, show = False):
            plot.text(left_start_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 1)
            plot.text(left_start_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 1)
 
-           line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper
+           line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper_time
            line4 = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (num_rad, num_theta)
 
            plot.text(right_end_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 1)
