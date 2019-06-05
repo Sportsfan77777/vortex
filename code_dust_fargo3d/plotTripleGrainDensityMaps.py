@@ -69,8 +69,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "multigrainDensityMaps",
+                         help = 'save directory (default: multigrainDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: do not use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -100,13 +100,17 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
-                         help = 'maximum density in colorbar (default: 2)')
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
+                         help = 'color map (default: inferno)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, nargs = 3, default = None,
+                         help = 'dust maximum density in colorbar (default: None)')
+    parser.add_argument('--cmaxGas', dest = "cmaxGas", type = float, default = 1.4,
+                         help = 'gas maximum density in colorbar (default: 1.4)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 18)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'labelsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -124,6 +128,7 @@ num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
+dust_surface_density_zero = p.sigma0 * p.epsilon
 
 planet_mass = 1.0
 taper_time = p.masstaper
@@ -189,10 +194,16 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+cmax = args.cmax
+cmaxGas = args.cmaxGas
 
 fontsize = args.fontsize
+labelsize = args.labelsize
 dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 
 """
 # Number of Cores 
@@ -231,11 +242,37 @@ clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
+"""
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
-"""
+
+###############################################################################
+
+### Helper Functions ###
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_density = np.roll(normalized_density, shift_c)
+    return shifted_density, shift_c
 
 ###############################################################################
 
@@ -250,62 +287,126 @@ def generate_colors(n):
 
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
-    ax = fig.add_subplot(111)
+    fig = plot.figure(figsize = (7, 14), dpi = dpi)
 
-    # Data
-    if merge > 0:
-        num_merged_cores = merge
-        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
-    elif mpi:
-        field = "dens"
-        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
-    else:
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-    normalized_density = density / surface_density_zero
+    # Indvidual Subplots (1 Gas + 3 Dust)
+    def add_to_plot(i, grain):
+        # Identify Subplot
+        number = i + 1
+        ax = plot.subplot(4, 1, number)
 
-    ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+        # Data
+        if merge > 0:
+            num_merged_cores = merge
+            gas_density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+            if i > 0:
+               density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta, fluid = 'dust%d' % i)
+        elif mpi:
+            field = "dens"
+            gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+            if i > 0:
+               density = Fields("./", 'dust%d' % i, frame).get_field(field).reshape(num_rad, num_theta)
+        else:
+            gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+            if i > 0:
+               density = fromfile("dust%ddens%d.dat" % (number, frame)).reshape(num_rad, num_theta)
+        normalized_gas_density = density / surface_density_zero
+        if i > 0:
+           normalized_density = density / dust_surface_density_zero
 
-    fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+        if center:
+            if i > 0:
+                normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
+            normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
-    if use_contours:
-        levels = np.linspace(low_contour, high_contour, num_levels)
-        colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        ### Plot ###
+        x = rad
+        y = theta * (180.0 / np.pi)
 
-    # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
+        if i == 0:
+           cmap = 'viridis'
+           result = ax.pcolormesh(x, y, np.transpose(normalized_gas_density), cmap = cmap)
+           fig.colorbar(result); result.clim(0, cmaxGas)
+        else:
+           result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+           fig.colorbar(result); result.clim(0, cmax[i])
 
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+        if use_contours and i > 0:
+            levels = np.linspace(low_contour, high_contour, num_levels)
+            colors = generate_colors(num_levels)
+            plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
-    # Annotate Axes
-    orbit = (dt / (2 * np.pi)) * frame
+        # Axes
+        plot.xlim(x_min, x_max)
+        plot.ylim(0, 360)
 
-    if orbit >= taper_time:
-        current_mass = planet_mass
-    else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+        angles = np.linspace(0, 360, 7)
+        plot.yticks(angles)
 
-    #title = readTitle()
+        ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 6)
 
-    unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
 
-    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+        # Annotate Axes
+        orbit = (dt / (2 * np.pi)) * frame
+
+        if orbit >= taper_time:
+            current_mass = planet_mass
+        else:
+            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+        if number == 4:
+           plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
+        if number == 1 or number == 3:
+           plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
+
+        if number == 1:
+           plot.title(r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{J}$]" % (orbit, current_mass), bbox=dict(facecolor = 'w', edgecolor = 'k', pad = 10.0), y = 1.08, fontsize = fontsize + 2)
+
+        # Label
+        left_x = plot.xlim()[0]; right_x = plot.xlim()[-1]; range_x = right_x - left_x; margin_x = 0.05 * range_x
+        bottom_y = plot.ylim()[0]; top_y = plot.ylim()[-1]; range_y = top_y - bottom_y; margin_y = 0.15 * range_y
+
+        if number == 1:
+           # Gas
+           title = r"$\mathrm{Gas\ Density}$"
+           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+        else:
+           # Dust
+           size_label = util.get_size_label(this_size)
+           stokes_number = util.get_stokes_number(this_size)
+
+           title = r"%s$\mathrm{-size}$" % size_label
+           stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
+           
+           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+           plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+
+        # Text
+        line_y = top_y + 0.31 * range_y; linebreak = 0.16 * range_y
+        left_start_x = left_x - 3.0 * margin_x; right_end_x = right_x + 4.0 * margin_x;
+        if number == 1:
+           line1 = r'$M_p = %d$ $M_J$' % planet_mass
+           line2 = r'$\nu = 10^{%d}$' % round(np.log(viscosity) / np.log(10), 0)
+           plot.text(left_start_x, line_y + linebreak, line1, horizontalalignment = 'left', fontsize = fontsize + 1)
+           plot.text(left_start_x, line_y, line2, horizontalalignment = 'left', fontsize = fontsize + 1)
+
+           line3 = r'$T_\mathrm{growth} = %d$ $\rm{orbits}$' % taper
+           line4 = r"$N_\mathrm{r} \times \ N_\mathrm{\phi} = %d \times \ %d$" % (num_rad, num_theta)
+
+           plot.text(right_end_x, line_y + linebreak, line3, horizontalalignment = 'right', fontsize = fontsize + 1)
+           plot.text(right_end_x, line_y, line4, horizontalalignment = 'right', fontsize = fontsize + 1)
+
+    add_to_plot(0, "gas") # Actually Gas!
+    add_to_plot(1, "cm")
+    add_to_plot(2, "hcm")
+    add_to_plot(3, "mm")
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/densityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/multigrainDensityMaps_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_densityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_multigrainDensityMaps_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
