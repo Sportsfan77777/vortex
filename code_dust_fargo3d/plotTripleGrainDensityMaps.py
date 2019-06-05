@@ -321,8 +321,8 @@ def make_plot(frame, show = False):
             normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
         ### Plot ###
-        x = rad
-        y = theta * (180.0 / np.pi)
+        x = theta * (180.0 / np.pi)
+        y = rad
 
         if i == 0:
            cmap = 'viridis'
@@ -331,7 +331,7 @@ def make_plot(frame, show = False):
         else:
            cmap =  args.cmap
            result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
-           fig.colorbar(result); result.set_clim(0, cmax[i])
+           fig.colorbar(result); result.set_clim(0, cmax[i - 1])
 
         if use_contours and i > 0:
             levels = np.linspace(low_contour, high_contour, num_levels)
@@ -339,11 +339,11 @@ def make_plot(frame, show = False):
             plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
         # Axes
-        plot.xlim(x_min, x_max)
-        plot.ylim(0, 360)
-
+        plot.xlim(0, 360)
+        plot.ylim(y_min, y_max)
+        
         angles = np.linspace(0, 360, 7)
-        plot.yticks(angles)
+        plot.xticks(angles)
 
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
         ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 6)
@@ -383,8 +383,8 @@ def make_plot(frame, show = False):
            title = r"%s$\mathrm{-size}$" % size_label
            stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
            
-           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-           plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+           #plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+           #plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
 
         # Text
         line_y = top_y + 0.31 * range_y; linebreak = 0.16 * range_y
