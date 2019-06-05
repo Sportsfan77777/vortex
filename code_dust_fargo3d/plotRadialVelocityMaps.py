@@ -102,7 +102,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: seismic)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1,
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.2,
                          help = 'maximum radial velocity in colorbar (default: 0.2)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -256,18 +256,20 @@ def make_plot(frame, show = False):
     # Data
     if merge > 0:
         num_merged_cores = merge
-        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+        gas_density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+        velocity = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta, field = "vy")
     elif mpi:
-        field = "vy"
-        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+        gas_density = Fields("./", 'gas', frame).get_field("dens").reshape(num_rad, num_theta)
+        velocity = Fields("./", 'gas', frame).get_field("vy").reshape(num_rad, num_theta)
     else:
-        density = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
-    normalized_density = density / surface_density_zero
+        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+        velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
+    normalized_gas_density = gas_density / surface_density_zero
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(velocity), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
