@@ -326,17 +326,17 @@ def make_plot(frame, show = False):
 
         if i == 0:
            cmap = 'viridis'
-           result = ax.pcolormesh(x, y, np.transpose(normalized_gas_density), cmap = cmap)
+           result = ax.pcolormesh(x, y, normalized_gas_density, cmap = cmap)
            fig.colorbar(result); result.set_clim(0, cmaxGas)
         else:
            cmap =  args.cmap
-           result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+           result = ax.pcolormesh(x, y, normalized_density, cmap = cmap)
            fig.colorbar(result); result.set_clim(0, cmax[i - 1])
 
         if use_contours and i > 0:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
-            plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+            plot.contour(x, y, normalized_gas_density, levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
         # Axes
         plot.xlim(0, 360)
