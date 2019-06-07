@@ -111,6 +111,9 @@ taper_time = p.masstaper
 
 dt = p.ninterm * p.dt
 
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
 ### Get Input Parameters ###
 
 # Frames
@@ -167,6 +170,8 @@ density_unit = mass_unit / radius_unit**2 # unit conversion factor
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
+fargo_par["Nrad"] = num_rad; fargo_par["Nsec"] = num_theta
+
 fargo_par["new_num_rad"] = new_num_rad; fargo_par["new_num_theta"] = new_num_theta
 fargo_par["new_r_min"] = new_r_min; fargo_par["new_r_max"] = new_r_max
 
@@ -186,7 +191,7 @@ def retrieve_density(frame, size_names):
             # For debugging purposes to test contribution of a single grain size
             pass
         else:
-            density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory)
+            density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = i + 1)
 
     return density, starting_sizes
 
