@@ -170,6 +170,8 @@ density_unit = mass_unit / radius_unit**2 # unit conversion factor
 ###############################################################################
 
 ### Add new parameters to dictionary ###
+fargo_par["p"] = p
+
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 

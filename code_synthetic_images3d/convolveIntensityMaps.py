@@ -68,21 +68,24 @@ args = new_argument_parser().parse_args()
 fn = "id%04d_par.p" % args.id_number
 fargo_par = pickle.load(open(fn, "rb"))
 
-num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
-r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+p = fargo_par["p"]
+
+num_rad = p.ny; num_theta = p.nx
+r_min = p.ymin; r_max = p.ymax
+
+surface_density_zero = p.sigma0
+dust_surface_density_zero = p.sigma0 * p.epsilon
+
+planet_mass = 1.0
+taper_time = p.masstaper
+
+scale_height = p.aspectratio
+viscosity = p.nu
+
+dt = p.ninterm * p.dt
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
-
-jupiter_mass = 1e-3
-planet_mass = fargo_par["PlanetMass"] / jupiter_mass
-taper_time = fargo_par["MassTaper"]
-
-surface_density_zero = fargo_par["Sigma0"] / 100
-disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
-
-scale_height = fargo_par["AspectRatio"]
-viscosity = fargo_par["Viscosity"]
 
 ### Get Synthetic Image Parameters ###
 synthetic_par = np.loadtxt("../id%04d_parameters.dat" % args.id_number)
