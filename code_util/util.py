@@ -88,13 +88,17 @@ def read_gas_data(frame, fargo_par, normalize = True, directory = "."):
         data /= surface_density_zero
     return data
 
-def read_dust_data(frame, fargo_par, normalize = True, directory = "."):
+def read_dust_data(frame, fargo_par, normalize = True, directory = ".", n = None):
     """ read dust data """
     ######## Get Parameters #########
     surface_density_zero = fargo_par["Sigma0"]
 
     ########### Method ##############
-    data = read_data(frame, 'dust', fargo_par, directory = directory) 
+    dust_name = 'dust'
+    if n is not None:
+        dust_name = "%s%d" % (dust_name, n) # Modification for FARGO3D
+
+    data = read_data(frame, dust_name, fargo_par, directory = directory) 
     if normalize:
         data /= (surface_density_zero / 100.0)
     return data
