@@ -53,6 +53,7 @@ def read_data(frame, fn, fargo_par, id_number = None, version = None, directory 
     # Dictionary
     basenames = {}
     basenames['gas'] = "gasdens%d.dat"; basenames['dust'] = "gasddens%d.dat"; basenames['input_density'] = "id%04d_gasddens%d.p";
+    basenames['dust1'] = "dust1%d.dat"; basenames['dust2'] = "dust2%d.dat"; basenames['dust3'] = "dust3%d.dat"
     basenames['intensity'] = "id%04d_intensity%04d.dat"; basenames['polar_intensity'] = "id%04d_intensityMap%04d.p"; basenames['cartesian_intensity'] = "id%04d_intensityCartGrid%04d.p"
 
     # Specific Data
