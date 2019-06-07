@@ -34,6 +34,9 @@ import util
 import azimuthal as az
 from labelOpacities import label_opacities
 
+from advanced import Parameters
+from reader import Fields
+
 size_names = ["cm", "hcm", "mm"] # , "hmm", hum", "um"]
 sizes = np.array([1.0, 0.3, 0.1]) #, 0.03, 0.01, 0.0001])
 
