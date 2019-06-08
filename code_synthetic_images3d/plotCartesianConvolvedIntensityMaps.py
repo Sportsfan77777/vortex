@@ -179,17 +179,10 @@ def make_plot(frame, show = False):
     xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Get Shift
-    dust_fargo_par = util.get_pickled_parameters(directory = "../../../cm-size") ## shorten name?
-    ######## Need to extract parameters, and add 'rad' and 'theta' ########
-    dust_rad = np.linspace(dust_fargo_par['Rmin'], dust_fargo_par['Rmax'], dust_fargo_par['Nrad'])
-    dust_theta = np.linspace(0, 2 * np.pi, dust_fargo_par['Nsec'])
-    dust_fargo_par['rad'] = dust_rad; dust_fargo_par['theta'] = dust_theta
-    gas_surface_density_zero = dust_fargo_par['Sigma0']
-
-    dust_density = util.read_data(frame, 'dust', dust_fargo_par, id_number = id_number, directory = "../../../cm-size")
+    gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../../")
 
     # Shift gas density with center of dust density
-    shift = az.get_lookup_shift(frame, directory = "../../../cm-size")
+    shift = az.shift_away_from_minimum(gas_density, fargo_par)
 
     # Normalize
     if normalize:
@@ -218,9 +211,9 @@ def make_plot(frame, show = False):
     ax.add_artist(planet_orbit)
 
     # Locate Planet
-    if shift < -len(dust_theta):
-        shift += len(dust_theta)
-    planet_theta = dust_theta[shift]
+    if shift < -len(theta):
+        shift += len(theta)
+    planet_theta = theta[shift]
     planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
     planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
 
