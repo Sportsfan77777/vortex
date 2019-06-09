@@ -48,6 +48,8 @@ movie_dictionary["azimuthalPressure"] = "azimuthalPressureGradientMap_"
 movie_dictionary["limitingVelocity"] = "limitingVelocityMap_"
 movie_dictionary["maxLimitingVelocity"] = "maxLimitingVelocity_"
 movie_dictionary["alphaViscosity"] = "alphaViscosityMap_"
+movie_dictionary["radialVelocity"] = "radialVelocityMap_"
+movie_dictionary["azimuthalVelocity"] = "azimuthalVelocityMap_"
 
 ###############################################################################
 
