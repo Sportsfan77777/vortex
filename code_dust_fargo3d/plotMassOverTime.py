@@ -188,7 +188,7 @@ def make_plot(show = False):
     #title = readTitle()
 
     unit = "orbits"
-    plot.xlabel(r"Time [$%s$]" % unit, fontsize = fontsize)
+    plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
     plot.ylabel(r"$M_p$ [$M_J$]", fontsize = fontsize)
 
     #if title is None:
