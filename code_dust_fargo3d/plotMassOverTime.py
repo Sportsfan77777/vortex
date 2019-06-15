@@ -185,14 +185,6 @@ def make_plot(show = False):
     plot.xlim(x_min, x_max)
     plot.ylim(0, max_y)
 
-    # Annotate Axes
-    orbit = (dt / (2 * np.pi)) * frame
-
-    if orbit >= taper_time:
-        current_mass = planet_mass
-    else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
-
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
