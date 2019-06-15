@@ -86,7 +86,6 @@ r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
 
-planet_mass = 1.0
 taper_time = p.masstaper
 
 viscosity = p.nu
@@ -97,6 +96,7 @@ fargo_par = util.get_pickled_parameters()
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
 
 
 """
@@ -198,6 +198,8 @@ def make_plot(show = False):
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
+
+    title1 = r"$\Sigma_0 = %.3e$   $M_c = %.2f\ M_J$   $A = %.2f" % (surface_density_zero, planet_mass, accretion)
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
