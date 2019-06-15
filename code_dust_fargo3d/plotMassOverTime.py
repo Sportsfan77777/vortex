@@ -133,7 +133,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = r_min; x_max = r_max
+    x_min = 0; x_max = 1000
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
@@ -187,8 +187,8 @@ def make_plot(show = False):
 
     #title = readTitle()
 
-    unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    unit = "orbits"
+    plot.xlabel(r"Time [$%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"$M_p$ [$M_J$]", fontsize = fontsize)
 
     #if title is None:
