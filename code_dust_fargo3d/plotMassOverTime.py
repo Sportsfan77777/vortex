@@ -171,7 +171,7 @@ def make_plot(show = False):
 
     if args.ref > 0:
         x = times
-        y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * planet_mass
+        y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * 1.0
         plot.plot(x, y_ref, linewidth = linewidth, alpha = 0.5)
 
     # Axes
