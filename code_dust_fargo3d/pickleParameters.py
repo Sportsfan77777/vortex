@@ -65,6 +65,7 @@ def parse_planet_mass(par_dictionary):
             planet_name = line_sp[0]
             if planet_name == "Jupiter":
                 par_dictionary["PlanetMass"] = float(line_sp[2])
+                par_dictionary["Accretion"] = float(line_sp[3])
 
     # Find *.cfg file (assume there is only one *.cfg file)
     files = glob.glob("*.cfg") # usually Jup.cfg
