@@ -72,7 +72,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
-                         help = 'use .mpio output files (default: do not use dat)')
+                         help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
@@ -125,19 +125,20 @@ r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
 
-planet_mass = 1.0
-taper_time = p.masstaper
-
 dt = p.ninterm * p.dt
 
-"""
 fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
+
+"""
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
-jupiter_mass = 1e-3
-planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+
 taper_time = fargo_par["MassTaper"]
 
 surface_density_zero = fargo_par["Sigma0"]
@@ -298,8 +299,13 @@ def make_plot(frame, show = False):
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
 
+    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    y_text = 1.14
+
+    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Save, Show, and Close
     if version is None:
