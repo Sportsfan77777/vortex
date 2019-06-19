@@ -104,9 +104,13 @@ viscosity = p.nu
 
 dt = p.ninterm * p.dt
 
-"""
 fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
 
+"""
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
@@ -156,6 +160,12 @@ max_y = args.max_y
 fontsize = args.fontsize
 linewidth = args.linewidth
 dpi = args.dpi
+
+# Planet File
+# Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7]
+accreted_mass = data[:, 8] / jupiter_mass
 
 ### Add new parameters to dictionary ###
 #fargo_par["rad"] = rad
@@ -227,6 +237,8 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
+    current_mass += accreted_mass[frame]
+
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
@@ -241,7 +253,8 @@ def make_plot(frame, show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
-    title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
