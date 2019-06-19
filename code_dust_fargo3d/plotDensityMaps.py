@@ -199,7 +199,7 @@ dpi = args.dpi
 # Data
 data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
-accreted_mass = data[:, 8]
+accreted_mass = data[:, 8] / jupiter_mass
 
 """
 # Number of Cores 
