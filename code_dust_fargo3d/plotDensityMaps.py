@@ -195,6 +195,12 @@ clim = [0, args.cmax]
 fontsize = args.fontsize
 dpi = args.dpi
 
+# Planet File
+# Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7]
+accreted_mass = data[:, 8]
+
 """
 # Number of Cores 
 num_cores = args.num_cores
@@ -292,6 +298,8 @@ def make_plot(frame, show = False):
         current_mass = planet_mass
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+    current_mass += accreted_mass[frame]
 
     #title = readTitle()
 
