@@ -93,14 +93,18 @@ num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
-
-planet_mass = 1.0
 taper_time = p.masstaper
 
 viscosity = p.nu
 scale_height = p.aspectratio
 
 dt = p.ninterm * p.dt
+
+fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
 
 """
 fargo_par = util.get_pickled_parameters()
@@ -151,6 +155,12 @@ max_y = args.max_y
 fontsize = args.fontsize
 linewidth = args.linewidth
 dpi = args.dpi
+
+# Planet File
+# Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7]
+accreted_mass = data[:, 8] / jupiter_mass
 
 ### Add new parameters to dictionary ###
 #fargo_par["rad"] = rad
@@ -285,9 +295,10 @@ def make_plot(show = False):
 
     # Annotate
     #this_title = readTitle()
+    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Excess Mass", fontsize = fontsize)
-    #plot.title(this_title, fontsize = fontsize)
+    plot.title(title1, fontsize = fontsize)
 
     #plot.legend(loc = "upper left")
 
