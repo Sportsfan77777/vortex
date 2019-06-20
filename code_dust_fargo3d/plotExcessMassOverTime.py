@@ -289,7 +289,7 @@ def make_plot(show = False):
     plot.ylabel("Excess Mass", fontsize = fontsize)
     #plot.title(this_title, fontsize = fontsize)
 
-    plot.legend(loc = "upper left")
+    #plot.legend(loc = "upper left")
 
     # Limits
     plot.xlim(0, frame_range[-1])
