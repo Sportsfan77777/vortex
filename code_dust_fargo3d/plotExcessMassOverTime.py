@@ -53,6 +53,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
                          help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
+                         help = 'use .mpio output files (default: use dat)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -138,6 +140,8 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+mpi = args.mpi
+
 # Plot Parameters (variable)
 show = args.show
 
@@ -188,9 +192,14 @@ def get_excess_mass(args):
     i, frame = args
 
     # Get Data
-    field = "dens"
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-    background_density = fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / surface_density_zero
+    
+    if mpi:
+        field = "dens"
+        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
+        background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
+    else:
+        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+        background_density = fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / surface_density_zero
 
     #fargo_directory = "taper750_fargo_comparison"
     #density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
