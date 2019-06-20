@@ -180,7 +180,7 @@ def get_excess_mass(args):
     # Get Data
     field = "dens"
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-    background_density = fromfile("gasdens%d.dat" % frame - 1).reshape(num_rad, num_theta) / surface_density_zero
+    background_density = fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / surface_density_zero
 
     #fargo_directory = "taper750_fargo_comparison"
     #density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
