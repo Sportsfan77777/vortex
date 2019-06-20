@@ -74,8 +74,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'save directory (default: dustDensityMaps%d)')
     parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
                          help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
-    parser.add_argument('--dat', dest = "dat", action = 'store_true', default = False,
-                         help = 'use .dat output files (default: do not use dat)')
+    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
+                         help = 'use .mpi0 output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
@@ -129,12 +129,15 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-planet_mass = 1.0
 taper_time = p.masstaper
 
 dt = p.ninterm * p.dt
 
 fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
 
 """
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
@@ -168,7 +171,7 @@ if not os.path.isdir(save_directory):
 
 dust_number = args.dust_number
 merge = args.merge
-dat = args.dat
+mpi = args.mpi
 
 # Plot Parameters (variable)
 show = args.show
@@ -198,6 +201,12 @@ clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
+
+# Planet File
+# Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7]
+accreted_mass = data[:, 8] / jupiter_mass
 
 """
 # Number of Cores 
@@ -289,13 +298,14 @@ def make_plot(frame, show = False):
         num_merged_cores = merge
         gas_density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
         density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta, fluid = 'dust%d' % dust_number)
-    elif dat:
-        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-        density = fromfile("dust%ddens%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
-    else:
+    elif mpi:
         field = "dens"
         gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
         density = Fields("./", 'dust%d' % dust_number, frame).get_field(field).reshape(num_rad, num_theta)
+    else:
+        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+        density = fromfile("dust%ddens%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
+        
     normalized_gas_density = gas_density / surface_density_zero
     normalized_density = density / dust_surface_density_zero
 
@@ -331,10 +341,13 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    #title = readTitle()
+    current_mass += accreted_mass[frame]
 
+    #title = readTitle()
+    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
