@@ -179,12 +179,12 @@ def get_excess_mass(args):
 
     # Get Data
     field = "dens"
-    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
-    background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+    background_density = fromfile("gasdens%d.dat" % frame - 1).reshape(num_rad, num_theta) / surface_density_zero
 
-    fargo_directory = "taper750_fargo_comparison"
-    density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
-    background_density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / surface_density_zero
+    #fargo_directory = "taper750_fargo_comparison"
+    #density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
+    #background_density_compare = (fromfile("../%s/gasdens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / surface_density_zero
 
     def helper(density, background_density):
         diff_density = density - background_density
@@ -213,22 +213,22 @@ def get_excess_mass(args):
         return excess_mass, vortex_excess
 
     excess_mass, vortex_excess = helper(density, background_density)
-    excess_mass_compare, vortex_excess_compare = helper(density_compare, background_density_compare)
+    #excess_mass_compare, vortex_excess_compare = helper(density_compare, background_density_compare)
 
     # Get Peak
     peak_diff_density = np.max(vortex_excess)
-    peak_diff_density_compare = np.max(vortex_excess_compare)
+    #peak_diff_density_compare = np.max(vortex_excess_compare)
 
     # Print Update
     print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
-    print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
+    #print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
 
     # Store Data
     mass_over_time[i] = excess_mass
     peak_over_time[i] = peak_diff_density
 
-    mass_over_time_compare[i] = excess_mass_compare
-    peak_over_time_compare[i] = peak_diff_density_compare
+    #mass_over_time_compare[i] = excess_mass_compare
+    #peak_over_time_compare[i] = peak_diff_density_compare
 
 ###############################################################################
 
@@ -259,8 +259,8 @@ p.terminate()
 max_mass = np.max(mass_over_time)
 max_peak = np.max(peak_over_time)
 
-max_mass_compare = np.max(mass_over_time_compare)
-max_peak_compare = np.max(peak_over_time_compare)
+#max_mass_compare = np.max(mass_over_time_compare)
+#max_peak_compare = np.max(peak_over_time_compare)
 
 ## Pickle to combine later ##
 
@@ -276,12 +276,12 @@ def make_plot(show = False):
     # Curves
     plot.plot(frame_range, mass_over_time, linewidth = linewidth)
     #plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
-    plot.plot(frame_range, mass_over_time_compare, linewidth = linewidth, label = "fargo")
+    #plot.plot(frame_range, mass_over_time_compare, linewidth = linewidth, label = "fargo")
 
     # Reference Lines
     plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
     #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
-    plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
+    #plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
 
     # Annotate
     #this_title = readTitle()
