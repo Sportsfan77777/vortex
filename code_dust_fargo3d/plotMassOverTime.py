@@ -50,6 +50,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Reference
     parser.add_argument('--ref', dest = "ref", type = int, default = 0,
                          help = 'reference taper time for prescribed growth curve (default: no reference)')
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
+                         help = 'select directories to compare planet growth rates')
 
 
     # Plot Parameters (variable)
@@ -173,6 +175,19 @@ def make_plot(show = False):
         x = times
         y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * 1.0
         plot.plot(x, y_ref, linewidth = linewidth, alpha = 0.5)
+
+    if args.compare is not None:
+        for i, directory in enumerate(args.compare):
+            data_comp = np.loadtxt("%s/planet0.dat" % directory)
+            times = data_comp[:, 0]
+            base_mass = data_comp[:, 7]
+            accreted_mass = data_comp[:, 8]
+
+            x = times
+            y = total_mass / jupiter_mass
+            result = plot.plot(x, y, linewidth = linewidth, zorder = 1, label = "%d" % i)
+
+        plot.legend(loc = "upper left")
 
     # Axes
     if args.max_y is None:
