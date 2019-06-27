@@ -183,6 +183,8 @@ def make_plot(show = False):
             base_mass = data_comp[:, 7]
             accreted_mass = data_comp[:, 8]
 
+            total_mass = base_mass + accreted_mass
+
             x = times
             y = total_mass / jupiter_mass
             result = plot.plot(x, y, linewidth = linewidth, zorder = 1, label = "%d" % i)
