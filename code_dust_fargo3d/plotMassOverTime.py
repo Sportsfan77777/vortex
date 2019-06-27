@@ -185,9 +185,9 @@ def make_plot(show = False):
 
             total_mass = base_mass + accreted_mass
 
-            x = times
-            y = total_mass / jupiter_mass
-            result = plot.plot(x, y, linewidth = linewidth, zorder = 1, label = "%d" % i)
+            x_comp = times
+            y_comp = total_mass / jupiter_mass
+            result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%d" % i)
 
         plot.legend(loc = "upper left")
 
