@@ -212,7 +212,7 @@ def make_plot(show = False):
 
     unit = "orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$M_p$ [$M_J$]", fontsize = fontsize)
+    plot.ylabel(r"$\dot{M_p}$ [$M_J / T_p$]", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
