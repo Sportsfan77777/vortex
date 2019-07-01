@@ -167,7 +167,7 @@ def make_plot(show = False):
 
     total_mass = base_mass + accreted_mass
 
-    bondi_rate = surface_density_zero * np.power(total_mass[1:], 2) / np.power(scale_height, 3)
+    bondi_rate = np.pi * surface_density_zero * np.power(total_mass[1:], 2) / np.power(scale_height, 3) * (2.0 * np.pi)
 
     ### Plot ###
     x = times[1:]
