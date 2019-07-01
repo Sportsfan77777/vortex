@@ -174,7 +174,8 @@ def make_plot(show = False):
     y = np.diff(total_mass) / jupiter_mass
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
-    bondi = plot.plot(x, bondi_rate, linewidth = linewidth, zorder = 10, label = "bondi")
+    y_bondi = bondi_rate / jupiter_mass
+    bondi = plot.plot(x, y_bondi, linewidth = linewidth, zorder = 10, label = "bondi")
 
     if args.ref > 0:
         x = times
