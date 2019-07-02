@@ -214,7 +214,7 @@ def make_plot(frame, show = False):
 
         ### Plot ###
         x = rad
-        y_fargo = normalized_density_compare
+        y_compare = normalized_density_compare
         result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "compare")
 
         plot.legend()
