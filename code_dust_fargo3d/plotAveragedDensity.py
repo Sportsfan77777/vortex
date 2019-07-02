@@ -52,8 +52,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
                          help = 'save directory (default: gasDensityMaps)')
-    parser.add_argument('--dat', dest = "dat", action = 'store_true', default = False,
-                         help = 'use .dat output files (default: do not use dat)')
+    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
+                         help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
@@ -71,8 +71,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
-    parser.add_argument('--compare', dest = "compare_to_fargo", action = 'store_true', default = False,
-                         help = 'compare to fargo (default: do not do it!)')
+    parser.add_argument('--compare', dest = "compare", default = None,
+                         help = 'compare to another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -141,7 +141,7 @@ if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
 merge = args.merge
-dat = args.dat
+mpi = args.mpi
 
 # Plot Parameters (variable)
 show = args.show
@@ -184,11 +184,11 @@ def make_plot(frame, show = False):
     if merge > 0:
         num_merged_cores = merge
         density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
-    elif dat:
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-    else:
+    elif mpi:
         field = "dens"
         density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+    else:
+        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
@@ -206,15 +206,15 @@ def make_plot(frame, show = False):
         y_zero = normalized_density_zero
         result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
 
-    if args.compare_to_fargo:
-        density_fargo = (fromfile("../first_test_fargo_comparison/gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-        averagedDensity_fargo = np.average(density_fargo, axis = 1)
-        normalized_density_fargo = averagedDensity_fargo / surface_density_zero
+    if args.compare is not None:
+        density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
+        averagedDensity_compare = np.average(density_compare, axis = 1)
+        normalized_density_compare = averagedDensity_compare / surface_density_zero
 
         ### Plot ###
         x = rad
-        y_fargo = normalized_density_fargo
-        result = plot.plot(x, y_fargo, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "fargo")
+        y_fargo = normalized_density_compare
+        result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "compare")
 
         plot.legend()
 
@@ -264,8 +264,8 @@ def make_plot(frame, show = False):
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
-    plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+    #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
 
     # Save, Show, and Close
