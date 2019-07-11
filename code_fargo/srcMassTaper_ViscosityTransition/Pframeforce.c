@@ -51,7 +51,7 @@ PlanetarySystem *sys;
   for (k = 0; k < NbPlanets; k++) {
     xplanet = sys->x[k];
     yplanet = sys->y[k];
-    mplanet = sys->mass[k]*MassTaper;
+    mplanet = sys->mass[k]*MassTaper + sys->accreted_mass[k];
     PlanetDistance = sqrt(xplanet*xplanet+yplanet*yplanet);
     InvPlanetDistance3 =  1.0/PlanetDistance/PlanetDistance/PlanetDistance;
     RRoche = PlanetDistance*pow((1.0/3.0*mplanet),1.0/3.0);
@@ -109,7 +109,7 @@ real dt;
   NbPlanets = sys->nb;
   for (k = 0; k < NbPlanets; k++) {
     if (sys->FeelDisk[k] == YES) {
-      m=sys->mass[k]*MassTaper; /*** ##### MASS TAPER EDIT HERE #### ***/
+      m=sys->mass[k]*MassTaper + sys->accreted_mass[k]; /*** ##### MASS TAPER EDIT HERE #### ***/
       //printf ("Pframe1");
       //fflush (stdout);
       x=sys->x[k];
@@ -126,10 +126,12 @@ real dt;
 	smoothing = cs * r * sqrt(r) * THICKNESSSMOOTHING;
       }
       gamma = ComputeAccel (Rho, x, y, smoothing, m);
+      //WriteAccelFile(0, sys->vx[k], sys->vy[k], sys->vz[k]);
       sys->vx[k] += dt * gamma.x;
       sys->vy[k] += dt * gamma.y;
       sys->vx[k] += dt * IndirectTerm.x;
       sys->vy[k] += dt * IndirectTerm.y;
+      //WriteAccelFile(0, sys->vx[k], sys->vy[k]);
     }
   }
 }
@@ -147,7 +149,7 @@ real dt;
     q0[i+n] = sys->y[i];
     q0[i+2*n] = sys->vx[i];
     q0[i+3*n] = sys->vy[i];
-    PlanetMasses[i] = sys->mass[i]*MassTaper; /*** ##### MASS TAPER EDIT HERE  ##### ***/
+    PlanetMasses[i] = sys->mass[i]*MassTaper + sys->accreted_mass[k]; /*** ##### MASS TAPER EDIT HERE  ##### ***/
     //printf ("Pframe2");
     //fflush (stdout);
   }

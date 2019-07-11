@@ -54,7 +54,7 @@ PlanetarySystem *sys;
       Yplanet = sys->y[k];
       VXplanet = sys->vx[k];
       VYplanet = sys->vy[k];
-      Mplanet = sys->mass[k]*MassTaper + 0.000001; //*** ##### MASS TAPER EDIT HERE ##### ***//
+      Mplanet = sys->mass[k]*MassTaper + sys->accreted_mass[k] + 0.000001; //*** ##### MASS TAPER EDIT HERE ##### ***//
       //printf ("Planet1");
       //fflush (stdout);
       Rplanet = sqrt(Xplanet*Xplanet+Yplanet*Yplanet);
@@ -152,7 +152,7 @@ PlanetarySystem *sys;
     	        sys->vx[k] = PxPlanet/Mplanet;
     	        sys->vy[k] = PyPlanet/Mplanet;
           }
-          sys->mass[k] = Mplanet;
+          sys->accreted_mass[k] += dMplanet;
           //printf ("done accreting\n");
           //fflush (stdout);
       }

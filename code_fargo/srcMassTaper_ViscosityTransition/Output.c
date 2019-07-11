@@ -41,8 +41,8 @@ int n;
   fflush (stdout);
   sprintf (name, "%splanet%d.dat", OUTPUTDIR, n);
   output = fopenp (name, "a");
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
-	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
+	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame);
   fclose (output);
   printf ("done\n");
   fflush (stdout);
@@ -60,6 +60,7 @@ int t;
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
     MplanetVirtual = sys->mass[i]*MassTaper; //*** ###### MASS TAPER EDIT HERE ###### ***//
+    AccretedMass = sys->accreted_mass[i];
     //printf ("Output1");
     //fflush (stdout);
     WritePlanetFile (t, i);
@@ -76,8 +77,8 @@ int n;
   if (!CPU_Master) return;
   sprintf (name, "%sbigplanet%d.dat", OUTPUTDIR, n);
   output = fopenp (name, "a");
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
-	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",\
+	   TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame);
   fclose (output);
 }
 
@@ -92,7 +93,8 @@ int t;
     Yplanet = sys->y[i];
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
-    MplanetVirtual = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***//
+    MplanetVirtual = sys->mass[i]*MassTaper; //*** ##### MASS TAPER EDIT HERE ##### ***// 
+    AccretedMass = sys->accreted_mass[i]; 
     //printf ("Output2");
     //fflush (stdout);
     WriteBigPlanetFile (t, i);
