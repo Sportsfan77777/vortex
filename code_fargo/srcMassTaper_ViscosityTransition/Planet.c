@@ -37,8 +37,8 @@ PlanetarySystem *sys;
   count1 = 0;
   count2 = 0;
 
-  sprintf (name, "%saccretion%d.dat", OUTPUTDIR, timestep_a);
-  planet_file = fopenp (name, "a");
+  //sprintf (name, "%saccretion%d.dat", OUTPUTDIR, timestep_a);
+  //planet_file = fopenp (name, "a");
 
   for (k=0; k < sys->nb; k++) {
     if (sys->acc[k] > 1e-10) {
@@ -69,8 +69,8 @@ PlanetarySystem *sys;
       PxPlanet = Mplanet*VXplanet;
       PyPlanet = Mplanet*VYplanet;
 
-      fprintf(planet_file, "\nPlanet: <%.4f, %.4f> at %.4f\n", 1000.0 * Mplanet, RRoche, Rplanet);
-      fprintf(planet_file, "\ni: <%d to %d>; j: <%d to %d>\n", i_min, i_max, j_min, j_max);
+      //fprintf(planet_file, "\nPlanet: <%.4f, %.4f> at %.4f\n", 1000.0 * Mplanet, RRoche, Rplanet);
+      //fprintf(planet_file, "\ni: <%d to %d>; j: <%d to %d>\n", i_min, i_max, j_min, j_max);
 
 #pragma omp parallel for private(j,jf,vrcell,vtcell,vxcell,vycell,l,lip,ljp,xc,yc,dx,dy,distance,deltaM) shared(dPxPlanet, dPyPlanet, dMplanet)
       for (i = i_min; i <= i_max; i++) {
@@ -92,13 +92,13 @@ PlanetarySystem *sys;
 	  vxcell=(vrcell*xc-vtcell*yc)/Rmed[i];
 	  vycell=(vrcell*yc+vtcell*xc)/Rmed[i];
 
-    fprintf(planet_file, "\nQ: (%.4f, %.4f) ", xc, yc);
+    //fprintf(planet_file, "\nQ: (%.4f, %.4f) ", xc, yc);
     count_cells++;
 
 	  if (distance < frac1*RRoche) {
       //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
           //printf("%s", "1");
-          fprintf(planet_file, "1 ");
+          //fprintf(planet_file, "1 ");
           count1++;
 	    deltaM = facc1*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
@@ -114,7 +114,7 @@ PlanetarySystem *sys;
 	  if (distance < frac2*RRoche) {
       //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
         //printf("%s", "2");
-        fprintf(planet_file, "2 ");
+        //fprintf(planet_file, "2 ");
         count2++;
 	    deltaM = facc2*dens[l]*Surf[i];
 	    if (i < Zero_or_active) deltaM = 0.0;
@@ -160,8 +160,8 @@ PlanetarySystem *sys;
     }
   }
   //printf("W");
-  fprintf(planet_file, "\nNumber of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
-  fclose(planet_file);
+  //fprintf(planet_file, "\nNumber of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
+  //fclose(planet_file);
 }
 
 
