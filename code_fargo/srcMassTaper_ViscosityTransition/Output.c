@@ -9,7 +9,7 @@ seek information about the planets at a restart.
 
 #include "fargo.h"
 
-static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
+static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass;
 extern real     LostMass, OmegaFrame;
 extern boolean  Write_Density, Write_Velocity, IsDisk;
 
