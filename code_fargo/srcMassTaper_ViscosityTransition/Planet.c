@@ -153,6 +153,7 @@ PlanetarySystem *sys;
     	        sys->vy[k] = PyPlanet/Mplanet;
           }
           sys->accreted_mass[k] += dMplanet;
+          //sys->mass[k] = Mplanet;
           //printf ("done accreting\n");
           //fflush (stdout);
       }
