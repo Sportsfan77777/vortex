@@ -232,6 +232,7 @@ def make_plot(frame, show = False):
     dt = all_times[1] # 0.00410595556163
 
     accreted_mass = 0.0
+    count1 = 0; count2 = 0
 
     for i, r_i in enumerate(rad[start:end]):
         for j, az_i in enumerate(theta):
@@ -244,18 +245,21 @@ def make_plot(frame, show = False):
             distance = np.sqrt(dx**2 + dy**2)
             r_roche = (planet_mass * 1e-3 / 3.0)**(1.0 / 3.0) * planet_r
 
-            cell_mass = density[i, j] * (np.pi / num_theta) * (rad[start+i+1]**2 - r_i**2)
+            cell_mass = density[start+i, j] * (np.pi / num_theta) * (rad[start+i+1]**2 - r_i**2)
             dm = 0.0
 
             if distance < 0.75 * r_roche:
                 dm = (1.0 / 3.0 * dt) * cell_mass
                 cell_mass *= (1.0 - 1.0 / 3.0 * dt)
+                count1 += 1
             accreted_mass += dm
 
             if distance < 0.45 * r_roche:
                 dm = (2.0 / 3.0 * dt) * cell_mass
+                count2 += 1
             accreted_mass += dm
 
+    print count1, count2
     print accreted_mass, accreted[0]
 
 
