@@ -229,6 +229,8 @@ def make_plot(frame, show = False):
     planet_y = 0
     planet_r = np.sqrt(planet_x**2 + planet_y**2)
 
+    dt = all_times[1] # 0.00410595556163
+
     accreted_mass = 0.0
 
     for i, r_i in enumerate(rad[start:end]):
@@ -246,12 +248,12 @@ def make_plot(frame, show = False):
             dm = 0.0
 
             if distance < 0.75 * r_roche:
-                dm = (1.0 / 3.0) * cell_mass
-                cell_mass *= (2.0 / 3.0)
+                dm = (1.0 / 3.0 * dt) * cell_mass
+                cell_mass *= (1.0 - 1.0 / 3.0 * dt)
             accreted_mass += dm
 
             if distance < 0.45 * r_roche:
-                dm = (2.0 / 3.0) * cell_mass
+                dm = (2.0 / 3.0 * dt) * cell_mass
             accreted_mass += dm
 
     print accreted_mass, accreted[0]
