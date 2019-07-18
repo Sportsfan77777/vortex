@@ -142,8 +142,8 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-rad = np.linspace(r_min, r_max, num_rad)
-theta = np.linspace(0, 2 * np.pi, num_theta)
+rad = np.linspace(r_min, r_max, num_rad + 1)[:-1]
+theta = np.linspace(0, 2.0 * np.pi, num_theta + 1)[:-1]
 
 version = args.version
 if args.r_lim is None:
@@ -181,14 +181,7 @@ def make_plot(frame, show = False):
     #ax = fig.add_subplot(111)
 
     # Data
-    if merge > 0:
-        num_merged_cores = merge
-        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
-    elif mpi:
-        field = "dens"
-        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
-    else:
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
     start = np.searchsorted(rad, 0.9)
