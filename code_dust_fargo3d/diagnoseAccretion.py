@@ -227,8 +227,9 @@ def make_plot(frame, show = False):
 
     planet_x = 1
     planet_y = 0
+    planet_r = np.sqrt(planet_x**2 + planet_y**2)
 
-    accreted_mass = 0
+    accreted_mass = 0.0
 
     for i, r_i in enumerate(rad[start:end]):
         for j, az_i in enumerate(theta):
@@ -239,9 +240,10 @@ def make_plot(frame, show = False):
             dy = planet_y - yc
 
             distance = np.sqrt(dx**2 + dy**2)
-            r_roche = (planet_mass * 1e-3 / 3.0)**(1.0 / 3.0) * distance
+            r_roche = (planet_mass * 1e-3 / 3.0)**(1.0 / 3.0) * planet_r
 
             cell_mass = density[i, j] * (np.pi / num_theta) * (rad[start+i+1]**2 - r_i**2)
+            dm = 0.0
 
             if distance < 0.75 * r_roche:
                 dm = (1.0 / 3.0) * cell_mass
