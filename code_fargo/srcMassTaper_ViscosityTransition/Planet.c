@@ -200,8 +200,8 @@ int n;
   } else {
     PerihelionPA=atan2(y,x);
   }
-  fprintf (output, "%.12g\t%.12g\t%.12g\t%.12g\t%.12g\t%.12g\n", PhysicalTime, e, a, M, V,\
-	   PerihelionPA);
+  fprintf (output, "%.12g\t%.12g\t%.12g\t%.12g\t%.12g\t%.12g\t%.12g\n", PhysicalTime, e, a, M, V,\
+	   PerihelionPA, sys->accreted_mass[n]);
   fclose (output);
 }
  
