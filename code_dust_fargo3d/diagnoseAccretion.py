@@ -201,8 +201,8 @@ data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
-accretion_data = np.loadtxt("accreted.dat")
-all_times = accretion_data[:, 0]; accreted = accretion[:, 1]
+accretion_data = np.loadtxt("accreted0.dat")
+all_times = accretion_data[:, 0]; accreted = accretion_data[:, 1]
 
 def make_plot(frame, show = False):
     # Set up figure
@@ -238,8 +238,18 @@ def make_plot(frame, show = False):
             dx = planet_x - xc
             dy = planet_y - yc
 
-            dm = density[i, j] * (np.pi / num_theta) * (rad[start+i+1]**2 - r_i**2)
+            distance = np.sqrt(dx**2 + dy**2)
+            r_roche = (planet_mass * 1e3 / 3.0)**(1.0 / 3.0) * distance
 
+            cell_mass = density[i, j] * (np.pi / num_theta) * (rad[start+i+1]**2 - r_i**2)
+
+            if distance < 0.75 * r_roche:
+                dm = (1.0 / 3.0) * cell_mass
+                cell_mass *= (2.0 / 3.0)
+            accreted_mass += dm
+
+            if distance < 0.45 * r_roche:
+                dm = (2.0 / 3.0) * cell_mass
             accreted_mass += dm
 
     print accreted_mass, accreted[0]
