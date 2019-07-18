@@ -251,13 +251,15 @@ def make_plot(frame, show = False):
             if distance < 0.75 * r_roche:
                 dm = (1.0 / 3.0 * dt) * cell_mass
                 cell_mass *= (1.0 - 1.0 / 3.0 * dt)
+
                 count1 += 1
-            accreted_mass += dm
+                accreted_mass += dm
 
             if distance < 0.45 * r_roche:
                 dm = (2.0 / 3.0 * dt) * cell_mass
+                
                 count2 += 1
-            accreted_mass += dm
+                accreted_mass += dm
 
     print count1, count2
     print accreted_mass, accreted[0]
