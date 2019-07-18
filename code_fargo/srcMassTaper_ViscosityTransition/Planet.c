@@ -30,6 +30,7 @@ PlanetarySystem *sys;
   vrad   = Vrad->Field;
   vtheta = Vtheta->Field;
   FILE *planet_file;
+  FILE *output;
   char name[256];
 
   timestep_a = floor(PhysicalTime / 2.0 / M_PI);
@@ -159,6 +160,12 @@ PlanetarySystem *sys;
       }
     }
   }
+
+  if (CPU_Rank) return;
+  sprintf (name, "%saccreted%d.dat", OUTPUTDIR, n);
+  output = fopen_prs (name, "a");
+  fprintf (output, "%.12g\t%.12g\n", PhysicalTime, Sys->accreted_mass[n]);
+  fclose (output);
   //printf("W");
   //fprintf(planet_file, "\nNumber of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
   //fclose(planet_file);
