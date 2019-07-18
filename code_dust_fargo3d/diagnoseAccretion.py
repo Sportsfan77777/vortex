@@ -239,7 +239,7 @@ def make_plot(frame, show = False):
             dy = planet_y - yc
 
             distance = np.sqrt(dx**2 + dy**2)
-            r_roche = (planet_mass * 1e3 / 3.0)**(1.0 / 3.0) * distance
+            r_roche = (planet_mass * 1e-3 / 3.0)**(1.0 / 3.0) * distance
 
             cell_mass = density[i, j] * (np.pi / num_theta) * (rad[start+i+1]**2 - r_i**2)
 
