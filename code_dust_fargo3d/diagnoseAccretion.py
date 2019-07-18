@@ -170,7 +170,7 @@ mpi = args.mpi
 show = args.show
 
 rad = np.linspace(r_min, r_max, num_rad)
-theta = np.linspace(0, 2 * np.pi, num_theta)
+theta = np.linspace(-np.pi, np.pi, num_theta + 1)[:-1]
 
 version = args.version
 if args.r_lim is None:
@@ -257,7 +257,7 @@ def make_plot(frame, show = False):
 
             if distance < 0.45 * r_roche:
                 dm = (2.0 / 3.0 * dt) * cell_mass
-                
+
                 count2 += 1
                 accreted_mass += dm
 
