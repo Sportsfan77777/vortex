@@ -164,7 +164,7 @@ PlanetarySystem *sys;
   if (CPU_Rank) return;
   sprintf (name, "%saccreted%d.dat", OUTPUTDIR, n);
   output = fopen_prs (name, "a");
-  fprintf (output, "%.12g\t%.12g\n", PhysicalTime, Sys->accreted_mass[n]);
+  fprintf (output, "%.12g\t%.12g\n", PhysicalTime, sys->accreted_mass[n]);
   fclose (output);
   //printf("W");
   //fprintf(planet_file, "\nNumber of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
