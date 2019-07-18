@@ -169,7 +169,7 @@ mpi = args.mpi
 # Plot Parameters (variable)
 show = args.show
 
-rad = np.linspace(r_min, r_max, num_rad)
+rad = np.linspace(r_min, r_max, num_rad + 1)[:-1]
 theta = np.linspace(-np.pi, np.pi, num_theta + 1)[:-1]
 
 version = args.version
