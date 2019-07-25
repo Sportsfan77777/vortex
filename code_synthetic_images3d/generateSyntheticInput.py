@@ -74,7 +74,9 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'number of interpolated grains (default: 100)')
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
-    parser.add_argument('--scale', dest = "scale", type = int, default = 1,
+    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 1,
+                         help = 'scaling of grain size distribution (default: 1)')
+    parser.add_argument('--scale-sizes', dest = "scale_sizes", type = float, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
 
     parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = None,
@@ -141,7 +143,8 @@ zero = args.zero
 # Save Parameters
 num_grains = args.num_grains
 number_density_power = -args.number_density_power # Note: negative of input
-scale = args.scale
+scale_density = args.scale_density
+scale_sizes = args.scale_sizes
 
 if args.new_res is None:
     new_num_rad = num_rad; new_num_theta = num_theta
@@ -200,7 +203,7 @@ def retrieve_density(frame, size_names):
 
     return density, starting_sizes
 
-def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
+def polish(density, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
     """ Step 1: get rid of inner cavity and scale dust densities to different grain size """
     # Cavity
     if cavity_cutoff is not None:
@@ -208,8 +211,8 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale = 1):
         density[:cavity_cutoff_i, ] /= 100.0
 
     # Scale
-    density *= scale
-    sizes *= scale
+    density *= scale_density
+    sizes *= scale_sizes
 
     return density, sizes
 
@@ -406,7 +409,7 @@ def full_procedure(frame):
     gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
     density, sizes = retrieve_density(frame, size_names)
 
-    density, sizes = polish(density, sizes, scale = scale)
+    density, sizes = polish(density, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
     if center != "off":
         density = center_vortex(density, frame, reference_density = gas_density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
