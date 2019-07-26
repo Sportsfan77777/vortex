@@ -244,6 +244,30 @@ fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 """
 
+### Helper Functions ###
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_density = np.roll(normalized_density, shift_c)
+    return shifted_density, shift_c
+
 ###############################################################################
 
 def generate_colors(n):
@@ -270,6 +294,9 @@ def make_plot(frame, show = False):
     else:
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
+
+    if center:
+        normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
 
     ### Plot ###
     x = rad
