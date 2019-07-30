@@ -205,6 +205,11 @@ dpi = args.dpi
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+# Planet File
+# Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7]
+accreted_mass = data[:, 8] / jupiter_mass
 
 """
 # Number of Cores 
@@ -356,6 +361,8 @@ def make_plot(frame, show = False):
             current_mass = planet_mass
         else:
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+        current_mass += accreted_mass[frame]
 
         if number == 4:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
