@@ -130,8 +130,11 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-planet_mass = 1.0
-taper_time = p.masstaper
+fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+
 viscosity = p.nu
 
 dt = p.ninterm * p.dt
