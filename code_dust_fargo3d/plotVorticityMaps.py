@@ -289,7 +289,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(density), levels = levels, origin = 'upper', linewidths = 1, colors = colors, alpha = 0.8)
+        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors, alpha = 0.8)
 
     # Axes
     plot.xlim(x_min, x_max)
