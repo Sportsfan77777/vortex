@@ -134,6 +134,7 @@ fargo_par = util.get_pickled_parameters()
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
 
 viscosity = p.nu
 
