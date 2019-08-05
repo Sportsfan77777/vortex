@@ -151,6 +151,7 @@ else:
 max_y = args.max_y
 
 normalize = args.normalize
+args.num_profiles = 1
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
@@ -179,7 +180,7 @@ def make_plot(frame, show = False):
     for i in range(num_dust):
         j = i + 1
         density = fromfile("dust%ddens%d.dat" % (j, frame)).reshape(num_rad, num_theta)
-        azimuthal_profile = az.get_profiles(density, fargo_par, args, num_profiles = 1)
+        azimuthal_profile = az.get_profiles(density, fargo_par, args)
 
         if normalize:
             azimuthal_profile /= np.max(azimuthal_profile)
