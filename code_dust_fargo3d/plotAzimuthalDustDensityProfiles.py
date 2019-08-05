@@ -180,7 +180,7 @@ def make_plot(frame, show = False):
     for i in range(num_dust):
         j = i + 1
         density = fromfile("dust%ddens%d.dat" % (j, frame)).reshape(num_rad, num_theta)
-        azimuthal_profile = az.get_profiles(density, fargo_par, args)
+        azimuthal_radius, azimuthal_profile = az.get_profiles(density, fargo_par, args)
 
         if normalize:
             azimuthal_profile /= np.max(azimuthal_profile)
