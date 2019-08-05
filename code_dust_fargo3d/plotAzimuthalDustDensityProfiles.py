@@ -144,7 +144,7 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
-if args.t_lim is None:
+if args.theta_lim is None:
     theta_min = 0; theta_max = 360
 else:
     theta_min = args.theta_lim[0]; theta_max = args.theta_lim[1]
