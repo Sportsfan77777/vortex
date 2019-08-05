@@ -177,6 +177,7 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
+    # Data and Plot
     for i in range(num_dust):
         j = i + 1
         density = fromfile("dust%ddens%d.dat" % (j, frame)).reshape(num_rad, num_theta)
@@ -187,7 +188,8 @@ def make_plot(frame, show = False):
 
         x = theta * (180.0 / np.pi)
         y = azimuthal_profile
-        result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+        result = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%d" % j)
+    plot.legend()
 
     # Axes
     x_min = theta_min
