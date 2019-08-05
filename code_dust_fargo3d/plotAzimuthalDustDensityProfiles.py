@@ -190,12 +190,15 @@ def make_plot(frame, show = False):
         result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
     # Axes
+    x_min = theta_min
+    x_max = theta_max
+
     if args.max_y is None:
         max_y = 1
     else:
         max_y = args.max_y
 
-    plot.xlim(theta_min, theta_max)
+    plot.xlim(x_min, x_max)
     plot.ylim(0, max_y)
 
     # Annotate Axes
