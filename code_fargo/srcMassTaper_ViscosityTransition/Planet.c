@@ -46,10 +46,10 @@ PlanetarySystem *sys;
       dMplanet = dPxPlanet = dPyPlanet = 0.0;
 				/* Hereafter : initialization of W. Kley's parameters */
       facc = dt*(sys->acc[k]);
-      facc1 = 1.0/3.0*facc;
-      facc2 = 2.0/3.0*facc;
-      frac1 = 0.75;
-      frac2 = 0.45;
+      facc1 = KLEYFACC1 * facc; // 1.0/3.0*facc;
+      facc2 = KLEYFACC2 * facc; // 2.0/3.0*facc;
+      frac1 = KLEYFRAC1; // 0.75;
+      frac2 = KLEYFRAC2; // 0.45;
 				/* W. Kley's parameters initialization finished */
       Xplanet = sys->x[k];
       Yplanet = sys->y[k];
