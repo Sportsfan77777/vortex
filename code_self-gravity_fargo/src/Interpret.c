@@ -15,6 +15,7 @@ boolean         Write_Temperature = NO, Write_DivV = NO, Write_Qplus = NO;
 boolean         SelfGravity = NO, SGZeroMode = NO, ZMPlus = NO;
 boolean         Adiabatic = NO, Cooling = NO;
 boolean         CICPlanet = NO, ForcedCircular = NO;
+boolean         FakeAccretion = NO;
 
 void var(name, ptr, type, necessary, deflt)
      char           *name;
@@ -207,6 +208,19 @@ void ReadVariables(filename)
   /* Add a trailing slash to OUTPUTDIR if needed */
   if (*(OUTPUTDIR+strlen(OUTPUTDIR)-1) != '/')
     strcat (OUTPUTDIR, "/");
+
+  // #### NEW VARIABLES #### //
+  if ((*FAKEACCRETION == 'y') || (*FAKEACCRETION == 'Y')) FakeAccretion = YES;
+
+  if ((*TAPERPROFILE == 's') || (*TAPERPROFILE == 'S')) SinSquaredTaper = YES;
+  else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
+  else {}
+
+  // #### NEW VARIABLES FOR DEAD ZONE #### //
+  if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;
+  if ((*FULLDEADZONE == 'y') || (*FULLDEADZONE=='Y')) FullDeadZone = YES;
+  if ((*EVOLVINGDEADZONE == 'y') || (*EVOLVINGDEADZONE=='Y')) EvolvingDeadZone = YES;
+
 }
 
 void PrintUsage (execname)
