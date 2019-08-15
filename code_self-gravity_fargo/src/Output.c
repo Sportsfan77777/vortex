@@ -39,7 +39,7 @@ void WritePlanetFile (TimeStep, n)
     fprintf (stderr, "Can't write 'planet%d.dat' file. Aborting.\n", n);
     prs_exit (1);
   }
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
   fclose (output);
   printf ("done\n");
   fflush (stdout);
@@ -146,6 +146,7 @@ void RestartPlanetarySystem (timestep, sys)
     sys->vx[k] = GetfromPlanetFile (timestep, 4, k);
     sys->vy[k] = GetfromPlanetFile (timestep, 5, k);
     sys->mass[k] = GetfromPlanetFile (timestep, 6, k);
+    sys->accreted_mass[k] = GetfromPlanetFile (timestep, 7, k);
   }
 }
 
