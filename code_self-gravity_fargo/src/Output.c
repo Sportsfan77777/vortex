@@ -56,7 +56,7 @@ void WritePlanetSystemFile (sys, t)
     Yplanet = sys->y[i];
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
-    MplanetVirtual = sys->mass[i];
+    MplanetVirtual = sys->mass[i]*MassTaper;
     AccretedMass = sys->accreted_mass[i];
     WritePlanetFile (t, i);
   }
@@ -91,7 +91,7 @@ void WriteBigPlanetSystemFile (sys, t)
     Yplanet = sys->y[i];
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
-    MplanetVirtual = sys->mass[i];
+    MplanetVirtual = sys->mass[i]*MassTaper;
     AccretedMass = sys->accreted_mass[i]; 
     WriteBigPlanetFile (t, i);
   }
