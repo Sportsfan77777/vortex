@@ -96,6 +96,7 @@ struct planetary_system {
   real *vx;			/* their velocities */
   real *vy;
   real *acc;			/* Their accretion times^-1 */
+  real *accreted_mass; /** mass accreted during simulation **/
   char **name;			/* their names */
   boolean *FeelDisk;		/* will "migrate" ? */
   boolean *FeelOthers;		/* will feel other planets ? */

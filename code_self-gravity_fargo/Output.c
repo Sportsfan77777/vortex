@@ -1,6 +1,6 @@
 #include "mp.h"
 
-static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual;
+static real     Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass;
 extern real     LostMass, OmegaFrame;
 extern boolean  Write_Density, Write_Velocity, Write_Energy, IsDisk;
 extern boolean  Write_Temperature, Write_DivV, Write_Qplus;
@@ -57,6 +57,7 @@ void WritePlanetSystemFile (sys, t)
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
     MplanetVirtual = sys->mass[i];
+    AccretedMass = sys->accreted_mass[i];
     WritePlanetFile (t, i);
   }
 }
@@ -75,7 +76,7 @@ void WriteBigPlanetFile (TimeStep, n)
     fprintf (stderr, "Can't write 'bigplanet.dat' file. Aborting.\n");
     prs_exit (1);
   }
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
   fclose (output);
 }
 
@@ -91,6 +92,7 @@ void WriteBigPlanetSystemFile (sys, t)
     VXplanet = sys->vx[i];
     VYplanet = sys->vy[i];
     MplanetVirtual = sys->mass[i];
+    AccretedMass = sys->accreted_mass[i]; 
     WriteBigPlanetFile (t, i);
   }
 }

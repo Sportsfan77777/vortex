@@ -24,16 +24,16 @@ void AccreteOntoPlanets (Rho, Vrad, Vtheta, dt, sys)
       dMplanet = dPxPlanet = dPyPlanet = 0.0;
       /* Hereafter : initialization of W. Kley's parameters */
       facc = dt*(sys->acc[k]);
-      facc1 = 1.0/3.0*facc;
-      facc2 = 2.0/3.0*facc;
-      frac1 = 0.75;
-      frac2 = 0.45;
+      facc1 = KLEYFACC1 * facc; // 1.0/3.0*facc;
+      facc2 = KLEYFACC2 * facc; // 2.0/3.0*facc;
+      frac1 = KLEYFRAC1; // 0.75;
+      frac2 = KLEYFRAC2; // 0.45;
       /* W. Kley's parameters initialization finished */
       Xplanet = sys->x[k];
       Yplanet = sys->y[k];
       VXplanet = sys->vx[k];
       VYplanet = sys->vy[k];
-      Mplanet = sys->mass[k];
+      Mplanet = sys->mass[k]*MassTaper + sys->accreted_mass[k] + 0.000001; //*** ##### MASS TAPER EDIT HERE ##### ***//
       Rplanet = sqrt(Xplanet*Xplanet+Yplanet*Yplanet);
       RRoche = pow((1.0/3.0*Mplanet),(1.0/3.0))*Rplanet; 
       /* Central mass is 1.0 */
@@ -100,11 +100,20 @@ void AccreteOntoPlanets (Rho, Vrad, Vtheta, dt, sys)
       PxPlanet += dPxPlanet;
       PyPlanet += dPyPlanet;
       Mplanet  += dMplanet;
-      if (sys->FeelDisk[k] == YES) {
-	sys->vx[k] = PxPlanet/Mplanet;
-	sys->vy[k] = PyPlanet/Mplanet;
+
+      if (FakeAccretion == YES) {
+          // pass (get rid of disk material, but don't let it affect planet)
       }
-      sys->mass[k] = Mplanet;
+      else {
+          if (sys->FeelDisk[k] == YES) {
+              sys->vx[k] = PxPlanet/Mplanet;
+              sys->vy[k] = PyPlanet/Mplanet;
+          }
+          sys->accreted_mass[k] += dMplanet;
+          //sys->mass[k] = Mplanet;
+          //printf ("done accreting\n");
+          //fflush (stdout);
+      }
     }
   }
 }

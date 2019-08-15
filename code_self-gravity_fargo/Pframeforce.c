@@ -94,7 +94,7 @@ void AdvanceSystemFromDisk (force, Rho, Energy, sys, dt)
   NbPlanets = sys->nb;
   for (k = 0; k < NbPlanets; k++) {
     if (sys->FeelDisk[k] == YES) {
-      m = sys->mass[k];
+      m=sys->mass[k]*MassTaper + sys->accreted_mass[k];
       x = sys->x[k];
       y = sys->y[k];
       r = sqrt(x*x + y*y);
@@ -126,7 +126,7 @@ void AdvanceSystemRK5 (sys, dt)
       q0[i+n] = sys->y[i];
       q0[i+2*n] = sys->vx[i];
       q0[i+3*n] = sys->vy[i];
-      PlanetMasses[i] = sys->mass[i];
+      PlanetMasses[i] = sys->mass[i]*MassTaper + sys->accreted_mass[i]; /*** ##### MASS TAPER EDIT HERE  ##### ***/
     }
     feelothers = sys->FeelOthers;
     RungeKunta (q0, dt, PlanetMasses, q1, n, feelothers);

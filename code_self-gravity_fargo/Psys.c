@@ -25,7 +25,7 @@ int FindNumberOfPlanets (filename)
 PlanetarySystem *AllocPlanetSystem (nb)
 int nb;
 {
-  real *mass, *x, *y, *vx, *vy, *acc;
+  real *mass, *x, *y, *vx, *vy, *acc, *accreted_mass;
   boolean *feeldisk, *feelothers;
   int i;
   PlanetarySystem *sys;
@@ -40,6 +40,7 @@ int nb;
   vx   = (real *)malloc (sizeof(real)*(nb+1));
   mass = (real *)malloc (sizeof(real)*(nb+1));
   acc  = (real *)malloc (sizeof(real)*(nb+1));
+  accreted_mass = (real *)malloc (sizeof(real)*(nb+1));
   if ((x == NULL) || (y == NULL) || (vx == NULL) || (vy == NULL) || (acc == NULL) || (mass == NULL)) {
     fprintf (stderr, "Not enough memory.\n");
     prs_exit (1);
@@ -55,6 +56,7 @@ int nb;
   sys->vx= vx;
   sys->vy= vy;
   sys->acc=acc;
+  sys->accreted_mass = accreted_mass;
   sys->mass = mass;
   sys->FeelDisk = feeldisk;
   sys->FeelOthers = feelothers;
@@ -74,6 +76,7 @@ void FreePlanetary (sys)
   free (sys->vy);
   free (sys->mass);
   free (sys->acc);
+  free (sys->accreted_mass);
   free (sys->FeelOthers);
   free (sys->FeelDisk);
   free (sys);
