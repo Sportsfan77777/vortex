@@ -167,7 +167,7 @@ def make_plot(show = False):
 
     total_mass = base_mass + accreted_mass
 
-    bondi_rate = np.pi * surface_density_zero * np.power(total_mass[1:], 2) / np.power(scale_height, 3) * (2.0 * np.pi)
+    bondi_rate = 4.0 * np.pi * (surface_density_zero / np.sqrt(2.0 * np.pi) / scale_height) * np.power(total_mass[1:], 2) / np.power(scale_height, 3) * (2.0 * np.pi)
 
     ### Plot ###
     x = times[1:]
@@ -240,9 +240,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/massOverTime.png" % (save_directory)
+        save_fn = "%s/accretionRateOverTime.png" % (save_directory)
     else:
-        save_fn = "%s/v%04d_massOverTime.png" % (save_directory, version)
+        save_fn = "%s/v%04d_accretionRateOverTime.png" % (save_directory, version)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
