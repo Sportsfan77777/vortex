@@ -67,8 +67,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "squarePolarGasDensityMaps",
-                         help = 'save directory (default: squarePolarGasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "squarePolarDustDensityMaps",
+                         help = 'save directory (default: squarePolarDustDensityMaps)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -80,6 +80,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'width of box (in r_p) (default: 2.5)')
     parser.add_argument('--shift', dest = "center", default = "off",
                          help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--clear', dest = "clear", action = 'store_true', default = False,
+                         help = 'clear inner disk or not (default: do not clear)')
 
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
@@ -162,6 +164,7 @@ version = args.version
 
 box = args.box
 center = args.center
+clear = args.clear
 
 # Plot Parameters (contours)
 use_contours = args.use_contours
@@ -186,6 +189,15 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 ### Helper Functions ###
+
+def clear_inner_disk(data):
+    # get rid of inner disk (r < outer_limit)
+    filtered_data = np.copy(data)
+
+    outer_limit = np.searchsorted(rad, 1.05)
+    filtered_data[:outer_limit] = 0
+
+    return filtered_data
 
 def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
@@ -226,7 +238,8 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
+    density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
+    gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
     normalized_density = density / surface_density_zero
 
     # Shift
@@ -236,6 +249,10 @@ def make_plot(frame, show = False):
     #   normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center[3:], reference_density = cm_dust_density, frame = frame)
     else:
        normalized_density, shift_c = shift_density(normalized_density, fargo_par, option = center, frame = frame)
+
+    # Clear
+    if clear:
+       density = clear_inner_disk(density)
 
     # Convert to cartesian
     xs, ys, _, _, normalized_density_cart = sq.polar_to_cartesian(normalized_density, rad, theta)
