@@ -252,7 +252,7 @@ def make_plot(frame, show = False):
 
     # Clear
     if clear:
-       density = clear_inner_disk(density)
+       normalized_density = clear_inner_disk(normalized_density)
 
     # Convert to cartesian
     xs, ys, _, _, normalized_density_cart = sq.polar_to_cartesian(normalized_density, rad, theta)
