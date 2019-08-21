@@ -260,7 +260,7 @@ def make_plot(frame, show = False):
     # Label star and planet
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
-    
+
     if orbit >= taper_time:
         current_mass = planet_mass
     else:
@@ -284,17 +284,21 @@ def make_plot(frame, show = False):
 
     # Annotate Axes
     unit = "r_\mathrm{p}"
-    plot.xlabel(r"x [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"y [$%s$]" % unit, fontsize = fontsize)
+    plot.xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize, usetex = True)
+    plot.ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize, usetex = True)
 
-    # Annotate Everything Else
-    title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
-    title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
-    #plot.xlabel("x", fontsize = fontsize)
-    #plot.ylabel("y", fontsize = fontsize)
-    plot.title("%s" % (title2), y = 1.01, fontsize = fontsize + 1)
-    plot.text(0.0, 3.14, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.text(0.0, 3.24, title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
+    # Text
+    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
+    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
+    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(-1.7, 3.24, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    plot.text(1.7, 3.24, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
     # Save, Show, and Close
     if version is None:
         save_fn = "%s/squareDensityMap_%04d.png" % (save_directory, frame)
