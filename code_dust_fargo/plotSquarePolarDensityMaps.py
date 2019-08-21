@@ -258,6 +258,11 @@ def make_plot(frame, show = False):
     fig.gca().add_artist(circle)
 
     # Label star and planet
+    if orbit >= taper_time:
+        current_mass = planet_mass
+    else:
+        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+        
     planet_size = (current_mass / (planet_mass / 0.001))
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
     plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
@@ -282,11 +287,6 @@ def make_plot(frame, show = False):
     # Annotate Everything Else
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
-
-    if orbit >= taper_time:
-        current_mass = planet_mass
-    else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
     title1 = r"$m_p = %d$ $M_{Jup}$, $\nu_{disk} = 10^{%d}$, $T_{growth} = %d$ $\rm{orbits}$" % (int(planet_mass / 0.001), int(np.log(viscosity) / np.log(10)), taper_time)
     title2 = r"$t = %d$ $\rm{orbits}}$, $m_p(t) = %.2f$ $M_{Jup}$" % (orbit, current_mass)
