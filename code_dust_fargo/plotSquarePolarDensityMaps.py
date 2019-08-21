@@ -241,9 +241,7 @@ def make_plot(frame, show = False):
     xs, ys, _, _, normalized_density_cart = sq.polar_to_cartesian(normalized_density, rad, theta)
 
     ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density_cart), cmap = cmap)
+    result = ax.pcolormesh(xs, ys, np.transpose(normalized_density_cart), cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
