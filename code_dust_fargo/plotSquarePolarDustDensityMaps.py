@@ -96,10 +96,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
-                         help = 'maximum density in colorbar (default: 2)')
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
+                         help = 'color map (default: inferno)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 50,
+                         help = 'maximum density in colorbar (default: 50)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -240,7 +240,7 @@ def make_plot(frame, show = False):
     # Data
     density = (fromfile("gasddens%d.dat" % frame).reshape(num_rad, num_theta))
     gas_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta))
-    normalized_density = density / surface_density_zero
+    normalized_density = density / (surface_density_zero / 100.0)
 
     # Shift
     if center is "off":
