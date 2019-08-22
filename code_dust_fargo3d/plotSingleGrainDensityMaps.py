@@ -341,7 +341,7 @@ def make_plot(frame, show = False):
         else:
            cmap =  args.cmap
            result = ax.pcolormesh(x, y, normalized_density, cmap = cmap)
-           fig.colorbar(result); result.set_clim(0, cmax[i - 1])
+           fig.colorbar(result); result.set_clim(0, cmax)
 
         if use_contours and i > 0:
             levels = np.linspace(low_contour, high_contour, num_levels)
