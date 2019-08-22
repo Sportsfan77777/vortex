@@ -337,11 +337,16 @@ def make_plot(frame, show = False):
         if i == 0:
            cmap = 'viridis'
            result = ax.pcolormesh(x, y, normalized_gas_density, cmap = cmap)
-           fig.colorbar(result); result.set_clim(0, cmaxGas)
+           cbar = fig.colorbar(result); result.set_clim(0, cmaxGas)
         else:
            cmap =  args.cmap
            result = ax.pcolormesh(x, y, normalized_density, cmap = cmap)
-           fig.colorbar(result); result.set_clim(0, cmax[i - 1])
+           cbar = fig.colorbar(result); result.set_clim(0, cmax[i - 1])
+
+        if number == 1:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{gas}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        elif number == 3:
+            cbar.set_label(r"$\Sigma$ / $\Sigma_\mathrm{0,}$ $_\mathrm{dust}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         if use_contours and i > 0:
             levels = np.linspace(low_contour, high_contour, num_levels)
