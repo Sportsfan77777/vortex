@@ -383,7 +383,7 @@ def make_plot(frame, show = False):
         if number == 1:
            # Gas
            title = r"$\mathrm{Gas\ Density}$"
-           #plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+           plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
         else:
            # Dust
            this_size = util.get_size(grain)
@@ -395,7 +395,7 @@ def make_plot(frame, show = False):
            stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
            
            #plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
-           #plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
+           plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
 
         # Text
         line_y = top_y + 0.31 * range_y; linebreak = 0.16 * range_y
