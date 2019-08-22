@@ -41,6 +41,8 @@ import math
 import numpy as np
 
 import matplotlib
+import matplotlib.style
+matplotlib.style.use('classic')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -99,7 +101,7 @@ def new_argument_parser(description = "Plot dust density maps for multiple grain
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
                          help = 'dust color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, nargs = 3, default = None,
+    parser.add_argument('--cmax', dest = "cmax", type = float, nargs = 2, default = None,
                          help = 'dust maximum density in colorbar (default: None)')
     parser.add_argument('--cmaxGas', dest = "cmaxGas", type = float, default = None,
                          help = 'dust maximum density in colorbar (default: 3.0 for T = 10, 1.4 for T = 1000)')
