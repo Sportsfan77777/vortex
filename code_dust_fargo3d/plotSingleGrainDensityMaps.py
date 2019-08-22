@@ -38,6 +38,8 @@ import math
 import numpy as np
 
 import matplotlib
+import matplotlib.style
+matplotlib.style.use('classic')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
