@@ -394,7 +394,7 @@ def make_plot(frame, show = False):
            stokes_number = util.get_stokes_number(this_size)
 
            title = r"%s$\mathrm{-size}$" % size_label
-           stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.03f$" % stokes_number
+           stokes = r"$\mathrm{St}_\mathrm{0}$ $=$ $%.02f$" % (0.02)
            
            #plot.text(left_x + margin_x, top_y - margin_y, title, fontsize = fontsize, color = 'white', horizontalalignment = 'left', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
            plot.text(right_x - margin_x, top_y - margin_y, stokes, fontsize = fontsize, color = 'white', horizontalalignment = 'right', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0))
