@@ -371,7 +371,7 @@ def make_plot(frame, show = False):
 
         current_mass += accreted_mass[frame]
 
-        if number == 1:
+        if number == 2:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
         plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
 
