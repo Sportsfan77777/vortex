@@ -298,7 +298,7 @@ def generate_colors(n):
 
 def make_plot(frame, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (7, 11), dpi = dpi)
+    fig = plot.figure(figsize = (7, 8), dpi = dpi)
 
     # Indvidual Subplots (1 Gas + 3 Dust)
     def add_to_plot(i, grain):
