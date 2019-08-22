@@ -305,7 +305,7 @@ def make_plot(frame, show = False):
         else:
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper)), 2) * planet_mass
 
-        if number == 4:
+        if number == 3:
            plot.xlabel(r"$\phi$ $\mathrm{(degrees)}$", fontsize = fontsize)
         if number == 1 or number == 3:
            plot.ylabel(r"Radius [$r_\mathrm{p}$]", fontsize = fontsize)
