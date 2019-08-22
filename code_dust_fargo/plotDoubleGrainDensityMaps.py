@@ -240,7 +240,7 @@ def make_plot(frame, show = False):
 
         # Identify Subplot
         number = i + 1
-        ax = plot.subplot(4, 1, number)
+        ax = plot.subplot(3, 1, number)
 
         # Parameters
         this_fargo_par = fargo_par.copy(); this_fargo_par["PSIZE"] = this_size
