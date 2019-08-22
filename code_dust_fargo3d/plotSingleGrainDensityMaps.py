@@ -304,7 +304,7 @@ def make_plot(frame, show = False):
     def add_to_plot(i, grain):
         # Identify Subplot
         number = i + 1
-        ax = plot.subplot(3, 1, number)
+        ax = plot.subplot(2, 1, number)
 
         # Data
         if merge > 0:
