@@ -82,8 +82,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
-                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--box', dest = "box", type = float, default = 2.5,
+                         help = 'width of box (in r_p) (default: 2.5)')
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
 
@@ -173,10 +173,7 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+box = args.box
 center = args.center
 
 # Plot Parameters (contours)
