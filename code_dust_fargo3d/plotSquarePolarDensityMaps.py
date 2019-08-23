@@ -315,7 +315,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density)_cart, levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(normalized_density_cart), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
