@@ -45,6 +45,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import square as sq
 import azimuthal as az
 from readTitle import readTitle
 
