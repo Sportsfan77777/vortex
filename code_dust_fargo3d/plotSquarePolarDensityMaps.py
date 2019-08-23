@@ -72,8 +72,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "squarePolarDustDensityMaps",
+                         help = 'save directory (default: squarePolarDustDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -315,7 +315,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(normalized_density)_cart, levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Get rid of interior
     circle = plot.Circle((0, 0), min(rad), color = "black")
@@ -336,9 +336,23 @@ def make_plot(frame, show = False):
 
     #current_mass += accreted_mass[frame]
 
+    if center:
+         # Locate Planet
+       if shift < -len(dust_theta):
+           shift += len(dust_theta)
+       planet_theta = dust_theta[shift]
+       planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
+       planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
+
+       planet_x = np.cos(planet_theta)
+       planet_y = np.sin(planet_theta)
+    else:
+       planet_x = 0
+       planet_y = 1
+
     planet_size = (current_mass / planet_mass)
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-    plot.scatter(0, 1, c = "white", s = int(70 * planet_size), marker = "D") # planet
+    plot.scatter(planet_x, planet_y, c = "white", s = int(70 * planet_size), marker = "D") # planet
 
     # Axes
     plot.xlim(-box, box)
