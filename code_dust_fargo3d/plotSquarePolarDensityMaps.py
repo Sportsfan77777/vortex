@@ -302,7 +302,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     result = ax.pcolormesh(xs, ys, np.transpose(normalized_density_cart), cmap = cmap)
 
-    fig.colorbar(result)
+    cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
     cbar.set_label(r"Normalized Surface Density", fontsize = fontsize + 2, rotation = 270, labelpad = 20)
