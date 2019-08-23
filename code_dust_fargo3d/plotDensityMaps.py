@@ -133,6 +133,9 @@ planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
+scale_height = p.aspectratio
+viscosity = p.nu
+
 """
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
