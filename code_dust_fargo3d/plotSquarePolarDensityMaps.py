@@ -341,7 +341,7 @@ def make_plot(frame, show = False):
        if shift_c < -len(theta):
            shift_c += len(theta)
        planet_theta = theta[shift_c]
-       planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
+       planet_theta -= (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
        planet_theta = planet_theta % (2 * np.pi) # Keep 0 < theta < 2 * np.pi
 
        planet_x = np.cos(planet_theta)
