@@ -111,7 +111,7 @@ distance = fargo_par["Distance"]
 
 arc_beam = beam_size * planet_radius / distance
 
-fargo_par = util.get_pickled_parameters()
+#fargo_par = util.get_pickled_parameters()
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
@@ -183,7 +183,7 @@ def make_plot(frame, show = False):
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     if normalize:
         intensity_polar /= np.max(intensity_polar)
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
+    _, azimuthal_profile = az.get_profiles(intensity_polar, fargo_par, args, shift = None)
 
     # Get Shift
     gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../../")
@@ -191,19 +191,9 @@ def make_plot(frame, show = False):
     # Shift gas density with center of dust density
     shift = az.shift_away_from_minimum(gas_density, fargo_par)
 
-    # Normalize
-    if normalize:
-        intensity_cart /= np.max(intensity_cart)
-
-    # Arcseconds or Planet Radii
-    if arc:
-        arc_weight = planet_radius / distance # related to parallax
-    else:
-        arc_weight = 1
-
     ### Plot ###
-    for i, (radius, azimuthal_profile) in enumerate(zip(azimuthal_radii, azimuthal_profiles)):
-        plot.plot(x, azimuthal_profile, linewidth = linewidth, dashes = dashes[i], alpha = alpha)
+    x = theta * (180.0 / np.pi) - 180.0
+    plot.plot(x, azimuthal_profile, linewidth = linewidth, alpha = alpha)
 
     # Locate Planet
     if shift is None:
@@ -244,11 +234,8 @@ def make_plot(frame, show = False):
     plot.ylabel(r"$I$ / $I_\mathrm{max}$", fontsize = fontsize)
 
     # Title
-    title = r"$t$ $=$ $%.1f$  [$m_p(t)$ $=$ $%.2f$ $M_J$]" % (orbit, current_mass)
-    plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
-
-    taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
-    plot.text(0.0 * box_size, 2 * arc_weight, taper_title, fontsize = fontsize, color = 'white', horizontalalignment = 'center', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0), zorder = 100)
+    title = "\n" + r"$t$ $=$ $%.1f$   " % (orbit) + "[$m_p(t)$ $=$ $%.2f$ $M_J$]" % (current_mass)
+    plot.title("%s" % (title), fontsize = fontsize + 1)
 
     # Save, Show,  and Close
     if version is None:
