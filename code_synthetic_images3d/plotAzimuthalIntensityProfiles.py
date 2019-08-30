@@ -195,6 +195,14 @@ def make_plot(frame, show = False):
     x = theta * (180.0 / np.pi) - 180.0
     plot.plot(x, azimuthal_profile, linewidth = linewidth, alpha = alpha)
 
+    if args.compare is not None:
+        for i, directory in enumerate(args.compare):
+            intensity_polar_c = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number, directory = directory)
+            if normalize:
+                intensity_polar_c /= np.max(intensity_polar_c)
+            _, azimuthal_profile_c = az.get_profiles(intensity_polar_c, fargo_par, args, shift = None)
+            plot.plot(x, azimuthal_profile_c, linewidth = linewidth, alpha = alpha, label = "%s" % i)
+
     # Locate Planet
     if shift is None:
         planet_loc = theta[0]
