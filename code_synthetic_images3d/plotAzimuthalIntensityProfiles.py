@@ -65,15 +65,14 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'normalize by max (default: normalize)')
 
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
-                         help = 'color map (default: inferno)')
-    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
-                         help = 'maximum density in colorbar (default: 2.5)')
-
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
                          help = 'fontsize of plot annotations (default: 19)')
     parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+                         help = 'labelsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'linewidths in plot (default: 3)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.65,
+                         help = 'line transparency in plot (default: 0.65)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -143,14 +142,14 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 id_number = args.id_number
 version = args.version
+
+normalize = args.normalize
 max_y = args.max_y
 if normalize:
     max_y = 1
 
 num_profiles = args.num_profiles
 num_scale_heights = args.num_scale_heights
-
-normalize = args.normalize
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
