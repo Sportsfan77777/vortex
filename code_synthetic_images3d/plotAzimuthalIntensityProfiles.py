@@ -45,6 +45,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMaps",
                          help = 'save directory (default: cartesianIntensityMaps)')
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
+                         help = 'directories to compare to (default: None)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
