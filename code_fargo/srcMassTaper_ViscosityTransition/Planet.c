@@ -150,8 +150,10 @@ PlanetarySystem *sys;
       }
       else {
           if (sys->FeelDisk[k] == YES) {
-    	        sys->vx[k] = PxPlanet/Mplanet;
-    	        sys->vy[k] = PyPlanet/Mplanet;
+              if (INCLUDEACCRETIONP) {
+      	        sys->vx[k] = PxPlanet/Mplanet;
+      	        sys->vy[k] = PyPlanet/Mplanet;
+              }
           }
           sys->accreted_mass[k] += dMplanet;
           //sys->mass[k] = Mplanet;
