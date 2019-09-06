@@ -167,7 +167,7 @@ def make_plot(show = False):
         for i, directory in enumerate(args.compare):
             data_comp = np.loadtxt("%s/orbit0.dat" % directory)
             times = data_comp[:, 0] / (2.0 * np.pi)
-            semimajor_axes = data[:, 2]
+            semimajor_axes = data_comp[:, 2]
 
             x_comp = times
             y_comp = semimajor_axes
