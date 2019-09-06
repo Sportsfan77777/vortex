@@ -150,7 +150,7 @@ PlanetarySystem *sys;
       }
       else {
           if (sys->FeelDisk[k] == YES) {
-              if (INCLUDEACCRETIONP) {
+              if (IncludeAccretionAngularMomentum) {
       	        sys->vx[k] = PxPlanet/Mplanet;
       	        sys->vy[k] = PyPlanet/Mplanet;
               }

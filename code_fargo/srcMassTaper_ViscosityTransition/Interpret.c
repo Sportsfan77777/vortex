@@ -28,6 +28,7 @@ boolean         FakeAccretion = NO;
 boolean         SinSquaredTaper = YES, ParabolaTaper = NO;
 boolean         Evanescent = NO;
 boolean         DeadZone = NO, FullDeadZone = NO, EvolvingDeadZone = NO;
+boolean         IncludeAccretionAngularMomentum = NO;
 
 void
 var(name, ptr, type, necessary, deflt)
@@ -204,6 +205,8 @@ char *filename;
   if ((*TAPERPROFILE == 's') || (*TAPERPROFILE == 'S')) SinSquaredTaper = YES;
   else if ((*TAPERPROFILE == 'p') || (*TAPERPROFILE == 'P')) ParabolaTaper = YES;
   else {}
+
+  if ((*INCLUDEACCRETIONP == 'y') || (*INCLUDEACCRETIONP == 'Y')) IncludeAccretionAngularMomentum = YES;
 
   // #### NEW VARIABLES FOR DEAD ZONE #### //
   if ((*DEADZONE == 'y') || (*DEADZONE=='Y')) DeadZone = YES;

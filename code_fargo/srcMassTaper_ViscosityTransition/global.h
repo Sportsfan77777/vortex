@@ -27,3 +27,4 @@ boolean OverridesOutputdir;
 char NewOutputdir[1024];
 boolean FakeAccretion;
 boolean SinSquaredTaper, ParabolaTaper;
+boolean IncludeAccretionAngularMomentum;
