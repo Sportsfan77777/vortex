@@ -76,7 +76,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
 ###############################################################################
 
-
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
 
 def make_plot():
     # Data
@@ -108,6 +109,6 @@ def make_plot():
     plot.show()
 
     plot.close()
-    
+
 
 make_plot()
