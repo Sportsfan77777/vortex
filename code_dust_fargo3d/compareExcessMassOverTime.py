@@ -12,6 +12,7 @@ import glob
 import pickle
 from multiprocessing import Pool
 from multiprocessing import Array as mp_array
+import argparse
 
 import math
 import numpy as np
@@ -38,6 +39,7 @@ from readTitle import readTitle
 directories = ["h06_nu7_a50", "h06_nu7_a167", "h06_nu7_a05", "h06_nu7_a02"]
 #directories = ["h06_nu0_a50", "h06_nu0_a167", "h06_nu0_a05", "h06_nu0_a02"]
 #directories = ["h04_nu7_a100", "h04_nu7_a50", "h04_nu7_a167", "h04_nu7_a05"]
+directories = ["h06_nu7_a05", "h06_nu7_a02"]
 
 ###############################################################################
 
@@ -88,8 +90,8 @@ def make_plot():
 
     # Annotate
     #title = r"$m_p = " + str(mass) + r" $ $M_J$, $\nu_{disk} = 10^{" + str(viscosity) + r"}$"
-    plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Excess Mass", fontsize = fontsize)
+    plot.xlabel("Number of Planet Orbits", fontsize = args.fontsize)
+    plot.ylabel("Excess Mass", fontsize = args.fontsize)
     #plot.title(title, fontsize = fontsize + 2)
 
     plot.legend(loc = "lower right")
