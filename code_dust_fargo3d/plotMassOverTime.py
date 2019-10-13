@@ -64,6 +64,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
+
+    parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
+                         help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -140,6 +143,8 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
 
+negative = args.negative
+
 # Plot Parameters (constant)
 fontsize = args.fontsize
 linewidth = args.linewidth
@@ -165,6 +170,10 @@ def make_plot(show = False):
     accreted_mass = data[:, 8]
 
     total_mass = base_mass + accreted_mass
+
+    if negative:
+        negative_mass = data[:, 13]
+        total_mass -= negative_mass
 
     ### Plot ###
     x = times
