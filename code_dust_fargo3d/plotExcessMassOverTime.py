@@ -187,9 +187,9 @@ def find_peak(averagedDensity):
 
 ### Data ###
 
-def get_excess_mass(args):
+def get_excess_mass(args_here):
     # Unwrap Args
-    i, frame = args
+    i, frame = args_here
 
     # Get Data
     if mpi:
@@ -242,7 +242,8 @@ def get_excess_mass(args):
 
     # Print Update
     print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
-    print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
+    if args.compare:
+        print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
 
     # Store Data
     mass_over_time[i] = excess_mass
