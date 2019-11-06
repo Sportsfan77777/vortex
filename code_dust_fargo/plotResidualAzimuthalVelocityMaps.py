@@ -179,7 +179,7 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 def generate_colors(n):
-    c = ['k', 'b', 'firebrick']
+    c = ['yellow', 'b', 'firebrick', 'w', 'green'] #c = ['k', 'b', 'firebrick']
     colors = []
     for i in range(n):
         colors.append(c[i % len(c)])
@@ -202,6 +202,7 @@ def make_plot(frame, show = False):
         else:
             threshold = util.get_threshold(size) * 1.5
             shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero)
+        gas_density = np.roll(gas_density, shift_c)
         azimuthal_velocity = np.roll(azimuthal_velocity, shift_c)
     
     # Take Residual
