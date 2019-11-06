@@ -202,7 +202,7 @@ def make_plot(frame, show = False):
         else:
             threshold = util.get_threshold(size) * 1.5
             shift_c = az.get_azimuthal_center(dust_density, fargo_par, threshold = threshold * surface_density_zero)
-        radial_velocity = np.roll(azimuthal_velocity, shift_c)
+        radial_velocity = np.roll(radial_velocity, shift_c)
 
     ### Plot ###
     x = rad
