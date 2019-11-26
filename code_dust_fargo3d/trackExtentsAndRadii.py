@@ -175,10 +175,11 @@ def get_extents(args_here):
 
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+    avg_density = np.average(density, axis = 1)
 
     azimuthal_extent = az.get_extent(density, fargo_par, threshold = 1.0)
     radial_extent = az.get_radial_extent(density, fargo_par, threshold = 1.0)
-    radial_peak, _ = az.get_radial_peak(density, fargo_par)
+    radial_peak, _ = az.get_radial_peak(avg_density, fargo_par)
 
     azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
     radial_extent_over_time[i] = radial_extent
@@ -195,14 +196,14 @@ azimuthal_extent_over_time = mp_array("d", len(frame_range))
 radial_extent_over_time = mp_array("d", len(frame_range))
 radial_peak_over_time = mp_array("d", len(frame_range))
 
-#for i, frame in enumerate(frame_range):
-#    get_excess_mass((i, frame))
+for i, frame in enumerate(frame_range):
+    get_extents((i, frame))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-p = Pool(num_cores)
-p.map(get_excess_mass, pool_args)
-p.terminate()
+#p = Pool(num_cores)
+#p.map(get_extents, pool_args)
+#p.terminate()
 
 ##### Helper Functions #####
 
