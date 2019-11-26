@@ -351,7 +351,7 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     # Move minimum to theta = zero (first get peak in azimuthally-averaged profile)
     avg_data = np.average(data_segment, axis = 1) # avg over theta
     segment_arg_peak = np.argmax(avg_data)
-    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+    arg_peak = np.searchsorted(rad_segment, rad_segment[segment_arg_peak])
     peak_rad = rad[arg_peak]
 
     arg_min = np.argmin(data_segment[arg_peak])
