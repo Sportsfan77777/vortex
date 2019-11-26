@@ -180,7 +180,7 @@ def get_extents(args_here):
     radial_extent = az.get_radial_extent(density, fargo_par, threshold = 1.0)
     radial_peak, _ = az.get_radial_peak(density, fargo_par)
 
-    azimuthal_extent_over_time[i] = azimuthal_extent
+    azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
     radial_extent_over_time[i] = radial_extent
     radial_peak_over_time[i] = radial_peak
 
@@ -223,7 +223,7 @@ def make_plot(show = False):
 
     par1 = host.twinx()
     par2 = host.twinx()
-    
+
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
