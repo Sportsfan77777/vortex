@@ -236,9 +236,9 @@ def make_plot(show = False):
     y2 = radial_extent_over_time
     y3 = radial_peak_over_time
 
-    p1, = host.plot(x, y1)
-    p2, = host.plot(x, y2)
-    p3, = host.plot(x, y3)
+    p1, = host.plot(x, y1, c = 'b')
+    p2, = par1.plot(x, y2, c = 'orange')
+    p3, = par2.plot(x, y3, c = 'g')
 
     # Axes
     host.set_xlabel("Time (planet orbits)")
