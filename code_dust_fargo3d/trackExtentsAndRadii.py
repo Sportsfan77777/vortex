@@ -162,8 +162,8 @@ linewidth = args.linewidth
 dpi = args.dpi
 
 ### Add new parameters to dictionary ###
-#fargo_par["rad"] = rad
-#fargo_par["theta"] = theta
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
 ###############################################################################
 
@@ -174,13 +174,7 @@ def get_extents(args_here):
     i, frame = args_here
 
     # Get Data
-    if mpi:
-        field = "dens"
-        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
-        background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
-    else:
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-        background_density = fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / surface_density_zero
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
 
     azimuthal_extent = az.get_extent(density, fargo_par, threshold = 1.0)
     radial_extent = az.get_radial_extent(density, fargo_par, threshold = 1.0)
@@ -188,7 +182,7 @@ def get_extents(args_here):
 
     azimuthal_extent_over_time[i] = azimuthal_extent
     radial_extent_over_time[i] = radial_extent
-    radial_peak[i] = radial_peak
+    radial_peak_over_time[i] = radial_peak
 
 
 ## Use These Frames ##
@@ -224,11 +218,15 @@ def make_patch_spines_invisible(ax):
 
 def make_plot(show = False):
     # Figure
-    fig, host = plt.subplots()
+    fig, host = plot.subplots()
     fig.subplots_adjust(right=0.75)
 
     par1 = host.twinx()
     par2 = host.twinx()
+    
+    par2.spines["right"].set_position(("axes", 1.2))
+    make_patch_spines_invisible(par2)
+    par2.spines["right"].set_visible(True)
 
     # Plot
     x = frame_range
