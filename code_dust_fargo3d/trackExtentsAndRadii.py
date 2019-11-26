@@ -186,6 +186,8 @@ def get_extents(args_here):
     radial_extent_over_time[i] = radial_extent / scale_height
     radial_peak_over_time[i] = radial_peak
 
+    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i]
+
 
 ## Use These Frames ##
 rate = 1 # 5 works better, but is very slow
