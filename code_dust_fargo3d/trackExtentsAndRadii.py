@@ -183,7 +183,7 @@ def get_extents(args_here):
     radial_peak, _ = az.get_radial_peak(avg_density, fargo_par)
 
     azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
-    radial_extent_over_time[i] = radial_extent
+    radial_extent_over_time[i] = radial_extent / scale_height
     radial_peak_over_time[i] = radial_peak
 
 
@@ -241,6 +241,10 @@ def make_plot(show = False):
     p3, = par2.plot(x, y3, c = 'g')
 
     # Axes
+    host.set_ylabel(0, 360)
+    pra1.set_ylabel(0, 6)
+    pra2.set_ylabel(1.2, 2.0)
+
     host.set_xlabel("Time (planet orbits)")
     host.set_ylabel("Azimuthal Extent")
     par1.set_ylabel("Radial Extent")
