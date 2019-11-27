@@ -186,8 +186,8 @@ def make_plot(show = False):
         plot.plot(frame_range_data2, mass_over_time_data2, linewidth = linewidth, label = "data2")
 
     if args.data3:
-        frame_range_data3 = pickle.load(open("%s/excess_mass_frames.p" % args.data2, "rb"))
-        mass_over_time_data3 = pickle.load(open("%s/excess_mass_values.p" % args.data2, "rb"))
+        frame_range_data3 = pickle.load(open("%s/excess_mass_frames.p" % args.data3, "rb"))
+        mass_over_time_data3 = pickle.load(open("%s/excess_mass_values.p" % args.data3, "rb"))
         plot.plot(frame_range_data3, mass_over_time_data3, linewidth = linewidth, label = "data3")
 
     # Reference Lines
