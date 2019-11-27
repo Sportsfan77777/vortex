@@ -243,14 +243,14 @@ def make_plot(show = False):
     p3, = par2.plot(x, y3, c = 'g')
 
     # Axes
-    host.set_ylabel(0, 360)
-    pra1.set_ylabel(0, 6)
-    pra2.set_ylabel(1.2, 2.0)
+    host.set_ylim(0, 360)
+    par1.set_ylim(0, 10)
+    par2.set_ylim(1.2, 2.0)
 
     host.set_xlabel("Time (planet orbits)")
-    host.set_ylabel("Azimuthal Extent")
-    par1.set_ylabel("Radial Extent")
-    par2.set_ylabel("Radial Center")
+    host.set_ylabel("Azimuthal Extent (degrees)")
+    par1.set_ylabel("Radial Extent (scale heights)")
+    par2.set_ylabel("Radial Center (planet radii)")
 
     # Annotate
     tkw = dict(size=4, width=1.5)
