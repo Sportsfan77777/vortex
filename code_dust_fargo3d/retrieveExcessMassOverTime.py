@@ -172,7 +172,7 @@ def make_plot(show = False):
 
     # Curves
     frame_range = pickle.load(open("./excess_mass_frames.p", "rb"))
-    mass_over_time = pickle.load(open("./excess_mass_values.p" "rb"))
+    mass_over_time = pickle.load(open("./excess_mass_values.p", "rb"))
     plot.plot(frame_range, mass_over_time, linewidth = linewidth)
 
     if args.data:
