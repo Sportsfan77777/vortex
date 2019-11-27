@@ -72,6 +72,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--compare', dest = "compare", default = None,
                          help = 'compare to fargo (default: do not do it!)')
+    parser.add_argument('--data', dest = "data", default = None,
+                         help = 'compare to data from another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -302,6 +304,11 @@ def make_plot(show = False):
     #plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
     if args.compare:
         plot.plot(frame_range, mass_over_time_compare, linewidth = linewidth, label = "compare")
+
+    if args.data:
+        frame_range_data = pickle.load(open("%s/excess_mass_frames.p" % args.data, "rb"))
+        mass_over_time_data = pickle.load(open("%s/excess_mass_values.p" % args.data, "rb"))
+        plot.plot(frame_range_data, mass_over_time_data, linewidth = linewidth, label = "data")
 
     # Reference Lines
     plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
