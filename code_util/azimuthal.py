@@ -331,7 +331,7 @@ def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width
     extent = right_theta - left_theta
     return extent
 
-def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 10.0, start = 1.1, end = 3.0):
+def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 20.0, start = 1.1, end = 2.5):
     """ Get radial extent at peak across a given threshold """
 
     ######## Get Parameters #########
