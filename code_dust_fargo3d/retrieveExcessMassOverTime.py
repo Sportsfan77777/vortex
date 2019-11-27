@@ -190,12 +190,6 @@ def make_plot(show = False):
         mass_over_time_data3 = pickle.load(open("%s/excess_mass_values.p" % args.data3, "rb"))
         plot.plot(frame_range_data3, mass_over_time_data3, linewidth = linewidth, label = "data3")
 
-    # Reference Lines
-    plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
-    #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
-    if args.compare:
-        plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
-
     # Annotate
     #this_title = readTitle()
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
