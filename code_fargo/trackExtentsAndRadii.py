@@ -30,9 +30,6 @@ import util
 import azimuthal as az
 from readTitle import readTitle
 
-from advanced import Parameters
-from reader import Fields
-
 from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
@@ -94,7 +91,7 @@ fargo_par = util.get_pickled_parameters()
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
-accretion = fargo_par["Accretion"]
+#accretion = fargo_par["Accretion"]
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
