@@ -371,7 +371,7 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     data_sliver = data_segment[:, zoom_start : zoom_end]
     length = len(data_sliver[0]); std = length / 3.0
     weights = gaussian(length, std)
-    radial_profile = np.average(data_sliver, weights = weights, axis = 1) # avg over rad to get azimuthal profile
+    radial_profile = np.average(data_sliver, weights = weights, axis = 1) # avg over theta to get radial profile
 
     if normalize:
         radial_profile /= np.max(radial_profile)
@@ -384,7 +384,8 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     right_rad = rad_segment[right_rad_i]
 
     extent = right_rad - left_rad
-    return extent
+    middle = left_rad + 0.5 * (extent)
+    return extent, middle
 
 ### Data ###
 

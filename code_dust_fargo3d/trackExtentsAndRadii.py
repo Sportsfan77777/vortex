@@ -77,7 +77,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -179,14 +179,15 @@ def get_extents(args_here):
     avg_density = np.average(density, axis = 1)
 
     azimuthal_extent = az.get_extent(density, fargo_par, threshold = 1.0)
-    radial_extent = az.get_radial_extent(density, fargo_par, threshold = 1.0)
-    radial_peak, _ = az.get_radial_peak(avg_density, fargo_par)
+    radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 1.0)
+    radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
 
     azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
     radial_extent_over_time[i] = radial_extent / scale_height
     radial_peak_over_time[i] = radial_peak
+    radial_peak_over_time_a[i] = radial_peak_a
 
-    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i]
+    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i], radial_peak_over_time_a[i]
 
 
 ## Use These Frames ##
@@ -198,6 +199,7 @@ max_frame = 100 #util.find_max_frame()
 azimuthal_extent_over_time = mp_array("d", len(frame_range))
 radial_extent_over_time = mp_array("d", len(frame_range))
 radial_peak_over_time = mp_array("d", len(frame_range))
+radial_peak_over_time_a = mp_array("d", len(frame_range))
 
 for i, frame in enumerate(frame_range):
     get_extents((i, frame))
@@ -237,10 +239,12 @@ def make_plot(show = False):
     y1 = azimuthal_extent_over_time
     y2 = radial_extent_over_time
     y3 = radial_peak_over_time
+    y3a = radial_peak_over_time_a
 
-    p1, = host.plot(x, y1, c = 'b')
-    p2, = par1.plot(x, y2, c = 'orange')
-    p3, = par2.plot(x, y3, c = 'g')
+    p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
+    p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
+    p3a, = par2.plot(x, y3a, c = 'g', linewidth = linewidth - 1)
+    p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
     host.set_ylim(0, 360)
