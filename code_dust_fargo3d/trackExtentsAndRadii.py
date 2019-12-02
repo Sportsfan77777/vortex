@@ -241,6 +241,8 @@ def make_plot(show = False):
     y3 = radial_peak_over_time
     y3a = radial_peak_over_time_a
 
+    ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1)
+
     p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
     p3a, = par2.plot(x, y3a, c = 'g', linewidth = linewidth - 1)
