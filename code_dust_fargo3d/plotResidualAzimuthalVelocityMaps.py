@@ -266,7 +266,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
@@ -294,9 +294,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/radialVelocityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/residualAzimuthalVelocityMap_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_radialVelocityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_residualAzimuthalVelocityMap_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
