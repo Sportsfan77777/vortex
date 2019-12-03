@@ -233,7 +233,7 @@ def make_plot(frame, show = False):
 
     # Reference Lines
     y_ref1 = np.power(rad, -1.5)
-    y_ref2 -= 0.5 * np.power(scale_height, 2)
+    y_ref2 = y_ref1 - 0.5 * np.power(scale_height, 2)
 
     ### Plot ###
     x = rad
