@@ -257,14 +257,18 @@ def make_plot(frame, show = False):
     if merge > 0:
         num_merged_cores = merge
         gas_density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
-        velocity = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta, field = "vy")
+        velocity = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta, field = "vx")
     elif mpi:
         gas_density = Fields("./", 'gas', frame).get_field("dens").reshape(num_rad, num_theta)
-        velocity = Fields("./", 'gas', frame).get_field("vy").reshape(num_rad, num_theta)
+        velocity = Fields("./", 'gas', frame).get_field("vx").reshape(num_rad, num_theta)
     else:
         gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-        velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
+        velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
+
+    # Take Residual
+    keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
+    azimuthal_velocity -= keplerian_velocity[:, None]
 
     ### Plot ###
     x = rad
