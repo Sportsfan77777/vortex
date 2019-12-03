@@ -268,7 +268,7 @@ def make_plot(frame, show = False):
 
     # Take Residual
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
-    azimuthal_velocity -= keplerian_velocity[:, None]
+    velocity -= keplerian_velocity[:, None]
 
     ### Plot ###
     x = rad
