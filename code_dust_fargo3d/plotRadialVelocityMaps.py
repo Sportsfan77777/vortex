@@ -136,7 +136,6 @@ taper_time = p.masstaper
 scale_height = p.aspectratio
 viscosity = p.nu
 
-"""
 ### Get Input Parameters ###
 
 # Frames
@@ -182,7 +181,6 @@ clim = [-args.cmax, args.cmax]
 fontsize = args.fontsize
 dpi = args.dpi
 
-"""
 # Number of Cores 
 num_cores = args.num_cores
 
@@ -219,7 +217,6 @@ clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
-"""
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
