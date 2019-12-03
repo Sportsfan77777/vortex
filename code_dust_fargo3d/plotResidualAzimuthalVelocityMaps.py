@@ -102,8 +102,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: seismic)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.2,
-                         help = 'maximum radial velocity in colorbar (default: 0.2)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.05,
+                         help = 'maximum radial velocity in colorbar (default: 0.05)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -213,7 +213,7 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+clim = [-args.cmax, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -221,6 +221,32 @@ dpi = args.dpi
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
+
+###############################################################################
+
+### Helper Functions ###
+
+def shift_data(data, fargo_par, option = "away", reference_density = None, frame = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = data
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_data = np.roll(data, shift_c)
+    return shifted_data, shift_c
 
 ###############################################################################
 
@@ -250,6 +276,10 @@ def make_plot(frame, show = False):
         gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
         velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
+
+    if center:
+        velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_gas_density)
+        normalized_gas_density, shift_c = shift_data(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
     # Take Residual
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
