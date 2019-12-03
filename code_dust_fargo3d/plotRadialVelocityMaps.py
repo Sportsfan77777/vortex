@@ -213,7 +213,7 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+clim = [-args.cmax, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
