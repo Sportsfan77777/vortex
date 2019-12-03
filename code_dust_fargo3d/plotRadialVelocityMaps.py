@@ -125,30 +125,18 @@ r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
 
-planet_mass = 1.0
-taper_time = p.masstaper
-
 dt = p.ninterm * p.dt
 
-"""
 fargo_par = util.get_pickled_parameters()
-
-num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
-r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
-
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
-taper_time = fargo_par["MassTaper"]
+accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
 
-surface_density_zero = fargo_par["Sigma0"]
-disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+scale_height = p.aspectratio
+viscosity = p.nu
 
-scale_height = fargo_par["AspectRatio"]
-viscosity = fargo_par["Viscosity"]
-
-size = fargo_par["PSIZE"]
 """
-
 ### Get Input Parameters ###
 
 # Frames
