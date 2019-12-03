@@ -50,8 +50,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
-                         help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "averagedOrbitalFrequency",
+                         help = 'save directory (default: averagedOrbitalFrequency)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -223,19 +223,25 @@ def make_plot(frame, show = False):
         velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
 
     # Average
-    averaged_velocity = np.average(density, axis = 1)
+    averaged_velocity = np.average(velocity, axis = 1)
 
     # Shift out of rotating frame
-    keplerian_velocity = 1 # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
+    rotating_frame = rad # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     averaged_velocity += rotating_frame
 
     averaged_orbital_frequency = averaged_velocity / rad
 
+    # Reference Lines
+    y_ref1 = np.power(rad, -1.5)
+    y_ref2 -= 0.5 * np.power(scale_height, 2)
 
     ### Plot ###
     x = rad
     y = averaged_orbital_frequency
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+
+    plot.plot(x, y_ref1, c = 'k', linewidth = linewidth - 1)
+    plot.plot(x, y_ref2, c = 'midnightblue', linewidth = linewidth - 1)
 
     # Axes
     if args.max_y is None:
