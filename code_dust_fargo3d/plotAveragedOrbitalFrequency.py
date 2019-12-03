@@ -1,32 +1,13 @@
 """
-plot 2-D dust density maps
+plot azimuthally averaged density
+then, makes movies
 
-usage: plotDustDensityMaps.py [-h] [-c NUM_CORES] [--dir SAVE_DIRECTORY]
-                              [--hide] [-v VERSION] [--range R_LIM R_LIM]
-                              [--shift] [--cmap CMAP] [--cmax CMAX]
-                              [--fontsize FONTSIZE] [--dpi DPI]
-                              frames [frames ...]
+Usage:
+python plotAveragedDensity.py frame_number <== plot one frame
+python plotAveragedDensity.py -m <== make a movie instead of plots (plots already exist)
+python plotAveragedDensity.py -1 <<<===== Plots a sample
+python plotAveragedDensity.py <== plot all frames and make a movie
 
-positional arguments:
-  frames                select single frame or range(start, end, rate). error
-                        if nargs != 1 or 3
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c NUM_CORES          number of cores (default: 1)
-  --dir SAVE_DIRECTORY  save directory (default: dustDensityMaps)
-  --hide                for single plot, do not display plot (default: display
-                        plot)
-  -v VERSION            version number (up to 4 digits) for this set of plot
-                        parameters (default: None)
-  --range R_LIM R_LIM   radial range in plot (default: [r_min, r_max])
-  --shift               center frame on vortex peak or middle (default: do not
-                        center)
-  --cmap CMAP           color map (default: viridis)
-  --cmax CMAX           maximum density in colorbar (default: 10 for hcm+, 2.5
-                        otherwise)
-  --fontsize FONTSIZE   fontsize of plot annotations (default: 16)
-  --dpi DPI             dpi of plot annotations (default: 100)
 """
 
 import sys, os, subprocess
@@ -69,10 +50,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalVelocityMaps",
-                         help = 'save directory (default: azimuthalVelocityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
+                         help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
-                         help = 'use .mpio output files (default: use dat)')
+                         help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
@@ -84,29 +65,20 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+                         help = 'maximum density (default: 1.1 times the max)')
 
-    # Plot Parameters (contours)
-    parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
-                         help = 'use contours or not (default: do not use contours)')
-    parser.add_argument('--low', dest = "low_contour", type = float, default = 1.1,
-                         help = 'lowest contour (default: 1.1)')
-    parser.add_argument('--high', dest = "high_contour", type = float, default = 3.5,
-                         help = 'highest contour (default: 3.5)')
-    parser.add_argument('--num_levels', dest = "num_levels", type = int, default = None,
-                         help = 'number of contours (choose this or separation) (default: None)')
-    parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
-                         help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+    parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
+                         help = 'plot density at t = 0 for reference (default: do not do it!)')
+
+    parser.add_argument('--compare', dest = "compare", default = None,
+                         help = 'compare to another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
-                         help = 'color map (default: seismic)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.05,
-                         help = 'maximum radial velocity in colorbar (default: 0.05)')
-
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -125,6 +97,11 @@ r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
 
+planet_mass = 1.0
+taper_time = p.masstaper
+
+viscosity = p.nu
+
 dt = p.ninterm * p.dt
 
 fargo_par = util.get_pickled_parameters()
@@ -133,8 +110,22 @@ planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
-scale_height = p.aspectratio
-viscosity = p.nu
+"""
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
+
+size = fargo_par["PSIZE"]
+"""
 
 ### Get Input Parameters ###
 
@@ -163,59 +154,11 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
-
-# Plot Parameters (contours)
-use_contours = args.use_contours
-low_contour = args.low_contour
-high_contour = args.high_contour
-num_levels = args.num_levels
-if num_levels is None:
-    separation = args.separation
-    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+max_y = args.max_y
 
 # Plot Parameters (constant)
-cmap = args.cmap
-clim = [-args.cmax, args.cmax]
-
 fontsize = args.fontsize
-dpi = args.dpi
-
-# Number of Cores 
-num_cores = args.num_cores
-
-# Files
-save_directory = args.save_directory
-if not os.path.isdir(save_directory):
-    os.mkdir(save_directory) # make save directory if it does not already exist
-
-# Plot Parameters (variable)
-show = args.show
-
-rad = np.linspace(r_min, r_max, num_rad)
-theta = np.linspace(0, 2 * np.pi, num_theta)
-
-version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
-
-# Plot Parameters (contours)
-use_contours = args.use_contours
-low_contour = args.low_contour
-high_contour = args.high_contour
-num_levels = args.num_levels
-if num_levels is None:
-    separation = args.separation
-    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
-
-# Plot Parameters (constant)
-cmap = args.cmap
-clim = [-args.cmax, args.cmax]
-
-fontsize = args.fontsize
+linewidth = args.linewidth
 dpi = args.dpi
 
 # Planet File
@@ -326,9 +269,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/azimuthalVelocityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/averagedOrbitalFrequency_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_azimuthalVelocityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_averagedOrbitalFrequency_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
