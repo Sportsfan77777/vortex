@@ -96,6 +96,7 @@ num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
 
 taper_time = fargo_par["MassTaper"]
+dt = fargo_par["Ninterm"] * fargo_par["DT"]
 
 surface_density_zero = fargo_par["Sigma0"]
 disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
