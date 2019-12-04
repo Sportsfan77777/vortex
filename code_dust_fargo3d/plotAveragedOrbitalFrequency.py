@@ -247,7 +247,7 @@ def make_plot(frame, show = False):
     plot.plot(x, y_ref1, c = 'k', linewidth = linewidth - 1)
     plot.plot(x, y_ref2, c = 'midnightblue', linewidth = linewidth - 1)
 
-    plot.plot([x[0], x[-1], [0.5, 0.5]], c = 'k', linewidth = linewidth - 1)
+    plot.plot([x[0], x[-1]], [0.5, 0.5], c = 'k', linewidth = linewidth - 1)
 
     # Axes
     if args.max_y is None:
@@ -258,7 +258,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    plot.ylim(min_y, max_y)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
