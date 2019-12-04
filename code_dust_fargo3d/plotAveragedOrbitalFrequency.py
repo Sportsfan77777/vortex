@@ -65,8 +65,10 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--min_y', dest = "min_y", type = float, default = 0,
+                         help = 'minimum y (default: 0)')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
-                         help = 'maximum density (default: 1.1 times the max)')
+                         help = 'maximum y (default: None)')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
@@ -155,6 +157,7 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
+min_y = args.min_y
 max_y = args.max_y
 
 # Plot Parameters (constant)
@@ -243,6 +246,8 @@ def make_plot(frame, show = False):
 
     plot.plot(x, y_ref1, c = 'k', linewidth = linewidth - 1)
     plot.plot(x, y_ref2, c = 'midnightblue', linewidth = linewidth - 1)
+
+    plot.plot([x[0], x[-1], [0.5, 0.5]], c = 'k', linewidth = linewidth - 1)
 
     # Axes
     if args.max_y is None:
