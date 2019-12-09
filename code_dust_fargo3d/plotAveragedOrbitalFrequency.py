@@ -256,9 +256,16 @@ def make_plot(frame, show = False):
     plot.plot(x, y_ref2, c = 'midnightblue', linewidth = linewidth - 1)
 
     if args.normalize:
-        plot.plot(x, 0.5 * y_ref1 / keplerian_velocity)
+        resonance_curve = 0.5 * y_ref1 / keplerian_velocity
+        plot.plot(x, resonance_curve)
+
+        look_for_resonance = y / resonance_curve
+        resonance_i = np.searchsorted(look_for_resonance, 1.0)
+        resonance_r = x[resonance_i]
+
+        plot.text(1.02, 1.05 * x_min, r"$r = %.3f$" % resonance_r)
     else:
-        plot.plot([x[0], x[-1]], [0.5, 0.5], c = 'k', linewidth = linewidth - 1)
+        plot.plot([x[0], x[-1]], [0.5, 0.5], linewidth = linewidth - 1)
 
     # Axes
     if args.max_y is None:
