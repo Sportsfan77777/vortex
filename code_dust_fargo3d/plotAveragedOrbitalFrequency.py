@@ -70,6 +70,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum y (default: None)')
 
+    parser.add_argument('--norm', dest = "normalize", action = 'store_true', default = False,
+                         help = 'normalize (default: do not do it!)')
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
@@ -239,6 +241,11 @@ def make_plot(frame, show = False):
     y_ref1 = np.power(rad, -1.5)
     y_ref2 = y_ref1 - 0.5 * np.power(scale_height, 2)
 
+    if args.normalize:
+        averaged_orbital_frequency /= y_ref1
+        y_ref2 /= y_ref1
+        y_ref1 /= y_ref1
+
     ### Plot ###
     x = rad
     y = averaged_orbital_frequency
@@ -274,7 +281,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.ylabel(r"$\Omega$ $/$ $\Omega_\mathrm{K}$", fontsize = fontsize)
 
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
