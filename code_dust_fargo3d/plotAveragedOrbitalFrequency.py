@@ -259,7 +259,7 @@ def make_plot(frame, show = False):
         resonance_curve = 0.5 * y_ref1 / keplerian_velocity
         plot.plot(x, resonance_curve)
 
-        look_for_resonance = y / resonance_curve
+        look_for_resonance = resonance_curve / y
 
         r_start_i = np.searchsorted(rad, 1.4)
         r_end_i = np.searchsorted(rad, 1.8)
@@ -267,7 +267,7 @@ def make_plot(frame, show = False):
         resonance_i = np.searchsorted(look_for_resonance[r_start_i:r_end_i], 1.0)
         resonance_r = rad[r_start_i + resonance_i]
 
-        plot.text(1.02, 1.05 * x_min, r"$r = %.3f$" % resonance_r)
+        plot.text(1.05 * x_min, 1.02, r"$r = %.3f$" % resonance_r)
     else:
         plot.plot([x[0], x[-1]], [0.5, 0.5], linewidth = linewidth - 1)
 
