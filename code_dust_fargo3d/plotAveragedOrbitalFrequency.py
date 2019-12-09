@@ -260,8 +260,12 @@ def make_plot(frame, show = False):
         plot.plot(x, resonance_curve)
 
         look_for_resonance = y / resonance_curve
-        resonance_i = np.searchsorted(look_for_resonance, 1.0)
-        resonance_r = x[resonance_i]
+
+        r_start_i = np.searchsorted(rad, 1.4)
+        r_end_i = np.searchsorted(rad, 1.8)
+
+        resonance_i = np.searchsorted(look_for_resonance[r_start_i:r_end_i], 1.0)
+        resonance_r = rad[r_start_i + resonance_i]
 
         plot.text(1.02, 1.05 * x_min, r"$r = %.3f$" % resonance_r)
     else:
