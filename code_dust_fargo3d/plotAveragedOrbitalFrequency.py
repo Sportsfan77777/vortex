@@ -238,13 +238,14 @@ def make_plot(frame, show = False):
     averaged_orbital_frequency = averaged_velocity / rad
 
     # Reference Lines
-    y_ref1 = np.power(rad, -1.5)
+    keplerian_velocity = np.power(rad, -1.5)
+    y_ref1 = 1.0 * keplerian_velocity
     y_ref2 = y_ref1 - 0.5 * np.power(scale_height, 2)
 
     if args.normalize:
-        averaged_orbital_frequency /= y_ref1
-        y_ref2 /= y_ref1
-        y_ref1 /= y_ref1
+        averaged_orbital_frequency /= keplerian_velocity
+        y_ref2 /= keplerian_velocity
+        y_ref1 /= keplerian_velocity
 
     ### Plot ###
     x = rad
@@ -254,7 +255,10 @@ def make_plot(frame, show = False):
     plot.plot(x, y_ref1, c = 'k', linewidth = linewidth - 1)
     plot.plot(x, y_ref2, c = 'midnightblue', linewidth = linewidth - 1)
 
-    plot.plot([x[0], x[-1]], [0.5, 0.5], c = 'k', linewidth = linewidth - 1)
+    if args.normalize:
+        plot.plot(x, 0.5 * y_ref1 / keplerian_velocity)
+    else:
+        plot.plot([x[0], x[-1]], [0.5, 0.5], c = 'k', linewidth = linewidth - 1)
 
     # Axes
     if args.max_y is None:
