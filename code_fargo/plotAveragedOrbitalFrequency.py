@@ -64,6 +64,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum y (default: None)')
 
+    parser.add_argument('--norm', dest = "normalize", action = 'store_true', default = False,
+                         help = 'normalize (default: do not do it!)')
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
@@ -195,8 +197,14 @@ def make_plot(frame, show = False):
     averaged_orbital_frequency = averaged_velocity / rad
 
     # Reference Lines
-    y_ref1 = np.power(rad, -1.5)
+    keplerian_velocity = np.power(rad, -1.5)
+    y_ref1 = 1.0 * keplerian_velocity
     y_ref2 = y_ref1 - 0.5 * np.power(scale_height, 2)
+
+    if args.normalize:
+        averaged_orbital_frequency /= keplerian_velocity
+        y_ref2 /= keplerian_velocity
+        y_ref1 /= keplerian_velocity
 
     ### Plot ###
     x = rad
@@ -206,7 +214,21 @@ def make_plot(frame, show = False):
     plot.plot(x, y_ref1, c = 'k', linewidth = linewidth - 1)
     plot.plot(x, y_ref2, c = 'midnightblue', linewidth = linewidth - 1)
 
-    plot.plot([x[0], x[-1]], [0.5, 0.5], c = 'k', linewidth = linewidth - 1)
+    if args.normalize:
+        resonance_curve = 0.5 * y_ref1 / keplerian_velocity
+        plot.plot(x, resonance_curve)
+
+        look_for_resonance = resonance_curve / y
+
+        r_start_i = np.searchsorted(rad, 1.4)
+        r_end_i = np.searchsorted(rad, 1.8)
+
+        resonance_i = np.searchsorted(look_for_resonance[r_start_i:r_end_i], 1.0)
+        resonance_r = rad[r_start_i + resonance_i]
+
+        plot.text(1.02 * x_min, 1.02, r"$r = %.3f$" % resonance_r)
+    else:
+        plot.plot([x[0], x[-1]], [0.5, 0.5], linewidth = linewidth - 1)
 
     # Axes
     if args.max_y is None:
