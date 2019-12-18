@@ -59,17 +59,19 @@ void WritePlanetFile (int TimeStep, int n, boolean big) {
     sprintf (name, "%splanet%d.dat", OUTPUTDIR, n);
   output = fopen_prs (name, "a");
 
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",
-	   TimeStep,
-	   Xplanet,
-	   Yplanet,
-	   Zplanet,
-	   VXplanet,
-	   VYplanet,
-	   VZplanet,
-	   MplanetVirtual,
-	   PhysicalTime,
-	   OMEGAFRAME);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n",
+     TimeStep,
+     Xplanet,
+     Yplanet,
+     Zplanet,
+     VXplanet,
+     VYplanet,
+     VZplanet,
+     MplanetVirtual,
+     AccretedMass,
+     PhysicalTime,
+     OMEGAFRAME,
+     ReductionFactor);
   fclose (output);
   //printf ("done\n");
   fflush (stdout);
@@ -118,6 +120,12 @@ PlanetarySystem *sys;
 int timestep;
 {
   int k;
+  real planetmass_taper;
+  if (MASSTAPER == 0.0)
+    planetmass_taper = 1.0;
+  else
+    planetmass_taper = (PhysicalTime >= (2.0 * M_PI * MASSTAPER) ? 1.0 : .5*(1.0-cos(M_PI*PhysicalTime/(2.0 * M_PI * MASSTAPER))));
+
   for (k = 0; k < sys->nb; k++) {
     sys->x[k] = GetfromPlanetFile (timestep, 2, k);
     sys->y[k] = GetfromPlanetFile (timestep, 3, k);
@@ -125,7 +133,8 @@ int timestep;
     sys->vx[k] = GetfromPlanetFile (timestep, 5, k);
     sys->vy[k] = GetfromPlanetFile (timestep, 6, k);
     sys->vz[k] = GetfromPlanetFile (timestep, 7, k);
-    sys->mass[k] = GetfromPlanetFile (timestep, 8, k);
+    sys->mass[k] = GetfromPlanetFile (timestep, 8, k) / planetmass_taper;
+    sys->accreted_mass[k] = GetfromPlanetFile (timestep, 9, k);
   }
 }
 
@@ -142,7 +151,7 @@ void WriteTorqueAndWork(int TimeStep, int n) {
 
   if (Sys == NULL) return;
 
-  m = Sys->mass[n];
+  m = Sys->mass[n] + Sys->accreted_mass[n]; // - NEGATIVEMASS*negative_taper;
   x = Sys->x[n];
   y = Sys->y[n];
   z = Sys->z[n];
@@ -185,6 +194,24 @@ void WriteTorqueAndWork(int TimeStep, int n) {
 
 void WritePlanetSystemFile (int t, boolean big) {
   int i, n;
+
+  real planetmass_taper;
+  real negative_taper, negative_time;
+  if (MASSTAPER == 0.0)
+    planetmass_taper = 1.0;
+  else
+    planetmass_taper = (PhysicalTime >= (2.0 * M_PI * MASSTAPER) ? 1.0 : .5*(1.0-cos(M_PI*PhysicalTime/(2.0 * M_PI * MASSTAPER))));
+
+  if (PhysicalTime < 2.0 * M_PI * NEGATIVESTARTTIME)
+    negative_taper = 0.0;
+  else {
+    negative_time = PhysicalTime - 2.0 * M_PI * NEGATIVESTARTTIME;
+    if (negative_time < 0.0)
+      negative_taper = 0.0;
+    else
+      negative_taper = (negative_time >= (2.0 * M_PI * NEGATIVEMASSTAPER) ? 1.0 : .5*(1.0-cos(M_PI*negative_time/(2.0 * M_PI * NEGATIVEMASSTAPER))));
+  }
+
   if (Sys == NULL) return;
   n = Sys->nb;
   for (i = 0; i < n; i++) {
@@ -194,7 +221,9 @@ void WritePlanetSystemFile (int t, boolean big) {
     VXplanet = Sys->vx[i];
     VYplanet = Sys->vy[i];
     VZplanet = Sys->vz[i];
-    MplanetVirtual = Sys->mass[i];
+    MplanetVirtual = Sys->mass[i] * planetmass_taper;
+    AccretedMass = Sys->accreted_mass[i] - NEGATIVEMASS*negative_taper;
+    ReductionFactor = Sys->reduction_factor[i];
     WriteTorqueAndWork(t, i);
     WritePlanetFile (t, i, big);
   }
@@ -233,6 +262,26 @@ void WriteDim () {
     temp = system (command);
 #endif
   }
+}
+
+void WriteDTFile(double this_dt)
+{
+  FILE *output;
+  char name[256];
+
+  if (!CPU_Master) return; // Only write one file
+
+  printf ("_Updating 'timesteps dat'_");
+  fflush (stdout);
+  sprintf (name, "%stimesteps.dat", OUTPUTDIR);
+  output = fopen(name, "a");
+
+  // What is slowing things down and how much???
+  fprintf (output, "%.9f\t%.9f\n", PhysicalTime, this_dt);
+
+  fclose (output);
+  printf ("done\n");
+  fflush (stdout);
 }
 
 void WriteField2D(Field2D *f, int n) {
@@ -292,7 +341,7 @@ void WriteMerging(Field *f, int n) {
   int i,j,k,m,jj;
   char outname[MAXLINELENGTH];
   int next, previous;
-  int relay;
+  int relay = 7; // originally, "relay" wasn't intialized!!
 
   sprintf(outname, "%s%s%d.dat", OUTPUTDIR, f->name, n);
 
@@ -320,10 +369,16 @@ void WriteMerging(Field *f, int n) {
 	  fwrite(f->field_cpu+(k-Z0+NGHZ)*Stride+jj*(Nx+2*NGHX)+NGHX, sizeof(real)*Nx, 1, fo);
       }
       fflush(fo);
-      MPI_Barrier(MPI_COMM_WORLD);
+      //MPI_Barrier(MPI_COMM_WORLD);
     }
   }
   fclose(fo);
+
+  if (CPU_Rank < CPU_Number-1) {  // Force sequential read
+    MPI_Send (&relay, 1, MPI_INT, CPU_Rank+1, 42, MPI_COMM_WORLD);
+  }
+
+  MPI_Barrier(MPI_COMM_WORLD); // Should this be in the outer loop? or outside altogether? or in the inner loop?
 }
 
 void Write_offset(int file_offset, char* fieldname, char* fluidname){

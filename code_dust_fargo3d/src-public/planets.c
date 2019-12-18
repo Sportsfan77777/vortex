@@ -1,5 +1,273 @@
 #include "fargo3d.h"
 
+void AccreteOntoPlanets(real dt) {
+
+    //<USER_DEFINED>
+    INPUT(Density);
+    OUTPUT(Density);
+  #ifdef X
+    INPUT(Vx);
+  #endif
+  #ifdef Y
+    INPUT(Vy);
+  #endif
+  #ifdef Z
+    INPUT(Vz);
+  #endif
+  //<\USER_DEFINED>
+
+  int i, j, k, n, i_min, i_max, j_min, j_max, i_f, NbPlanets, count_cells, count1, count2, timestep_a;
+  real m, x, y, z, r, r_roche, angle, vx, vy, px, py, distance, dx, dy, MassTaper, surf, core_coef, reduction_factor;
+  real negative_taper, negative_time;
+  real vrcell, vtcell, vxcell, vycell;
+  real facc, facc1, facc2, frac1, frac2;
+  real* dens = Density->field_cpu;
+  real* vrad = Vy->field_cpu;
+  real* vtheta = Vx->field_cpu;
+
+  real dMplanet, dPxPlanet, dPyPlanet, deltaM, temp;
+  NbPlanets = Sys->nb;
+
+  real rad_l, az_l;
+  char name[256];
+  FILE *planet_file;
+
+  count_cells = 0;
+  count1 = 0;
+  count2 = 0;
+
+  // Return if no accretion
+  if (Sys->acc[0] < 0.001) return;
+
+  // Turn printing off
+  timestep_a = floor(PhysicalTime / 2.0 / M_PI);
+  // sprintf(fn, "accretion%d.dat", timestep);
+
+  // if (access(fn, F_OK) != -1) {
+  //   // Already Exists
+  //   WriteAccretionFile = NO;
+  // }
+  // else {
+  //   // Create file and open in append mode
+  //   if (timestep >= 10) {
+  //     file = fopen(fn, "a");
+  //     WriteAccretionFile = YES;
+  //     printf ("...Accretion file ready...");
+  //     fflush (stdout);
+  //   }
+  // }
+
+  // Calculate mass taper
+  if (MASSTAPER == 0.0)
+    MassTaper = 1.0;
+  else
+    MassTaper = (PhysicalTime >= (2.0 * M_PI * MASSTAPER) ? 1.0 : 0.5 * (1.0 - cos(M_PI * PhysicalTime / (2.0 * M_PI * MASSTAPER))));
+
+  if (PhysicalTime < 2.0 * M_PI * NEGATIVESTARTTIME)
+    negative_taper = 0.0;
+  else {
+    negative_time = PhysicalTime - 2.0 * M_PI * NEGATIVESTARTTIME;
+    if (negative_time < 0.0)
+      negative_taper = 0.0;
+    else
+      negative_taper = (negative_time >= (2.0 * M_PI * NEGATIVEMASSTAPER) ? 1.0 : .5*(1.0-cos(M_PI*negative_time/(2.0 * M_PI * NEGATIVEMASSTAPER))));
+  }
+
+  // Loop through planets
+  for (n = 0; n < NbPlanets; n++) {
+    dMplanet = dPxPlanet = dPyPlanet = 0.0;
+    count1 = count2 = 0;
+
+    // Kley's parameters
+    facc = dt * (Sys->acc[n]);
+    //facc = (Sys->acc[k]); // Hack-ish test
+    facc1 = KLEYFACC1 * facc; // 1.0 / 3.0 * facc;
+    facc2 = KLEYFACC2 * facc; // 2.0 / 3.0 * facc;
+    frac1 = KLEYFRAC1; // 0.75; (outer region)
+    frac2 = KLEYFRAC2; // 0.45; (inner region)
+
+    // Planet parameters
+    m = Sys->mass[n] * MassTaper + Sys->accreted_mass[n] - NEGATIVEMASS*negative_taper + 0.000001;
+    x = Sys->x[n];
+    y = Sys->y[n];
+    z = Sys->z[n];
+
+    reduction_factor = Sys->reduction_factor[n];
+    if (reduction_factor > 1)
+       reduction_factor = 1.0; // do not reduce accretion rate
+    if (reduction_factor < 0.1)
+       reduction_factor = REDUCTION_LIMIT; // anything past this is too much
+
+    r = sqrt(x*x + y*y + z*z);
+    r_roche = pow((1.0 / 3.0 * m / MSTAR), (1.0 / 3.0)) * r;
+    angle = atan2(y, x);
+
+    vx = Sys->vx[n];
+    vy = Sys->vy[n];
+
+    px = m * vx;
+    py = m * vy;
+
+    // Indices
+    j_min = 0;
+    j_max = Ny;
+    while ((ymed(j_min) < r - r_roche) && (j_min < Ny)) j_min++; // should be y[j+1]
+    while ((ymed(j_max) > r + r_roche) && (j_max > 0)) j_max--; // should be regular y[j]
+    j_min -= 2;
+    j_max += 2;
+
+    i_min = (int)((real)Nx / 2.0 / M_PI * (angle - 2.0 * r_roche / r)); // does this take into account -pi to pi?
+    i_max = (int)((real)Nx / 2.0 / M_PI * (angle + 2.0 * r_roche / r));
+    i_min = 0;
+    i_max = Nx;
+
+    // Surface density
+    surf = 0.0;
+    core_coef = 1.0;
+
+    if (COREACCRETION) {
+      if (Sys->accreted_mass[n] < Sys->mass[n])
+          core_coef = 0.33 + 0.67 * pow(Sys->accreted_mass[n] / Sys->mass[n], 5.0);
+    }
+
+    //sprintf (name, "%saccretion%d.dat", OUTPUTDIR, timestep_a);
+    //planet_file = fopen_prs (name, "a");
+
+    //fprintf(planet_file, "\nPlanet: <%.4f, %.4f> at %.4f\n", 1000.0 * m, r_roche, r);
+    //fprintf(planet_file, "\ni: <%d to %d>; j: <%d to %d> (%.4f to %.4f)\n", i_min, i_max, j_min, j_max, ymed(j_min), ymed(j_max));
+
+    //<MAIN_LOOP>
+    #ifdef Z
+      for (k=0; k<Nz; k++) {
+    #endif
+    #ifdef Y
+        for (j=j_min; j<j_max; j++) { // radius
+    #endif
+    #ifdef X
+          for (i=i_min; i<i_max; i++) { // azimuth
+    #endif
+            rad_l = ymed(j);
+            az_l = xmed(i);
+            //i_f = i;
+            //while (i_f <  0)  i_f += Nx;
+            //while (i_f >= Nx) i_f -= Nx;
+
+            //xc = abs[l];
+            //yc = ord[l];
+            dx = x - XC;
+            dy = y - YC;
+
+            distance = sqrt(dx*dx + dy*dy);
+
+            count_cells++;
+            //fprintf(planet_file, "\nQ %04d: (%.4f, %.4f) (%.4f, %.4f) (%.6f, %.6f, %.6f) ", count_cells, XC, YC, rad_l, az_l, dx, dy, distance);
+
+            vtcell = 0.5 * (vtheta[l] + vtheta[lxp]) + rad_l * OMEGAFRAME;
+            vrcell = 0.5 * (vrad[l] + vrad[lyp]);
+            vxcell = (vrcell * XC - vtcell * YC) / rad_l;
+            vycell = (vrcell * YC + vtcell * XC) / rad_l;
+
+            // Condition 1
+            if (distance < frac1 * r_roche) {
+              surf = M_PI * (ymed(j+1) * ymed(j+1) - rad_l * rad_l) /(real)Nx; // Set accreted mass here!
+
+              deltaM = facc1 * ACCOFFSET * core_coef * dens[l] * surf * reduction_factor;
+              dens[l] *= (1.0 - facc1 * core_coef * reduction_factor);
+
+              dPxPlanet += deltaM * vxcell;
+              dPyPlanet += deltaM * vycell;
+              dMplanet += deltaM;
+              //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
+                //printf("%s", "1");
+              //fprintf(planet_file, "\nQ %04d: (%.4f, %.4f) (%.4f, %.4f) (%.6f, %.6f, %.6f) ", count_cells, XC, YC, rad_l, az_l, dx, dy, distance);
+                //fprintf(planet_file, "1 ");
+              count1++;
+              //accreting1++;
+            }
+            
+            // Condition 2
+            if (distance < frac2 * r_roche) {
+              deltaM = facc2 * ACCOFFSET * core_coef * dens[l] * surf * reduction_factor;
+              dens[l] *= (1.0 - facc2 * core_coef * reduction_factor);
+
+              dPxPlanet += deltaM * vxcell;
+              dPyPlanet += deltaM * vycell;
+              dMplanet += deltaM;
+              //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
+                //printf("%s", "2");
+                //fprintf(planet_file, "2 ");
+              count2++;
+              //accreting2++;
+            }
+            //printf("%d %d", count1, count2);
+            //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
+            //  printf("Q");
+            // if (WriteAccretionFile && timestep >= 10) {
+            //   if (accreting1 || accreting2) {
+            //     fprintf (file, "(%.3f, %.3f) - %d %d\n", rad_l, az_l, accreting1, accreting2);
+            //   }
+            // }
+    #ifdef X
+          }
+    #endif
+    #ifdef Y
+        }
+    #endif
+    #ifdef Z
+      }
+    #endif
+    //<\MAIN_LOOP>
+
+    //if ((timestep_a > 62.73 && timestep_a < 62.93) || (timestep_a > 125.55 && timestep_a < 125.75) || (timestep_a > 188.4 && timestep_a < 188.6) || (timestep_a > 251.2 && timestep_a < 251.4))
+      //printf("W");
+      //fprintf(planet_file, "\nNumber of Accreting Cells: [%d, %d, %d]\n", count_cells, count1, count2);
+      //fclose(planet_file);
+    //fflush(stdout);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    // They all should reach here at the same time.
+
+    MPI_Allreduce (&dMplanet, &temp, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    dMplanet = temp;
+
+    MPI_Allreduce (&dPxPlanet, &temp, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    dPxPlanet = temp;
+    MPI_Allreduce (&dPyPlanet, &temp, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    dPyPlanet = temp;
+
+    //MPI_Allreduce (&count1, &temp, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    //count1 = temp;
+    //MPI_Allreduce (&count2, &temp, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    //count2 = temp;
+
+    // if (WriteAccretionFile && timestep >= 10) {
+    //   fprintf(file, "Totals: %d %d \n", count1, count2);
+    //   fclose(file);
+    // }
+
+    px += dPxPlanet;
+    py += dPyPlanet;
+    //m += dMplanet;
+
+    // Post-processing
+    if (FAKEACCRETION) {
+          // pass (get rid of disk material, but don't let it affect planet)
+      //printf("Fake\n");
+    }
+    else {
+        //Sys->mass[k] = m;
+        Sys->accreted_mass[k] += dMplanet;
+        //printf("Not Fake %.8f \n", Sys->accreted_mass[k]);
+    }
+
+    if (Sys->FeelDisk[n]) {
+        //Sys->vx[n] = px / m;
+        //Sys->vy[n] = py / m;
+    }
+  }
+}
+
 void ComputeIndirectTerm () {
 #ifndef NODEFAULTSTAR
   IndirectTerm.x = -DiskOnPrimaryAcceleration.x;

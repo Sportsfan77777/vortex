@@ -136,7 +136,7 @@ void AdvanceSystemRK5 (real dt) {
     q0[i+4*n] = Sys->vy[i];
     q0[i+5*n] = Sys->vz[i];
     
-    PlanetMasses[i] = Sys->mass[i];
+    PlanetMasses[i] = Sys->mass[i] + Sys->accreted_mass[i];;
   }
 
   feelothers = Sys->FeelOthers;
@@ -156,7 +156,7 @@ void AdvanceSystemRK5 (real dt) {
     r = sqrt(x*x+y*y);
     theta = atan2(y,x);
     rdot = (RELEASERADIUS-r)/(RELEASEDATE-PhysicalTime);
-    omega = sqrt((1.+Sys->mass[0])/r/r/r);
+    omega = sqrt((1.+Sys->mass[0] + Sys->accreted_mass[0])/r/r/r);
     new_r = r + rdot*dt;
     denom = r-new_r;
     if (denom != 0.0) {
@@ -165,7 +165,7 @@ void AdvanceSystemRK5 (real dt) {
       dtheta = omega*dt;
     }
     vx = rdot;
-    vy = new_r*sqrt((1.+Sys->mass[0])/new_r/new_r/new_r);
+    vy = new_r*sqrt((1.+Sys->mass[0] + Sys->accreted_mass[0])/new_r/new_r/new_r);
     Sys->x[0] = new_r*cos(dtheta+theta);
     Sys->y[0] = new_r*sin(dtheta+theta);
     Sys->z[0] = 0.0;
