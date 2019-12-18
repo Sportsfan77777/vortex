@@ -65,6 +65,7 @@ void Potential_cpu() {
   real* yplanet = Sys->y_cpu;
   real* zplanet = Sys->z_cpu;
   real* mplanet = Sys->mass_cpu;
+  real* accreted_mass = Sys->accreted_mass_cpu;
   int nb        = Sys->nb;
   int pitch  = Pitch_cpu;
   int stride = Stride_cpu;
@@ -140,9 +141,8 @@ void Potential_cpu() {
 #endif
 
 	for(n=0; n<nb; n++) {
-	  mp = mplanet[n]*taper;
+	  mp = mplanet[n]*taper + accreted_mass[n] - NEGATIVEMASS*negative_taper;
 	  
-
 	  planetdistance = sqrt(xplanet[n]*xplanet[n]+
 				yplanet[n]*yplanet[n]+
 				zplanet[n]*zplanet[n]);

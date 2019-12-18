@@ -409,6 +409,12 @@ OMEGAFRAME (which is used afterwards to build the initial Vx field. */
       //We apply comms and boundaries at the end of the step
       MULTIFLUID(FillGhosts(PrimitiveVariables()));
 
+      if (ThereArePlanets) {
+        if (BONDI_LIMIT)
+          MULTIFLUID(CalculationAccretionReductionFactor(dt)); // calculate reduction factor if necessary
+        MULTIFLUID(AccreteOntoPlanets(dt)); // added accretion
+      }
+
       if(CPU_Master) {
 	if (FullArrayComms)
 	  printf("%s", "!");
