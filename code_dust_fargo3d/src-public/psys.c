@@ -19,7 +19,7 @@ int FindNumberOfPlanets(char *filename) {
 
 PlanetarySystem *AllocPlanetSystem(int nb) {
   char command[512];
-  real *mass, *x, *y, *z, *vx, *vy, *vz, *acc;
+  real *mass, *x, *y, *z, *vx, *vy, *vz, *acc, *accreted_mass, *reduction_factor;;
   boolean *feeldisk, *feelothers;
   int i;
   PlanetarySystem *sys;
@@ -37,6 +37,8 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   vz   = (real*)malloc(sizeof(real)*(nb+1));
   mass = (real*)malloc(sizeof(real)*(nb+1));
   acc  = (real*)malloc(sizeof(real)*(nb+1));
+  accreted_mass = (real*)malloc(sizeof(real)*(nb+1));
+  reduction_factor = (real*)malloc(sizeof(real)*(nb+1));
   if ((x == NULL) || (y == NULL) || (z == NULL)	      \
       || (vx == NULL) || (vy == NULL) || (vz == NULL) \
       || (acc == NULL) || (mass == NULL)) {
@@ -57,10 +59,12 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   sys->vz= vz;
   sys->acc=acc;
   sys->mass = mass;
+  sys->accreted_mass = accreted_mass;
+  sys->reduction_factor = reduction_factor;
   sys->FeelDisk = feeldisk;
   sys->FeelOthers = feelothers;
   for (i = 0; i < nb; i++) {
-    x[i] = y[i] = z[i] = vx[i] = vy[i] = vz[i] = mass[i] = acc[i] = 0.0;
+    x[i] = y[i] = z[i] = vx[i] = vy[i] = vz[i] = mass[i] = acc[i] = accreted_mass[i] = 0.0;
     feeldisk[i] = feelothers[i] = YES;
   }
   for (i = 0; i < nb; i++) {
@@ -77,6 +81,7 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   sys->y_cpu = sys->y; //Alias
   sys->z_cpu = sys->z; //Alias
   sys->mass_cpu = sys->mass; //Alias
+  sys->accreted_mass_cpu = sys->accreted_mass; //Alias
 
   sys->vx= vx;
   sys->vy= vy;
@@ -108,6 +113,8 @@ void FreePlanetary () {
   free (Sys->y);
   free (Sys->vy);
   free (Sys->mass);
+  free (Sys->accreted_mass);
+  free (Sys->reduction_factor);
   free (Sys->acc);
   free (Sys->FeelOthers);
   free (Sys->FeelDisk);

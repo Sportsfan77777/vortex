@@ -263,6 +263,8 @@ real VXplanet;
 real VYplanet;
 real VZplanet;
 real MplanetVirtual;
+real AccretedMass;
+real ReductionFactor;
 
 MPI_Status fargostat;
 
