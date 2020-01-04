@@ -296,8 +296,8 @@ if args.compare:
 
 ## Pickle to combine later ##
 
-pickle.dump(np.array(frame_range), open("excess_mass_frames.p", "wb"))
-pickle.dump(np.array(mass_over_time), open("excess_mass_values.p", "wb"))
+pickle.dump(np.array(frame_range), open("dust_variance_frames.p", "wb"))
+pickle.dump(np.array(mass_over_time), open("dust_variance_values.p", "wb"))
 
 ##### PLOTTING #####
 
@@ -312,8 +312,8 @@ def make_plot(show = False):
         plot.plot(frame_range, mass_over_time_compare, linewidth = linewidth, label = "compare")
 
     if args.data:
-        frame_range_data = pickle.load(open("%s/excess_mass_frames.p" % args.data, "rb"))
-        mass_over_time_data = pickle.load(open("%s/excess_mass_values.p" % args.data, "rb"))
+        frame_range_data = pickle.load(open("%s/dust_variance_frames.p" % args.data, "rb"))
+        mass_over_time_data = pickle.load(open("%s/dust_variance_frames.p" % args.data, "rb"))
         plot.plot(frame_range_data, mass_over_time_data, linewidth = linewidth, label = "data")
 
     # Reference Lines
@@ -326,7 +326,7 @@ def make_plot(show = False):
     #this_title = readTitle()
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Excess Mass", fontsize = fontsize)
+    plot.ylabel("Dust Variation", fontsize = fontsize)
 
     title1 = os.getcwd().split("/")[-1]
     plot.title(title1, fontsize = fontsize)
@@ -340,7 +340,7 @@ def make_plot(show = False):
     plot.yscale('log')
 
     # Save + Close
-    plot.savefig("dustExcessVariance.png")
+    plot.savefig("dustVariation.png")
     plot.show()
 
     plot.close()
