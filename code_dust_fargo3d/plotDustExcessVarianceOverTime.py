@@ -237,7 +237,7 @@ def get_excess_mass(args_here):
         #excess_mass = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_diff_density)
         #return excess_mass, vortex_excess
 
-        return variance / average
+        return variance / average, vortex_excess
 
     excess_mass, vortex_excess = helper(density, background_density)
     if args.compare:
