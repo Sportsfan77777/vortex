@@ -97,6 +97,7 @@ num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
+dust_surface_density_zero = p.sigma0 * p.epsilon
 taper_time = p.masstaper
 
 viscosity = p.nu
@@ -199,13 +200,13 @@ def get_excess_mass(args_here):
         density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
         background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
     else:
-        density = fromfile("dust1dens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-        background_density = fromfile("dust1dens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / surface_density_zero
+        density = fromfile("dust1dens%d.dat" % frame).reshape(num_rad, num_theta) / dust_surface_density_zero
+        background_density = fromfile("dust1dens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / dust_surface_density_zero
 
     if args.compare:
         fargo_directory = args.compare
-        density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
-        background_density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / surface_density_zero
+        density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / dust_surface_density_zero
+        background_density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / dust_surface_density_zero
 
     def helper(density, background_density):
         diff_density = density - background_density
@@ -332,7 +333,7 @@ def make_plot(show = False):
     plot.yscale('log')
 
     # Save + Close
-    plot.savefig("excessMass.png")
+    plot.savefig("dustExcessMass.png")
     plot.show()
 
     plot.close()
