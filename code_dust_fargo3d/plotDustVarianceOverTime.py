@@ -225,7 +225,7 @@ def get_excess_mass(args_here):
         vortex_rad = rad[vortex_start_i : vortex_end_i]
         vortex_diff_density = diff_density[vortex_start_i : vortex_end_i]
 
-        vortex_excess = np.average(vortex_diff_density, axis = 1)
+        vortex_excess = np.average(vortex_diff_density, axis = 0)
 
         variance = np.std(vortex_excess)
         average = np.average(vortex_excess)
