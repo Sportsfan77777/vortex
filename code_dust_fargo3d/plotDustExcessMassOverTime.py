@@ -322,6 +322,8 @@ def make_plot(show = False):
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
     plot.ylabel("Excess Mass", fontsize = fontsize)
+
+    title1 = os.getcwd().split("/")[-1]
     plot.title(title1, fontsize = fontsize)
 
     #plot.legend(loc = "upper left")
