@@ -317,7 +317,8 @@ def make_plot(show = False):
         plot.plot(frame_range_data, mass_over_time_data, linewidth = linewidth, label = "data")
 
     # Reference Lines
-    plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
+    plot.plot([0, frame_range[-1]], 0.10 * np.ones(2), linewidth = 2, color = "black")
+    #plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
     #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
     if args.compare:
         plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
