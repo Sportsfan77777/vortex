@@ -300,16 +300,16 @@ def make_plot(frames, show = False):
         energy2 = fromfile("gasenergy%d.dat" % frames[1]).reshape(num_rad, num_theta)
 
         density = fromfile("gasdens%d.dat" % frames[0]).reshape(num_rad, num_theta)
-    normalized_energy = energy
+    diff_energy = energy - energy2
     normalized_density = density / surface_density_zero
 
     if center:
-        normalized_energy, shift_c = shift_density(normalized_energy, fargo_par, reference_density = normalized_density)
+        diff_energy, shift_c = shift_density(diff_energy, fargo_par, reference_density = normalized_density)
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_energy), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(diff_energy), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
