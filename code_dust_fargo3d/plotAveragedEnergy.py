@@ -50,8 +50,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
-                         help = 'save directory (default: averagedDensity)')
+    parser.add_argument('--dir', dest = "save_directory", default = "averagedEnergy",
+                         help = 'save directory (default: averagedEnergy)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -183,14 +183,14 @@ def make_plot(frame, show = False):
     # Data
     if merge > 0:
         num_merged_cores = merge
-        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
+        energy = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
     elif mpi:
         field = "dens"
-        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+        energy = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
     else:
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-    averagedDensity = np.average(density, axis = 1)
-    normalized_density = averagedDensity / surface_density_zero
+        energy = fromfile("gasenergy%d.dat" % frame).reshape(num_rad, num_theta)
+    averagedEnergy = np.average(energy, axis = 1)
+    normalizedEnergy = averagedEnergy
 
     ### Plot ###
     x = rad
@@ -198,9 +198,9 @@ def make_plot(frame, show = False):
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
     if args.zero:
-        density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
-        averagedDensity_zero = np.average(density_zero, axis = 1)
-        normalized_density_zero = averagedDensity_zero / surface_density_zero
+        energy_zero = fromfile("gasenergy0.dat").reshape(num_rad, num_theta)
+        averagedEnergy_zero = np.average(density_zero, axis = 1)
+        normalized_density_zero = averagedEnergy_zero
 
         x = rad
         y_zero = normalized_density_zero
@@ -228,7 +228,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    #plot.ylim(0, max_y)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
@@ -271,9 +271,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/averagedDensity_%04d.png" % (save_directory, frame)
+        save_fn = "%s/averagedEnergy_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_averagedDensity_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_averagedEnergy_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
