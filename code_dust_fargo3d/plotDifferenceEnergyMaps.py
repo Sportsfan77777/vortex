@@ -156,7 +156,7 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
-frame_range = util.get_frame_range(args.frames)
+frame_range = args.frames
 
 # Number of Cores 
 num_cores = args.num_cores
