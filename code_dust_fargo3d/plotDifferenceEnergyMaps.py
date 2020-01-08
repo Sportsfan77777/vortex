@@ -366,5 +366,5 @@ def make_plot(frames, show = False):
 
 # Iterate through frames
 
-make_plot(frame_range)
+make_plot(frame_range, show = True)
 
