@@ -190,20 +190,20 @@ def make_plot(frame, show = False):
     else:
         energy = fromfile("gasenergy%d.dat" % frame).reshape(num_rad, num_theta)
     averagedEnergy = np.average(energy, axis = 1)
-    normalizedEnergy = averagedEnergy
+    normalized_energy = averagedEnergy
 
     ### Plot ###
     x = rad
-    y = normalized_density
+    y = normalized_energy
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
     if args.zero:
         energy_zero = fromfile("gasenergy0.dat").reshape(num_rad, num_theta)
-        averagedEnergy_zero = np.average(density_zero, axis = 1)
-        normalized_density_zero = averagedEnergy_zero
+        averagedEnergy_zero = np.average(energy_zero, axis = 1)
+        normalized_energy_zero = averagedEnergy_zero
 
         x = rad
-        y_zero = normalized_density_zero
+        y_zero = normalized_energy_zero
         result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
 
     if args.compare is not None:
