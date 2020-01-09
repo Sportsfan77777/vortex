@@ -333,7 +333,8 @@ def make_plot(show = False):
 
     # Save + Close
     plot.savefig("start.png")
-    plot.show()
+    if show:
+        plot.show()
 
     plot.close()
 
