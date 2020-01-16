@@ -198,15 +198,15 @@ def get_excess_mass(args_here):
     if mpi:
         field = "dens"
         density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
-        #background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
+        background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
     else:
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / dust_surface_density_zero
-        #background_density = fromfile("dust1dens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / dust_surface_density_zero
+        background_density = fromfile("gasdens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / dust_surface_density_zero
 
     if args.compare:
         fargo_directory = args.compare
-        density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / dust_surface_density_zero
-        #background_density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / dust_surface_density_zero
+        density_compare = (fromfile("%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / dust_surface_density_zero
+        background_density_compare = (fromfile("%s/gasdens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / dust_surface_density_zero
 
     def helper(density, background_density):
         diff_density = density # - background_density
