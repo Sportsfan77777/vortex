@@ -216,8 +216,8 @@ def get_excess_mass(args_here):
         averagedDensity = np.average(density, axis = 1)
         peak_rad, peak_density = find_peak(averagedDensity)
 
-        vortex_start = np.max([1.0, peak_rad - 5.0 * scale_height])
-        vortex_end = peak_rad + 5.0 * scale_height
+        vortex_start = np.max([1.0, peak_rad - 3.0 * scale_height])
+        vortex_end = peak_rad + 3.0 * scale_height
 
         vortex_start_i = np.searchsorted(rad, vortex_start)
         vortex_end_i = np.searchsorted(rad, vortex_end)
