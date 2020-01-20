@@ -189,8 +189,10 @@ def make_plot(frame, show = False):
     sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
     azimuthal_velocity -= sub_keplerian_velocity[:, None]
 
+    sound_speed = np.power(scale_height, 2) * np.power(rad, -1.5)
+
     stress = np.multiply(radial_velocity, azimuthal_velocity)
-    averagedStress = np.average(np.abs(stress), axis = 1)
+    averagedStress = np.average(np.abs(stress), axis = 1) / np.power(sound_speed, 2)
 
     ### Plot ###
     x = rad
