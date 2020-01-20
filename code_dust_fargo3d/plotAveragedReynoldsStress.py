@@ -230,7 +230,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(10**(-8), 10**(-2))
+    plot.ylim(10**(-5), 10**(-1))
     plot.yscale('log')
 
     # Annotate Axes
