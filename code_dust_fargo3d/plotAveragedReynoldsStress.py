@@ -187,9 +187,10 @@ def make_plot(frame, show = False):
 
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
-
     #azimuthal_velocity -= sub_keplerian_velocity[:, None]
-    azimuthal_velocity -= np.average(azimuthal_velocity, axis = 1)
+
+    radial_velocity -= np.average(radial_velocity, axis = 1)[:, None]
+    azimuthal_velocity -= np.average(azimuthal_velocity, axis = 1)[:, None]
 
     sound_speed = scale_height * np.power(rad, -1.5)
 
@@ -232,7 +233,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(10**(-5), 10**(-1))
+    plot.ylim(10**(-5), 3 * 10**(-1))
     plot.yscale('log')
 
     # Annotate Axes
