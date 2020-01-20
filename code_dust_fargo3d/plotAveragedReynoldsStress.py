@@ -190,7 +190,7 @@ def make_plot(frame, show = False):
     azimuthal_velocity -= sub_keplerian_velocity[:, None]
 
     stress = np.multiply(radial_velocity, azimuthal_velocity)
-    averagedStress = np.average(stress, axis = 1)
+    averagedStress = np.average(np.abs(stress), axis = 1)
 
     ### Plot ###
     x = rad
@@ -259,7 +259,7 @@ def make_plot(frame, show = False):
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
