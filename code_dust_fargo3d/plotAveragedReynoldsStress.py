@@ -182,6 +182,9 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    averagedDensity = np.average(density, axis = 1)
+
     radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
     azimuthal_velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
 
@@ -202,7 +205,7 @@ def make_plot(frame, show = False):
     y = averagedStress
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
-    radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par, end = 2.0)
+    radial_peak_a, _ = az.get_radial_peak(averagedDensity, fargo_par, end = 2.0)
     plot.plot([radial_peak_a, radial_peak_a], [10**(-10), 10**(1)], c = 'k')
 
     if args.zero:
