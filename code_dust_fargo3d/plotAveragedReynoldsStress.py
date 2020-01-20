@@ -187,7 +187,9 @@ def make_plot(frame, show = False):
 
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
-    azimuthal_velocity -= sub_keplerian_velocity[:, None]
+
+    #azimuthal_velocity -= sub_keplerian_velocity[:, None]
+    azimuthal_velocity -= np.average(azimuthal_velocity, axis = 1)
 
     sound_speed = scale_height * np.power(rad, -1.5)
 
