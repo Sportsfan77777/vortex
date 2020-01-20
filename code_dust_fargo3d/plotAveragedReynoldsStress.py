@@ -169,8 +169,8 @@ times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
 ### Add new parameters to dictionary ###
-#fargo_par["rad"] = rad
-#fargo_par["theta"] = theta
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
 ###############################################################################
 
@@ -201,6 +201,9 @@ def make_plot(frame, show = False):
     x = rad
     y = averagedStress
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+
+    radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par, end = 2.0)
+    plot.plot([radial_peak_a, radial_peak_a], [10**(-10), 10**(1)], c = 'k')
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
