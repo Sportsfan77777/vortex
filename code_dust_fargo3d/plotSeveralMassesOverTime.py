@@ -109,7 +109,7 @@ viscosity = p.nu
 
 dt = p.ninterm * p.dt
 
-fargo_par = util.get_pickled_parameters(directory = directories[0])
+fargo_par = util.get_pickled_parameters(directory = "../" + directories[0])
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
@@ -184,7 +184,7 @@ def make_plot(show = False):
         label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
 
         # Data
-        data = np.loadtxt("%s/planet0.dat" % directory)
+        data = np.loadtxt("../%s/planet0.dat" % directory)
         times = data[:, 0]
         base_mass = data[:, 7]
         accreted_mass = data[:, 8]
