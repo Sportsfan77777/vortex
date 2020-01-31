@@ -96,7 +96,7 @@ args = new_argument_parser().parse_args()
 directories = master_directories[args.choice]
 
 ### Get Fargo Parameters ###
-p = Parameters()
+p = Parameters(directory = "../" + directories[0])
 
 num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
