@@ -101,7 +101,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
                          help = 'fontsize of plot annotations (default: 18)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
@@ -195,7 +195,7 @@ dpi = args.dpi
 ##### PLOTTING #####
 
 colors = ['k', 'cornflowerblue', 'darkorange', 'r']
-labelsize = 17
+labelsize = 19
 size = 100
 
 rc['xtick.labelsize'] = labelsize
@@ -244,7 +244,7 @@ def make_plot(show = False):
 
             result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
-            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 100, marker = "o", zorder = 120)
+            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
             plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     plot.legend(loc = "upper right", fontsize = fontsize - 4)
