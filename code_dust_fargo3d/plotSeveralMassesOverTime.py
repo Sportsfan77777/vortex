@@ -191,7 +191,7 @@ def make_plot(show = False):
         scale_height = float(directories[0].split("_")[0][1:]) / 100.0
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
         accretion_rate = accretion_rates[i]
-        label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, % accretion_rate)
+        label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
 
         # Data
         data = np.loadtxt("../%s/planet0.dat" % directory)
@@ -208,7 +208,7 @@ def make_plot(show = False):
         ### Plot ###
         x = times
         y = total_mass / jupiter_mass
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth, zorder = 99)
+        result = plot.plot(x, y, c = colors[i], linewidth = linewidth, zorder = 99, label = label)
 
     plot.legend(loc = "upper left")
 
@@ -242,7 +242,7 @@ def make_plot(show = False):
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
 
-    title = r"$h = %d$          $\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (scale_height, log_viscosity)
+    title = r"$h = %d$          $\alpha_\mathrm{disk} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
