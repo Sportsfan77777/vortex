@@ -52,6 +52,19 @@ master_accretion_rates[47] = [1.00, 0.50, 0.17, 0.05]
 master_accretion_rates[86] = [0.17, 0.05, 0.02]
 master_accretion_rates[66] = [0.50, 0.17, 0.05]
 
+master_start_times = {}
+master_start_times[87] = [349, 913, 1751, 2875]
+master_start_times[67] = [108, 217, 451, 788]
+master_start_times[47] = [59, 70, 104, 223]
+master_start_times[86] = [376, 1816, 0]
+master_start_times[66] = [116, 247, 677]
+
+master_end_times[87] = [1816, 2590, 0]
+master_end_times[67] = [675, 1336, 1607]
+master_end_times[47] = [4000, 4745, 6790, 10700]
+master_end_times[86] = [2512, 2502, 6918, 7500]
+master_end_times[66] = [2097, 1225, 1898, 2918]
+
 ###############################################################################
 
 ### Input Parameters ###
@@ -103,6 +116,8 @@ args = new_argument_parser().parse_args()
 
 directories = master_directories[args.choice]
 accretion_rates = master_accretion_rates[args.choice]
+start_times = master_start_times[args.choice]
+end_times = master_end_times[args.choice]
 
 ### Get Fargo Parameters ###
 p = Parameters(directory = "../" + directories[0])
@@ -191,6 +206,10 @@ def make_plot(show = False):
         scale_height = float(directories[0].split("_")[0][1:]) / 100.0
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
         accretion_rate = accretion_rates[i]
+
+        start_time = start_times[i]
+        end_time = end_times[i]
+
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         label = r"$A = %.02f$" % (accretion_rate)
 
@@ -207,11 +226,25 @@ def make_plot(show = False):
             total_mass -= negative_mass
 
         ### Plot ###
+        # Basic
         x = times
         y = total_mass / jupiter_mass
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth, zorder = 99, label = label)
 
-    plot.legend(loc = "upper left", zorder = 100)
+        # Vortex Lifetime
+        if start_time > 0:
+            start_time_i = np.searchsorted(x, start_time)
+            end_time_i = np.searchsorted(x, end_time)
+
+            x_v = times[start_time_i : end_time_i]
+            y_v = times[start_time_i : end_time_i]
+
+            result_v = plot.plot(x_v, y_v, c = colors[i], linewidth = linewidth + 2, zorder = 99)
+
+            plot.scatter(x[start_time_i], y[start_time_i], s = 50, marker = ">", zorder = 120)
+            plot.scatter(x[end_time_i], y[end_time_i], s = 50, marker = "X", zorder = 120)
+
+    plot.legend(loc = "upper right", fontsize = fontsize)
 
     # Axes
     if args.max_y is None:
