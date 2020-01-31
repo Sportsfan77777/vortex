@@ -191,7 +191,8 @@ def make_plot(show = False):
         scale_height = float(directories[0].split("_")[0][1:]) / 100.0
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
         accretion_rate = accretion_rates[i]
-        label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
+        #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
+        label = r"$A = %.02f$" % (accretion_rate)
 
         # Data
         data = np.loadtxt("../%s/planet0.dat" % directory)
