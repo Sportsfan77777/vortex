@@ -60,11 +60,11 @@ master_start_times[86] = [376, 1816, 0]
 master_start_times[66] = [116, 247, 677]
 
 master_end_times = {}
-master_end_times[87] = [1816, 2590, 0]
-master_end_times[67] = [675, 1336, 1607]
-master_end_times[47] = [4000, 4745, 6790, 10700]
-master_end_times[86] = [2512, 2502, 6918, 7500]
-master_end_times[66] = [2097, 1225, 1898, 2918]
+master_end_times[87] = [4000, 4745, 6790, 10700]
+master_end_times[67] = [2512, 2502, 6918, 7500]
+master_end_times[47] = [2097, 1225, 1898, 2918]
+master_end_times[86] = [1816, 2590, 0]
+master_end_times[66] = [675, 1336, 1607]
 
 ###############################################################################
 
