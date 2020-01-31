@@ -42,8 +42,15 @@ master_directories = {}
 master_directories[87] = ["h08_nu7_a167-offset", "h08_nu7_a05-offset", "h08_nu7_a02-offset", "h08_nu7_a01-offset"]
 master_directories[67] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_a05-offset", "h06_nu7_a02-offset"]
 master_directories[47] = ["h04_nu7_a100-offset", "h04_nu7_a50-offset", "h04_nu7_a167-offset", "h04_nu7_a05-offset"]
-master_directories[86] = ["h08_nu6_a50-offset", "h08_nu6_a167-offset", "h08_nu6_a05-offset"]
+master_directories[86] = ["h08_nu6_a167-offset", "h08_nu6_a05-offset", "h08_nu6_a02-offset"]
 master_directories[66] = ["h06_nu6_a50-offset", "h06_nu6_a167-offset", "h06_nu6_a05-offset"]
+
+master_accretion_rates = {}
+master_accretion_rates[87] = [0.17, 0.05, 0.02, 0.01]
+master_accretion_rates[67] = [0.50, 0.17, 0.05, 0.02]
+master_accretion_rates[47] = [1.00, 0.50, 0.17, 0.05]
+master_accretion_rates[86] = [0.17, 0.05, 0.02]
+master_accretion_rates[66] = [0.50, 0.17, 0.05]
 
 ###############################################################################
 
@@ -93,7 +100,9 @@ def new_argument_parser(description = "Plot gas density maps."):
 
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
+
 directories = master_directories[args.choice]
+accretion_rates = master_accretion_rates[args.choice]
 
 ### Get Fargo Parameters ###
 p = Parameters(directory = "../" + directories[0])
@@ -181,7 +190,8 @@ def make_plot(show = False):
         # Label
         scale_height = float(directories[0].split("_")[0][1:]) / 100.0
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
-        label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
+        accretion_rate = accretion_rates[i]
+        label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, % accretion_rate)
 
         # Data
         data = np.loadtxt("../%s/planet0.dat" % directory)
@@ -227,11 +237,13 @@ def make_plot(show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
-    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
+
+    title = r"$h = %d$          $\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (scale_height, log_viscosity)
+    plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
@@ -239,8 +251,8 @@ def make_plot(show = False):
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
-    plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+    #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
 
     # Save, Show, and Close
