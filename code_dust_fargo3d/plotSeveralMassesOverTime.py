@@ -101,8 +101,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 18)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -195,6 +195,11 @@ dpi = args.dpi
 ##### PLOTTING #####
 
 colors = ['k', 'cornflowerblue', 'darkorange', 'r']
+labelsize = 17
+size = 100
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 def make_plot(show = False):
     # Set up figure
@@ -234,18 +239,15 @@ def make_plot(show = False):
 
         # Vortex Lifetime
         if start_time > 0:
-            start_time_i = np.searchsorted(x, start_time)
-            end_time_i = np.searchsorted(x, end_time)
+            start_time_i = az.my_searchsorted(x, start_time)
+            end_time_i = az.my_searchsorted(x, end_time)
 
-            x_v = times[start_time_i : end_time_i]
-            y_v = times[start_time_i : end_time_i]
+            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 2, zorder = 99)
 
-            result_v = plot.plot(x_v, y_v, c = colors[i], linewidth = linewidth + 2, zorder = 99)
+            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 100, marker = ">", zorder = 120)
+            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "X", zorder = 120)
 
-            plot.scatter(x[start_time_i], y[start_time_i], s = 50, marker = ">", zorder = 120)
-            plot.scatter(x[end_time_i], y[end_time_i], s = 50, marker = "X", zorder = 120)
-
-    plot.legend(loc = "upper right", fontsize = fontsize)
+    plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
     if args.max_y is None:
