@@ -235,17 +235,17 @@ def make_plot(show = False):
         # Basic
         x = times
         y = total_mass / jupiter_mass
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth, zorder = 99, label = label)
+        result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
         # Vortex Lifetime
         if start_time > 0:
             start_time_i = az.my_searchsorted(x, start_time)
             end_time_i = az.my_searchsorted(x, end_time)
 
-            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 2, zorder = 99)
+            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
-            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 100, marker = ">", zorder = 120)
-            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "X", zorder = 120)
+            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 100, marker = "o", zorder = 120)
+            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
