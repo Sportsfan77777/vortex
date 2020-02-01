@@ -313,7 +313,7 @@ def make_plot(show = False):
         # Basic
         x = times[9:]
         y = accretion[9:] / jupiter_mass
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
+        result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 2, zorder = 99, label = label)
 
         # Vortex Lifetime
         if start_time > 0:
