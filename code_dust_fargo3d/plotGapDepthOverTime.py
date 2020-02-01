@@ -76,6 +76,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('choice', type = int,
                          help = 'choice of directories')
+    parser.add_argument('--frames', dest = "frames", type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('--dir', dest = "save_directory", default = "mass",
                          help = 'save directory (default: mass)')
 
@@ -159,6 +161,8 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Files
+frame_range = util.get_frame_range(args.frames)
+
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
