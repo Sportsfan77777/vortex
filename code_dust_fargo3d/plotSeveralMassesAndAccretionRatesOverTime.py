@@ -343,15 +343,10 @@ def make_plot(show = False):
             plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
             plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 4)
+    #plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
-    if args.max_y is None:
-        x_min_i = np.searchsorted(x, x_min)
-        x_max_i = np.searchsorted(x, x_max)
-        max_y = 1.1 * max(y[x_min_i : x_max_i])
-    else:
-        max_y = args.max_y
+    max_y = 1.1 * max(y[x_min_i : x_max_i])
 
     plot.xlim(x_min, x_max)
     plot.ylim(0, max_y)
