@@ -303,8 +303,10 @@ def make_plot(show = False):
     plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 1.1 * max_gap_depth)
+    plot.xlim(0, frame_range[-1])
+    plot.ylim(1, 10**(5))
+
+    plot.yscale('log')
 
     #title = readTitle()
 
