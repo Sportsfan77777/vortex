@@ -252,11 +252,8 @@ rc['ytick.labelsize'] = labelsize
 
 def make_plot(show = False):
     # Set up figure
-    fig = plot.figure(figsize = (7, 12), dpi = dpi)
-    plot.subplots_adjust(hspace = 0.12)
-
-    ######### TOP PANEL #########
-    ax = fig.add_subplot(211)
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
 
     # Iterate
     max_gap_depth = 0
@@ -312,8 +309,8 @@ def make_plot(show = False):
     #title = readTitle()
 
     unit = "planet orbits"
-    #plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$M_\mathrm{p}$ [$M_\mathrm{Jup}$]", fontsize = fontsize)
+    plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
+    plot.ylabel(r" Gap Depth ($\Sigma_\mathrm{min}$ $/$ $\Sigma_{0}$)", fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
@@ -322,68 +319,7 @@ def make_plot(show = False):
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 2)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-    ######### BOTTOM PANEL #########
-    ax = fig.add_subplot(212)
-
-    # Iterate
-    for i, directory in enumerate(directories):
-        # Label
-        scale_height = float(directories[0].split("_")[0][1:]) / 100.0
-        log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
-        accretion_rate = accretion_rates[i]
-
-        start_time = start_times[i]
-        end_time = end_times[i]
-
-        #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
-        label = r"$A = %.02f$" % (accretion_rate)
-
-        # Data
-        data = np.loadtxt("../%s/planet0.dat" % directory)
-        times = data[:, 0]
-        base_mass = data[:, 7]
-        accreted_mass = data[:, 8]
-
-        total_mass = base_mass + accreted_mass
-
-        if negative:
-            negative_mass = data[:, 13]
-            total_mass -= negative_mass
-
-        accretion = total_mass[1:] - total_mass[:-1]
-
-        # Filter out repeats
-        times = (times[1:])[accretion > 0]
-        accretion = accretion[accretion > 0]
-
-        ### Plot ###
-        # Basic
-        x = times[9:]
-        y = accretion[9:] / jupiter_mass
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 2, zorder = 99, label = label)
-
-        # Vortex Lifetime
-        if start_time > 0:
-            start_time_i = az.my_searchsorted(x, start_time)
-            end_time_i = az.my_searchsorted(x, end_time)
-            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 1, zorder = 99)
-
-            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
-            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
-
-    #plot.legend(loc = "upper right", fontsize = fontsize - 4)
-
-    # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(10**(-6), 10**(-2))
-
-    plot.yscale("log")
-
     #title = readTitle()
-
-    unit = "planet orbits"
-    plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r" Gap Depth ($\Sigma_\mathrm{min}$ $/$ $\Sigma_{0}$)", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
