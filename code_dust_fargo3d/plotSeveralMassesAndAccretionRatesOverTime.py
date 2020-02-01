@@ -204,6 +204,7 @@ rc['ytick.labelsize'] = labelsize
 def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 12), dpi = dpi)
+    plot.subplots_adjust(hspace = 0.1)
 
     ######### TOP PANEL #########
     ax = fig.add_subplot(211)
