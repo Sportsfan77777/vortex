@@ -264,7 +264,7 @@ def make_plot(show = False):
 
     #title = readTitle()
 
-    unit = "orbits"
+    unit = "planet orbits"
     #plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
     plot.ylabel(r"$M_\mathrm{p}$ [$M_\mathrm{Jup}$]", fontsize = fontsize)
 
@@ -274,7 +274,7 @@ def make_plot(show = False):
     title = r"$h = %.02f$          $\alpha_\mathrm{disk} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 2)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
-    
+
     ######### BOTTOM PANEL #########
     ax = fig.add_subplot(212)
 
@@ -319,8 +319,7 @@ def make_plot(show = False):
         if start_time > 0:
             start_time_i = az.my_searchsorted(x, start_time)
             end_time_i = az.my_searchsorted(x, end_time)
-
-            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
+            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 1, zorder = 99)
 
             plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
             plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
@@ -328,18 +327,16 @@ def make_plot(show = False):
     #plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
-    max_y = 2 * max(y)
-
     plot.xlim(x_min, x_max)
-    plot.ylim(10**(-3), max_y)
+    plot.ylim(10**(-6), 10*(-2))
 
     plot.yscale("log")
 
     #title = readTitle()
 
-    unit = "orbits"
+    unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\dot{M}_\mathrm{p}$ [$10^{-3}$ $M_\mathrm{Jup}$]", fontsize = fontsize)
+    plot.ylabel(r"$\dot{M}_\mathrm{p}$ [$M_\mathrm{Jup} / T_\mathrm{p}$]", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
