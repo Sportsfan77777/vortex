@@ -222,7 +222,7 @@ def get_min(args_here):
     i, frame, directory = args_here
 
     # Get Data
-    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
+    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
     
@@ -275,7 +275,7 @@ def make_plot(show = False):
         #for i, frame in enumerate(frame_range):
         #    get_min((i, frame))
 
-        pool_args = [(i, frame, directory) for i, frame in enumerate(frame_range)]
+        pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
         p = Pool(num_cores)
         p.map(get_min, pool_args)
