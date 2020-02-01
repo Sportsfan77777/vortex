@@ -67,6 +67,13 @@ master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
 
+master_frame_ranges = {}
+master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 7000, 50], [0, 117000, 50]]
+master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
+master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
+master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
+master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
+
 ###############################################################################
 
 ### Input Parameters ###
@@ -77,8 +84,6 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('choice', type = int,
                          help = 'choice of directories')
-    parser.add_argument('--frames', dest = "frames", type = int, nargs = '+',
-                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('--dir', dest = "save_directory", default = "gapDepth",
                          help = 'save directory (default: gapDepth)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
@@ -124,6 +129,7 @@ directories = master_directories[args.choice]
 accretion_rates = master_accretion_rates[args.choice]
 start_times = master_start_times[args.choice]
 end_times = master_end_times[args.choice]
+frame_ranges = master_frame_ranges[args.choice]
 
 ### Get Fargo Parameters ###
 p = Parameters(directory = "../" + directories[0])
@@ -237,7 +243,7 @@ def get_min(args_here):
 
 ###############################################################################
 
-gap_depth_over_time = mp_array("d", len(frame_range))
+gap_depth_over_time = mp_array("d", 10.0 * len(frame_ranges[0]))
 
 ###############################################################################
 
@@ -258,6 +264,9 @@ def make_plot(show = False):
     # Iterate
     max_gap_depth = 0
     for i, directory in enumerate(directories):
+        # Frame Range 
+        frame_range = util.get_frame_range(frame_ranges[i])
+
         # Label
         scale_height = float(directories[0].split("_")[0][1:]) / 100.0
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
@@ -284,10 +293,13 @@ def make_plot(show = False):
         if np.max(gap_depth_over_time) > max_gap_depth:
             max_gap_depth = np.max(gap_depth_over_time)
 
+        num_frames = len(frame_range)
+        this_gap_depth_over_time = np.array(gap_depth_over_time[:num_frames])
+
         ### Plot ###
         # Basic
         x = frame_range
-        y = gap_depth_over_time
+        y = this_gap_depth_over_time
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
         # Vortex Lifetime
