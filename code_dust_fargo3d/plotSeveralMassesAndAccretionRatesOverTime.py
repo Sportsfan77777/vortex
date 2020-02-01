@@ -312,7 +312,7 @@ def make_plot(show = False):
         ### Plot ###
         # Basic
         x = times[9:]
-        y = accretion[9:] / (1e-3 * jupiter_mass)
+        y = accretion[9:] / jupiter_mass
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
         # Vortex Lifetime
@@ -328,7 +328,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x_min, x_max)
-    plot.ylim(10**(-6), 10*(-2))
+    plot.ylim(10**(-6), 10**(-2))
 
     plot.yscale("log")
 
@@ -336,7 +336,7 @@ def make_plot(show = False):
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\dot{M}_\mathrm{p}$ [$M_\mathrm{Jup} / T_\mathrm{p}$]", fontsize = fontsize)
+    plot.ylabel(r"$\dot{M}_\mathrm{p}$ [$M_\mathrm{Jup}$ $/$ $T_\mathrm{p}$]", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
