@@ -237,6 +237,10 @@ def get_min(args_here):
 
 ###############################################################################
 
+gap_depth_over_time = mp_array("d", len(frame_range))
+
+###############################################################################
+
 ##### PLOTTING #####
 
 colors = ['k', 'cornflowerblue', 'darkorange', 'r']
@@ -270,7 +274,6 @@ def make_plot(show = False):
 
         # Data
         #gap_depth_over_time = np.zeros(len(frame_range))
-        gap_depth_over_time = mp_array("d", len(frame_range))
 
         #for i, frame in enumerate(frame_range):
         #    get_min((i, frame))
