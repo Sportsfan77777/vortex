@@ -68,7 +68,7 @@ master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 7000, 50], [0, 117000, 50]]
+master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 7000, 50], [0, 11700, 50]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -170,8 +170,6 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Files
-frame_range = util.get_frame_range(args.frames)
-
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
@@ -243,7 +241,7 @@ def get_min(args_here):
 
 ###############################################################################
 
-gap_depth_over_time = mp_array("d", 10.0 * len(frame_ranges[0]))
+gap_depth_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges[0])))
 
 ###############################################################################
 
