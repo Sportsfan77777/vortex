@@ -265,34 +265,16 @@ def make_plot(show = False):
     #title = readTitle()
 
     unit = "orbits"
-    plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
+    #plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
     plot.ylabel(r"$M_\mathrm{p}$ [$M_\mathrm{Jup}$]", fontsize = fontsize)
-
-    #if title is None:
-    #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
-    #else:
-    #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
-    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
-
-    #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-
     title = r"$h = %.02f$          $\alpha_\mathrm{disk} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 2)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
-
-    # Text
-    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
-    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
-    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
-    #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
-
+    
     ######### BOTTOM PANEL #########
     ax = fig.add_subplot(212)
 
@@ -324,12 +306,12 @@ def make_plot(show = False):
         accretion = total_mass[1:] - total_mass[:-1]
 
         # Filter out repeats
-        times = times[accretion > 0]
+        times = (times[1:])[accretion > 0]
         accretion = accretion[accretion > 0]
 
         ### Plot ###
         # Basic
-        x = times[10:]
+        x = times[9:]
         y = accretion[9:] / (1e-3 * jupiter_mass)
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
@@ -346,16 +328,18 @@ def make_plot(show = False):
     #plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
-    max_y = 1.1 * max(y[x_min_i : x_max_i])
+    max_y = 2 * max(y)
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    plot.ylim(10**(-3), max_y)
+
+    plot.yscale("log")
 
     #title = readTitle()
 
     unit = "orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\dot{M}_\mathrm{p}$ [$10^{-3} $M_\mathrm{Jup}$]", fontsize = fontsize)
+    plot.ylabel(r"$\dot{M}_\mathrm{p}$ [$10^{-3}$ $M_\mathrm{Jup}$]", fontsize = fontsize)
 
     # Save, Show, and Close
     if version is None:
