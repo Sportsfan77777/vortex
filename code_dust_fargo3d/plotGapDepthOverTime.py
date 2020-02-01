@@ -81,6 +81,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('--dir', dest = "save_directory", default = "mass",
                          help = 'save directory (default: mass)')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
 
     # Reference
     parser.add_argument('--ref', dest = "ref", type = int, default = 0,
@@ -167,6 +169,9 @@ frame_range = util.get_frame_range(args.frames)
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Number of Cores 
+num_cores = args.num_cores
 
 # Reference
 ref = args.ref
