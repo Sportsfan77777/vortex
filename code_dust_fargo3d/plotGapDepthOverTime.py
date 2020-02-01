@@ -289,7 +289,7 @@ def make_plot(show = False):
 
         ### Plot ###
         # Basic
-        x = times
+        x = frame_range
         y = gap_depth_over_time
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
