@@ -79,8 +79,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'choice of directories')
     parser.add_argument('--frames', dest = "frames", type = int, nargs = '+',
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
-    parser.add_argument('--dir', dest = "save_directory", default = "mass",
-                         help = 'save directory (default: mass)')
+    parser.add_argument('--dir', dest = "save_directory", default = "gapDepth",
+                         help = 'save directory (default: gapDepth)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
 
@@ -234,23 +234,6 @@ def get_min(args_here):
 
     # Store Data
     gap_depth_over_time[i] = 1.0 / min_density
-
-###############################################################################
-
-#gap_depth_over_time = np.zeros(len(frame_range))
-gap_depth_over_time = mp_array("d", len(frame_range))
-
-#for i, frame in enumerate(frame_range):
-#    get_min((i, frame))
-
-pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
-
-p = Pool(num_cores)
-p.map(get_min, pool_args)
-p.terminate()
-
-if np.max(gap_depth_over_time) > max_gap_depth:
-    max_gap_depth = np.max(gap_depth_over_time)
 
 ###############################################################################
 
