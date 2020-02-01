@@ -182,7 +182,7 @@ def make_plot(frame_range, show = False):
         ### Plot ###
         x = rad
         y = normalized_density
-        result = plot.plot(x, y, linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ = %d T_\mathrm{p}" % frame)
+        result = plot.plot(x, y, linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
         plot.legend(loc = "upper right")
 
