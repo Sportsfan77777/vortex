@@ -238,10 +238,12 @@ def make_plot(frame_range, show = False):
 
 
     # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+
     if version is None:
-        save_fn = "%s/averagedDensity_%04d-%04d-%04d.png" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/averagedDensity_%s_%04d-%04d-%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_averagedDensity_%04d-%04d-%04d.png" % (save_directory, version, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/v%04d_averagedDensity_%s_%04d-%04d-%04d.png" % (save_directory, version, directory_name args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
