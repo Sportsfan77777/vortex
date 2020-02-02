@@ -38,7 +38,7 @@ for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
 # Input Parameter
-frame = sys.argv[1]
+frame = int(sys.argv[1])
  
 ### Get Fargo Parameters ###
 p = Parameters()
