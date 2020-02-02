@@ -46,6 +46,9 @@ p = Parameters()
 num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
 surface_density_zero = p.sigma0
 
 # Mass Data
