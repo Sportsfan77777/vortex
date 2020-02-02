@@ -69,7 +69,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'maximum density (default: 1.1 times the max)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
@@ -170,7 +170,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 linestyles = ["-", "--"]
 colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 
-labelsize = 19
+labelsize = 18
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
