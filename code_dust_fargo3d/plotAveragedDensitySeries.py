@@ -170,6 +170,10 @@ accreted_mass = data[:, 8] / jupiter_mass
 linestyles = ["-", "--"]
 colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 
+labelsize = 19
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 def make_plot(frame_range, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
