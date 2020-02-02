@@ -190,7 +190,7 @@ def make_plot(frame_range, show = False):
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-        plot.legend(loc = "upper right")
+    plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
     if args.max_y is None:
