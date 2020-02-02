@@ -168,7 +168,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 ##### PLOTTING #####
 
 linestyles = ["-", "--"]
-colors = ['k', 'b', 'cornflowerblue', 'cyan', '#8c564b', 'darkorange', 'r', 'gold']
+colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 
 def make_plot(frame_range, show = False):
     # Set up figure
