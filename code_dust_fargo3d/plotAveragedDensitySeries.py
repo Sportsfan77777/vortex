@@ -190,7 +190,7 @@ def make_plot(frame_range, show = False):
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 4)
+    plot.legend(loc = "upper right", fontsize = fontsize - 6)
 
     # Axes
     if args.max_y is None:
@@ -217,7 +217,7 @@ def make_plot(frame_range, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
+    plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
@@ -260,4 +260,4 @@ def make_plot(frame_range, show = False):
 
 # Iterate through frames
 
-make_plot(frame_range, show = True)
+make_plot(frame_range, show = show)
