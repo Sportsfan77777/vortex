@@ -251,7 +251,7 @@ def shift_data(data, fargo_par, option = "away", reference_density = None, frame
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
-    shifted_data = np.roll(data, shift_c)
+    shifted_data = np.roll(data, shift_c, axis = -1)
     return shifted_data, shift_c
 
 ###############################################################################
