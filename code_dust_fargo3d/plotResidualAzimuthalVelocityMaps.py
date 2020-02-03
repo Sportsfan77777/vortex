@@ -289,7 +289,8 @@ def make_plot(frame, show = False):
 
     # Take Residual
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
-    velocity -= keplerian_velocity[:, None]
+    sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
+    velocity -= sub_keplerian_velocity[:, None]
 
     ### Plot ###
     x = rad
