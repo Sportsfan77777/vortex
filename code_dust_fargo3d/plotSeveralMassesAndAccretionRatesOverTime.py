@@ -56,11 +56,11 @@ master_start_times = {}
 master_start_times[87] = [349, 913, 1751, 2875]
 master_start_times[67] = [108, 217, 451, 788]
 master_start_times[47] = [59, 70, 104, 223]
-master_start_times[86] = [376, 1816, 0]
+master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
 
 master_end_times = {}
-master_end_times[87] = [4000, 4745, 6790, 10700]
+master_end_times[87] = [4000, 4745, 8000, 10700]
 master_end_times[67] = [2512, 2502, 6918, 7500]
 master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
@@ -204,7 +204,7 @@ rc['ytick.labelsize'] = labelsize
 def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 12), dpi = dpi)
-    plot.subplots_adjust(hspace = 0.1)
+    plot.subplots_adjust(hspace = 0.12)
 
     ######### TOP PANEL #########
     ax = fig.add_subplot(211)
