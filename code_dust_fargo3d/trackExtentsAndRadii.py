@@ -289,7 +289,10 @@ def make_plot(show = False):
         tick_labels = []
 
         for i, mass in enumerate(masses):
+            total_mass_jupiter = total_mass / jupiter_mass # in Jupiter masses
             times_i = az.my_searchsorted(total_mass, mass)
+
+            print mass, times_i, len(times)
 
             tick_locations[i] = times[times_i]
             if delta_mass < 0.1:
