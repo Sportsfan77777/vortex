@@ -178,7 +178,7 @@ def get_extents(args_here):
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     avg_density = np.average(density, axis = 1)
 
-    azimuthal_extent = az.get_extent(density, fargo_par, threshold = 1.0)
+    azimuthal_extent = az.get_extent(density, fargo_par, threshold = 0.9)
     radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 1.0)
     radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
 
