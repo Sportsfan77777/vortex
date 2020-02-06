@@ -258,10 +258,6 @@ def make_plot(show = False):
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("outward", 50))
-    make_patch_spines_invisible(par3)
-    par3.spines["bottom"].set_visible(True)
-
     # Plot
     x = frame_range
     y1 = azimuthal_extent_over_time
@@ -325,6 +321,10 @@ def make_plot(show = False):
     par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     par3.tick_params(axis = 'x', **tkw)
     host.tick_params(axis = 'x', **tkw)
+
+    par3.spines["bottom"].set_position(("outward", 50))
+    make_patch_spines_invisible(par3)
+    par3.spines["bottom"].set_visible(True)
 
     # Save, Show, and Close
     if version is None:
