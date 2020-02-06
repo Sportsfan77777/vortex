@@ -280,7 +280,7 @@ def make_plot(show = False):
     par1.set_ylim(0, 10)
     par2.set_ylim(1.2, 2.0)
 
-    min_mass = args.min_mass, max_mass = args.max_mass; delta_mass = args.delta_mass
+    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     mass_ticks = np.arange(min_mass, max_mass, start_mass)
 
     def tick_function(masses):
