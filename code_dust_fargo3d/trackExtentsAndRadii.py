@@ -251,13 +251,14 @@ def make_plot(show = False):
     par1 = host.twinx()
     par2 = host.twinx()
 
+    par_z = host.twiny()
     par3 = host.twiny()
 
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("outward", 40))
+    par3.spines["bottom"].set_position(("outward", 50))
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
