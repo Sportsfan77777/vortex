@@ -257,11 +257,9 @@ def make_plot(show = False):
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"] = par3.get_grid_helper().new_fixed_axis(loc = "bottom", axes = par3, offset = (50, 0))
-
-    #par3.spines["bottom"].set_position(("axes", -0.23))
-    #make_patch_spines_invisible(par3)
-    #par3.spines["bottom"].set_visible(True)
+    par3.spines["top"].set_position(("axes", -0.23))
+    make_patch_spines_invisible(par3)
+    par3.spines["top"].set_visible(True)
 
     # Plot
     x = frame_range
