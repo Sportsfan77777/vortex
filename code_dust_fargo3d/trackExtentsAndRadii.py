@@ -252,7 +252,7 @@ def make_plot(show = False):
     par2 = host.twinx()
 
     par3 = host.twiny()
-    par3.xaxis.set_tick_position('bottom')
+    par3.xaxis.set_ticks_position('bottom')
     par3.xaxis.set_label_position('bottom')
 
     par2.spines["right"].set_position(("axes", 1.2))
