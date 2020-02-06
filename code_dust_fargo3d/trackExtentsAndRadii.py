@@ -251,16 +251,15 @@ def make_plot(show = False):
     par1 = host.twinx()
     par2 = host.twinx()
 
-    parx = host.twiny()
     par3 = host.twiny()
 
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("axes", -0.23))
-    make_patch_spines_invisible(par3)
-    par3.spines["bottom"].set_visible(True)
+    #par3.spines["bottom"].set_position(("axes", -0.23))
+    #make_patch_spines_invisible(par3)
+    #par3.spines["bottom"].set_visible(True)
 
     # Plot
     x = frame_range
@@ -270,8 +269,6 @@ def make_plot(show = False):
     y3a = radial_peak_over_time_a
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
-
-    px  = parx.plot(x, 1.2 * y1, c = 'w', linewidth = linewidth - 1)
 
     p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
@@ -319,7 +316,8 @@ def make_plot(show = False):
     par3.set_xlabel(r"$M_p$ [$M_J$])", fontsize = fontsize)
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
+    #plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
+    plot.title("%s" % (title1), y = 1.075, fontsize = fontsize + 1)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
