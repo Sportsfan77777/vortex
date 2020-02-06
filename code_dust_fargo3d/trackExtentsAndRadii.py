@@ -59,7 +59,6 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'select directories to compare planet growth rates')
 
-
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -70,6 +69,14 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
+
+    parser.add_argument('--min_mass', dest = "min_mass", type = float, default = 0.1,
+                         help = 'minimum mass on plot (default: 0.1 Jupiter mass)')
+    parser.add_argument('--max_mass', dest = "max_mass", type = float, default = 1.0,
+                         help = 'maximum mass on plot (default: 1.0 Jupiter mass)')
+    parser.add_argument('--delta_mass', dest = "delta_mass", type = float, default = 0.1,
+                         help = 'delta mass on plot (default: 0.1 Jupiter mass)')
+
 
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
@@ -168,6 +175,14 @@ dpi = args.dpi
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+# Planet Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]
+base_mass = data[:, 7]
+accreted_mass = data[:, 8]
+
+total_mass = base_mass + accreted_mass
+
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
@@ -236,9 +251,15 @@ def make_plot(show = False):
     par1 = host.twinx()
     par2 = host.twinx()
 
+    par3 = host.twiny()
+
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
+
+    par3.spines["bottom"].set_position(("axes", -0.2))
+    make_patch_spines_invisible(par2)
+    par3.spines["bottom"].set_visible(True)
 
     # Plot
     x = frame_range
@@ -251,21 +272,48 @@ def make_plot(show = False):
 
     p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
-    p3a, = par2.plot(x, y3a, c = 'g', linewidth = linewidth - 1)
-    p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
+    p3, = par2.plot(x, y3a, c = 'g', linewidth = linewidth)
+    #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
     host.set_ylim(0, 300)
     par1.set_ylim(0, 10)
     par2.set_ylim(1.2, 2.0)
 
+    min_mass = args.min_mass, max_mass = args.max_mass; delta_mass = args.delta_mass
+    mass_ticks = np.arange(min_mass, max_mass, start_mass)
+
+    def tick_function(masses):
+        # For the secondary x-axis showing the planet mass over time
+        tick_locations = np.zeros(len(masses))
+        tick_labels = []
+
+        for i, mass in enumerate(masses):
+            times_i = np.searchsorted(total_mass, mass)
+
+            tick_locations[i] = times[times_i]
+            if delta_mass < 0.1:
+                tick_labels.append("%.2f" % mass)
+            else:
+                tick_labels.append("%.1f" % mass)
+
+        return tick_locations, tick_labels
+
+    tick_locations, tick_labels = tick_function(mass_ticks)
+
+    par3.set_xlim()
+    par3.set_xlim(host.get_xlim())
+    par3.set_xticks(tick_locations)
+    par3.set_xticklabels(tick_labels)
+
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize)
+    par3.set_xlabel(r"$M_p$ [$M_J$])", fontsize = fontsize)
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
+    plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
