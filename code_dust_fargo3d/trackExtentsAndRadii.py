@@ -316,7 +316,7 @@ def make_plot(show = False):
     par3.set_xlabel(r"$M_p$ [$M_J$])", fontsize = fontsize, y = -1.0)
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
+    plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
