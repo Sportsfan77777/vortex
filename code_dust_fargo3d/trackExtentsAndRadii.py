@@ -246,7 +246,7 @@ def make_patch_spines_invisible(ax):
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
-    fig.subplots_adjust(right = 0.75, top = 0.4)
+    fig.subplots_adjust(right = 0.75)
 
     par1 = host.twinx()
     par2 = host.twinx()
@@ -256,6 +256,8 @@ def make_plot(show = False):
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
+
+    par3.spines["bottom"] = par3.get_grid_helper().new_fixed_axis(loc = "bottom", axes = par3, offset = (50, 0))
 
     #par3.spines["bottom"].set_position(("axes", -0.23))
     #make_patch_spines_invisible(par3)
