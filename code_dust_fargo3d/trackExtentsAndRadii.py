@@ -75,10 +75,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
-                         help = 'fontsize of plot annotations (default: 19)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 17,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
                          help = 'fontsize of plot annotations (default: 17)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
+                         help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -255,7 +255,7 @@ def make_plot(show = False):
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
-    host.set_ylim(0, 360)
+    host.set_ylim(0, 300)
     par1.set_ylim(0, 10)
     par2.set_ylim(1.2, 2.0)
 
