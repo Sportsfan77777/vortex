@@ -281,7 +281,7 @@ def make_plot(show = False):
     par2.set_ylim(1.2, 2.0)
 
     min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
-    mass_ticks = np.arange(min_mass, max_mass, start_mass)
+    mass_ticks = np.arange(min_mass, max_mass, delta_mass)
 
     def tick_function(masses):
         # For the secondary x-axis showing the planet mass over time
@@ -289,7 +289,7 @@ def make_plot(show = False):
         tick_labels = []
 
         for i, mass in enumerate(masses):
-            times_i = np.searchsorted(total_mass, mass)
+            times_i = az.my_searchsorted(total_mass, mass)
 
             tick_locations[i] = times[times_i]
             if delta_mass < 0.1:
