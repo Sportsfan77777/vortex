@@ -307,17 +307,16 @@ def make_plot(show = False):
 
     par3.set_xlim(host.get_xlim())
     par3.set_xticks(tick_locations)
-    par3.set_xticklabels(tick_labels)
+    par3.set_xticklabels(tick_labels, x = -0.4)
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize)
-    par3.set_xlabel(r"$M_p$ [$M_J$])", fontsize = fontsize)
+    par3.set_xlabel(r"$M_p$ [$M_J$])", fontsize = fontsize, x = -0.5)
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    #plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
-    plot.title("%s" % (title1), y = 1.275, fontsize = fontsize + 1)
+    plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
