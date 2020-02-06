@@ -246,7 +246,7 @@ def make_patch_spines_invisible(ax):
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
-    fig.subplots_adjust(right=0.75, bottom = 0.25)
+    fig.subplots_adjust(right = 0.75, top = 0.4)
 
     par1 = host.twinx()
     par2 = host.twinx()
@@ -317,7 +317,7 @@ def make_plot(show = False):
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #plot.title("%s" % (title1), y = 1.025, fontsize = fontsize + 1)
-    plot.title("%s" % (title1), y = 1.075, fontsize = fontsize + 1)
+    plot.title("%s" % (title1), y = 1.275, fontsize = fontsize + 1)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
