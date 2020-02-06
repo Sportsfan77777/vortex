@@ -257,7 +257,7 @@ def make_plot(show = False):
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("axes", -1))
+    par3.spines["bottom"].set_position(("outward", 40))
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
@@ -304,7 +304,6 @@ def make_plot(show = False):
 
     tick_locations, tick_labels = tick_function(mass_ticks)
 
-    par3.set_xlim()
     par3.set_xlim(host.get_xlim())
     par3.set_xticks(tick_locations)
     par3.set_xticklabels(tick_labels)
