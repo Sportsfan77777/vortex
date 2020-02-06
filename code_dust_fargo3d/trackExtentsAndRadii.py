@@ -75,7 +75,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 22,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
                          help = 'fontsize of plot annotations (default: 3)')
@@ -222,6 +222,10 @@ def make_patch_spines_invisible(ax):
 
 ##### PLOTTING #####
 
+labelsize = 19
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
@@ -253,10 +257,10 @@ def make_plot(show = False):
     par1.set_ylim(0, 10)
     par2.set_ylim(1.2, 2.0)
 
-    host.set_xlabel("Time (planet orbits)")
-    host.set_ylabel("Azimuthal Extent (degrees)")
-    par1.set_ylabel("Radial Extent (scale heights)")
-    par2.set_ylabel("Radial Center (planet radii)")
+    host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
+    host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
+    par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize)
+    par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
