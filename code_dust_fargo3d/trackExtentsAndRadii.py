@@ -257,8 +257,8 @@ def make_plot(show = False):
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("axes", -0.2))
-    make_patch_spines_invisible(par2)
+    par3.spines["bottom"].set_position(("axes", -1))
+    make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
     # Plot
@@ -290,7 +290,7 @@ def make_plot(show = False):
 
         for i, mass in enumerate(masses):
             total_mass_jupiter = total_mass / jupiter_mass # in Jupiter masses
-            times_i = az.my_searchsorted(total_mass, mass)
+            times_i = az.my_searchsorted(total_mass_jupiter, mass)
 
             print mass, times_i, len(times)
 
