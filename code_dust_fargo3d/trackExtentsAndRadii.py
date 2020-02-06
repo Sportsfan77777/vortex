@@ -251,13 +251,14 @@ def make_plot(show = False):
     par1 = host.twinx()
     par2 = host.twinx()
 
+    parx = host.twiny()
     par3 = host.twiny()
 
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("axes", -0.2))
+    par3.spines["bottom"].set_position(("axes", -0.23))
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
@@ -270,9 +271,12 @@ def make_plot(show = False):
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
+    px  = parx.plot(x, 1.2 * y1, c = 'w', linewidth = linewidth - 1)
+
     p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
     p3, = par2.plot(x, y3a, c = 'g', linewidth = linewidth)
+
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
