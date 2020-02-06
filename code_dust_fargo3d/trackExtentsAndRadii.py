@@ -246,17 +246,20 @@ def make_patch_spines_invisible(ax):
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
-    fig.subplots_adjust(right=0.75)
+    fig.subplots_adjust(right=0.75, bottom = 0.25)
 
     par1 = host.twinx()
     par2 = host.twinx()
 
-    par_z = host.twiny()
     par3 = host.twiny()
 
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
+
+    par3.spines["bottom"].set_position(("axes", -0.2))
+    make_patch_spines_invisible(par3)
+    par3.spines["bottom"].set_visible(True)
 
     # Plot
     x = frame_range
@@ -321,10 +324,6 @@ def make_plot(show = False):
     par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     par3.tick_params(axis = 'x', **tkw)
     host.tick_params(axis = 'x', **tkw)
-
-    par3.spines["bottom"].set_position(("outward", 50))
-    make_patch_spines_invisible(par3)
-    par3.spines["bottom"].set_visible(True)
 
     # Save, Show, and Close
     if version is None:
