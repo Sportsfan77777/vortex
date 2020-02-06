@@ -329,10 +329,12 @@ def make_plot(show = False):
     host.tick_params(axis = 'x', **tkw)
 
     # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+
     if version is None:
-        save_fn = "%s/radiiAndExtentsOverTime.png" % (save_directory)
+        save_fn = "%s/%s_radiiAndExtentsOverTime.png" % (save_directory, directory_name)
     else:
-        save_fn = "%s/v%04d_radiiAndExtentsOverTime.png" % (save_directory, version)
+        save_fn = "%s/v%04d_%s_radiiAndExtentsOverTime.png" % (save_directory, version, directory_name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
