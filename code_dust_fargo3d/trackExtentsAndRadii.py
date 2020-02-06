@@ -252,13 +252,14 @@ def make_plot(show = False):
     par2 = host.twinx()
 
     par3 = host.twiny()
-    par3.xaxis.set_label_position
+    par3.xaxis.set_tick_position('bottom')
+    par3.xaxis.set_label_position('bottom')
 
     par2.spines["right"].set_position(("axes", 1.2))
     make_patch_spines_invisible(par2)
     par2.spines["right"].set_visible(True)
 
-    par3.spines["bottom"].set_position(("axes", -0.25))
+    par3.spines["bottom"].set_position(("axes", -0.2))
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
@@ -314,7 +315,7 @@ def make_plot(show = False):
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize)
-    par3.set_xlabel(r"$M_p$ [$M_J$])", fontsize = fontsize)
+    par3.set_xlabel(r"$M_p$ [$M_J$]", fontsize = fontsize)
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
