@@ -75,8 +75,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 22,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 17,
+                         help = 'fontsize of plot annotations (default: 17)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -159,8 +161,12 @@ negative = args.negative
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
+labelsize = args.labelsize
 linewidth = args.linewidth
 dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
@@ -222,10 +228,6 @@ def make_patch_spines_invisible(ax):
 
 ##### PLOTTING #####
 
-labelsize = 19
-rc['xtick.labelsize'] = labelsize
-rc['ytick.labelsize'] = labelsize
-
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
@@ -261,6 +263,9 @@ def make_plot(show = False):
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize)
+
+    title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
 
     # Annotate
     tkw = dict(size=4, width=1.5)
