@@ -313,7 +313,7 @@ def make_plot(show = False):
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
-    par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize, rotation = 270, labelpad = 10)
+    par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize, rotation = 270, labelpad = 15)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
     par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
 
