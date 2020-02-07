@@ -320,7 +320,7 @@ def make_plot(show = False):
     alpha_coefficent = "3"
     if scale_height == 0.08:
         alpha_coefficent = "1.5"
-    else if scale_height == 0.04:
+    elif scale_height == 0.04:
         alpha_coefficent = "6"
 
     title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
