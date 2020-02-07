@@ -313,9 +313,9 @@ def make_plot(show = False):
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
-    par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize)
-    par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize)
-    par3.set_xlabel(r"$M_p$ [$M_J$]", fontsize = fontsize)
+    par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize, rotation = 180)
+    par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 180)
+    par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
 
     title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
