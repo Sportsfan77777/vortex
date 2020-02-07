@@ -279,7 +279,7 @@ def make_plot(show = False):
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
-    host.set_ylim(0, 300)
+    host.set_ylim(0, 360)
     par1.set_ylim(0, 10)
     par2.set_ylim(1.2, 2.0)
 
