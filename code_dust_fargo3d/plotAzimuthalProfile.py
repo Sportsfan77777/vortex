@@ -212,7 +212,7 @@ def make_plot(frame, show = False):
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     if center:
-        density, shift_c = shift_density(normalized_density, fargo_par, reference_density = density)
+        density, shift_c = shift_density(density, fargo_par, reference_density = density)
 
     azimuthal_profile = az.get_azimuthal_profile(density, fargo_par)
 
