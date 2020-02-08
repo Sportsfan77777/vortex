@@ -250,7 +250,7 @@ def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
     #fig.subplots_adjust(right = 0.75)
-    fig.subplots_adjust(right = 1.21)
+    fig.subplots_adjust(right = 0.65)
 
     par1 = host.twinx()
     par2 = host.twinx()
