@@ -214,7 +214,7 @@ def make_plot(frame, show = False):
     if center:
         density, shift_c = shift_density(density, fargo_par, reference_density = density)
 
-    azimuthal_profile = az.get_azimuthal_profile(density, fargo_par)
+    azimuthal_profile = az.get_azimuthal_profile(density, fargo_par, sliver_width = 2.0)
 
     ### Plot ###
     x = theta * (180.0 / np.pi)
