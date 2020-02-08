@@ -318,6 +318,40 @@ def get_contrast(data, fargo_par, normalize = False, threshold = 0.5, sliver_wid
     contrast = np.max(azimuthal_profile) / np.min(azimuthal_profile)
     return contrast
 
+def get_azimuthal_profile(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
+    """ Get azimuthal extent at peak across a given threshold """
+
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    scale_height = fargo_par["AspectRatio"]
+
+    ########### Method ##############
+
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+    data_segment = data[outer_disk_start : outer_disk_end]
+
+    # Get peak in azimuthal profile
+    avg_data = np.average(data_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_data)
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+    peak_rad = rad[arg_peak]
+
+    # Zoom in on peak --- Average over half a scale height
+    half_width = (0.5 * sliver_width) * scale_height
+    zoom_start = np.searchsorted(rad, peak_rad - half_width)
+    zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+    data_sliver = data[zoom_start : zoom_end]
+    length = len(data_sliver); std = length / 3.0
+    weights = gaussian(length, std)
+    azimuthal_profile = np.average(data_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
+
+    return azimuthal_profile
+
 def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
     """ Get azimuthal extent at peak across a given threshold """
 
