@@ -249,7 +249,8 @@ def make_patch_spines_invisible(ax):
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
-    fig.subplots_adjust(right = 0.75)
+    #fig.subplots_adjust(right = 0.75)
+    fig.subplots_adjust(right = 1.21)
 
     par1 = host.twinx()
     par2 = host.twinx()
@@ -292,7 +293,7 @@ def make_plot(show = False):
     host.set_ylim(0, 360)
     par1.set_ylim(0, 10)
     par2.set_ylim(1.2, 2.0)
-    par4.set_ylim(1, 4)
+    par4.set_ylim(0, 3)
 
     min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     mass_ticks = np.arange(min_mass, max_mass, delta_mass)
@@ -344,6 +345,7 @@ def make_plot(show = False):
     par1.tick_params(axis = 'y', colors = p2.get_color(), **tkw)
     par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     par3.tick_params(axis = 'x', **tkw)
+    par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
     host.tick_params(axis = 'x', **tkw)
 
     # Save, Show, and Close
