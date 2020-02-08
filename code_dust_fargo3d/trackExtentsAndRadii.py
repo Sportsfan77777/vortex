@@ -208,9 +208,10 @@ def get_extents(args_here):
     radial_peak_over_time[i] = radial_peak
     radial_peak_over_time_a[i] = radial_peak_a
 
-    contrasts_over_time[i] = az.get_contrast(density, fargo_par)
+    #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
 
-    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i], radial_peak_over_time_a[i], contrasts_over_time[i]
+    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i], radial_peak_over_time_a[i]
+    #print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i], radial_peak_over_time_a[i], contrasts_over_time[i]
 
 
 ## Use These Frames ##
@@ -223,7 +224,7 @@ azimuthal_extent_over_time = mp_array("d", len(frame_range))
 radial_extent_over_time = mp_array("d", len(frame_range))
 radial_peak_over_time = mp_array("d", len(frame_range))
 radial_peak_over_time_a = mp_array("d", len(frame_range))
-contrasts_over_time = mp_array("d", len(frame_range))
+#contrasts_over_time = mp_array("d", len(frame_range))
 
 for i, frame in enumerate(frame_range):
     get_extents((i, frame))
@@ -254,7 +255,7 @@ def make_plot(show = False):
 
     par1 = host.twinx()
     par2 = host.twinx()
-    par4 = host.twinx()
+    #par4 = host.twinx()
 
     par3 = host.twiny()
     par3.xaxis.set_ticks_position('bottom')
@@ -268,9 +269,9 @@ def make_plot(show = False):
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
-    par4.spines["right"].set_position(("axes", 1.4))
-    make_patch_spines_invisible(par4)
-    par4.spines["right"].set_visible(True)
+    #par4.spines["right"].set_position(("axes", 1.4))
+    #make_patch_spines_invisible(par4)
+    #par4.spines["right"].set_visible(True)
 
     # Plot
     x = frame_range
@@ -285,7 +286,7 @@ def make_plot(show = False):
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
     p3, = par2.plot(x, y3a, c = 'g', linewidth = linewidth)
 
-    p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
+    #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
@@ -328,7 +329,7 @@ def make_plot(show = False):
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize, rotation = 270, labelpad = 15)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
     par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
-    par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
+    #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -345,7 +346,7 @@ def make_plot(show = False):
     par1.tick_params(axis = 'y', colors = p2.get_color(), **tkw)
     par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     par3.tick_params(axis = 'x', **tkw)
-    par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
+    #par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
     host.tick_params(axis = 'x', **tkw)
 
     # Save, Show, and Close
