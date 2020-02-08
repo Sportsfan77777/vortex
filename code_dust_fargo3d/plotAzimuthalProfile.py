@@ -65,6 +65,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
+                         help = 'center frame on vortex peak or middle (default: do not center)')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
 
@@ -154,6 +156,7 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
+center = args.center
 max_y = args.max_y
 
 # Plot Parameters (constant)
@@ -173,6 +176,32 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+### Helper Functions ###
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_density = np.roll(normalized_density, shift_c, axis = -1)
+    return shifted_density, shift_c
+
+###############################################################################
+
 ##### PLOTTING #####
 
 def make_plot(frame, show = False):
@@ -182,6 +211,9 @@ def make_plot(frame, show = False):
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+    if center:
+        density, shift_c = shift_density(normalized_density, fargo_par, reference_density = density)
+
     azimuthal_profile = az.get_azimuthal_profile(density, fargo_par)
 
     ### Plot ###
@@ -213,9 +245,7 @@ def make_plot(frame, show = False):
 
     # Axes
     if args.max_y is None:
-        x_min_i = np.searchsorted(x, x_min)
-        x_max_i = np.searchsorted(x, x_max)
-        max_y = 1.1 * max(y[x_min_i : x_max_i])
+        max_y = 1.1 * max(y)
     else:
         max_y = args.max_y
 
