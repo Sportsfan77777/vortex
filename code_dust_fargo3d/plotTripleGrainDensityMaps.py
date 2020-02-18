@@ -281,7 +281,7 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
-    shifted_density = np.roll(normalized_density, shift_c)
+    shifted_density = np.roll(normalized_density, shift_c, axis = -1)
     return shifted_density, shift_c
 
 ###############################################################################
