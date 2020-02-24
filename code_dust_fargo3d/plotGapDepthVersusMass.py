@@ -208,10 +208,6 @@ fontsize = args.fontsize
 linewidth = args.linewidth
 dpi = args.dpi
 
-# Filter out repeats
-times = (times[1:])[accretion > 0]
-total_mass = total_mass[total_mass > 0]
-
 ### Add new parameters to dictionary ###
 #fargo_par["rad"] = rad
 #fargo_par["theta"] = theta
@@ -319,6 +315,10 @@ def make_plot(show = False):
             total_mass -= negative_mass
 
         accretion = total_mass[1:] - total_mass[:-1]
+
+        # Filter out repeats
+        times = (times[1:])[accretion > 0]
+        total_mass = total_mass[total_mass > 0]
 
         ### Plot ###
         # Basic
