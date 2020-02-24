@@ -44,6 +44,7 @@ master_directories[67] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_
 master_directories[47] = ["h04_nu7_a100-offset", "h04_nu7_a50-offset", "h04_nu7_a167-offset", "h04_nu7_a05-offset"]
 master_directories[86] = ["h08_nu6_a167-offset", "h08_nu6_a05-offset", "h08_nu6_a02-offset"]
 master_directories[66] = ["h06_nu6_a50-offset", "h06_nu6_a167-offset", "h06_nu6_a05-offset"]
+master_directories[671] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_a05-offset", "h06_nu7_a02-offset", "h06_nu7_a125-low_mass-offset"]
 
 master_accretion_rates = {}
 master_accretion_rates[87] = [0.17, 0.05, 0.02, 0.01]
@@ -51,13 +52,15 @@ master_accretion_rates[67] = [0.50, 0.17, 0.05, 0.02]
 master_accretion_rates[47] = [1.00, 0.50, 0.17, 0.05]
 master_accretion_rates[86] = [0.17, 0.05, 0.02]
 master_accretion_rates[66] = [0.50, 0.17, 0.05]
+master_accretion_rates[671] = [0.50, 0.17, 0.05, 0.02, 0.125]
 
 master_start_times = {}
 master_start_times[87] = [349, 913, 1751, 2875]
-master_start_times[67] = [108, 217, 451, 788]
+master_start_times[67] = [108, 217, 451, 788, 0]
 master_start_times[47] = [59, 70, 104, 223]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
+master_start_times[671] = [108, 217, 451, 788, 0]
 
 master_end_times = {}
 master_end_times[87] = [4000, 4745, 8000, 10700]
@@ -65,6 +68,7 @@ master_end_times[67] = [2512, 2502, 6918, 7500]
 master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
+master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 ###############################################################################
 
