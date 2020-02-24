@@ -322,7 +322,7 @@ def make_plot(show = False):
 
         ### Plot ###
         # Basic
-        x = total_mass[frame_range]
+        x = total_mass[frame_range] / jupiter_mass
         y = this_gap_depth_over_time
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
@@ -339,15 +339,15 @@ def make_plot(show = False):
     plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
-    plot.xlim(0, frame_range[-1])
+    plot.xlim(0, x[-1])
     plot.ylim(1, 10**(5))
 
     plot.yscale('log')
 
     #title = readTitle()
 
-    unit = "planet orbits"
-    plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
+    unit = r"$M_\mathrm{Jup}$"
+    plot.xlabel(r"Planet Mass [%s]" % unit, fontsize = fontsize)
     plot.ylabel(r" Gap Depth ($\Sigma_{0}$ $/$ $\Sigma_\mathrm{min}$)", fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
