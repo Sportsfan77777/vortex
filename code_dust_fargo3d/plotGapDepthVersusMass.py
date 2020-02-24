@@ -208,20 +208,6 @@ fontsize = args.fontsize
 linewidth = args.linewidth
 dpi = args.dpi
 
-# Data
-data = np.loadtxt("../%s/planet0.dat" % directory)
-times = data[:, 0]
-base_mass = data[:, 7]
-accreted_mass = data[:, 8]
-
-total_mass = base_mass + accreted_mass
-
-if negative:
-    negative_mass = data[:, 13]
-    total_mass -= negative_mass
-
-accretion = total_mass[1:] - total_mass[:-1]
-
 # Filter out repeats
 times = (times[1:])[accretion > 0]
 total_mass = total_mass[total_mass > 0]
@@ -319,6 +305,20 @@ def make_plot(show = False):
 
         num_frames = len(frame_range)
         this_gap_depth_over_time = np.array(gap_depth_over_time[:num_frames])
+
+        # Mass Data
+        data = np.loadtxt("../%s/planet0.dat" % directory)
+        times = data[:, 0]
+        base_mass = data[:, 7]
+        accreted_mass = data[:, 8]
+
+        total_mass = base_mass + accreted_mass
+
+        if negative:
+            negative_mass = data[:, 13]
+            total_mass -= negative_mass
+
+        accretion = total_mass[1:] - total_mass[:-1]
 
         ### Plot ###
         # Basic
