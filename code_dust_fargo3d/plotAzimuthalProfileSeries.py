@@ -221,7 +221,7 @@ def make_plot(frame_range, show = False):
         y = azimuthal_profile
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 6)
+    plot.legend(loc = "lower right", fontsize = fontsize - 6)
 
     # Axes
     if args.max_y is None:
@@ -248,7 +248,7 @@ def make_plot(frame_range, show = False):
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.xlabel(r"$\phi$", fontsize = fontsize)
     plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
 
     #if title is None:
