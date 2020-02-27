@@ -252,6 +252,9 @@ def make_plot(frame, show = False):
     plot.xlim(0, 360)
     plot.ylim(0, max_y)
 
+    angles = np.linspace(0, 360, 7)
+    plot.xticks(angles)
+
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
 
@@ -265,7 +268,7 @@ def make_plot(frame, show = False):
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
     plot.ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
 
     #if title is None:

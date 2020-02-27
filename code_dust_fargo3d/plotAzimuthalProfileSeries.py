@@ -65,6 +65,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
+                         help = 'center frame on vortex peak or middle (default: do not center)')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
     
@@ -146,6 +148,7 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
+center = args.center
 max_y = args.max_y
 
 # Plot Parameters (constant)
@@ -229,6 +232,9 @@ def make_plot(frame_range, show = False):
     plot.xlim(0, 360)
     plot.ylim(0, max_y)
 
+    angles = np.linspace(0, 360, 7)
+    plot.xticks(angles)
+
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
 
@@ -242,7 +248,7 @@ def make_plot(frame_range, show = False):
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$\phi$", fontsize = fontsize)
     plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
 
     #if title is None:
