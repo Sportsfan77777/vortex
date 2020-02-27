@@ -309,7 +309,7 @@ def make_plot(show = False):
         num_frames = len(frame_range)
         this_gap_depth_over_time = np.array(gap_depth_over_time[:num_frames])
 
-        if i > 4:
+        if i == 4:
             this_gap_depth_over_time = this_gap_depth_over_time * (0.3) # low-mass case
 
         ### Plot ###
