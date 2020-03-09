@@ -228,7 +228,7 @@ def get_contrasts(args_here):
 
     maxima_over_time[i] = np.percentile(azimuthal_profile, 90)
     minima_over_time[i] = np.percentile(azimuthal_profile, 5)
-    contrasts_over_time[i] = maxima_over_time[i] / minima_over_time[i]
+    contrasts_over_time[i] = maxima_over_time[i] - minima_over_time[i]
 
     print i, frame, maxima_over_time[i], minima_over_time[i], contrasts_over_time[i]
 
@@ -271,7 +271,7 @@ def make_plot(show = False):
     #fig.subplots_adjust(right = 0.75)
     #fig.subplots_adjust(right = 0.65)
 
-    par1 = host.twinx()
+    #par1 = host.twinx()
     #par2 = host.twinx()
 
     # Plot
@@ -283,8 +283,8 @@ def make_plot(show = False):
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth)
-    p2, = host.plot(x, y2, c = 'r', linewidth = linewidth)
-    p3, = par1.plot(x, y3, c = 'b', linewidth = linewidth)
+    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth)
+    p3, = host.plot(x, y3, c = 'r', linewidth = linewidth)
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
@@ -292,7 +292,7 @@ def make_plot(show = False):
 
     # Axes
     host.set_ylim(0, 1.1 * max(y1))
-    par1.set_ylim(0, 1.2 * max(y3))
+    #par1.set_ylim(0, 1.2 * max(y3))
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     #mass_ticks = np.arange(min_mass, max_mass, delta_mass)
@@ -324,7 +324,7 @@ def make_plot(show = False):
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
-    par1.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 15)
+    #par1.set_ylabel(r"($\Sigma_\mathrm{max}$ $-$ $\Sigma_\mathrm{min}$) $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 15)
     #par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
     #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
     #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
