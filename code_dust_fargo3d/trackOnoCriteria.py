@@ -217,8 +217,8 @@ def get_criteria(args_here):
     left_zoom = np.abs(zoom_diff_averagedDensity[:amplitude_i] - half_amplitude)
     right_zoom = np.abs(zoom_diff_averagedDensity[amplitude_i:] - half_amplitude)
 
-    left_i = np.min(left_zoom)
-    right_i = np.min(right_zoom)
+    left_i = np.argmin(left_zoom)
+    right_i = np.argmin(right_zoom)
     width = rad[start_i + amplitude_i + right_i] - rad[start_i + left_i]
 
     amplitude_over_time[i] = amplitude
