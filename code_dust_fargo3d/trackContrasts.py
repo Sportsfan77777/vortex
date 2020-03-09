@@ -86,7 +86,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'fontsize of plot annotations (default: 17)')
     parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
                          help = 'fontsize of plot annotations (default: 15)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -283,7 +283,7 @@ def make_plot(show = False):
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth)
-    p2, = host.plot(x, y2, c = 'k', linewidth = linewidth)
+    p2, = host.plot(x, y2, c = 'r', linewidth = linewidth)
     p3, = par1.plot(x, y3, c = 'b', linewidth = linewidth)
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
@@ -323,7 +323,7 @@ def make_plot(show = False):
     #par3.set_xticklabels(tick_labels)
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
-    host.set_ylabel(r"$\Sigma~/~\Sigma_0$", fontsize = fontsize)
+    host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
     par1.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 15)
     #par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
     #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
