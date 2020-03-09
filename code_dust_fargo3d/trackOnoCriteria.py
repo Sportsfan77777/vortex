@@ -217,14 +217,14 @@ def get_criteria(args_here):
     left_zoom = np.abs(zoom_diff_averagedDensity[:amplitude_i] - half_amplitude)
     right_zoom = np.abs(zoom_diff_averagedDensity[amplitude_i:] - half_amplitude)
 
-    left_i = np.argmin(left_zoom)
-    right_i = np.argmin(right_zoom)
-    width = (rad[start_i + amplitude_i + right_i] - rad[start_i + left_i]) / rad[start_i + amplitude_i]
+    left_i = np.argmin(left_zoom); right_i = np.argmin(right_zoom)
+    left_r = rad[start_i + left_i]; right_r = rad[start_i + amplitude_i + right_i]; amplitude_r = rad[start_i + amplitude_i]
+    width = (right_r - left_r) / amplitude_r
 
     amplitude_over_time[i] = amplitude
     width_over_time[i] = width
 
-    print i, frame, amplitude_over_time[i], width_over_time[i], rad[start_i + left_i], rad[start_i + amplitude_i + right_i]
+    print i, frame, amplitude_over_time[i], width_over_time[i], left_r, amplitude_r, right_r
 
 
 ## Use These Frames ##
