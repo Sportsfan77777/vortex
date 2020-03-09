@@ -224,7 +224,7 @@ def get_criteria(args_here):
     amplitude_over_time[i] = amplitude
     width_over_time[i] = width
 
-    print i, frame, amplitude_over_time[i], width_over_time[i]
+    print i, frame, amplitude_over_time[i], width_over_time[i], rad[start_i + left_i], rad[start_i + amplitude_i + right_i]
 
 
 ## Use These Frames ##
