@@ -292,7 +292,7 @@ def make_plot(show = False):
 
     # Axes
     host.set_ylim(0, 1.1 * max(y1))
-    par1.set_ylim(0, 1.1 * max(y3))
+    par1.set_ylim(0, 1.2 * max(y3))
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     #mass_ticks = np.arange(min_mass, max_mass, delta_mass)
