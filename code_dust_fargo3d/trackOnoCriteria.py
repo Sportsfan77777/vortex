@@ -219,7 +219,7 @@ def get_criteria(args_here):
 
     left_i = np.argmin(left_zoom)
     right_i = np.argmin(right_zoom)
-    width = rad[start_i + amplitude_i + right_i] - rad[start_i + left_i]
+    width = (rad[start_i + amplitude_i + right_i] - rad[start_i + left_i]) / rad[start_i + amplitude_i]
 
     amplitude_over_time[i] = amplitude
     width_over_time[i] = width
