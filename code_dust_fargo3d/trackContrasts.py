@@ -341,7 +341,7 @@ def make_plot(show = False):
     # Annotate
     tkw = dict(size=4, width=1.5)
     host.tick_params(axis = 'y', colors = p1.get_color(), **tkw)
-    par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
+    #par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par3.tick_params(axis = 'x', **tkw)
     #par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
