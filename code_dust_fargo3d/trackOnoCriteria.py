@@ -211,7 +211,7 @@ def get_criteria(args_here):
     amplitude_i = np.argmax(zoom_diff_averagedDensity)
 
     amplitude = np.max(zoom_diff_averagedDensity)
-    half_amplitude = 0.5 * amplitude
+    half_amplitude = e**(-0.5) * amplitude
 
     # Find half-max (left and right)
     left_zoom = np.abs(zoom_diff_averagedDensity[:amplitude_i] - half_amplitude)
