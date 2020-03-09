@@ -193,7 +193,7 @@ fargo_par["theta"] = theta
 ### Data ###
 
 density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta) / surface_density_zero
-averagedDensity_zero = np.average(density, axis = 1)
+averagedDensity_zero = np.average(density_zero, axis = 1)
 
 def get_criteria(args_here):
     # Unwrap Args
