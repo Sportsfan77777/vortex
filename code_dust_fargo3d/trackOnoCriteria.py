@@ -222,7 +222,7 @@ def get_criteria(args_here):
     width = (right_r - left_r) / amplitude_r
 
     amplitude_over_time[i] = amplitude / averagedDensity_zero[start_i + amplitude_i]
-    width_over_time[i] = width
+    width_over_time[i] = width / 2.0
 
     print i, frame, amplitude_over_time[i], width_over_time[i], left_r, amplitude_r, right_r
 
