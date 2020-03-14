@@ -202,7 +202,8 @@ def get_criteria(args_here):
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     averagedDensity = np.average(density, axis = 1)
-    diff_averagedDensity = averagedDensity - averagedDensity_zero
+    #diff_averagedDensity = averagedDensity - averagedDensity_zero # Subtract initial profile
+    diff_averagedDensity = averagedDensity - (2.0 / 3.0) # Subtract \Sigma(t = 0, r = 1.5)
 
     start_i = np.searchsorted(rad, 1.1)
     end_i = np.searchsorted(rad, 2.1)
