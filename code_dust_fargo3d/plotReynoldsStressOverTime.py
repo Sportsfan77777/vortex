@@ -317,7 +317,7 @@ def make_plot(show = False):
         #for i, frame in enumerate(frame_range):
         #    get_reynolds_stress((i, frame, directory))
 
-        #pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
+        pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
         p = Pool(num_cores)
         p.map(get_reynolds_stress, pool_args)
@@ -352,7 +352,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(0, frame_range[-1])
-    plot.ylim(1, 10**(5))
+    plot.ylim(10**(-5), 3 * 10**(-1))
 
     plot.yscale('log')
 
