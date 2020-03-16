@@ -312,16 +312,16 @@ def make_plot(show = False):
         label = r"$A = %.02f$" % (accretion_rate)
 
         # Data
-        get_reynolds_stress = np.zeros(len(frame_range))
+        #get_reynolds_stress = np.zeros(len(frame_range))
 
-        for i, frame in enumerate(frame_range):
-            get_reynolds_stress((i, frame))
+        #for i, frame in enumerate(frame_range):
+        #    get_reynolds_stress((i, frame, directory))
 
-        pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
+        #pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
-        #p = Pool(num_cores)
-        #p.map(get_reynolds_stress, pool_args)
-        #p.terminate()
+        p = Pool(num_cores)
+        p.map(get_reynolds_stress, pool_args)
+        p.terminate()
 
         if np.max(stress_over_time) > max_stress:
             max_stress = np.max(stress_over_time)
