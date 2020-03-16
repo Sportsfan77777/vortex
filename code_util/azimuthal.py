@@ -490,6 +490,60 @@ def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, slive
     middle = left_rad + 0.5 * (extent)
     return extent, middle
 
+def get_radial_bounds(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 20.0, start = 1.1, end = 2.5):
+    """ Get radial extent at peak across a given threshold """
+
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    scale_height = fargo_par["AspectRatio"]
+
+    ########### Method ##############
+
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+    rad_segment = rad[outer_disk_start : outer_disk_end]
+    data_segment = data[outer_disk_start : outer_disk_end]
+
+    # Move minimum to theta = zero (first get peak in azimuthally-averaged profile)
+    avg_data = np.average(data_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_data)
+    arg_peak = np.searchsorted(rad_segment, rad_segment[segment_arg_peak])
+    peak_rad = rad[arg_peak]
+
+    arg_min = np.argmin(data_segment[arg_peak])
+    shift_min = int(0 - arg_min)
+    data_segment = np.roll(data_segment, shift_min, axis = -1)
+
+    # Get peak in azimuthal profile
+    avg_data = np.average(data_segment, axis = 0) # avg over rad
+    arg_peak = np.argmax(avg_data)
+    peak_theta = theta[arg_peak]
+
+    # Zoom in on center --- Average over sliver width
+    half_width = (0.5 * sliver_width) * (np.pi / 180.0)
+    zoom_start = np.searchsorted(theta, peak_theta - half_width)
+    zoom_end = np.searchsorted(theta, peak_theta + half_width)
+
+    data_sliver = data_segment[:, zoom_start : zoom_end]
+    length = len(data_sliver[0]); std = length / 3.0
+    weights = gaussian(length, std)
+    radial_profile = np.average(data_sliver, weights = weights, axis = 1) # avg over theta to get radial profile
+
+    if normalize:
+        radial_profile /= np.max(radial_profile)
+
+    # Find extents with the threshold
+    left_rad_i = my_searchsorted(radial_profile, threshold)
+    right_rad_i = len(rad_segment) - (my_searchsorted(radial_profile[::-1], threshold)) - 1
+
+    left_rad = rad_segment[left_rad_i]
+    right_rad = rad_segment[right_rad_i]
+
+    return left_rad, right_rad
+
 ### Data ###
 
 def get_profiles(density, fargo_par, args, normalize = False, shift = None, start = outer_start, end = outer_end):
