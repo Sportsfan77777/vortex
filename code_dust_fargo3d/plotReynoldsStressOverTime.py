@@ -80,11 +80,11 @@ master_end_times[871] = [4000, 4745, 6790, 10700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[400, 3500, 250], [1000, 4200, 250], [1800, 6000, 250], [3000, 11700, 250]]
-master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
+master_frame_ranges[87] = [[400, 3500, 250], [1000, 4200, 250], [1800, 8300, 250], [3000, 11700, 250]]
+master_frame_ranges[67] = [[200, 3000, 250], [300, 3000, 250], [500, 6800, 250], [800, 7500, 250]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
-master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
+master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[0] = [[0, 4000, 25]]
 master_frame_ranges[871] = [[0, 8000, 200], [0, 7000, 200], [0, 7000, 200], [0, 11700, 200], [0, 2500, 25]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
@@ -282,7 +282,7 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Iterate
-    max_gap_depth = 0
+    max_stress = 0
     for i, directory in enumerate(directories):
         # Frame Range 
         frame_range = util.get_frame_range(frame_ranges[i])
