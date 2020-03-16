@@ -80,7 +80,7 @@ master_end_times[871] = [4000, 4745, 6790, 10700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[0, 8000, 250], [0, 7000, 250], [0, 7000, 250], [0, 11700, 250]]
+master_frame_ranges[87] = [[400, 8000, 250], [1000, 7000, 250], [1800, 7000, 250], [3000, 11700, 250]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -320,7 +320,7 @@ def make_plot(show = False):
         pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
         p = Pool(num_cores)
-        p.map(get_min, pool_args)
+        p.map(get_reynolds_stress, pool_args)
         p.terminate()
 
         if np.max(stress_over_time) > max_stress:
