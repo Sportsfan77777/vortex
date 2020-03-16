@@ -81,7 +81,7 @@ master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
 master_frame_ranges[87] = [[400, 3500, 250], [1000, 4200, 250], [1800, 8300, 250], [3000, 11700, 250]]
-master_frame_ranges[67] = [[200, 3000, 250], [300, 3000, 250], [500, 6800, 250], [800, 7500, 250]]
+master_frame_ranges[67] = [[200, 3000, 100], [300, 3000, 100], [500, 6800, 250], [800, 7500, 250]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
@@ -326,7 +326,7 @@ def make_plot(show = False):
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
         # Vortex Lifetime
-        if start_time > 0:
+        if start_time > 100000:
             start_time_i = az.my_searchsorted(x, start_time)
             end_time_i = az.my_searchsorted(x, end_time)
 
