@@ -241,11 +241,11 @@ def get_reynolds_stress(args_here):
     i, frame, directory = args_here
 
     # Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
 
-    radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
-    azimuthal_velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
+    radial_velocity = fromfile("../%s/gasvy%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
+    azimuthal_velocity = fromfile("../%s/gasvx%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
 
     #keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     #sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
