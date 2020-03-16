@@ -223,25 +223,12 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def find_min(averagedDensity):
-    outer_disk_start = np.searchsorted(rad, 0.9) # look for max radial density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, 1.25) # look for max radial density before r = 2.3
-    min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : outer_disk_end])
-
-    min_index = outer_disk_start + min_rad_outer_index
-    min_rad = rad[min_index]
-    min_density = averagedDensity[min_index]
-
-    return min_density
-
-### Data ###
-
 def get_reynolds_stress(args_here):
     # Unwrap Args
     i, frame, directory = args_here
 
     # Data
-    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
+    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
     averagedDensity = np.average(density, axis = 1)
 
     radial_velocity = fromfile("../%s/gasvy%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
@@ -260,7 +247,7 @@ def get_reynolds_stress(args_here):
     averagedStress = np.abs(np.average(stress, axis = 1) / np.power(sound_speed, 2))
 
     # Zoom in on region around vortex
-    vortex_left_rad, vortex_right_rad = az.get_radial_bounds(density, fargo_par, threshold = 1.0)
+    vortex_left_rad, vortex_right_rad = az.get_radial_bounds(density, fargo_par, threshold = 0.9)
     vortex_left_i = np.searchsorted(rad, vortex_left_rad)
     vortex_right_i = np.searchsorted(rad, vortex_right_rad)
     zoom_averagedStress = averagedStress[vortex_left_i, vortex_right_i]
