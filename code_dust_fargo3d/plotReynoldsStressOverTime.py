@@ -153,9 +153,9 @@ num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
-
 taper_time = p.masstaper
 
+scale_height = p.aspectratio
 viscosity = p.nu
 
 dt = p.ninterm * p.dt
