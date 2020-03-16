@@ -80,7 +80,7 @@ master_end_times[871] = [4000, 4745, 6790, 10700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[400, 8000, 250], [1000, 7000, 250], [1800, 7000, 250], [3000, 11700, 250]]
+master_frame_ranges[87] = [[400, 3500, 250], [1000, 4200, 250], [1800, 6000, 250], [3000, 11700, 250]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -250,7 +250,7 @@ def get_reynolds_stress(args_here):
     vortex_left_rad, vortex_right_rad = az.get_radial_bounds(density, fargo_par, threshold = 0.9)
     vortex_left_i = np.searchsorted(rad, vortex_left_rad)
     vortex_right_i = np.searchsorted(rad, vortex_right_rad)
-    zoom_averagedStress = averagedStress[vortex_left_i, vortex_right_i]
+    zoom_averagedStress = averagedStress[vortex_left_i : vortex_right_i]
 
     median_averagedStress = np.median(zoom_averagedStress)
     max_averagedStress = np.max(zoom_averagedStress)
