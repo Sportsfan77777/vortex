@@ -198,7 +198,7 @@ def make_plot(frame, show = False):
     sound_speed = scale_height * np.power(rad, -1.5)
 
     stress = np.multiply(radial_velocity, azimuthal_velocity)
-    averagedStress = np.average(np.abs(stress), axis = 1) / np.power(sound_speed, 2)
+    averagedStress = np.abs(np.average(stress, axis = 1) / np.power(sound_speed, 2))
 
     ### Plot ###
     x = rad
