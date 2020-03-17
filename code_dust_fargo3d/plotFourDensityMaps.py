@@ -282,7 +282,7 @@ def generate_colors(n):
 
 ##### PLOTTING #####
 
-def make_each_plot(frames, show = False):
+def make_plot(frames, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 14), dpi = dpi)
 
