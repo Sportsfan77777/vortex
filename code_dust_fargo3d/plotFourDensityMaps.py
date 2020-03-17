@@ -106,10 +106,10 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
                          help = 'maximum density in colorbar (default: 2)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
+                         help = 'fontsize of plot annotations (default: 17)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -353,7 +353,7 @@ def make_plot(frames, show = False):
         cbar = fig.colorbar(result, cax = cax)
         cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
-        if number != 4:
+        if number != len(frames):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     # Make each sub-plot
@@ -367,7 +367,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.02, fontsize = fontsize + 1, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.02, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
