@@ -69,7 +69,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'maximum density (default: 1.1 times the max)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
@@ -170,7 +170,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 linestyles = ["-", "--"]
 colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 
-labelsize = 18
+labelsize = 16
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
@@ -203,6 +203,9 @@ def make_plot(frame_range, show = False):
     plot.xlim(x_min, x_max)
     plot.ylim(0, max_y)
 
+    plot.ylim(0.2 * 10**(-2), 2.0)
+    plot.yscale("log")
+
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
 
@@ -227,8 +230,14 @@ def make_plot(frame_range, show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title1 = r"$h = %.2f$     $\alpha_\mathrm{disk} = 3 \times 10^{%d}$     $A = %.2f$" % (scale_height, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
