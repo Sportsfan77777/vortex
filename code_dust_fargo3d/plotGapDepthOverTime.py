@@ -340,7 +340,7 @@ def make_plot(show = False):
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r" Gap Depth ($\Sigma_{0}$ $/$ $\Sigma_\mathrm{min}$)", fontsize = fontsize)
+    plot.ylabel(r" Gap Depth ($\delta_\mathrm{gap}$ $=$ $\Sigma_{0}$ $/$ $\Sigma_\mathrm{min}$)", fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
