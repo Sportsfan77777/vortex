@@ -76,7 +76,7 @@ master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
 master_end_times[0] = [4000]
-master_end_times[871] = [4000, 4745, 6790, 10700, 0]
+master_end_times[871] = [4000, 4745, 6790, 11700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
