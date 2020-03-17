@@ -241,7 +241,7 @@ def get_reynolds_stress(args_here):
     radial_velocity -= np.average(radial_velocity, axis = 1)[:, None]
     azimuthal_velocity -= np.average(azimuthal_velocity, axis = 1)[:, None]
 
-    sound_speed = scale_height * np.power(rad, -1.5)
+    sound_speed = scale_height * np.power(rad, -0.5) # c_s = H * \Omega = (h * R) * (R^-1.5)
 
     stress = np.multiply(radial_velocity, azimuthal_velocity)
     averagedStress = np.abs(np.average(stress, axis = 1) / np.power(sound_speed, 2))
