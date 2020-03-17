@@ -344,7 +344,7 @@ def make_plot(frames, show = False):
         plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Make each sub-plot
-    for i in len(frames):
+    for i, _ in enumerate(frames):
         add_to_plot(i)
 
     # Title
