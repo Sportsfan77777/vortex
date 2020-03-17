@@ -190,7 +190,7 @@ def make_plot(frame_range, show = False):
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 6)
+    plot.legend(loc = "lower right", fontsize = fontsize - 6)
 
     # Axes
     if args.max_y is None:
@@ -201,9 +201,9 @@ def make_plot(frame_range, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    #plot.ylim(0, max_y)
 
-    plot.ylim(0.2 * 10**(-2), 2.0)
+    plot.ylim(0.2 * 10**(-2), 3.0)
     plot.yscale("log")
 
     # Annotate Axes
