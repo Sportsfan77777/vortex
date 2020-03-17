@@ -346,8 +346,8 @@ def make_plot(frames, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
-        title = r"$t = %d$ [$m_\mathrm{p}\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-        plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
+        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+        plot.title("%s" % (title), y = 1.018, fontsize = fontsize + 1)
 
     # Make each sub-plot
     for i, _ in enumerate(frames):
@@ -360,7 +360,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.018, fontsize = fontsize + 1, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.02, fontsize = fontsize + 1, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
