@@ -311,9 +311,18 @@ def make_plot(frames, show = False):
         result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
         result.set_clim(clim[0], clim[1])
-        if number == 4:
-            fig.colorbar(result)
-            
+
+        # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        cbar = fig.colorbar(result, cax = cax)
+        cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
+        if number != 4:
+            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
+
+        # Contours
         if use_contours:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
