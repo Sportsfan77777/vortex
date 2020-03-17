@@ -68,9 +68,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
 
-    parser.add_argument('--start', dest = "start", type = float, default = None,
+    parser.add_argument('--start', dest = "start", type = int, default = None,
                          help = 'vortex lifetime start (default: None)')
-    parser.add_argument('--end', dest = "end", type = float, default = None,
+    parser.add_argument('--end', dest = "end", type = int, default = None,
                          help = 'vortex lifetime end (default: None)')
     
     # Plot Parameters (rarely need to change)
