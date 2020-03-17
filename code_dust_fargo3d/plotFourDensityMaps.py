@@ -107,6 +107,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
+                         help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -197,6 +199,9 @@ clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 # Planet File
 # Data
@@ -340,7 +345,7 @@ def make_plot(frames, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
-        title = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+        title = r"$t = %d$ [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
 
     # Make each sub-plot
