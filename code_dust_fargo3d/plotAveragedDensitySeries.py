@@ -195,7 +195,7 @@ def make_plot(frame_range, show = False):
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "lower right", fontsize = fontsize - 4)
+    plot.legend(loc = "lower right", fontsize = fontsize - 5)
 
     # Axes
     if args.max_y is None:
@@ -257,10 +257,10 @@ def make_plot(frame_range, show = False):
 
     if args.start is not None:
         text_start = r"$t_\mathrm{start}$ $=$ $%d$ $T_\mathrm{p}$" % args.start
-        plot.text(0.5, 0.55, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
+        plot.text(0.0055, 0.55, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
     if args.end is not None:
         text_end = r"$t_\mathrm{end}$ $=$ $%d$ $T_\mathrm{p}$" % args.end
-        plot.text(0.5, 0.30, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
+        plot.text(0.0055, 0.30, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
