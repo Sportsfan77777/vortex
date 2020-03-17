@@ -284,7 +284,7 @@ def generate_colors(n):
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (7, 14), dpi = dpi)
+    fig = plot.figure(figsize = (16, 6), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
@@ -354,7 +354,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.05, fontsize = fontsize + 1, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.02, fontsize = fontsize + 1, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
