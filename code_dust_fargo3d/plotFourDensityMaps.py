@@ -344,7 +344,7 @@ def make_plot(frames, show = False):
         y_text = 1.14
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-        plot.title("%s" % (title), y = 1.025, fontsize = fontsize + 1)
+        plot.title("%s" % (title), y = 1.03, fontsize = fontsize + 1)
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
         divider = make_axes_locatable(ax)
@@ -367,7 +367,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.02, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.03, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
