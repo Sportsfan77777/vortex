@@ -304,10 +304,10 @@ def make_plot(frames, show = False):
         y = theta * (180.0 / np.pi)
         result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
+        result.set_clim(clim[0], clim[1])
         if number == 4:
             fig.colorbar(result)
-            result.set_clim(clim[0], clim[1])
-
+            
         if use_contours:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
