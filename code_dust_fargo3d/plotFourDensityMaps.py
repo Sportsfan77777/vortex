@@ -198,6 +198,7 @@ cmap = args.cmap
 clim = [0, args.cmax]
 
 fontsize = args.fontsize
+labelsize = args.labelsize
 dpi = args.dpi
 
 rc['xtick.labelsize'] = labelsize
