@@ -310,18 +310,7 @@ def make_plot(frames, show = False):
         x = rad
         y = theta * (180.0 / np.pi)
         result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
-
         result.set_clim(clim[0], clim[1])
-
-        # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "8%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
-
-        if number != 4:
-            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
         # Contours
         if use_contours:
@@ -346,8 +335,6 @@ def make_plot(frames, show = False):
 
         current_mass += accreted_mass[frame]
 
-        #title = readTitle()
-
         unit = "r_\mathrm{p}"
         plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
         if number == 1:
@@ -358,6 +345,16 @@ def make_plot(frames, show = False):
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.018, fontsize = fontsize + 1)
+
+        # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size = "8%", pad = 0.2)
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        cbar = fig.colorbar(result, cax = cax)
+        cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
+        if number != 4:
+            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     # Make each sub-plot
     for i, _ in enumerate(frames):
