@@ -302,7 +302,7 @@ def make_plot(frames, show = False):
         # Data
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
         velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
-        normalized_density = gas_density / surface_density_zero
+        normalized_density = density / surface_density_zero
 
         if center:
             normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -310,7 +310,7 @@ def make_plot(frames, show = False):
         ### Plot ###
         x = rad
         y = theta * (180.0 / np.pi)
-        result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, y, np.transpose(velocity), cmap = cmap)
         result.set_clim(clim[0], clim[1])
 
         # Contours
@@ -352,7 +352,7 @@ def make_plot(frames, show = False):
         cax = divider.append_axes("right", size = "6%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"Radial Velocity  ($v_\mathrm{rad}$ $/$ $v_\mathrm{K,~r=0,~t=0})$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"Radial Velocity  ($v_\mathrm{rad}$ $/$ $v_\mathrm{K,\ r=1,\ t=0})$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         if number != len(frames):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
