@@ -291,7 +291,7 @@ def generate_colors(n):
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (16, 6), dpi = dpi)
+    fig = plot.figure(figsize = (16, 4), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
@@ -353,7 +353,7 @@ def make_plot(frames, show = False):
         cax = divider.append_axes("right", size = "6%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"Radial Velocity  ($v_\mathrm{rad}$ $/$ $v_\mathrm{K,\ r=1,\ t=0})$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"$v_\mathrm{r}$ $/$ $v_\mathrm{K,\ r=1,\ t=0})$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         if number != len(frames):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
@@ -369,7 +369,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    #plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
