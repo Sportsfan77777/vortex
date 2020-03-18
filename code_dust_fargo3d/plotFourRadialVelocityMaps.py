@@ -256,7 +256,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+def shift_data(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -306,7 +306,7 @@ def make_plot(frames, show = False):
 
         if center:
             velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_density)
-            normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
+            normalized_density, shift_c = shift_data(normalized_density, fargo_par, reference_density = normalized_density)
 
         ### Plot ###
         x = rad
