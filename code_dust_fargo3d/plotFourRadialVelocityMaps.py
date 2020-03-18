@@ -305,6 +305,7 @@ def make_plot(frames, show = False):
         normalized_density = density / surface_density_zero
 
         if center:
+            velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_density)
             normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
 
         ### Plot ###
