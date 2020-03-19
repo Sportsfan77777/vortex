@@ -98,6 +98,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of contours (choose this or separation) (default: None)')
     parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+
+    parser.add_argument('--quiver', dest = "quiver", action = 'store_true', default = False,
+                         help = 'use velocity quivers or not (default: do not use quivers)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
@@ -190,6 +193,8 @@ num_levels = args.num_levels
 if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
+quiver = args.quiver
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -313,6 +318,11 @@ def make_plot(frame, show = False):
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
         plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+
+    if quiver:
+        u = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta) # Radial
+        v = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta) # Azimuthal
+        plot.quiver(x, y, 20 * u, 20 * v)
 
     # Axes
     plot.xlim(x_min, x_max)
