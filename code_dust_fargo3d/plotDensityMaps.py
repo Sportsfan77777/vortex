@@ -102,16 +102,16 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (quiver)
     parser.add_argument('--quiver', dest = "quiver", action = 'store_true', default = False,
                          help = 'use velocity quivers or not (default: do not use quivers)')
-    parser.add_argument('--start', dest = "start_quiver", type = float, default = 1.2,
-                         help = 'start of quiver region in radius (default: 1.2)')
-    parser.add_argument('--end', dest = "end_quiver", type = float, default = 1.6,
-                         help = 'end of quiver region in radius (default: 1.6)')
+    parser.add_argument('--start', dest = "start_quiver", type = float, default = None,
+                         help = 'start of quiver region in radius (default: r_lim[0])')
+    parser.add_argument('--end', dest = "end_quiver", type = float, default = None,
+                         help = 'end of quiver region in radius (default: r_lim[1])')
     parser.add_argument('--rate_x', dest = "quiver_rate_x", type = int, default = 6,
                          help = 'sub_sample in radius (default: 6)')
-    parser.add_argument('--rate_y', dest = "quiver_rate_y", type = int, default = 24,
+    parser.add_argument('--rate_y', dest = "quiver_rate_y", type = int, default = 100,
                          help = 'sub_sample in angle (default: 24)')
-    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 1.0,
-                         help = 'bigger scale means smaller arrow (default: 1.0)')
+    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.25,
+                         help = 'bigger scale means smaller arrow (default: 1)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
@@ -212,6 +212,10 @@ end_quiver = args.end_quiver
 rate_x = args.quiver_rate_x
 rate_y = args.quiver_rate_y
 scale = args.quiver_scale
+if start_quiver is None:
+   start_quiver = x_min
+if end_quiver is None:
+   end_quiver = x_max
 
 # Plot Parameters (constant)
 cmap = args.cmap
