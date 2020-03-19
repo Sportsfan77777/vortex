@@ -352,7 +352,7 @@ def make_plot(frame, show = False):
         u = np.transpose(radial_velocity)[:, start_i:end_i]
         v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
 
-        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rax_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
+        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
     # Axes
     plot.xlim(x_min, x_max)
