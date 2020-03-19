@@ -343,6 +343,10 @@ def make_plot(frame, show = False):
         keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
         azimuthal_velocity -= keplerian_velocity[:, None]
 
+        if center:
+            radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
+            azimuthal_velocity = np.roll(azimuthal_velocity, shift_c, axis = -1)
+
         # Sub-sample the grid
         start_i = np.searchsorted(rad, start_quiver)
         end_i = np.searchsorted(rad, end_quiver)
