@@ -196,7 +196,7 @@ def make_plot(frame, show = False):
     averaged_vortensity = averaged_vorticity / averaged_density[1:]
 
     ### Plot ###
-    x = rad
+    x = rad[1:]
     y = averaged_vortensity
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
