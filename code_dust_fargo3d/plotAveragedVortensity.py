@@ -193,7 +193,7 @@ def make_plot(frame, show = False):
 
     averaged_vorticity = np.average(vorticity, axis = 1)
     averaged_density = np.average(normalized_density, axis = 1)
-    averaged_vortensity = averaged_vorticity / averaged_density
+    averaged_vortensity = averaged_vorticity / averaged_density[1:]
 
     ### Plot ###
     x = rad
