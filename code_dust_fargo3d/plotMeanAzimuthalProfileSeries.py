@@ -288,7 +288,7 @@ def make_plot(frame_range, show = False):
         plot.text(10, 0.93 * max_y, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
     if args.end is not None:
         text_end = r"$t_\mathrm{end}$  $=$ $%d$ $T_\mathrm{p}$" % args.end
-        plot.text(10, 0.85 * max_y, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
+        plot.text(350, 0.93 * max_y, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'right')
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
