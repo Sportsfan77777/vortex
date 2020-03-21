@@ -287,7 +287,7 @@ def make_plot(frame_range, show = False):
         text_start = r"$t_\mathrm{start}$ $=$ $%d$ $T_\mathrm{p}$" % args.start
         plot.text(10, 0.93 * max_y, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
     if args.end is not None:
-        text_end = r"$t_\mathrm{end}$  $=$ $%d$ $T_\mathrm{p}$" % args.end
+        text_end = r"$t_\mathrm{end}$ $=$ $%d$ $T_\mathrm{p}$" % args.end
         plot.text(350, 0.93 * max_y, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'right')
 
     # Save, Show, and Close
