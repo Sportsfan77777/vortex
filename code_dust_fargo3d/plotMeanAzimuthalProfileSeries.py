@@ -69,6 +69,11 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'center frame on vortex peak or middle (default: do not center)')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
+
+    parser.add_argument('--start', dest = "start", type = int, default = None,
+                         help = 'vortex lifetime start (default: None)')
+    parser.add_argument('--end', dest = "end", type = int, default = None,
+                         help = 'vortex lifetime end (default: None)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
@@ -278,6 +283,12 @@ def make_plot(frame_range, show = False):
     #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
+    if args.start is not None:
+        text_start = r"$t_\mathrm{start}$ $=$ $%d$ $T_\mathrm{p}$" % args.start
+        plot.text(10, 0.10 * max_y, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
+    if args.end is not None:
+        text_end = r"$t_\mathrm{end}$  $=$ $%d$ $T_\mathrm{p}$" % args.end
+        plot.text(10, 0.05 * max_y, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
