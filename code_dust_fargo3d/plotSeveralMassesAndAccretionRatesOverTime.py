@@ -63,7 +63,7 @@ master_start_times[66] = [116, 247, 677]
 master_start_times[671] = [108, 217, 451, 788, 0]
 
 master_end_times = {}
-master_end_times[87] = [4000, 4745, 8000, 10700]
+master_end_times[87] = [4000, 4745, 9000, 11700]
 master_end_times[67] = [2512, 2502, 6918, 7500]
 master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
@@ -252,7 +252,8 @@ def make_plot(show = False):
             result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
             plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
-            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
+            if end_time < 10000:
+                plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
@@ -282,7 +283,7 @@ def make_plot(show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
-    title = r"$h = %.02f$          $\alpha = %s \times 10^{%d}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+    title = r"$h = %.02f$          $\alpha \approx %s \times 10^{%d}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
     #title = r"$h = %.02f$          $\alpha_\mathrm{disk} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
     plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 2)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
@@ -334,7 +335,8 @@ def make_plot(show = False):
             result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 1, zorder = 99)
 
             plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
-            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
+            if end_time < 10000:
+                plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     #plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
