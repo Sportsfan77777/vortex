@@ -57,8 +57,8 @@ initial_amplitudes_h8 = [0.148, 0.195, 0.209, 0.236]
 second_widths_h4 = [0.041, 0.041, 0.040, 0.043, 0.044, 0.046, 0.046] # (A = 0.5, t = 795), (A = 0.167, t = 900)
 second_amplitudes_h4 = [0.820, 0.779, 0.675, 0.691, 0.698, 0.689, 0.686] # then (A = 0.05: t = 940, t = 1235, t = 1520, t = 1800, t = 2130)
 
-second_widths_h6 = [0.061, 0.064, 0.058, 0.061] # first two are from A = 0.05 (t = 2450, t = 3550)
-second_amplitudes_h6 = [0.716, 0.667, 0.641, 0.641] # the rest are from A = 0.02 (t = 2470, t = 3080)
+second_widths_h6 = [0.061, 0.064, 0.058, 0.061, 0.065] # first two are from A = 0.05 (t = 2450, t = 3550)
+second_amplitudes_h6 = [0.716, 0.667, 0.641, 0.641, 0.713] # the rest are from A = 0.02 (t = 2470, t = 3080, t = 3650)
 
 # Vortices that don't reform
 
@@ -72,30 +72,30 @@ death_amplitudes_h6 = [0.687, 0.687, 0.518]
 
 # Initial Vortices
 
-initial_widths_h4 = []
-initial_amplitudes_h4 = []
+#initial_widths_h4 = []
+#initial_amplitudes_h4 = []
 
-initial_widths_h6 = []
-initial_amplitudes_h6 = []
+#initial_widths_h6 = [0.061, 0.065, 0.066, 0.069]
+#initial_amplitudes_h6 = [0.268, 0.313, 0.352, 0.348]
 
-initial_widths_h8 = []
-initial_amplitudes_h8 = []
+#initial_widths_h8 = []
+#initial_amplitudes_h8 = []
 
 # Later Generation Vortices
 
-second_widths_h4 = [0.041, 0.041, 0.040, 0.043, 0.044, 0.046, 0.046] # (A = 0.5, t = 795), (A = 0.167, t = 900)
-second_amplitudes_h4 = [0.820, 0.779, 0.675, 0.691, 0.698, 0.689, 0.686] # then (A = 0.05: t = 940, t = 1235, t = 1520, t = 1800, t = 2130)
+#econd_widths_h4 = [0.041, 0.041, 0.040, 0.043, 0.044, 0.046, 0.046] # (A = 0.5, t = 795), (A = 0.167, t = 900)
+#second_amplitudes_h4 = [0.820, 0.779, 0.675, 0.691, 0.698, 0.689, 0.686] # then (A = 0.05: t = 940, t = 1235, t = 1520, t = 1800, t = 2130)
 
-second_widths_h6 = [0.061, 0.064, 0.058, 0.061] # first two are from A = 0.05 (t = 2450, t = 3550)
-second_amplitudes_h6 = [0.716, 0.667, 0.641, 0.641] # the rest are from A = 0.02 (t = 2470, t = 3080)
+#second_widths_h6 = [0.061, 0.064, 0.058, 0.061] # first two are from A = 0.05 (t = 2450, t = 3550)
+#second_amplitudes_h6 = [0.716, 0.667, 0.641, 0.641] # the rest are from A = 0.02 (t = 2470, t = 3080)
 
 # Vortices that don't reform
 
-death_widths_h4 = [0.034, 0.043, 0.044, 0.051]
-death_amplitudes_h4 = [0.315, 0.681, 0.620, 0.593]
+#death_widths_h4 = [0.034, 0.043, 0.044, 0.051]
+#death_amplitudes_h4 = [0.315, 0.681, 0.620, 0.593]
 
-death_widths_h6 = [0.061, 0.064, 0.077]
-death_amplitudes_h6 = [0.687, 0.687, 0.518]
+#death_widths_h6 = [0.061, 0.064, 0.077]
+#death_amplitudes_h6 = [0.687, 0.687, 0.518]
 
 ###############################################################################
 
@@ -164,7 +164,7 @@ def make_plot(show = False):
 
     # Annotate
     plot.xlabel(r"$\Delta w$ $/$ $r$", fontsize = fontsize)
-    plot.ylabel(r"$A$ $/$ $\Sigma_0$", fontsize = fontsize)
+    plot.ylabel(r"$\bar{A}$ $/$ $\Sigma_0$", fontsize = fontsize)
     plot.title(r"Stability of gap-edge bumps", y = 1.02, fontsize = fontsize + 2)
 
     plot.text(0.0295, 2.35, "Unstable", fontsize = fontsize)
