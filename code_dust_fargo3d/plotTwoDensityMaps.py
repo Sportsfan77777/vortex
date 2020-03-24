@@ -106,9 +106,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
                          help = 'maximum density in colorbar (default: 2)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
                          help = 'fontsize of plot annotations (default: 17)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 18,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -366,8 +366,8 @@ def make_plot(frames, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
-        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-        title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
+        title = r"$t = %d$ $T_\mathrm{p}$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+        title = r"$t = %d$ $T_\mathrm{p}$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
@@ -392,7 +392,7 @@ def make_plot(frames, show = False):
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
-    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.07, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
