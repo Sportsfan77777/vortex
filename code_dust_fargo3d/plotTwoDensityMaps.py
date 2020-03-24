@@ -64,14 +64,14 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 4,
+    parser.add_argument('frames', type = int, nargs = 2,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "fourVelocityMaps",
-                         help = 'save directory (default: fourVelocityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "fourGasDensityMaps",
+                         help = 'save directory (default: fourGasDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -101,12 +101,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
-                         help = 'color map (default: seismic)')
-    parser.add_argument('--cmax1', dest = "cmax1", type = float, default = 0.04,
-                         help = 'maximum radial velocity in colorbar (default: 0.04)')
-    parser.add_argument('--cmax2', dest = "cmax2", type = float, default = 0.05,
-                         help = 'maximum radial velocity in colorbar (default: 0.05)')
+    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
+                         help = 'maximum density in colorbar (default: 2)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
                          help = 'fontsize of plot annotations (default: 17)')
@@ -198,8 +196,7 @@ if num_levels is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim1 = [-args.cmax1, args.cmax1]
-clim2 = [-args.cmax2, args.cmax2]
+clim = [0, args.cmax]
 
 fontsize = args.fontsize
 labelsize = args.labelsize
@@ -259,7 +256,18 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_data(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+def get_gap_depth(density):
+    # Get Data
+    averagedDensity = np.average(density, axis = 1)
+    normalized_density = averagedDensity / surface_density_zero
+    
+    # Get Minima
+    min_density = find_min(normalized_density)
+    gap_depth =  1.0 / min_density
+
+    return gap_depth
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -294,28 +302,26 @@ def generate_colors(n):
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (16, 8), dpi = dpi)
+    fig = plot.figure(figsize = (8, 6), dpi = dpi)
 
-    # Indvidual Radial Subplots
-    def add_rad_to_plot(i):
+    # Indvidual Subplots
+    def add_to_plot(i):
         # Identify Subplot
         frame = frames[i]; number = i + 1
-        ax = plot.subplot(2, 4, number)
+        ax = plot.subplot(1, 2, number)
 
         # Data
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-        velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
         normalized_density = density / surface_density_zero
 
         if center:
-            velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_density)
-            normalized_density, shift_c = shift_data(normalized_density, fargo_par, reference_density = normalized_density)
+            normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
 
         ### Plot ###
         x = rad
         y = theta * (180.0 / np.pi)
-        result = ax.pcolormesh(x, y, np.transpose(velocity), cmap = cmap)
-        result.set_clim(clim1[0], clim1[1])
+        result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+        result.set_clim(clim[0], clim[1])
 
         # Contours
         if use_contours:
@@ -339,76 +345,7 @@ def make_plot(frames, show = False):
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
         current_mass += accreted_mass[frame]
-
-        unit = "r_\mathrm{p}"
-        #plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-        if number == 1:
-           plot.ylabel(r"$\phi$", fontsize = fontsize)
-
-        x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-        y_text = 1.14
-
-        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-        plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
-
-        # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "6%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"$v_\mathrm{r}$ $/$ $v_\mathrm{K,\ r=1,\ t=0}$", fontsize = fontsize, rotation = 270, labelpad = 25)
-
-        if number != len(frames):
-            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
-
-    # Indvidual Radial Subplots
-    def add_az_to_plot(i):
-        # Identify Subplot
-        frame = frames[i]; number = i + 1
-        ax = plot.subplot(2, 4, number + 4)
-
-        # Data
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-        velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
-        normalized_density = density / surface_density_zero
-
-        # Take Residual
-        keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
-        #sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
-        velocity -= keplerian_velocity[:, None]
-
-        if center:
-            velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_density)
-            normalized_density, shift_c = shift_data(normalized_density, fargo_par, reference_density = normalized_density)
-
-        ### Plot ###
-        x = rad
-        y = theta * (180.0 / np.pi)
-        result = ax.pcolormesh(x, y, np.transpose(velocity), cmap = cmap)
-        result.set_clim(clim1[0], clim1[1])
-
-        # Contours
-        if use_contours:
-            levels = np.linspace(low_contour, high_contour, num_levels)
-            colors = generate_colors(num_levels)
-            plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
-
-        # Axes
-        plot.xlim(x_min, x_max)
-        plot.ylim(0, 360)
-
-        angles = np.linspace(0, 360, 7)
-        plot.yticks(angles)
-
-        # Annotate Axes
-        orbit = (dt / (2 * np.pi)) * frame
-
-        if orbit >= taper_time:
-            current_mass = planet_mass
-        else:
-            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
-
-        current_mass += accreted_mass[frame]
+        current_gap_depth = get_gap_depth(density)
 
         unit = "r_\mathrm{p}"
         plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
@@ -419,25 +356,22 @@ def make_plot(frames, show = False):
         y_text = 1.14
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-        #plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
+        title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
+        plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size = "6%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"($v_{\phi}$ $/$ $v_\mathrm{K,\ r=1,\ t=0}$) - $1$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         if number != len(frames):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
-    # Make each rad sub-plot
+    # Make each sub-plot
     for i, _ in enumerate(frames):
-        add_rad_to_plot(i)
-
-    # Make each az sub-plot
-    for i, _ in enumerate(frames):
-        add_az_to_plot(i)
+        add_to_plot(i)
 
     # Title
     alpha_coefficent = "3"
@@ -446,13 +380,14 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    #plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
+    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/velocityMap_%04d-%04d-%04d-%04d.png" % (save_directory, frames[0], frames[1], frames[2], frames[3])
+        save_fn = "%s/densityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1])
     else:
-        save_fn = "%s/v%04d_velocityMap_%04d-%04d-%04d-%04d.png" % (save_directory, version, frames[0], frames[1], frames[2], frames[3])
+        save_fn = "%s/v%04d_densityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
