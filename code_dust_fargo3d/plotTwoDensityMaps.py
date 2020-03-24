@@ -366,8 +366,8 @@ def make_plot(frames, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
-        title = r"$t = %d$ $T_\mathrm{p}$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-        title = r"$t = %d$ $T_\mathrm{p}$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
+        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+        title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
