@@ -398,9 +398,9 @@ def make_plot(frames, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/radialVelocityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1], frames[2], frames[3])
+        save_fn = "%s/radialVelocityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1])
     else:
-        save_fn = "%s/v%04d_radialVelocityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1], frames[2], frames[3])
+        save_fn = "%s/v%04d_radialVelocityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
