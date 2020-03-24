@@ -256,6 +256,17 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
+def find_min(averagedDensity):
+    outer_disk_start = np.searchsorted(rad, 0.9) # look for max radial density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 1.25) # look for max radial density before r = 2.3
+    min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : outer_disk_end])
+
+    min_index = outer_disk_start + min_rad_outer_index
+    min_rad = rad[min_index]
+    min_density = averagedDensity[min_index]
+
+    return min_density
+
 def get_gap_depth(density):
     # Get Data
     averagedDensity = np.average(density, axis = 1)
