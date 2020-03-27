@@ -230,7 +230,9 @@ def get_contrasts(args_here):
     minima_over_time[i] = np.percentile(azimuthal_profile, 5)
     contrasts_over_time[i] = maxima_over_time[i] - minima_over_time[i]
 
-    print i, frame, maxima_over_time[i], minima_over_time[i], contrasts_over_time[i]
+    contrast = maxima_over_time[i] / minima_over_time[i]
+
+    print i, frame, contrast, maxima_over_time[i], minima_over_time[i], contrasts_over_time[i]
 
 
 ## Use These Frames ##
