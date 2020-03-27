@@ -274,7 +274,7 @@ def make_plot(show = False):
     if args.choice > 0:
         fig = plot.figure(figsize = (7, 6), dpi = dpi)
     else:
-        fig = plot.figure(figsize = (7, 3), dpi = dpi)
+        fig = plot.figure(figsize = (7, 2), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Iterate
@@ -341,12 +341,12 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(0, frame_range[-1])
-    plot.ylim(1, 10**(5))
-
-    plot.yscale('log')
-
-    if args.choice == 0:
+    if args.choice > 0:
+        plot.ylim(1, 10**(5))
+        plot.yscale('log')
+    else:
         plot.ylim(1, 10)
+        plot.yscale('log')
         plot.yticks([1, 3, 10], ["1", "3", "10"])
 
     #title = readTitle()
