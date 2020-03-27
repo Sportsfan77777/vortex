@@ -65,7 +65,7 @@ master_start_times[67] = [108, 217, 451, 788]
 master_start_times[47] = [59, 70, 104, 223]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
-master_start_times[0] = [600, 2500]
+master_start_times[0] = [600, 0]
 master_start_times[871] = [349, 913, 1751, 2875, 0]
 master_start_times[671] = [108, 217, 451, 788, 0]
 
@@ -296,7 +296,11 @@ def make_plot(show = False):
         end_time = end_times[i]
 
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
-        label = r"$A = %.02f$" % (accretion_rate)
+        if args.choice > 0:
+            label = r"$A = %.02f$" % (accretion_rate)
+        else:
+            labels = ["Default", "Restart"]
+            label = labels[i]
 
         # Data
         #gap_depth_over_time = np.zeros(len(frame_range))
@@ -338,6 +342,8 @@ def make_plot(show = False):
 
     if args.choice > 0:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
+    else:
+        plot.legend(loc = "upper left", fontsize = fontsize - 4)
 
     # Axes
     plot.xlim(0, frame_range[-1])
@@ -345,9 +351,9 @@ def make_plot(show = False):
         plot.ylim(1, 10**(5))
         plot.yscale('log')
     else:
-        plot.ylim(1, 10)
+        plot.ylim(1, 5)
         plot.yscale('log')
-        plot.yticks([1, 3, 10], ["1", "3", "10"])
+        plot.yticks([1, 3, 5], ["1", "3", "5"])
 
     #title = readTitle()
 
