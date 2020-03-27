@@ -310,7 +310,7 @@ def make_plot(show = False):
     x_comp = frame_range[comp_start : comp_end]
     y_comp = contrasts_over_time_comparison[comp_start : comp_end]
 
-    plot.plot(x_comp, y_comp, c = 'purple', linewidth = linewidth - 1, label = r"Restart w/ $M = 0.05$ $M_\mathrm{J}$", zorder = 90)
+    plot.plot(x_comp, y_comp, c = 'cornflowerblue', linewidth = linewidth - 1, label = r"Restart w/ $M_\mathrm{p} = 0.05$ $M_\mathrm{J}$", zorder = 90)
 
     popt_comp, pcov_comp = curve_fit(exponential_decay, x_comp, y_comp, p0 = [0.5, 2000])
     x_fit_compare = np.array(range(2500, 5001, 1))
@@ -327,7 +327,8 @@ def make_plot(show = False):
 
     # Annotate
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
-    plot.ylabel(r"Contrast ($C$ $\equiv$ $\Sigma_\mathrm{peak}$ $/$ $\Sigma_\mathrm{trough}$)", fontsize = fontsize)
+    #plot.ylabel(r"Contrast ($C$ $\equiv$ $\Sigma_\mathrm{peak}$ $/$ $\Sigma_\mathrm{trough}$)", fontsize = fontsize)
+    plot.ylabel(r"Azimuthal Contrast", fontsize = fontsize)
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
