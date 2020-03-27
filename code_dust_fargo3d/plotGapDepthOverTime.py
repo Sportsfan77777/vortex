@@ -343,11 +343,11 @@ def make_plot(show = False):
     plot.xlim(0, frame_range[-1])
     plot.ylim(1, 10**(5))
 
+    plot.yscale('log')
+
     if args.choice == 0:
         plot.ylim(1, 10)
         plot.yticks([1, 10])
-
-    plot.yscale('log')
 
     #title = readTitle()
 
