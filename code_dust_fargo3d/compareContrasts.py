@@ -306,7 +306,7 @@ def make_plot(show = False):
     fit = plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit")
 
     # Plot comparison
-    x_comp = frame_range_comparison
+    x_comp = frame_range
     y_comp = contrasts_over_time_comparison[fit_start:]
 
     plot.plot(x_comp, y_comp, c = 'brown', linewidth = linewidth - 1, label = r"Restart at $M = 0.05~M_\mathrm{J}$")
