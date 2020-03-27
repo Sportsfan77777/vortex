@@ -283,8 +283,12 @@ def make_plot(show = False):
         frame_range = util.get_frame_range(frame_ranges[i])
 
         # Label
-        scale_height = float(directories[0].split("_")[0][1:]) / 100.0
-        log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
+        if args.choice > 0:
+            scale_height = float(directories[0].split("_")[0][1:]) / 100.0
+            log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
+        else:
+            scale_height = 0.06
+            log_viscosity = 5.0
         accretion_rate = accretion_rates[i]
 
         start_time = start_times[i]
