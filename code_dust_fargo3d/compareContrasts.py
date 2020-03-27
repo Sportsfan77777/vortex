@@ -282,7 +282,7 @@ def make_plot(show = False):
     def exponential_decay(x, a, b):
         return a * np.exp((x - 2500) / b)
 
-    popt, pcov = curve_fit(func, x, y)
+    popt, pcov = curve_fit(exponential_decay, x, y)
     x_fit = np.array(range(2000, 8001, 1))
     #y_fit = fit[0] * np.power(x_fit, 2) + fit[1] * x_fit + fit[2]
     y_fit = exponential_decay(x_fit, popt[0], popt[1])
