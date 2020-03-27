@@ -75,7 +75,7 @@ master_end_times[67] = [2512, 2502, 6918, 7500]
 master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
-master_end_times[0] = [4000]
+master_end_times[0] = [5000]
 master_end_times[871] = [4000, 4745, 9000, 11700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
@@ -272,6 +272,8 @@ rc['ytick.labelsize'] = labelsize
 def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    if choice == 0:
+        fig = plot.figure(figsize = (7, 3), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Iterate
@@ -326,13 +328,18 @@ def make_plot(show = False):
             result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
             plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
-            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
+            if choice > 0:
+                plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 4)
+    if choice > 0:
+        plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
     plot.xlim(0, frame_range[-1])
     plot.ylim(1, 10**(5))
+
+    if choice == 0:
+        plot.ylim(1, 10)
 
     plot.yscale('log')
 
