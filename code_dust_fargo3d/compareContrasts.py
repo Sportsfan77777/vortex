@@ -235,7 +235,7 @@ def get_contrasts(args_here):
     print i, frame, contrasts_over_time[i], maxima_over_time[i], minima_over_time[i], differences_over_time[i]
 
     # Do Comparison
-    if frame >= 2500:
+    if frame >= 2500 and frame < 3000:
         density = fromfile("%s/gasdens%d.dat" % (comparison_directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
         density, shift_c = shift_density(density, fargo_par, reference_density = density)
         azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5)
@@ -261,7 +261,7 @@ contrasts_over_time = mp_array("d", len(frame_range))
 contrasts_over_time_comparison = mp_array("d", len(frame_range))
 
 for i, frame in enumerate(frame_range):
-    get_contrasts((i, frame, ".", "../hi-res_high_density-2000-m2500"))
+    get_contrasts((i, frame, ".", "../hi_res_high_density-2000-m2500"))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
@@ -296,9 +296,10 @@ def make_plot(show = False):
     def exponential_decay(x, a, b):
         return 1.0 + a * np.exp(-(x - 2500.0) / b)
 
-    fit_start = np.searchsorted(frame_range, 2500)
+    comp_start = np.searchsorted(frame_range, 2500)
+    comp_end = np.searchsorted(frame_range, 2500)
 
-    popt, pcov = curve_fit(exponential_decay, x[fit_start:], y[fit_start:], p0 = [0.5, 2000])
+    popt, pcov = curve_fit(exponential_decay, x[comp_start:], y[comp_start:], p0 = [0.5, 2000])
     x_fit = np.array(range(2500, 8001, 1))
     #y_fit = fit[0] * np.power(x_fit, 2) + fit[1] * x_fit + fit[2]
     y_fit = exponential_decay(x_fit, popt[0], popt[1])
@@ -306,8 +307,8 @@ def make_plot(show = False):
     fit = plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit")
 
     # Plot comparison
-    x_comp = frame_range
-    y_comp = contrasts_over_time_comparison[fit_start:]
+    x_comp = frame_range[comp_start : comp_end]
+    y_comp = contrasts_over_time_comparison[comp_start : comp_end]
 
     plot.plot(x_comp, y_comp, c = 'brown', linewidth = linewidth - 1, label = r"Restart at $M = 0.05~M_\mathrm{J}$")
 
