@@ -70,7 +70,7 @@ master_start_times[871] = [349, 913, 1751, 2875, 0]
 master_start_times[671] = [108, 217, 451, 788, 0]
 
 master_end_times = {}
-master_end_times[87] = [4000, 4745, 9000, 11700]
+master_end_times[87] = [5000, 4745, 9000, 11700]
 master_end_times[67] = [2512, 2502, 6918, 7500]
 master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
@@ -85,7 +85,7 @@ master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
-master_frame_ranges[0] = [[0, 4000, 25]]
+master_frame_ranges[0] = [[0, 5000, 25]]
 master_frame_ranges[871] = [[0, 8000, 200], [0, 7000, 200], [0, 9000, 200], [0, 11700, 200], [0, 2500, 25]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
 
@@ -271,8 +271,9 @@ rc['ytick.labelsize'] = labelsize
 
 def make_plot(show = False):
     # Set up figure
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
-    if args.choice == 0:
+    if args.choice > 0:
+        fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    else:
         fig = plot.figure(figsize = (7, 3), dpi = dpi)
     ax = fig.add_subplot(111)
 
