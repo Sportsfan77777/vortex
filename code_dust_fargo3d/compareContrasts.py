@@ -337,7 +337,7 @@ def make_plot(show = False):
         alpha_coefficent = "6"
 
     title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p}=%.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
-    plot.title("%s" % (title1), y = 1.01, fontsize = fontsize + 1)
+    #plot.title("%s" % (title1), y = 1.01, fontsize = fontsize + 1)
 
     plot.legend(loc = "upper right", fontsize = fontsize - 6)
 
