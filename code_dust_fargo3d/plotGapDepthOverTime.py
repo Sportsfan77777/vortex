@@ -272,7 +272,7 @@ rc['ytick.labelsize'] = labelsize
 def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
-    if choice == 0:
+    if args.choice == 0:
         fig = plot.figure(figsize = (7, 3), dpi = dpi)
     ax = fig.add_subplot(111)
 
@@ -328,17 +328,17 @@ def make_plot(show = False):
             result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
             plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
-            if choice > 0:
+            if args.choice > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
-    if choice > 0:
+    if args.choice > 0:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
     # Axes
     plot.xlim(0, frame_range[-1])
     plot.ylim(1, 10**(5))
 
-    if choice == 0:
+    if args.choice == 0:
         plot.ylim(1, 10)
 
     plot.yscale('log')
