@@ -18,6 +18,7 @@ import argparse
 
 import math
 import numpy as np
+from scipy.optimize import curve_fit
 
 import matplotlib
 from matplotlib import rcParams as rc
@@ -278,9 +279,13 @@ def make_plot(show = False):
     plot.plot(x, y, c = 'k', linewidth = linewidth)
 
     # Fit Data
-    fit = np.polyfit(x, y, 2)
-    x_fit = np.array(range(x[0], 8001, 1))
-    y_fit = fit[0] * np.power(x, 2) + fit[1] * x + fit[2]
+    def exponential_decay(x, a, b):
+        return a * np.exp((x - 2500) / b)
+
+    popt, pcov = curve_fit(func, x, y)
+    x_fit = np.array(range(2000, 8001, 1))
+    #y_fit = fit[0] * np.power(x_fit, 2) + fit[1] * x_fit + fit[2]
+    y_fit = exponential_decay(x_fit, popt[0], popt[1])
 
     plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--")
     
