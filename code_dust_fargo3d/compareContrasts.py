@@ -276,11 +276,18 @@ def make_plot(show = False):
     y = contrasts_over_time
 
     plot.plot(x, y, c = 'k', linewidth = linewidth)
+
+    # Fit Data
+    fit = np.polyfit(x, y, 2)
+    x_fit = np.array(range(x[0], 8001, 1))
+    y_fit = fit[0] * np.power(x, 2) + fit[1] * x + fit[2]
+
+    plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--")
     
     # Axes
-    plot.ylim(1, 1.1 * max(y))
+    plot.ylim(1, 1.05 * max(y))
 
-
+    # Annotate
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
     plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
 
