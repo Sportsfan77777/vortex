@@ -347,7 +347,7 @@ def make_plot(show = False):
 
     if args.choice == 0:
         plot.ylim(1, 10)
-        plot.yticks([1, 10])
+        plot.yticks([1, 10], [r"$10^0$", r"$10^1$"])
 
     #title = readTitle()
 
