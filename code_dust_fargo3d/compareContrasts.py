@@ -83,10 +83,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 17,
                          help = 'fontsize of plot annotations (default: 17)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -220,7 +220,7 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
 
 def get_contrasts(args_here):
     # Unwrap Args
-    i, frame, directory = args_here
+    i, frame, directory, comparison_directory = args_here
 
     # Get Data
     density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
@@ -234,6 +234,18 @@ def get_contrasts(args_here):
 
     print i, frame, contrasts_over_time[i], maxima_over_time[i], minima_over_time[i], differences_over_time[i]
 
+    # Do Comparison
+    if frame >= 2500:
+        density = fromfile("%s/gasdens%d.dat" % (comparison_directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
+        density, shift_c = shift_density(density, fargo_par, reference_density = density)
+        azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5)
+
+        maxima = np.percentile(azimuthal_profile, 90)
+        minima = np.percentile(azimuthal_profile, 5)
+        contrasts_over_time_comparison[i] = maxima / minima
+
+        print i, frame, contrasts_over_time_comparison[i]
+
 
 ## Use These Frames ##
 rate = 20 # 5 works better, but is very slow
@@ -246,8 +258,10 @@ minima_over_time = mp_array("d", len(frame_range))
 differences_over_time = mp_array("d", len(frame_range))
 contrasts_over_time = mp_array("d", len(frame_range))
 
+contrasts_over_time_comparison = mp_array("d", len(frame_range))
+
 for i, frame in enumerate(frame_range):
-    get_contrasts((i, frame, "."))
+    get_contrasts((i, frame, ".", "../hi-res_high_density-2000-m2500"))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
@@ -269,32 +283,46 @@ def make_patch_spines_invisible(ax):
 
 def make_plot(show = False):
     # Figure
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    fig = plot.figure(figsize = (7, 4), dpi = dpi)
     ax = fig.add_subplot(111)
 
     # Plot
     x = frame_range
     y = contrasts_over_time
 
-    plot.plot(x, y, c = 'k', linewidth = linewidth)
+    plot.plot(x, y, c = 'k', linewidth = linewidth, label = "Default")
 
     # Fit Data
     def exponential_decay(x, a, b):
-        return a * np.exp((x - 2500) / b)
+        return 1.0 + a * np.exp(-(x - 2500.0) / b)
 
-    popt, pcov = curve_fit(exponential_decay, x, y)
-    x_fit = np.array(range(2000, 8001, 1))
+    fit_start = np.searchsorted(frame_range, 2500)
+
+    popt, pcov = curve_fit(exponential_decay, x[fit_start:], y[fit_start:], p0 = [0.5, 2000])
+    x_fit = np.array(range(2500, 8001, 1))
     #y_fit = fit[0] * np.power(x_fit, 2) + fit[1] * x_fit + fit[2]
     y_fit = exponential_decay(x_fit, popt[0], popt[1])
 
-    plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--")
+    fit = plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit")
+
+    # Plot comparison
+    x_comp = frame_range_comparison
+    y_comp = contrasts_over_time_comparison[fit_start:]
+
+    plot.plot(x_comp, y_comp, c = 'brown', linewidth = linewidth - 1, label = r"Restart at $M = 0.05~M_\mathrm{J}$")
+
+    popt_comp, pcov_comp = curve_fit(exponential_decay, x_comp, y_comp, p0 = [0.5, 2000])
+    x_fit_compare = np.array(range(2500, 6001, 1))
+    y_fit_compare = exponential_decay(x_fit_compare, popt_comp[0], popt_comp[1])
+
+    fit = plot.plot(x_fit_compare, y_fit_compare, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit")
     
     # Axes
     plot.ylim(1, 1.05 * max(y))
 
     # Annotate
     plot.xlabel("Time (planet orbits)", fontsize = fontsize)
-    plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+    plot.ylabel(r"Contrast ($\Sigma_\mathrm{peak}$ $/$ $\Sigma_\mathrm{trough}$)", fontsize = fontsize)
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -303,7 +331,9 @@ def make_plot(show = False):
         alpha_coefficent = "6"
 
     title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p}=%.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
-    plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
+    plot.title("%s" % (title1), y = 1.01, fontsize = fontsize + 1)
+
+    plot.legend(loc = "upper right")
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
