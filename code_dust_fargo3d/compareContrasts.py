@@ -297,7 +297,7 @@ def make_plot(show = False):
         return 1.0 + a * np.exp(-(x - 2500.0) / b)
 
     comp_start = np.searchsorted(frame_range, 2500)
-    comp_end = np.searchsorted(frame_range, 2500)
+    comp_end = np.searchsorted(frame_range, 3000)
 
     popt, pcov = curve_fit(exponential_decay, x[comp_start:], y[comp_start:], p0 = [0.5, 2000])
     x_fit = np.array(range(2500, 8001, 1))
@@ -316,7 +316,7 @@ def make_plot(show = False):
     x_fit_compare = np.array(range(2500, 6001, 1))
     y_fit_compare = exponential_decay(x_fit_compare, popt_comp[0], popt_comp[1])
 
-    fit = plot.plot(x_fit_compare, y_fit_compare, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit")
+    fit = plot.plot(x_fit_compare, y_fit_compare, c = 'orange', linewidth = linewidth, linestyle = "--", label = "Fit")
     
     # Axes
     plot.ylim(1, 1.05 * max(y))
