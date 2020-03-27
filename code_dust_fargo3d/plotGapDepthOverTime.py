@@ -346,7 +346,11 @@ def make_plot(show = False):
         plot.legend(loc = "upper left", fontsize = fontsize - 4)
 
     # Axes
-    plot.xlim(0, frame_range[-1])
+    if args.choice > 0:
+        plot.xlim(0, frame_range[-1])
+    else:
+        plot.xlim(0, frame_ranges[0][-1])
+
     if args.choice > 0:
         plot.ylim(1, 10**(5))
         plot.yscale('log')
