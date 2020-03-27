@@ -20,6 +20,7 @@ import math
 import numpy as np
 
 import matplotlib
+from matplotlib.ticker import ScalarFormatter
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -65,7 +66,7 @@ master_start_times[67] = [108, 217, 451, 788]
 master_start_times[47] = [59, 70, 104, 223]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
-master_start_times[0] = [600, 0]
+master_start_times[0] = [600, 2500]
 master_start_times[871] = [349, 913, 1751, 2875, 0]
 master_start_times[671] = [108, 217, 451, 788, 0]
 
@@ -275,7 +276,7 @@ def make_plot(show = False):
         fig = plot.figure(figsize = (7, 6), dpi = dpi)
     else:
         fig = plot.figure(figsize = (7, 2), dpi = dpi)
-    #ax = fig.add_subplot(111)
+    ax = fig.add_subplot(111)
 
     # Iterate
     max_gap_depth = 0
@@ -357,6 +358,7 @@ def make_plot(show = False):
     else:
         plot.ylim(1, 5)
         plot.yscale('log')
+        ax.set_major_formatter(ScalarFormatter())
         plot.yticks([1, 3, 5], ["1", "3", "5"])
 
     #title = readTitle()
