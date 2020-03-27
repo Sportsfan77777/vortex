@@ -304,19 +304,19 @@ def make_plot(show = False):
     #y_fit = fit[0] * np.power(x_fit, 2) + fit[1] * x_fit + fit[2]
     y_fit = exponential_decay(x_fit, popt[0], popt[1])
 
-    fit = plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit (default)", zorder = 90)
+    fit = plot.plot(x_fit, y_fit, c = 'r', linewidth = linewidth, linestyle = "--", label = "Fit (default)")
 
     # Plot comparison
     x_comp = frame_range[comp_start : comp_end]
     y_comp = contrasts_over_time_comparison[comp_start : comp_end]
 
-    plot.plot(x_comp, y_comp, c = 'brown', linewidth = linewidth - 1, label = r"Restart at $M = 0.05~M_\mathrm{J}$")
+    plot.plot(x_comp, y_comp, c = 'brown', linewidth = linewidth - 1, label = r"Restart w/ $M = 0.05$ $M_\mathrm{J}$", zorder = 90)
 
     popt_comp, pcov_comp = curve_fit(exponential_decay, x_comp, y_comp, p0 = [0.5, 2000])
     x_fit_compare = np.array(range(2500, 5001, 1))
     y_fit_compare = exponential_decay(x_fit_compare, popt_comp[0], popt_comp[1])
 
-    fit = plot.plot(x_fit_compare, y_fit_compare, c = 'orange', linewidth = linewidth, linestyle = "--", label = "Fit (restart)")
+    fit = plot.plot(x_fit_compare, y_fit_compare, c = 'orange', linewidth = linewidth - 1, linestyle = "--", label = "Fit (restart)")
 
     # Plot Reference (Assume vortex dies at Contrast = 1.05)
     plot.plot([x[0], x_fit[-1]], [1.05, 1.05], linewidth = 1, c = "k")
@@ -338,7 +338,7 @@ def make_plot(show = False):
     title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p}=%.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
     plot.title("%s" % (title1), y = 1.01, fontsize = fontsize + 1)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 4)
+    plot.legend(loc = "upper right", fontsize = fontsize - 6)
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
