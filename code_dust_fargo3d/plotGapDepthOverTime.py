@@ -275,7 +275,7 @@ def make_plot(show = False):
         fig = plot.figure(figsize = (7, 6), dpi = dpi)
     else:
         fig = plot.figure(figsize = (7, 2), dpi = dpi)
-    ax = fig.add_subplot(111)
+    #ax = fig.add_subplot(111)
 
     # Iterate
     max_gap_depth = 0
@@ -349,7 +349,7 @@ def make_plot(show = False):
     if args.choice > 0:
         plot.xlim(0, frame_range[-1])
     else:
-        plot.xlim(0, frame_ranges[0][-1])
+        plot.xlim(0, frame_ranges[0][1])
 
     if args.choice > 0:
         plot.ylim(1, 10**(5))
