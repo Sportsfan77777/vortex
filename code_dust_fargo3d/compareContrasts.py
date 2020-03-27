@@ -275,7 +275,7 @@ def make_plot(show = False):
     x = frame_range
     y = contrasts_over_time
 
-    plot(x, y, c = 'k', linewidth = linewidth)
+    plot.plot(x, y, c = 'k', linewidth = linewidth)
     
     # Axes
     plot.ylim(1, 1.1 * max(y))
