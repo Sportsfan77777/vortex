@@ -285,10 +285,9 @@ def make_plot(frame, show = False):
 
     k = 4.0
     first_term = np.power(velocity - upper_velocity, 2)
-    second_term = (gas_density + upper_gas_density)(gas_density - upper_gas_density) / (gas_density * upper_gas_density) / k / np.power(rad[:, np.newaxis], 2)
+    second_term = (gas_density + upper_gas_density)(gas_density - upper_gas_density) / (gas_density * upper_gas_density) / k / np.power(rad[:, None], 2)
 
     slip_condition = first_term - second_term
-
 
     ### Plot ###
     x = rad
