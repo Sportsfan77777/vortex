@@ -300,7 +300,7 @@ def make_plot(frames, show = False):
     def add_rad_to_plot(i):
         # Identify Subplot
         frame = frames[i]; number = i + 1
-        ax = plot.subplot(2, 4, number)
+        ax = plot.subplot(2, 2, number)
 
         # Data
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
@@ -365,7 +365,7 @@ def make_plot(frames, show = False):
     def add_az_to_plot(i):
         # Identify Subplot
         frame = frames[i]; number = i + 1
-        ax = plot.subplot(2, 4, number + 4)
+        ax = plot.subplot(2, 2, number + 2)
 
         # Data
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
