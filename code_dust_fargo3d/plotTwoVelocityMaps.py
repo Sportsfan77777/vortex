@@ -294,7 +294,7 @@ def generate_colors(n):
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (8, 8), dpi = dpi)
+    fig = plot.figure(figsize = (8, 7), dpi = dpi)
 
     # Indvidual Radial Subplots
     def add_rad_to_plot(i):
@@ -385,7 +385,7 @@ def make_plot(frames, show = False):
         x = rad
         y = theta * (180.0 / np.pi)
         result = ax.pcolormesh(x, y, np.transpose(velocity), cmap = cmap)
-        result.set_clim(clim1[0], clim1[1])
+        result.set_clim(clim2[0], clim2[1])
 
         # Contours
         if use_contours:
@@ -446,7 +446,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.025, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
