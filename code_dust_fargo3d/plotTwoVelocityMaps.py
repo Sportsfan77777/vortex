@@ -453,7 +453,7 @@ def make_plot(frames, show = False):
         save_fn = "%s/velocityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1])
     else:
         save_fn = "%s/v%04d_velocityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1])
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.1)
 
     if show:
         plot.show()
