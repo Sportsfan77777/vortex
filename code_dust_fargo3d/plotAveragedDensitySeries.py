@@ -74,8 +74,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'vortex lifetime end (default: None)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
+                         help = 'fontsize of plot annotations (default: 20)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -175,7 +175,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 linestyles = ["-", "--"]
 colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 
-labelsize = 16
+labelsize = 18
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
@@ -195,7 +195,7 @@ def make_plot(frame_range, show = False):
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "lower right", fontsize = fontsize - 5)
+    plot.legend(loc = "lower right", fontsize = fontsize - 7)
 
     # Axes
     if args.max_y is None:
@@ -242,7 +242,7 @@ def make_plot(frame_range, show = False):
         alpha_coefficent = "6"
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
