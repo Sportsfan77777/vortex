@@ -317,8 +317,10 @@ def make_plot(frame, show = False):
     top = vortex_center + 0.5 * extent # But use center and extent to get real bounds
     bottom = vortex_center - 0.5 * extent
 
-    plot.plot([left, right], [0, 360], c = 'k', linewidth = 1)
-    plot.plot([x[0], x[-1]], [bottom, top], c = 'k', linewidth = 1)
+    plot.plot([left, left], [0, 360], c = 'k', linewidth = 1)
+    plot.plot([right, right], [0, 360], c = 'k', linewidth = 1)
+    plot.plot([x[0], x[-1]], [bottom, bottom], c = 'k', linewidth = 1)
+    plot.plot([x[0], x[-1]], [top, top], c = 'k', linewidth = 1)
 
     # Axes
     plot.xlim(x_min, x_max)
