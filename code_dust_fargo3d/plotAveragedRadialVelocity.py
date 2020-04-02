@@ -243,12 +243,12 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
+    y_text = 1.5
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.08, fontsize = fontsize + 1)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text

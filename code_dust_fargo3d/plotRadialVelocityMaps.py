@@ -98,6 +98,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of contours (choose this or separation) (default: None)')
     parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+
+    parser.add_argument('--ref', dest = "ref", action = 'store_true', default = False,
+                         help = 'plot reference lines across radii (default: do not)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
@@ -173,6 +176,8 @@ num_levels = args.num_levels
 if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
+ref = args.ref
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -294,6 +299,10 @@ def make_plot(frame, show = False):
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
+
+    if ref:
+        for i, value in enumerate(np.linspace(x[0], x[-1], 0.1)):
+           plot.plot([value, value], [0, 360], c = 'k', linewidth = 2)
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
