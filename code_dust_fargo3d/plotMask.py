@@ -247,7 +247,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_data(data, fargo_par, option = "away", reference_density = None, frame = None):
+def shift_data(data, fargo_par, option = "away", reference_density = None, frame = None, radial_center = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = data
@@ -259,7 +259,7 @@ def shift_data(data, fargo_par, option = "away", reference_density = None, frame
        threshold = util.get_threshold(fargo_par["PSIZE"])
        shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
     elif option == "away":
-       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par, radial_center = radial_center)
     elif option == "lookup":
        shift_c = az.get_lookup_shift(frame)
     else:
@@ -285,13 +285,19 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
+    # For Mask
+    left = np.interp(frame, measuring_times, inner_edges)
+    right = np.interp(frame, measuring_times, outer_edges)
+    extent = np.interp(frame, measuring_times, extents)
+    radial_center = left + 0.5 * (right - left) # Need this to find center from threshold
+
     # Data
     gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
 
     if center:
-        velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_gas_density)
+        velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_gas_density, radial_center = radial_center)
         normalized_gas_density, shift_c = shift_data(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
     ### Plot ###
@@ -308,10 +314,7 @@ def make_plot(frame, show = False):
         plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Plot Mask
-    left = np.interp(frame, measuring_times, inner_edges)
-    right = np.interp(frame, measuring_times, outer_edges)
-    extent = np.interp(frame, measuring_times, extents)
-    radial_center = left + 0.5 * (right - left) # Need this to find center from threshold
+    
 
     bottom_bound, top_bound = az.get_azimuthal_bounds(normalized_gas_density, fargo_par, threshold = 0.6, radial_center = radial_center) # Get bounds from threshold
     vortex_center = (bottom_bound + 0.5 * (top_bound - bottom_bound)) * (180.0 / np.pi)
