@@ -314,7 +314,7 @@ def make_plot(frame, show = False):
     radial_center = left + 0.5 * (right - left) # Need this to find center from threshold
 
     bottom_bound, top_bound = az.get_azimuthal_bounds(normalized_gas_density, fargo_par, threshold = 0.6, radial_center = radial_center) # Get bounds from threshold
-    vortex_center = 0.5 * (top_bound - bottom_bound) 
+    vortex_center = (bottom_bound + 0.5 * (top_bound - bottom_bound)) * (180.0 / np.pi)
     top = vortex_center + 0.5 * extent # But use center and extent to get real bounds
     bottom = vortex_center - 0.5 * extent
 
