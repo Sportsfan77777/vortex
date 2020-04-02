@@ -68,7 +68,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-1, 0],
+    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.05, 0.05],
                          help = 'range in y-axis (default: [-1, 0])')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
@@ -191,7 +191,7 @@ def make_plot(frame, show = False):
     averaged_vrad = np.average(vrad, axis = 1)
 
     ### Plot ###
-    x = rad[1:]
+    x = rad
     y = averaged_vrad
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
