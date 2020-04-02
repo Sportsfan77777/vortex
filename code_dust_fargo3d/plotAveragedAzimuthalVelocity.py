@@ -188,6 +188,9 @@ def make_plot(frame, show = False):
     normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
 
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
+    vtheta -= keplerian_velocity[:, None]
+
     averaged_vtheta = np.average(vtheta, axis = 1)
 
     ### Plot ###
