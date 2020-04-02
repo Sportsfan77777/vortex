@@ -313,9 +313,9 @@ def make_plot(frame, show = False):
     extent = np.interp(frame, times, extents)
 
     bottom_bound, top_bound = az.get_azimuthal_bounds(density, fargo_par, threshold = 0.6) # Get bounds from threshold
-    center = 0.5 * (top_bound + bottom_bound) 
-    top = center + 0.5 * extent # But use center and extent to get real bounds
-    bottom = center - 0.5 * extent
+    vortex_center = 0.5 * (top_bound + bottom_bound) 
+    top = vortex_center + 0.5 * extent # But use center and extent to get real bounds
+    bottom = vortex_center - 0.5 * extent
 
     plot.plot([left, right], [0, 360], c = 'k', linewidth = 1)
     plot.plot([x[0], x[-1]], [bottom, top], c = 'k', linewidth = 1)
