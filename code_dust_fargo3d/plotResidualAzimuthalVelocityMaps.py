@@ -303,8 +303,10 @@ def make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     if ref:
-        for i, value in enumerate(np.linspace(x[0], x[-1], 0.1)):
-           plot.plot([value, value], [0, 360], c = 'k', linewidth = 2)
+        for i, value in enumerate(np.arange(x[0], x[-1], 0.1)):
+           plot.plot([value, value], [0, 360], c = 'k', linewidth = 1)
+        for i, value in enumerate(np.arange(y[0], y[-1], 10)):
+           plot.plot([x[0], x[-1]], [value, value], c = 'k', linewidth = 1)
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
