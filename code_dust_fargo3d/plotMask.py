@@ -298,7 +298,7 @@ def make_plot(frame, show = False):
 
     if center:
         velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_gas_density, radial_center = radial_center)
-        normalized_gas_density, shift_c = shift_data(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
+        normalized_gas_density, shift_c = shift_data(normalized_gas_density, fargo_par, reference_density = normalized_gas_density, radial_center = radial_center)
 
     ### Plot ###
     x = rad
