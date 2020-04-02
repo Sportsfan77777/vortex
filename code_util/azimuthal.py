@@ -145,7 +145,7 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05, start = outer_sta
 
     return shift_c
 
-def shift_away_from_minimum(density, fargo_par, start = outer_start, end = outer_end):
+def shift_away_from_minimum(density, fargo_par, radial_center = None, start = outer_start, end = outer_end):
     """ return shift needed to shift vortex center to 180 degrees """
     ######## Get Parameters #########
     rad = fargo_par["rad"]
@@ -157,16 +157,20 @@ def shift_away_from_minimum(density, fargo_par, start = outer_start, end = outer
     ########### Method ##############
 
     ### Identify center using threshold ###
-    # Search outer disk only
-    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
-    density_segment = density[outer_disk_start : outer_disk_end]
 
-    # Get peak in azimuthal profile
-    avg_density = np.average(density_segment, axis = 1) # avg over theta
-    segment_arg_peak = np.argmax(avg_density)
-    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
-    peak_rad = rad[arg_peak]
+    if radial_center is None:
+        # Search outer disk only
+        outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+        outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+        density_segment = density[outer_disk_start : outer_disk_end]
+
+        # Get peak in azimuthal profile
+        avg_density = np.average(density_segment, axis = 1) # avg over theta
+        segment_arg_peak = np.argmax(avg_density)
+        arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+        peak_rad = rad[arg_peak]
+    else:
+        peak_rad = radial_center
 
     # Zoom in on peak --- Average over half a scale height
     half_width = 0.25 * scale_height
