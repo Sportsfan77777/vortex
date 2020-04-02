@@ -65,9 +65,9 @@ master_directories.append(["h08_nu7_a167", "h08_nu7_a05", "h08_nu7_a02", "h08_nu
 lifetimes.append([3631, 3832, 7249, 8825])
 final_masses.append([1.22, 0.59, 0.33, 0.18])
 
-times = [800, 1200, 1600, 2000, 2400, 2800, 3200, 3600]
-inner_edges = [1.15, 1.15, 1.25, 1.25, 1.30, 1.20, 1.10, 1.1]
-outer_edges = [1.75, 1.85, 1.95, 2.00, 2.05, 2.10, 2.10, 2.0]
+measuring_times = [800, 1200, 1600, 2000, 2400, 2800, 3200, 3600]
+inner_edges = [1.15, 1.15, 1.25, 1.25, 1.30, 1.20, 1.10, 1.10]
+outer_edges = [1.75, 1.85, 1.95, 2.00, 2.05, 2.10, 2.10, 2.00]
 extents = [270, 250, 250, 235, 170, 145, 120, 110]
 
 ###############################################################################
@@ -308,9 +308,9 @@ def make_plot(frame, show = False):
         plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Plot Mask
-    left = np.interp(frame, times, inner_edges)
-    right = np.interp(frame, times, outer_edges)
-    extent = np.interp(frame, times, extents)
+    left = np.interp(frame, measuring_times, inner_edges)
+    right = np.interp(frame, measuring_times, outer_edges)
+    extent = np.interp(frame, measuring_times, extents)
 
     bottom_bound, top_bound = az.get_azimuthal_bounds(density, fargo_par, threshold = 0.6) # Get bounds from threshold
     vortex_center = 0.5 * (top_bound + bottom_bound) 
