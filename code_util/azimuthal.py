@@ -434,6 +434,55 @@ def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width
     extent = right_theta - left_theta
     return extent
 
+def get_azimuthal_bounds(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
+    """ Get azimuthal edges at peak across a given threshold """
+
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    scale_height = fargo_par["AspectRatio"]
+
+    ########### Method ##############
+
+    # Search outer disk only
+    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+    data_segment = data[outer_disk_start : outer_disk_end]
+
+    # Get peak in azimuthal profile
+    avg_data = np.average(data_segment, axis = 1) # avg over theta
+    segment_arg_peak = np.argmax(avg_data)
+    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+    peak_rad = rad[arg_peak]
+
+    # Zoom in on peak --- Average over half a scale height
+    half_width = (0.5 * sliver_width) * scale_height
+    zoom_start = np.searchsorted(rad, peak_rad - half_width)
+    zoom_end = np.searchsorted(rad, peak_rad + half_width)
+
+    data_sliver = data[zoom_start : zoom_end]
+    length = len(data_sliver); std = length / 3.0
+    weights = gaussian(length, std)
+    azimuthal_profile = np.average(data_sliver, weights = weights, axis = 0) # avg over rad to get azimuthal profile
+
+    if normalize:
+        azimuthal_profile /= np.max(azimuthal_profile)
+
+    # Move minimum to theta = zero
+    arg_min = np.argmin(azimuthal_profile)
+    shift_min = int(0 - arg_min)
+    azimuthal_profile = np.roll(azimuthal_profile, shift_min)
+
+    # Find extents with the threshold
+    left_theta_i = my_searchsorted(azimuthal_profile, threshold)
+    right_theta_i = len(theta) - (my_searchsorted(azimuthal_profile[::-1], threshold)) - 1
+
+    left_theta = theta[left_theta_i]
+    right_theta = theta[right_theta_i]
+
+    return left_theta, right_theta
+
 def get_radial_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 20.0, start = 1.1, end = 2.5):
     """ Get radial extent at peak across a given threshold """
 
