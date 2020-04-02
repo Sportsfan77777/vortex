@@ -311,9 +311,10 @@ def make_plot(frame, show = False):
     left = np.interp(frame, measuring_times, inner_edges)
     right = np.interp(frame, measuring_times, outer_edges)
     extent = np.interp(frame, measuring_times, extents)
+    radial_center = left + 0.5 * (right - left) # Need this to find center from threshold
 
-    bottom_bound, top_bound = az.get_azimuthal_bounds(normalized_gas_density, fargo_par, threshold = 0.6) # Get bounds from threshold
-    vortex_center = 0.5 * (top_bound + bottom_bound) 
+    bottom_bound, top_bound = az.get_azimuthal_bounds(normalized_gas_density, fargo_par, threshold = 0.6, radial_center = radial_center) # Get bounds from threshold
+    vortex_center = 0.5 * (top_bound - bottom_bound) 
     top = vortex_center + 0.5 * extent # But use center and extent to get real bounds
     bottom = vortex_center - 0.5 * extent
 

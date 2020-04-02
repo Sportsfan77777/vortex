@@ -434,7 +434,7 @@ def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width
     extent = right_theta - left_theta
     return extent
 
-def get_azimuthal_bounds(data, fargo_par, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
+def get_azimuthal_bounds(data, fargo_par, radial_center = None, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
     """ Get azimuthal edges at peak across a given threshold """
 
     ######## Get Parameters #########
@@ -445,16 +445,19 @@ def get_azimuthal_bounds(data, fargo_par, normalize = False, threshold = 0.5, sl
 
     ########### Method ##############
 
-    # Search outer disk only
-    outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
-    outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
-    data_segment = data[outer_disk_start : outer_disk_end]
+    if radial_center is None:
+        # Search outer disk only
+        outer_disk_start = np.searchsorted(rad, start) # look for max density beyond r = 1.1
+        outer_disk_end = np.searchsorted(rad, end) # look for max density before r = 2.3
+        data_segment = data[outer_disk_start : outer_disk_end]
 
-    # Get peak in azimuthal profile
-    avg_data = np.average(data_segment, axis = 1) # avg over theta
-    segment_arg_peak = np.argmax(avg_data)
-    arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
-    peak_rad = rad[arg_peak]
+        # Get peak in azimuthal profile
+        avg_data = np.average(data_segment, axis = 1) # avg over theta
+        segment_arg_peak = np.argmax(avg_data)
+        arg_peak = np.searchsorted(rad, rad[outer_disk_start + segment_arg_peak])
+        peak_rad = rad[arg_peak]
+    else:
+        peak_rad = radial_center
 
     # Zoom in on peak --- Average over half a scale height
     half_width = (0.5 * sliver_width) * scale_height
