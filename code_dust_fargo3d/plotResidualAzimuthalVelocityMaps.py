@@ -211,6 +211,8 @@ if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
+ref = args.ref
+
 # Plot Parameters (constant)
 cmap = args.cmap
 clim = [-args.cmax, args.cmax]
@@ -290,7 +292,7 @@ def make_plot(frame, show = False):
     # Take Residual
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
-    velocity -= sub_keplerian_velocity[:, None]
+    velocity -= keplerian_velocity[:, None]
 
     ### Plot ###
     x = rad
@@ -299,6 +301,10 @@ def make_plot(frame, show = False):
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
+
+    if ref:
+        for i, value in enumerate(np.linspace(x[0], x[-1], 0.1)):
+           plot.plot([value, value], [0, 360], c = 'k', linewidth = 2)
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)

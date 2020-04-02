@@ -177,8 +177,6 @@ if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
-ref = args.ref
-
 # Plot Parameters (constant)
 cmap = args.cmap
 clim = [-args.cmax, args.cmax]
@@ -215,6 +213,8 @@ num_levels = args.num_levels
 if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
+ref = args.ref
 
 # Plot Parameters (constant)
 cmap = args.cmap
