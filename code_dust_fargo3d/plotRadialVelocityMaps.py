@@ -304,7 +304,7 @@ def make_plot(frame, show = False):
         for i, value in enumerate(np.arange(x[0], x[-1], 0.1)):
            plot.plot([value, value], [0, 360], c = 'k', linewidth = 1)
         for i, value in enumerate(np.arange(y[0], y[-1], 10)):
-           plot.plot([value, value], [x[0], x[-1]], c = 'k', linewidth = 1)
+           plot.plot([x[0], x[-1]], [value, value], c = 'k', linewidth = 1)
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
