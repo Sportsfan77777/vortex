@@ -301,9 +301,9 @@ def make_plot(frame, show = False):
     result.set_clim(clim[0], clim[1])
 
     if ref:
-        for i, value in enumerate(np.range(x[0], x[-1], 0.1)):
+        for i, value in enumerate(np.arange(x[0], x[-1], 0.1)):
            plot.plot([value, value], [0, 360], c = 'k', linewidth = 1)
-        for i, value in enumerate(np.range(y[0], y[-1], 10)):
+        for i, value in enumerate(np.arange(y[0], y[-1], 10)):
            plot.plot([value, value], [x[0], x[-1]], c = 'k', linewidth = 1)
 
     if use_contours:
