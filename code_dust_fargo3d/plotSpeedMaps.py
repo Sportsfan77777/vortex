@@ -218,7 +218,7 @@ ref = args.ref
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [-args.cmax, args.cmax]
+clim = [0, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -292,7 +292,7 @@ def make_plot(frame, show = False):
     azimuthal_velocity -= keplerian_velocity[:, None]
 
     # Speed
-    velocity = np.sqrt(radial_velocity * azimuthal_velocity)
+    velocity = np.sqrt(np.power(radial_velocity, 2) + np.power(azimuthal_velocity, 2))
 
     ### Plot ###
     x = rad
@@ -300,7 +300,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(velocity), cmap = cmap)
 
     fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
+    result.set_clim(0, clim[1])
 
     if ref:
         for i, value in enumerate(np.arange(x[0], x[-1], 0.1)):
