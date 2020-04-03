@@ -103,10 +103,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'plot reference lines across radii (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
-                         help = 'color map (default: seismic)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.05,
-                         help = 'maximum radial velocity in colorbar (default: 0.05)')
+    parser.add_argument('--cmap', dest = "cmap", default = "gist_ncar",
+                         help = 'color map (default: gist_ncar)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.08,
+                         help = 'maximum radial velocity in colorbar (default: 0.08)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
