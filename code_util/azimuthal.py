@@ -162,7 +162,7 @@ def find_vortex_center(density, speed, fargo_par, threshold = 0.05, start = oute
     zoom_end = np.searchsorted(rad, outer_end)
 
     density_sliver = density[zoom_start : zoom_end]
-    speed_sliver = speed[zoom_start : zoom_end]
+    speed_sliver = np.copy(speed[zoom_start : zoom_end])
 
     # Find center indices
     speed_sliver[density_sliver < threshold] += np.max(speed_sliver) # Get rid of points outside vortex (below threshold)
