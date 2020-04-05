@@ -257,7 +257,7 @@ def make_plot(frame, show = False):
     #plot.title("Intensity Map (t = %.1f)" % (orbit), fontsize = fontsize + 1)
 
     taper_title = r"$T_\mathrm{growth} = %d$" % taper_time
-    plot.text(0.0 * box_size, 2 * arc_weight, taper_title, fontsize = fontsize, color = 'white', horizontalalignment = 'center', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0), zorder = 100)
+    #plot.text(0.0 * box_size, 2 * arc_weight, taper_title, fontsize = fontsize, color = 'white', horizontalalignment = 'center', bbox=dict(facecolor = 'black', edgecolor = 'white', pad = 10.0), zorder = 100)
 
     # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
     if colorbar:
