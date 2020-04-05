@@ -145,6 +145,36 @@ def get_azimuthal_center(density, fargo_par, threshold = 0.05, start = outer_sta
 
     return shift_c
 
+def find_vortex_center(density, speed, fargo_par, threshold = 0.05, start = outer_start, end = outer_end):
+    """ identify center of vortex by location of minimum speed (the vortex does not rotate at the center) """
+    ######## Get Parameters #########
+    rad = fargo_par["rad"]
+    theta = fargo_par["theta"]
+
+    scale_height = fargo_par["AspectRatio"]
+    surface_density_zero = fargo_par["Sigma0"]
+
+    ########### Method ##############
+
+    # Zoom in on vortex
+    half_width = 0.25 * scale_height
+    zoom_start = np.searchsorted(rad, outer_start)
+    zoom_end = np.searchsorted(rad, outer_endt)
+
+    density_sliver = density[zoom_start : zoom_end]
+    speed_sliver = speed[zoom_start : zoom_end]
+
+    # Find center indices
+    speed_sliver[density_sliver < threshold] += np.max(speed_sliver) # Get rid of points outside vortex (below threshold)
+    center_rad_i, center_theta_i = np.argmin(speed_sliver)
+
+    # Find center location
+    center_rad = rad[zoom_start + center_rad_i]
+    center_theta = theta[center_theta_i]
+
+    return center_rad, center_theta
+
+
 def shift_away_from_minimum(density, fargo_par, radial_center = None, start = outer_start, end = outer_end):
     """ return shift needed to shift vortex center to 180 degrees """
     ######## Get Parameters #########
