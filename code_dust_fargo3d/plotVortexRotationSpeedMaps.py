@@ -307,12 +307,12 @@ def make_plot(frame, show = False):
     distance_from_center = np.sqrt(np.power(x_grid - x_center, 2) + np.power(y_grid - y_center, 2)) + 1e-6
 
     # Rotation Rate
-    rotation_rate = velocity / np.transpose(distance_from_center)
+    rotation_rate = np.transpose(velocity) / distance_from_center
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(rotation_rate), cmap = cmap)
+    result = ax.pcolormesh(x, y, rotation_rate, cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(0, clim[1])
