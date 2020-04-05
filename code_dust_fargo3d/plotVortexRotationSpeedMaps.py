@@ -312,8 +312,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    #result = ax.pcolormesh(x, y, np.transpose(rotation_rate), cmap = cmap)
-    result = ax.pcolormesh(x, y, distance_from_center, cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(rotation_rate), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(0, clim[1])
