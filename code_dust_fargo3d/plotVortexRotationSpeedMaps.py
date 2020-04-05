@@ -307,7 +307,7 @@ def make_plot(frame, show = False):
     distance_from_center = np.sqrt(np.power(x_grid - x_center, 2) + np.power(y_grid - y_center, 2)) + 1e-6
 
     # Rotation Rate
-    rotation_rate = velocity / distance_from_center
+    rotation_rate = velocity / np.transpose(distance_from_center)
 
     ### Plot ###
     x = rad
