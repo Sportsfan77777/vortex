@@ -295,8 +295,8 @@ def make_plot(frame, show = False):
     velocity = np.sqrt(np.power(radial_velocity, 2) + np.power(azimuthal_velocity, 2))
 
     # Distance
-    left_rad, right_rad = az.get_radial_bounds(density, fargo_par, threshold = 0.8)
-    center_rad, center_theta = az.find_vortex_center(density, velocity, fargo_par, threshold = 0.8, start = left_rad, end = right_rad)
+    left_rad, right_rad = az.get_radial_bounds(normalized_gas_density, fargo_par, threshold = 0.8)
+    center_rad, center_theta = az.find_vortex_center(normalized_gas_density, velocity, fargo_par, threshold = 0.8, start = left_rad, end = right_rad)
     x_center = center_rad * np.cos(center_theta)
     y_center = center_rad * np.sin(center_theta)
 
