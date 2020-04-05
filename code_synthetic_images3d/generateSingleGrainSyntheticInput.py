@@ -77,9 +77,9 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('--scale-sizes', dest = "scale_sizes", type = float, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
 
-    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = [400, 400],
+    parser.add_argument('-s', dest = "new_res", nargs = 2, type = int, default = None,
                          help = 're-sample resolution (default: [Nrad, Nsec])')
-    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = [0.2, 4.0],
+    parser.add_argument('-t', dest = "new_range", nargs = 2, type = float, default = None,
                          help = 're-sample range (default: [Rmin, Rmax])')
     parser.add_argument('--id', dest = "id_number", type = int, default = 0,
                          help = 'id number (up to 4 digits) for this set of plot parameters (default: None)')
