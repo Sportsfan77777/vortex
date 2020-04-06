@@ -300,6 +300,19 @@ def make_plot(frame, show = False):
         normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
         normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
+    ### Plot ###
+    x = rad
+    y = theta * (180.0 / np.pi)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+
+    fig.colorbar(result)
+    result.set_clim(clim[0], clim[1])
+
+    if use_contours:
+        levels = np.linspace(low_contour, high_contour, num_levels)
+        colors = generate_colors(num_levels)
+        plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+
     if quiver:
         # Velocity
         radial_velocity = np.array(fromfile("dust%dvy%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)) # Radial
@@ -321,19 +334,6 @@ def make_plot(frame, show = False):
         v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
 
         plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
-
-    ### Plot ###
-    x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
-
-    fig.colorbar(result)
-    result.set_clim(clim[0], clim[1])
-
-    if use_contours:
-        levels = np.linspace(low_contour, high_contour, num_levels)
-        colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     # Axes
     plot.xlim(x_min, x_max)
