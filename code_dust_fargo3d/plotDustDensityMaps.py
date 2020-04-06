@@ -101,6 +101,20 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of contours (choose this or separation) (default: None)')
     parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+
+    # Plot Parameters (quiver)
+    parser.add_argument('--quiver', dest = "quiver", action = 'store_true', default = False,
+                         help = 'use velocity quivers or not (default: do not use quivers)')
+    parser.add_argument('--start', dest = "start_quiver", type = float, default = None,
+                         help = 'start of quiver region in radius (default: r_lim[0])')
+    parser.add_argument('--end', dest = "end_quiver", type = float, default = None,
+                         help = 'end of quiver region in radius (default: r_lim[1])')
+    parser.add_argument('--rate_x', dest = "quiver_rate_x", type = int, default = 6,
+                         help = 'sub_sample in radius (default: 6)')
+    parser.add_argument('--rate_y', dest = "quiver_rate_y", type = int, default = 100,
+                         help = 'sub_sample in angle (default: 24)')
+    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.25,
+                         help = 'bigger scale means smaller arrow (default: 1)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
@@ -195,6 +209,18 @@ if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
+# Plot Parameters (quiver)
+quiver = args.quiver
+start_quiver = args.start_quiver
+end_quiver = args.end_quiver
+rate_x = args.quiver_rate_x
+rate_y = args.quiver_rate_y
+scale = args.quiver_scale
+if start_quiver is None:
+   start_quiver = x_min
+if end_quiver is None:
+   end_quiver = x_max
+
 # Plot Parameters (constant)
 cmap = args.cmap
 clim = [0, args.cmax]
@@ -207,45 +233,6 @@ dpi = args.dpi
 data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
-
-"""
-# Number of Cores 
-num_cores = args.num_cores
-
-# Files
-save_directory = args.save_directory
-if not os.path.isdir(save_directory):
-    os.mkdir(save_directory) # make save directory if it does not already exist
-
-# Plot Parameters (variable)
-show = args.show
-
-rad = np.linspace(r_min, r_max, num_rad)
-theta = np.linspace(0, 2 * np.pi, num_theta)
-
-version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
-
-# Plot Parameters (contours)
-use_contours = args.use_contours
-low_contour = args.low_contour
-high_contour = args.high_contour
-num_levels = args.num_levels
-if num_levels is None:
-    separation = args.separation
-    num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
-
-# Plot Parameters (constant)
-cmap = args.cmap
-clim = [0, args.cmax]
-
-fontsize = args.fontsize
-dpi = args.dpi
-"""
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
@@ -312,6 +299,28 @@ def make_plot(frame, show = False):
     if center:
         normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
         normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
+
+    if quiver:
+        # Velocity
+        radial_velocity = np.array(fromfile("dust%dvy%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)) # Radial
+        azimuthal_velocity = np.array(fromfile("dust%dvx%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)) # Azimuthal
+        keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
+        azimuthal_velocity -= keplerian_velocity[:, None]
+
+        if center:
+            radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
+            azimuthal_velocity = np.roll(azimuthal_velocity, shift_c, axis = -1)
+
+        # Sub-sample the grid
+        start_i = np.searchsorted(rad, start_quiver)
+        end_i = np.searchsorted(rad, end_quiver)
+
+        x_q = x[start_i:end_i]
+        y_q = y[:]
+        u = np.transpose(radial_velocity)[:, start_i:end_i]
+        v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
+
+        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
     ### Plot ###
     x = rad
