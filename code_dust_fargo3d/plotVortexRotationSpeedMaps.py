@@ -305,6 +305,7 @@ def make_plot(frame, show = False):
     y_grid = rad_grid * np.sin(theta_grid)
 
     distance_from_center = np.sqrt(np.power(x_grid - x_center, 2) + np.power(y_grid - y_center, 2)) + 1e-6
+    distance_from_center = np.sqrt(np.power(rad_grid - center_rad, 2) + np.power(rad_grid * theta_grid - rad_grid * center_theta, 2)) + 1e-6
 
     # Rotation Rate
     rotation_rate = np.transpose(velocity) / distance_from_center
