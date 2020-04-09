@@ -260,9 +260,9 @@ def get_contrasts(args_here):
 
     # Mask opposite
     angular_momentum_copy[np.logical_or(normalized_gas_density > 0.6, speed > 0.025)] = 0
-    background_angular_momentum = np.max(angular_momentum_copy, axis = 1) # Take maximum at each radius
+    background_angular_momentum = np.max(angular_momentum_copy, axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
 
-    angular_momentum[angular_momentum > 0] -= background_angular_momentum[:, None]
+    angular_momentum[angular_momentum > 0] -= background_angular_momentum[angular_momentum > 0]
 
     # Add up Angular Momentum Excess
     total_angular_momentum = np.sum(rad[:, None] * angular_momentum * dr * dtheta)
@@ -315,8 +315,8 @@ def make_plot(show = False):
     y1 = angular_momentum_over_time
     y2 = excess_angular_momentum_over_time
 
-    p1, = host.plot(x, y1, c = 'k', linewidth = linewidth)
-    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth)
+    p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
+    p2, = host.plot(x, y2, c = 'r', linewidth = linewidth)
 
     # Axes
     host.set_ylim(0, 1.05 * max(y1))
@@ -350,7 +350,7 @@ def make_plot(show = False):
     #par3.set_xticklabels(tick_labels)
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
-    host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+    host.set_ylabel(r"Angular Momentum", fontsize = fontsize)
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -358,7 +358,7 @@ def make_plot(show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
-    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Annotate
