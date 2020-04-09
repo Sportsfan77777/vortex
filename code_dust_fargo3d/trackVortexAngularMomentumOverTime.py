@@ -251,7 +251,7 @@ def get_contrasts(args_here):
     angular_momentum[outer_edge:] = 0 # Mask too far out
 
     # Add up Angular Momentum
-    total_angular_momentum = rad[:, None] * angular_momentum * dr * dtheta
+    total_angular_momentum = np.sum(rad[:, None] * angular_momentum * dr * dtheta)
     angular_momentum_over_time[i] = total_angular_momentum
 
     ########################################################
@@ -265,7 +265,7 @@ def get_contrasts(args_here):
     angular_momentum[angular_momentum > 0] -= background_angular_momentum[:, None]
 
     # Add up Angular Momentum Excess
-    total_angular_momentum = rad[:, None] * angular_momentum * dr * dtheta
+    total_angular_momentum = np.sum(rad[:, None] * angular_momentum * dr * dtheta)
     excess_angular_momentum_over_time[i] = total_angular_momentum
 
     print i, frame, angular_momentum_over_time[i], excess_angular_momentum_over_time[i]
