@@ -101,6 +101,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--ref', dest = "ref", action = 'store_true', default = False,
                          help = 'plot reference lines across radii (default: do not)')
+    parser.add_argument('--mask', dest = "mask", action = 'store_true', default = False,
+                         help = 'mask outside the vortex (default: do not)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "gnuplot",
@@ -175,6 +177,7 @@ if num_levels is None:
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
 ref = args.ref
+mask = args.mask
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -237,24 +240,38 @@ def make_plot(frame, show = False):
 
     # Data
     gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-    velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
+    azimuthal_velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_gas_density = gas_density / surface_density_zero
 
     if center:
-        velocity, shift_c = shift_data(velocity, fargo_par, reference_density = normalized_gas_density)
+        azimuthal_velocity, shift_c = shift_data(azimuthal_velocity, fargo_par, reference_density = normalized_gas_density)
         normalized_gas_density, shift_c = shift_data(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
     # Take Residual
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     sub_keplerian_velocity = keplerian_velocity - 0.5 * np.power(scale_height, 2)
-    velocity -= keplerian_velocity[:, None]
+    residual_azimuthal_velocity = azimuthal_velocity + keplerian_velocity[:, None]
 
     # Add Back Residual
     real_keplerian_velocity = np.power(rad, -0.5)
-    velocity += real_keplerian_velocity[:, None]
+    azimuthal_velocity += real_keplerian_velocity[:, None]
 
     # Combine
     angular_momentum = normalized_gas_density * velocity * rad[:, None]
+
+    # Mask
+    if mask:
+        radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
+        if center:
+            radial_velocity, shift_c = shift_data(radial_velocity, fargo_par, reference_density = normalized_gas_density)
+        azimuthal_velocity -= keplerian_velocity[:, None]
+        speed = np.sqrt(np.power(radial_velocity, 2) + np.power(azimuthal_velocity, 2))
+
+        angular_momentum[np.logical_and(normalized_gas_density < 0.6, speed < 0.025)] = 0 # Mask vortex
+
+        inner_edge = np.searchsorted(rad, 1.1); outer_edge = np.searchsorted(rad, 2.2)
+        angular_momentum[:inner_edge] = 0 # Mask too far in
+        angular_momentum[outer_edge:] = 0 # Mask too far out
 
     ### Plot ###
     x = rad
