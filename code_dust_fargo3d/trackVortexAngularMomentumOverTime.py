@@ -81,10 +81,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
-                         help = 'fontsize of plot annotations (default: 17)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
-                         help = 'fontsize of plot annotations (default: 15)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 18)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -234,7 +234,10 @@ def get_contrasts(args_here):
     real_keplerian_velocity = np.power(rad, -0.5)
     azimuthal_velocity = residual_azimuthal_velocity + real_keplerian_velocity[:, None]
 
+    ########################################################
+
     #### Angular Momentum ####
+
     angular_momentum = normalized_gas_density * velocity * rad[:, None]
     angular_momentum_copy = np.copy(angular_momentum)
 
@@ -249,6 +252,8 @@ def get_contrasts(args_here):
     # Add up Angular Momentum
     total_angular_momentum = rad[:, None] * angular_momentum * dr * dtheta
     angular_momentum_over_time[i] = total_angular_momentum
+
+    ########################################################
 
     #### Angular Momentum Excess ####
 
@@ -271,10 +276,8 @@ start = 50
 max_frame = 100 #util.find_max_frame()
 #frame_range = np.array(range(start, max_frame + 1, rate))
 
-maxima_over_time = mp_array("d", len(frame_range))
-minima_over_time = mp_array("d", len(frame_range))
-contrasts_over_time = mp_array("d", len(frame_range))
-#contrasts_over_time = mp_array("d", len(frame_range))
+angular_momentum_over_time = mp_array("d", len(frame_range))
+excess_angular_momentum_over_time = mp_array("d", len(frame_range))
 
 for i, frame in enumerate(frame_range):
     get_contrasts((i, frame))
@@ -308,23 +311,14 @@ def make_plot(show = False):
 
     # Plot
     x = frame_range
-    y1 = maxima_over_time
-    y2 = minima_over_time
-    y3 = contrasts_over_time
-
-    #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
+    y1 = angular_momentum_over_time
+    y2 = excess_angular_momentum_over_time
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth)
     p2, = host.plot(x, y2, c = 'b', linewidth = linewidth)
-    p3, = host.plot(x, y3, c = 'r', linewidth = linewidth)
-
-    #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
-
-    #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
-    host.set_ylim(0, 1.1 * max(y1))
-    #par1.set_ylim(0, 1.2 * max(y3))
+    host.set_ylim(0, 1.05 * max(y1))
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     #mass_ticks = np.arange(min_mass, max_mass, delta_mass)
@@ -356,10 +350,6 @@ def make_plot(show = False):
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
-    #par1.set_ylabel(r"($\Sigma_\mathrm{max}$ $-$ $\Sigma_\mathrm{min}$) $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 15)
-    #par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
-    #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
-    #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
