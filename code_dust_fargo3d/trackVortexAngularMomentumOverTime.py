@@ -225,6 +225,7 @@ def get_contrasts(args_here):
     gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
     azimuthal_velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
+    normalized_gas_density = gas_density / surface_density_zero
 
     # Take Residual
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
@@ -258,7 +259,7 @@ def get_contrasts(args_here):
     #### Angular Momentum Excess ####
 
     # Mask opposite
-    angular_momentum_copy[np.logical_or(normalized_density > 0.6, speed > 0.025)] = 0
+    angular_momentum_copy[np.logical_or(normalized_gas_density > 0.6, speed > 0.025)] = 0
     background_angular_momentum = np.max(angular_momentum_copy, axis = 1) # Take maximum at each radius
 
     angular_momentum[angular_momentum > 0] -= background_angular_momentum[:, None]
