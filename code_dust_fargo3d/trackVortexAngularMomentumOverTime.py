@@ -217,7 +217,7 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
 
 ### Data ###
 
-def get_contrasts(args_here):
+def get_angular_momentum(args_here):
     # Unwrap Args
     i, frame = args_here
 
@@ -260,7 +260,9 @@ def get_contrasts(args_here):
 
     # Mask opposite
     angular_momentum_copy[np.logical_or(normalized_gas_density > 0.6, speed > 0.025)] = 0
-    background_angular_momentum = np.max(angular_momentum_copy, axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
+    #background_angular_momentum = np.max(angular_momentum_copy, axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
+    angular_momentum[:, 0] += 1e-7 # Make sure there is a nonzero value
+    background_angular_momentum = np.min(np.nonzero(angular_momentum), axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
 
     angular_momentum[angular_momentum > 0] -= background_angular_momentum[angular_momentum > 0]
 
@@ -281,7 +283,7 @@ angular_momentum_over_time = mp_array("d", len(frame_range))
 excess_angular_momentum_over_time = mp_array("d", len(frame_range))
 
 for i, frame in enumerate(frame_range):
-    get_contrasts((i, frame))
+    get_angular_momentum((i, frame))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
@@ -363,7 +365,7 @@ def make_plot(show = False):
 
     # Annotate
     tkw = dict(size=4, width=1.5)
-    host.tick_params(axis = 'y', colors = p1.get_color(), **tkw)
+    #host.tick_params(axis = 'y', colors = p1.get_color(), **tkw)
     #par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par3.tick_params(axis = 'x', **tkw)
