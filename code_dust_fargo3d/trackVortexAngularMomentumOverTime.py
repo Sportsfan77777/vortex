@@ -239,11 +239,11 @@ def get_contrasts(args_here):
 
     #### Angular Momentum ####
 
-    angular_momentum = normalized_gas_density * velocity * rad[:, None]
+    angular_momentum = normalized_gas_density * azimuthal_velocity * rad[:, None]
     angular_momentum_copy = np.copy(angular_momentum)
 
     # Mask Vortex
-    speed = np.sqrt(np.power(radial_velocity, 2) + np.power(azimuthal_velocity, 2))
+    speed = np.sqrt(np.power(radial_velocity, 2) + np.power(residual_azimuthal_velocity, 2))
     angular_momentum[np.logical_and(normalized_gas_density < 0.6, speed < 0.025)] = 0 # Mask vortex
 
     inner_edge = np.searchsorted(rad, 1.1); outer_edge = np.searchsorted(rad, 2.2)
