@@ -259,10 +259,11 @@ def get_angular_momentum(args_here):
     #### Angular Momentum Excess ####
 
     # Mask opposite
-    angular_momentum_copy[np.logical_or(normalized_gas_density > 0.6, speed > 0.025)] = 0
+    #angular_momentum_copy[np.logical_or(normalized_gas_density > 0.6, speed > 0.025)] = 0
     #background_angular_momentum = np.max(angular_momentum_copy, axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
-    angular_momentum[:, 0] += 1e-7 # Make sure there is a nonzero value
-    background_angular_momentum = np.min(np.nonzero(angular_momentum), axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
+    angular_momentum_copy = np.copy(angular_momentum)
+    angular_momentum_copy[angular_momentum == 0] += 1e5
+    background_angular_momentum = np.min(angular_momentum, axis = 1)[:, None] * np.ones(len(theta)) # Take maximum at each radius
 
     angular_momentum[angular_momentum > 0] -= background_angular_momentum[angular_momentum > 0]
 
