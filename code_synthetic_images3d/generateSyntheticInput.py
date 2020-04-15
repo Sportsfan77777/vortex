@@ -74,7 +74,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'number of interpolated grains (default: 100)')
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
-    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 1,
+    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 100,
                          help = 'scaling of grain size distribution (default: 1)')
     parser.add_argument('--scale-sizes', dest = "scale_sizes", type = float, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
@@ -218,13 +218,13 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes 
 
 def center_vortex(density, frame, reference_density = None):
     """ Step 2: center the vortex so that the peak is at 180 degrees """
-    if taper_time < 10.1:
+    if taper_time < 1.1:
         for i, size in enumerate(sizes):
             shift_i = az.get_azimuthal_peak(density[:, :, i], fargo_par)
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
         return density
 
-    elif taper_time > 99.9:
+    elif taper_time > 1.1:
         for i, size_name in enumerate(size_names):
             if center == "lookup":
                 pass
