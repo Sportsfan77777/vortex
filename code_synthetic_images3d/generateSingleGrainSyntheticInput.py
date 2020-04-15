@@ -50,6 +50,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
+    parser.add_argument('-n', dest = "n", type = float, default = 1,
+                         help = 'choose grain number (default: 1)')
 
     # System Parameters
     parser.add_argument('-m', dest = "mass", type = float, default = 1.0,
@@ -72,7 +74,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     # Save Parameters
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
-    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 1,
+    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 1000,
                          help = 'scaling of grain size distribution (default: 1)')
     parser.add_argument('--scale-sizes', dest = "scale_sizes", type = float, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
@@ -197,7 +199,7 @@ def retrieve_density(frame, size_names):
             # For debugging purposes to test contribution of a single grain size
             pass
         else:
-            density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = i + 1)
+            density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = args.n)
 
     return density, starting_sizes
 
