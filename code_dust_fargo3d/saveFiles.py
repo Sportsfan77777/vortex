@@ -133,9 +133,7 @@ def trash(fns, delete):
 
 def gather_files(fn):
     """ gathers all such files in frame range """
-    fns = []
-    for i, frame in enumerate(delete_range):
-        fns += [fn % frame]
+    fns = [fn % frame for frame in delete_range]
     return fns
 
 def delete_files():
