@@ -26,7 +26,7 @@ dust1_velocity_files = ["dust1vx%d.dat", "dust1vy%d.dat"]
 dust2_velocity_files = ["dust2vx%d.dat", "dust2vy%d.dat"]
 dust3_velocity_files = ["dust3vx%d.dat", "dust3vy%d.dat"]
 
-density_files = ["gasdens%d.dat, dust1dens%d.dat", "dust2dens%d.dat", "dust3dens%d.dat"]
+density_files = ["gasdens%d.dat", "dust1dens%d.dat", "dust2dens%d.dat", "dust3dens%d.dat"]
 velocity_files = ["gasvx%d.dat", "gasvx%d.dat", "dust1vx%d.dat", "dust1vy%d.dat", "dust2vx%d.dat", "dust2vy%d.dat", "dust3vx%d.dat", "dust3vy%d.dat"]
 energy_files = ["gasenergy%d.dat", "dust1energy%d.dat", "dust2energy%d.dat", "dust3energy%d.dat"]
 
