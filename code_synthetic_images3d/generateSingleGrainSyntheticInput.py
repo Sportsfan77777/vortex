@@ -56,7 +56,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'choose grain number (default: 1)')
     parser.add_argument('--size', dest = "size", type = float, default = 0.3,
                          help = 'choose size (default: 0.3)')
-    parser.add_argument('--name', dest = "name", type = float, default = "hcm",
+    parser.add_argument('--name', dest = "name", default = "hcm",
                          help = 'choose size name (default: hcm)')
 
     # System Parameters
