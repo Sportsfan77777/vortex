@@ -125,6 +125,7 @@ def trash(fns, delete):
                 existing_fns += [fn]
         if len(existing_fns) > 1:
             print existing_fns[0], existing_fns[1], existing_fns[-1]
+            print existing_fns
         elif len(existing_fns) == 0:
             print existing_fns
         
