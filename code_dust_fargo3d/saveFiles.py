@@ -126,7 +126,7 @@ def trash(fns, delete):
         if len(existing_fns) > 1:
             print existing_fns[0], existing_fns[1], existing_fns[-1]
         elif len(existing_fns) == 0:
-            print existing_fns[0]
+            print existing_fns
         
         test_count += len(existing_fns)
         print "Test Count: %d" % test_count

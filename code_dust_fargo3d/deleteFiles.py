@@ -26,8 +26,8 @@ dust1_velocity_files = ["dust1vx%d.dat", "dust1vy%d.dat"]
 dust2_velocity_files = ["dust2vx%d.dat", "dust2vy%d.dat"]
 dust3_velocity_files = ["dust3vx%d.dat", "dust3vy%d.dat"]
 
-density_files = ["gasdens%d.dat, dust1dens%d.dat", "dust2dens%d.dat", "dust3dens%d.dat"]
-velocity_files = ["gasvx%d.dat", "gasvx%d.dat", "dust1vx%d.dat", "dust1vy%d.dat", "dust2vx%d.dat", "dust2vy%d.dat", "dust3vx%d.dat", "dust3vy%d.dat"]
+density_files = ["gasdens%d.dat", "dust1dens%d.dat", "dust2dens%d.dat", "dust3dens%d.dat"]
+velocity_files = ["gasvx%d.dat", "gasvy%d.dat", "dust1vx%d.dat", "dust1vy%d.dat", "dust2vx%d.dat", "dust2vy%d.dat", "dust3vx%d.dat", "dust3vy%d.dat"]
 energy_files = ["gasenergy%d.dat", "dust1energy%d.dat", "dust2energy%d.dat", "dust3energy%d.dat"]
 
 all_files = []
@@ -119,7 +119,7 @@ def trash(fns, delete):
         if len(existing_fns) > 1:
             print existing_fns[0], existing_fns[1], existing_fns[-1]
         elif len(existing_fns) == 0:
-            print existing_fns[0]
+            print existing_fns
         
         test_count += len(existing_fns)
         print "Test Count: %d" % test_count
