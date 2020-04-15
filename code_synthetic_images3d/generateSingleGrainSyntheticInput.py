@@ -50,8 +50,14 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
+
+    # Select Dust
     parser.add_argument('-n', dest = "n", type = float, default = 1,
                          help = 'choose grain number (default: 1)')
+    parser.add_argument('--size', dest = "size", type = float, default = 0.3,
+                         help = 'choose size (default: 0.3)')
+    parser.add_argument('--name', dest = "name", type = float, default = "hcm",
+                         help = 'choose size name (default: hcm)')
 
     # System Parameters
     parser.add_argument('-m', dest = "mass", type = float, default = 1.0,
@@ -126,6 +132,10 @@ frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
+
+# Dust
+sizes[0] = args.size
+size_names[0] = args.name
 
 # System Parameters
 mass = args.mass # (in solar masses)
