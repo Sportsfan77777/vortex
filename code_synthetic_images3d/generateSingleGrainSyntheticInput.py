@@ -74,7 +74,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     # Save Parameters
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
-    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 1000,
+    parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 100,
                          help = 'scaling of grain size distribution (default: 1)')
     parser.add_argument('--scale-sizes', dest = "scale_sizes", type = float, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
