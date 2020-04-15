@@ -141,6 +141,12 @@ def trash(fns, delete):
         test_count += len(existing_fns)
         print "Test Count: %d" % test_count
 
+def gather_files_to_save(fn):
+    """ gathers all such files in frame range """
+    print fn
+    fns = [fn % frame for frame in save_range]
+    return fns
+
 def gather_files_to_delete(fn):
     """ gathers all such files in frame range """
     print fn
