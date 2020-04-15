@@ -105,7 +105,19 @@ print delete_range
 test_count = 0
 delete_count = 0
 
+save_count = 0
+
 ###############################################################################
+
+def monitor_save(fns):
+    """ count and list files to save """
+    global save_count
+
+    existing_fns = [fn for fn in fns if os.path.exists(fn)]
+    print len(existing_fns) #, existing_fns
+
+    save_count += len(existing_fns)
+    print "Save Count: %d" % save_count
 
 def trash(fns, delete):
     """ if delete, delete. else print. """
@@ -119,20 +131,17 @@ def trash(fns, delete):
                 delete_count += 1
         print "Delete Count: %d" % delete_count
     else:
-        existing_fns = []
-        for fn in fns:
-            if os.path.exists(fn):
-                existing_fns += [fn]
+        existing_fns = [fn for fn in fns if os.path.exists(fn)]
         if len(existing_fns) > 1:
             print existing_fns[0], existing_fns[1], existing_fns[-1]
-            print len(existing_fns), existing_fns
+            print len(existing_fns) #, existing_fns
         elif len(existing_fns) == 0:
             print len(existing_fns), existing_fns
         
         test_count += len(existing_fns)
         print "Test Count: %d" % test_count
 
-def gather_files(fn):
+def gather_files_to_delete(fn):
     """ gathers all such files in frame range """
     print fn
     fns = [fn % frame for frame in delete_range]
@@ -145,75 +154,91 @@ def delete_files():
 
     if args.gas:
         for fn in gas_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust1:
         for fn in dust1_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust2:
         for fn in dust1_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust3:
         for fn in dust1_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     ###############################
 
     if args.gas_density:
         for fn in gas_density_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust1_density:
         for fn in dust1_density_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust2_density:
         for fn in dust2_density_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust3_density:
         for fn in dust3_density_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     ###############################
 
     if args.gas_velocity:
         for fn in gas_velocity_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust1_velocity:
         for fn in dust1_velocity_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust2_velocity:
         for fn in dust2_velocity_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.dust3_velocity:
         for fn in dust3_velocity_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     ###############################
 
     if args.density:
         for fn in density_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.velocity:
         for fn in velocity_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     if args.energy:
         for fn in energy_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
     ###############################
 
     if args.all:
         for fn in all_files:
-            trash(gather_files(fn), args.delete)
+            monitor_save(gather_files_to_save(fn))
+            trash(gather_files_to_delete(fn), args.delete)
 
 
 ###############################################################################
