@@ -92,12 +92,12 @@ args = new_argument_parser().parse_args()
 
 # Frames
 save_range = util.get_frame_range(args.frames)
-print "Save:"
+print "Save: (%d)" % len(save_range)
 print save_range
 
 all_files = range(args.frames[0], args.frames[1])
 delete_range = [int(round(x, 0)) for x in all_files if x not in save_range]
-print "Delete:"
+print "Delete: (%d)" % len(delete_range)
 print delete_range
 
 ###############################################################################
