@@ -61,7 +61,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
                          help = 'normalize by max (default: normalize)')
 
-    parser.add_argument('--cbar', dest = "colorbar", action = 'store_false', default = True,
+    parser.add_argument('--cbar', dest = "colorbar", action = 'store_true', default = False,
                          help = 'include colorbar (default: no colorbar)')
 
     # Plot Parameters (rarely need to change)
@@ -266,14 +266,15 @@ def make_plot(frames, show = False):
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size = "6%", pad = 0.2)
-        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
-        cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"Normalized Intensity", fontsize = fontsize, rotation = 270, labelpad = 25)
+        if args.colorbar:
+            divider = make_axes_locatable(ax)
+            cax = divider.append_axes("right", size = "6%", pad = 0.2)
+            #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+            cbar = fig.colorbar(result, cax = cax)
+            cbar.set_label(r"Normalized Intensity", fontsize = fontsize, rotation = 270, labelpad = 25)
 
-        if number != len(frames):
-            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
+            if number != len(frames):
+                fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     # Make each sub-plot
     for i, _ in enumerate(frames):
@@ -286,7 +287,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.065, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.13, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
