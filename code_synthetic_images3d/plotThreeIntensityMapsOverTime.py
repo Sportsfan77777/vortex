@@ -244,8 +244,8 @@ def make_plot(frames, show = False):
         ax.set_ylim(-box_size, box_size)
         ax.set_aspect('equal')
 
-        ax.spines['bottom'].set_color('g'); ax.spines['top'].set_color('b'); ax.spines['left'].set_color('r'); ax.spines['right'].set_color('b')
-        ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
+        ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+        ax.tick_params(colors = 'red', labelcolor = 'black', width = 1, length = 5, direction = "in")
 
         # Annotate Axes
         if arc:
@@ -266,7 +266,7 @@ def make_plot(frames, show = False):
         cax = divider.append_axes("right", size = "6%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"Normalized Intensity  $I$ $/$ $I_\mathrm{max}$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"Normalized Intensity", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         if number != len(frames):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
@@ -282,7 +282,10 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.07, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.052, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+
+    # Tighten!
+    plot.tight_layout()
 
     # Save, Show, and Close
     if version is None:
