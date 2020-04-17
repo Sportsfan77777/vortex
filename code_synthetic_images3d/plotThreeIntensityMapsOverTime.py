@@ -96,7 +96,7 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-fargo_par = util.get_pickled_parameters()
+fargo_par = util.get_pickled_parameters(directory = "../../")
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
