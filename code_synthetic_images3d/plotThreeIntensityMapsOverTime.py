@@ -1,0 +1,217 @@
+"""
+convolves intensity map to make it look like an alma image
+
+python convolveIntensityMap.py frame
+"""
+
+import sys, os, subprocess
+import pickle, glob
+from multiprocessing import Pool
+import argparse
+
+import math
+import numpy as np
+
+import matplotlib
+#matplotlib.use('Agg')
+from matplotlib import rcParams as rc
+from matplotlib import pyplot as plot
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+from pylab import rcParams
+from pylab import fromfile
+
+import util
+import square as sq
+import azimuthal as az
+
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
+
+###############################################################################
+
+### Input Parameters ###
+
+def new_argument_parser(description = "Plot convolved intensity maps."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = 4,
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "threeIntensityMapsInTime",
+                         help = 'save directory (default: threeIntensityMapsInTime)')
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('--id', dest = "id_number", type = int, default = 0,
+                         help = 'id number (up to 4 digits) for this set of input parameters (default: 0)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('--box', dest = "box", type = float, default = 2.5,
+                         help = 'width of box (in r_p) (default: 2.5)')
+    parser.add_argument('--arc', dest = "arc", action = 'store_false', default = True,
+                         help = 'axes in arcseconds (default: yes, arcseconds!)')
+    parser.add_argument('-n', dest = "normalize", action = 'store_false', default = True,
+                         help = 'normalize by max (default: normalize)')
+
+    parser.add_argument('--cbar', dest = "colorbar", action = 'store_false', default = True,
+                         help = 'include colorbar (default: no colorbar)')
+
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
+                         help = 'color map (default: inferno)')
+    parser.add_argument('--cmax', dest = "cmax", type = int, default = None,
+                         help = 'maximum density in colorbar (default: 2.5)')
+
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+                         help = 'fontsize of plot annotations (default: 19)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+##### PLOTTING #####
+
+def make_plot(frames, show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (12, 6), dpi = dpi)
+
+    # Indvidual Subplots
+    def add_to_plot(i):
+        # Identify Subplot
+        frame = frames[i]; number = i + 1
+        ax = plot.subplot(1, 3, number)
+
+        # Data
+        intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
+        xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
+
+        # Get Shift
+        gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../../")
+
+        # Shift gas density with center of dust density
+        shift = az.shift_away_from_minimum(gas_density, fargo_par)
+
+        # Normalize
+        if normalize:
+            intensity_cart /= np.max(intensity_cart)
+
+        # Arcseconds or Planet Radii
+        if arc:
+            arc_weight = planet_radius / distance # related to parallax
+        else:
+            arc_weight = 1
+
+        ### Plot ###
+        result = plot.pcolormesh(xs * arc_weight, ys * arc_weight, np.transpose(intensity_cart), cmap = cmap)
+        result.set_clim(clim[0], clim[1])
+
+        # Get rid of interior
+        circle = plot.Circle((0, 0), min(rad) * arc_weight, color = "black")
+        ax.add_artist(circle)
+
+        # Add beam size
+        beam = plot.Circle((1.7 * arc_weight, 1.7 * arc_weight), (beam_size / 2) * arc_weight, color = "white")
+        fig.gca().add_artist(beam)
+
+        # Add planet orbit
+        planet_orbit = plot.Circle((0, 0), 1 * arc_weight, color = "white", fill = False, alpha = 0.8, linestyle = "dashed", zorder = 50)
+        ax.add_artist(planet_orbit)
+
+        # Locate Planet
+        if shift < -len(theta):
+            shift += len(theta)
+        planet_theta = theta[shift]
+        planet_theta += (np.pi / 2.0) # Note: the conversion from polar to cartesian rotates everything forward by 90 degrees
+        planet_theta = planet_theta % (2 * np.pi) - (np.pi) # Keep -np.pi < theta < np.pi
+
+        planet_x = np.cos(planet_theta)
+        planet_y = np.sin(planet_theta)
+
+        # Label star and planet
+        time = fargo_par["Ninterm"] * fargo_par["DT"]
+        orbit = (time / (2 * np.pi)) * frame
+        if orbit >= taper_time:
+            current_mass = planet_mass
+        else:
+            current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
+
+        current_mass += accreted_mass[frame]
+
+        planet_size = current_mass / planet_mass
+        plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
+        plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+
+        # Axes
+        box_size = args.box * arc_weight
+        plot.xlim(-box_size, box_size)
+        plot.ylim(-box_size, box_size)
+        plot.axes().set_aspect('equal')
+
+        ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
+
+        # Annotate Axes
+        if arc:
+            unit = "^{\prime\prime}"
+        else:
+            unit = "r_\mathrm{p}"
+
+        ax.set_xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
+        ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
+
+        # Title
+        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+        plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
+
+        # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size = "6%", pad = 0.2)
+        #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
+        cbar = fig.colorbar(result, cax = cax)
+        cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
+        if number != len(frames):
+            fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
+
+    # Make each sub-plot
+    for i, _ in enumerate(frames):
+        add_to_plot(i)
+
+    # Title
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+
+    # Save, Show, and Close
+    if version is None:
+        save_fn = "%s/id%04d_intensityCartGrid_%04d-%04d-%04d-%04d.png" % (save_directory, id_number, frames[0], frames[1], frames[2])
+    else:
+        save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d-%04d-%04d-%04d.png" % (save_directory, version, id_number, frames[0], frames[1], frames[2])
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+##### Make Plots! #####
+make_plot(frame_range, show = show)
