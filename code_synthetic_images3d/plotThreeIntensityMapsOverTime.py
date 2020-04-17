@@ -96,7 +96,10 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-planet_mass = 1.0
+fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
 scale_height = p.aspectratio
