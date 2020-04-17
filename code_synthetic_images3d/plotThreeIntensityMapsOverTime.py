@@ -96,12 +96,6 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-fargo_par = util.get_pickled_parameters(directory = "../../")
-jupiter_mass = 1e-3
-planet_mass = fargo_par["PlanetMass"] / jupiter_mass
-accretion = fargo_par["Accretion"]
-taper_time = p.masstaper
-
 scale_height = p.aspectratio
 viscosity = p.nu
 
@@ -117,6 +111,12 @@ wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
 arc_beam = beam_size * planet_radius / distance
+
+real_fargo_par = util.get_pickled_parameters(directory = "../../")
+jupiter_mass = 1e-3
+planet_mass = real_fargo_par["PlanetMass"] / jupiter_mass
+accretion = real_fargo_par["Accretion"]
+taper_time = p.masstaper
 
 ### Get Input Parameters ###
 
