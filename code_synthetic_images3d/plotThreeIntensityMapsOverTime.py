@@ -235,8 +235,8 @@ def make_plot(frames, show = False):
 
         current_mass += accreted_mass[frame]
 
-        plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-        plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = 70, marker = "D", zorder = 100) # planet
+        plot.scatter(0, 0, c = "white", s = 250, marker = "*", zorder = 100) # star
+        plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = 60, marker = "D", zorder = 100) # planet
 
         # Axes
         box_size = args.box * arc_weight
@@ -244,7 +244,7 @@ def make_plot(frames, show = False):
         ax.set_ylim(-box_size, box_size)
         ax.set_aspect('equal')
 
-        ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
+        ax.spines['bottom'].set_color('g'); ax.spines['top'].set_color('b'); ax.spines['left'].set_color('r'); ax.spines['right'].set_color('b')
         ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
 
         # Annotate Axes
@@ -282,7 +282,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.1, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.07, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
