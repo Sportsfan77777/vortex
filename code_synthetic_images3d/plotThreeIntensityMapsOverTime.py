@@ -240,12 +240,13 @@ def make_plot(frames, show = False):
 
         # Axes
         box_size = args.box * arc_weight
+
         ax.set_xlim(-box_size, box_size)
         ax.set_ylim(-box_size, box_size)
         ax.set_aspect('equal')
 
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
-        ax.tick_params(colors = 'red', labelcolor = 'black', width = 1, length = 5, direction = "in")
+        ax.tick_params(colors = 'red', labelcolor = 'black', width = 1, length = 5, visible = True, direction = "in")
 
         # Annotate Axes
         if arc:
@@ -282,7 +283,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.052, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.06, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
@@ -292,7 +293,7 @@ def make_plot(frames, show = False):
         save_fn = "%s/id%04d_intensityCartGrid_%04d-%04d-%04d.png" % (save_directory, id_number, frames[0], frames[1], frames[2])
     else:
         save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d-%04d-%04d.png" % (save_directory, version, id_number, frames[0], frames[1], frames[2])
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.1)
 
     if show:
         plot.show()
