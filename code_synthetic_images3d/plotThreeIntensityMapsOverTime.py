@@ -84,6 +84,87 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
+### Get ID%04d Parameters ###
+fn = "id%04d_par.p" % args.id_number
+fargo_par = pickle.load(open(fn, "rb"))
+
+p = fargo_par["p"]
+
+num_rad = p.ny; num_theta = p.nx
+r_min = p.ymin; r_max = p.ymax
+
+surface_density_zero = p.sigma0
+dust_surface_density_zero = p.sigma0 * p.epsilon
+
+planet_mass = 1.0
+taper_time = p.masstaper
+
+scale_height = p.aspectratio
+viscosity = p.nu
+
+dt = p.ninterm * p.dt
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+planet_radius = fargo_par["Radius"]
+
+beam_size = fargo_par["Beam"]
+wavelength = fargo_par["Wavelength"]
+distance = fargo_par["Distance"]
+
+arc_beam = beam_size * planet_radius / distance
+
+### Get Input Parameters ###
+
+# Frames
+if len(args.frames) == 1:
+    frame_range = args.frames
+elif len(args.frames) == 3:
+    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
+    frame_range = range(start, end + 1, rate)
+else:
+    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
+    exit()
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Plot Parameters (variable)
+show = args.show
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+id_number = args.id_number
+version = args.version
+
+box = args.box
+arc = args.arc
+normalize = args.normalize
+colorbar = args.colorbar
+
+# Plot Parameters (constant)
+cmap = args.cmap
+cmax = args.cmax
+if cmax is not None:
+    clim = [0, args.cmax]
+elif normalize:
+    cmax = 1
+    clim = [0, 1]
+
+fontsize = args.fontsize
+labelsize = args.labelsize
+dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 ##### PLOTTING #####
 
 def make_plot(frames, show = False):
@@ -183,7 +264,7 @@ def make_plot(frames, show = False):
         cax = divider.append_axes("right", size = "6%", pad = 0.2)
         #cax = fig.add_axes([0.9, 0.1, 0.03, 0.8])
         cbar = fig.colorbar(result, cax = cax)
-        cbar.set_label(r"Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+        cbar.set_label(r"Normalized Intensity  $I$ $/$ $I_\mathrm{max}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         if number != len(frames):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
