@@ -240,9 +240,9 @@ def make_plot(frames, show = False):
 
         # Axes
         box_size = args.box * arc_weight
-        plot.xlim(-box_size, box_size)
-        plot.ylim(-box_size, box_size)
-        #plot.axes().set_aspect('equal')
+        ax.set_xlim(-box_size, box_size)
+        ax.set_ylim(-box_size, box_size)
+        ax.set_aspect('equal')
 
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
         ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
@@ -259,7 +259,7 @@ def make_plot(frames, show = False):
 
         # Title
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-        plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
+        plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
         divider = make_axes_locatable(ax)
@@ -282,7 +282,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.1, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
