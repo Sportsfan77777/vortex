@@ -251,7 +251,7 @@ def make_plot(frames, show = False):
         # Annotate Axes
         if arc:
             ticks = np.arange(-0.3, 0.31, 0.1)
-            ax.set_xticks(ticks)
+            ax.set_xticks(ticks); ax.set_xticklabels(["", "-0.2", "", "0.0", "", "0.2", ""])
             ax.set_yticks(ticks)
             unit = "^{\prime\prime}"
         else:
