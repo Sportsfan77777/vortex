@@ -171,7 +171,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 4), dpi = dpi)
+    fig = plot.figure(figsize = (12, 5), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
@@ -246,7 +246,7 @@ def make_plot(frames, show = False):
         ax.set_aspect('equal')
 
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
-        ax.tick_params(colors = 'red', labelcolor = 'black', width = 1, length = 5, visible = True, direction = "in")
+        ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5, direction = "in")
 
         # Annotate Axes
         if arc:
@@ -283,7 +283,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.06, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.065, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
