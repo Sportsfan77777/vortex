@@ -286,9 +286,9 @@ def make_plot(frames, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/id%04d_intensityCartGrid_%04d-%04d-%04d-%04d.png" % (save_directory, id_number, frames[0], frames[1], frames[2])
+        save_fn = "%s/id%04d_intensityCartGrid_%04d-%04d-%04d.png" % (save_directory, id_number, frames[0], frames[1], frames[2])
     else:
-        save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d-%04d-%04d-%04d.png" % (save_directory, version, id_number, frames[0], frames[1], frames[2])
+        save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d-%04d-%04d.png" % (save_directory, version, id_number, frames[0], frames[1], frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
