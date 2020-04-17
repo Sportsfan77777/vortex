@@ -37,7 +37,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 4,
+    parser.add_argument('frames', type = int, nargs = 3,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
@@ -118,14 +118,7 @@ arc_beam = beam_size * planet_radius / distance
 ### Get Input Parameters ###
 
 # Frames
-if len(args.frames) == 1:
-    frame_range = args.frames
-elif len(args.frames) == 3:
-    start = args.frames[0]; end = args.frames[1]; rate = args.frames[2]
-    frame_range = range(start, end + 1, rate)
-else:
-    print "Error: Must supply 1 or 3 frame arguments\nWith one argument, plots single frame\nWith three arguments, plots range(start, end + 1, rate)"
-    exit()
+frame_range = args.frames
 
 # Number of Cores 
 num_cores = args.num_cores
