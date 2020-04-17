@@ -171,7 +171,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 6), dpi = dpi)
+    fig = plot.figure(figsize = (12, 4), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
@@ -235,15 +235,14 @@ def make_plot(frames, show = False):
 
         current_mass += accreted_mass[frame]
 
-        planet_size = current_mass / planet_mass
         plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-        plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+        plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = 70, marker = "D", zorder = 100) # planet
 
         # Axes
         box_size = args.box * arc_weight
         plot.xlim(-box_size, box_size)
         plot.ylim(-box_size, box_size)
-        plot.axes().set_aspect('equal')
+        #plot.axes().set_aspect('equal')
 
         ax.spines['bottom'].set_color('w'); ax.spines['top'].set_color('w'); ax.spines['left'].set_color('w'); ax.spines['right'].set_color('w')
         ax.tick_params(colors = 'white', labelcolor = 'black', width = 1, length = 5)
@@ -255,7 +254,8 @@ def make_plot(frames, show = False):
             unit = "r_\mathrm{p}"
 
         ax.set_xlabel(r"$x$ [$%s$]" % unit, fontsize = fontsize)
-        ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
+        if number == 1:
+            ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
         # Title
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
