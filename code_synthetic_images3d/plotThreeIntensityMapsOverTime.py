@@ -171,7 +171,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 5), dpi = dpi)
+    fig = plot.figure(figsize = (12, 4), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
@@ -250,6 +250,9 @@ def make_plot(frames, show = False):
 
         # Annotate Axes
         if arc:
+            ticks = np.arange(-0.3, 0.31, 0.1)
+            ax.set_xticks(ticks)
+            ax.set_yticks(ticks)
             unit = "^{\prime\prime}"
         else:
             unit = "r_\mathrm{p}"
