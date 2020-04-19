@@ -193,10 +193,12 @@ def make_plot(frame, show = False):
 
     # Extract Action
     wave_locations = np.argmax(diff_density, axis = -1)
+    shift = np.searchsorted(theta, np.pi) - wave_locations
 
     print_a = np.searchsorted(rad, 1.1)
     print_b = np.searchsorted(rad, 1.4)
     print (wave_locations[print_a : print_b] * (180.0 / np.pi))
+    print (shift[print_a : print_b] * (180.0 / np.pi))
 
     left = np.searchsorted(theta, 177 * (np.pi / 180.0))
     right = np.searchsorted(theta, 183 * (np.pi / 180.0))
@@ -205,10 +207,12 @@ def make_plot(frame, show = False):
     centered_radial_velocity = np.shift(radial_velocity, shift, axis = -1)[left : right]
     centered_azimuthal_velocity = np.shift(azimuthal_velocity, shift, axis = -1)[left : right]
 
+    residual_density = centered_density - np.min(centered_density)
+
     dr = rad[1] - rad[0]
     dtheta = theta[1] - theta[0]
     grid_size = rad * dr * dtheta
-    wave_action = np.sum(rad[:, None] * rad[:, None] * grid_size[:, None], axis = -1)
+    wave_action = np.sum(residual_density * centered_radial_velocity * centered_azimuthal_velocity * rad[:, None] * rad[:, None] * grid_size[:, None], axis = -1)
 
     ### Plot ###
     x = rad
