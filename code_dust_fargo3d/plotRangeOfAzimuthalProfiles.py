@@ -145,7 +145,7 @@ if not os.path.isdir(save_directory):
 start = args.start
 end = args.end
 number = args.number
-radii = np.arange(args.start, args.end + 1e-6, args.number)
+radii = np.linspace(args.start, args.end + 1e-6, args.number)
 
 # Plot Parameters (variable)
 show = args.show
@@ -231,9 +231,9 @@ def make_plot(frame, show = False):
         ### Plot ###
         x = theta * (180.0 / np.pi)
         y = azimuthal_profile
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$r$ $=$ $%.3f" % radius)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$r$ $=$ $%.3f$" % radius)
 
-    plot.legend(loc = "lower center", fontsize = fontsize - 6)
+    plot.legend(loc = "upper center", fontsize = fontsize - 6)
 
     # Axes
     if args.max_y is None:
