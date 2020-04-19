@@ -214,17 +214,17 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    for i, frame in enumerate(frame_range):
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-        if center:
-            density, shift_c = shift_density(density, fargo_par, reference_density = density)
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+    if center:
+        density, shift_c = shift_density(density, fargo_par, reference_density = density)
 
-        azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5)
+    for i, (radius, rad_index) in enumerate(zip(radii, rad_indices)):
+        azimuthal_profile = density[rad_index]
 
         ### Plot ###
         x = theta * (180.0 / np.pi)
         y = azimuthal_profile
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$r$ $=$ $%.3f" % radius)
 
     plot.legend(loc = "lower center", fontsize = fontsize - 6)
 
