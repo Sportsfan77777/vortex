@@ -218,12 +218,15 @@ def make_plot(frame, show = False):
     x = rad
     y = wave_action
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+    result2 = plot.plot(x, -y, linewidth = linewidth, zorder = 99)
 
     # Axes
     if args.max_y is None:
         x_min_i = np.searchsorted(x, x_min)
         x_max_i = np.searchsorted(x, x_max)
-        max_y = 1.1 * max(y[x_min_i : x_max_i])
+        max_y1 = 1.1 * max(y[x_min_i : x_max_i])
+        max_y2 = 1.1 * max(-y[x_min_i : x_max_i])
+        max_y = np.max([max_y1, max_y2])
     else:
         max_y = args.max_y
 
