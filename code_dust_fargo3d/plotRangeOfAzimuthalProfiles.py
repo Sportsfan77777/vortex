@@ -52,10 +52,14 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "azimuthalProfileRange",
                          help = 'save directory (default: azimuthalProfileRange)')
-    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
-                         help = 'use .mpiio output files (default: do not use mpi)')
-    parser.add_argument('--merge', dest = "merge", type = int, default = 0,
-                         help = 'number of cores needed to merge data outputs (default: 0)')
+
+    # Radii
+    parser.add_argument('--start', dest = "start", type = float, default = 1.1,
+                         help = 'start radius (default: 1.1)')
+    parser.add_argument('--end', dest = "end", type = float, default = 1.4,
+                         help = 'end radius (default: 1.4)')
+    parser.add_argument('--number', dest = "number", type = int, default = 10,
+                         help = 'end radius (default: 10)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -69,11 +73,6 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'center frame on vortex peak or middle (default: do not center)')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
-
-    parser.add_argument('--start', dest = "start", type = int, default = None,
-                         help = 'vortex lifetime start (default: None)')
-    parser.add_argument('--end', dest = "end", type = int, default = None,
-                         help = 'vortex lifetime end (default: None)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
@@ -141,6 +140,12 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Radius
+start = args.start
+end = args.end
+number = args.number
+radii = np.arange(args.start, args.end + 1e-6, args.number)
 
 # Plot Parameters (variable)
 show = args.show
@@ -218,6 +223,8 @@ def make_plot(frame, show = False):
     if center:
         density, shift_c = shift_density(density, fargo_par, reference_density = density)
 
+    rad_indices = [np.searchsorted(rad, rad_i) for rad_i in radii]
+
     for i, (radius, rad_index) in enumerate(zip(radii, rad_indices)):
         azimuthal_profile = density[rad_index]
 
@@ -275,20 +282,12 @@ def make_plot(frame, show = False):
     plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-    # Text
-    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
-    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
-    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
-    #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
-
-    if args.start is not None:
-        text_start = r"$t_\mathrm{start}$ $=$ $%d$ $T_\mathrm{p}$" % args.start
-        plot.text(10, 0.93 * max_y, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
-    if args.end is not None:
-        text_end = r"$t_\mathrm{end}$ $=$ $%d$ $T_\mathrm{p}$" % args.end
-        plot.text(350, 0.93 * max_y, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'right')
+    #if args.start is not None:
+    #    text_start = r"$t_\mathrm{start}$ $=$ $%d$ $T_\mathrm{p}$" % args.start
+    #    plot.text(10, 0.93 * max_y, text_start, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'left')
+    #if args.end is not None:
+    #    text_end = r"$t_\mathrm{end}$ $=$ $%d$ $T_\mathrm{p}$" % args.end
+    #    plot.text(350, 0.93 * max_y, text_end, fontsize = fontsize - 4, color = 'black', horizontalalignment = 'right')
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
