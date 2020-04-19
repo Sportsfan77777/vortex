@@ -203,9 +203,9 @@ def make_plot(frame, show = False):
     left = np.searchsorted(theta, 177 * (np.pi / 180.0))
     right = np.searchsorted(theta, 183 * (np.pi / 180.0))
 
-    centered_density = np.roll(density, shift, axis = -1)[left : right]
-    centered_radial_velocity = np.roll(radial_velocity, shift, axis = -1)[left : right]
-    centered_azimuthal_velocity = np.roll(azimuthal_velocity, shift, axis = -1)[left : right]
+    centered_density = np.roll(density, shift, axis = -1)[:, left : right]
+    centered_radial_velocity = np.roll(radial_velocity, shift, axis = -1)[:, left : right]
+    centered_azimuthal_velocity = np.roll(azimuthal_velocity, shift, axis = -1)[:, left : right]
 
     residual_density = centered_density - np.min(centered_density)
 
