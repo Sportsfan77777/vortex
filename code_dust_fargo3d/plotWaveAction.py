@@ -99,7 +99,7 @@ surface_density_zero = p.sigma0
 
 planet_mass = 1.0
 taper_time = p.masstaper
-
+scale_height = p.aspectratio
 viscosity = p.nu
 
 dt = p.ninterm * p.dt
