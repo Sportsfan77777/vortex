@@ -286,7 +286,7 @@ def make_plot(show = False):
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max", zorder = 99)
     p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min", zorder = 90)
-    p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth, label = "contrast", zorder = 10)
+    p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth - 1, label = "contrast", zorder = 10)
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
