@@ -55,6 +55,7 @@ movie_dictionary["angularMomentum"] = "angularMomentumMap_"
 movie_dictionary["rotationSpeed"] = "vortexRotationSpeedMap_"
 movie_dictionary["averagedStress"] = "averagedStress_"
 movie_dictionary["azimuthalProfile"] = "azimuthalProfile_"
+movie_dictionary["waveAction"] = "waveAction_"
 
 ###############################################################################
 
