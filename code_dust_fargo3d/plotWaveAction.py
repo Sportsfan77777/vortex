@@ -234,7 +234,7 @@ def make_plot(frame, show = False):
     plot.ylim(0, max_y)
 
     # Reference
-    vortex_rad = az.get_radial_peak(np.average(density, axis = 1), fargo_par, outer_end = 2.0)
+    vortex_rad = az.get_radial_peak(np.average(density, axis = 1), fargo_par, end = 2.0)
     x_vortex = np.searchsorted(rad, vortex_rad)
     plot.plot([x_vortex, x_vortex], [0, max_y], c = "k", linewidth = 1)
 
