@@ -273,7 +273,7 @@ def make_plot(show = False):
     #fig.subplots_adjust(right = 0.75)
     #fig.subplots_adjust(right = 0.65)
 
-    #par1 = host.twinx()
+    par1 = host.twinx()
     #par2 = host.twinx()
 
     # Plot
@@ -286,7 +286,7 @@ def make_plot(show = False):
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max")
     p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min")
-    p3, = host.plot(x, y3, c = 'r', linewidth = linewidth, label = "contrast")
+    p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth, label = "contrast")
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
@@ -295,8 +295,8 @@ def make_plot(show = False):
     plot.legend(loc = "upper right")
 
     # Axes
-    host.set_ylim(0, 1.1 * max([max(y1), max(y3)]))
-    #par1.set_ylim(0, 1.2 * max(y3))
+    host.set_ylim(0, 1.1 * max(y1))
+    par1.set_ylim(0, 1.2 * max(y3))
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     #mass_ticks = np.arange(min_mass, max_mass, delta_mass)
@@ -328,8 +328,8 @@ def make_plot(show = False):
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
-    #par1.set_ylabel(r"($\Sigma_\mathrm{max}$ $-$ $\Sigma_\mathrm{min}$) $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 15)
-    #par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
+    par1.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 15)
+    #par2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 20)
     #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
     #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
 
@@ -345,7 +345,7 @@ def make_plot(show = False):
     # Annotate
     tkw = dict(size=4, width=1.5)
     host.tick_params(axis = 'y', colors = p1.get_color(), **tkw)
-    #par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
+    par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par3.tick_params(axis = 'x', **tkw)
     #par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
