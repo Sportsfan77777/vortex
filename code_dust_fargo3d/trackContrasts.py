@@ -286,13 +286,13 @@ def make_plot(show = False):
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max")
     p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min")
-    plot.legend(loc = "upper left")
-
     p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth, label = "contrast")
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
+
+    host.legend(loc = "upper right")
 
     # Axes
     host.set_ylim(0, 1.3 * max(y1))
