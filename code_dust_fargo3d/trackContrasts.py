@@ -224,7 +224,7 @@ def get_contrasts(args_here):
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     density, shift_c = shift_density(density, fargo_par, reference_density = density)
-    azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5)
+    azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5, end = 1.85)
 
     maxima_over_time[i] = np.percentile(azimuthal_profile, 90)
     minima_over_time[i] = np.percentile(azimuthal_profile, 5)
@@ -284,16 +284,18 @@ def make_plot(show = False):
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
-    p1, = host.plot(x, y1, c = 'k', linewidth = linewidth)
-    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth)
-    p3, = host.plot(x, y3, c = 'r', linewidth = linewidth)
+    p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max")
+    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min")
+    p3, = host.plot(x, y3, c = 'r', linewidth = linewidth, label = "contrast")
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
+    plot.legend(loc = "upper right")
+
     # Axes
-    host.set_ylim(0, 1.1 * max(y1))
+    host.set_ylim(0, 1.1 * max([max(y1), max(y3)])
     #par1.set_ylim(0, 1.2 * max(y3))
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
