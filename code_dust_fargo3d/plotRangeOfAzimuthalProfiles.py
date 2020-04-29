@@ -71,6 +71,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--diff', dest = "diff", action = 'store_true', default = False,
+                         help = 'plot azimuthally-differenced density instead (default: do not)')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
     
@@ -159,6 +161,7 @@ if args.r_lim is None:
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 center = args.center
+diff = args.diff
 max_y = args.max_y
 
 # Plot Parameters (constant)
@@ -222,6 +225,9 @@ def make_plot(frame, show = False):
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     if center:
         density, shift_c = shift_density(density, fargo_par, reference_density = density)
+    if diff:
+        shifted_density = np.roll(density, 1, axis = -1)
+        density -= shifted_density
 
     rad_indices = [np.searchsorted(rad, rad_i) for rad_i in radii]
 
