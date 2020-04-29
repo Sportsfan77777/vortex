@@ -286,13 +286,13 @@ def make_plot(show = False):
 
     p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max")
     p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min")
+    plot.legend(loc = "upper left")
+
     p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth, label = "contrast")
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
-
-    plot.legend(loc = "upper right")
 
     # Axes
     host.set_ylim(0, 1.3 * max(y1))
@@ -328,7 +328,7 @@ def make_plot(show = False):
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
-    par1.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 15)
+    par1.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 15)
     #par2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 20)
     #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
     #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
