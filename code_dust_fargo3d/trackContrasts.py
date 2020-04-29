@@ -284,10 +284,11 @@ def make_plot(show = False):
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
-    p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max", zorder = 99)
-    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min", zorder = 90)
     p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth - 1, label = "contrast", zorder = 10)
 
+    p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = "max", zorder = 99)
+    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = "min", zorder = 90)
+    
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
