@@ -85,10 +85,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'add negative mass (default: do not)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 21,
-                         help = 'fontsize of plot annotations (default: 19)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 20,
-                         help = 'fontsize of plot annotations (default: 18)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 22,
+                         help = 'fontsize of plot annotations (default: 22)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 21,
+                         help = 'fontsize of plot annotations (default: 21)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -320,7 +320,7 @@ def make_plot(show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
-    title1 = r"$h = %.2f$    $\alpha = %s \times 10^{%d}$   $A = %.2f$     " % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
+    title1 = r"$h = %.2f$    $\alpha = %s \times 10^{%d}$   $A = %.2f$       " % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
     #title1 = r"$A = %.2f$" % (accretion)
     ax1.set_title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
