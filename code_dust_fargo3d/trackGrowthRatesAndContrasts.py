@@ -272,7 +272,7 @@ def make_patch_spines_invisible(ax):
 
 def make_plot(show = False):
     # Figure
-    fig, ax = plot.subplots(3, 1, gridspec_kw={'width_ratios': [2, 3, 2]})
+    fig, ax = plot.subplots(3, 1, figsize = (6, 10), gridspec_kw={'width_ratios': [2, 3, 2]})
     #fig.subplots_adjust(right = 0.75)
     #fig.subplots_adjust(right = 0.65)
 
@@ -297,8 +297,12 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
-    plot.ylim(1, 10)
+    plot.ylim(1, 15)
     plot.yscale('log')
+
+    # Annotate
+    #plot.xlabel("", fontsize = fontsize)
+    plot.ylabel("Contrast", fontsize = fontsize)
 
     ##### Middle Plot #####
     number = 2
@@ -312,6 +316,10 @@ def make_plot(show = False):
     plot.xlim(x[0], x[-1])
     plot.ylim(0, 2.5)
 
+    # Annotate
+    #plot.xlabel("", fontsize = fontsize)
+    plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+
     host.legend(loc = "upper right")
 
     ##### Bottom Plot #####
@@ -323,8 +331,12 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
-    plot.ylim(0.01, 0.1)
+    plot.ylim(0.001, 0.1)
     plot.yscale('log')
+
+    # Annotate
+    #plot.xlabel("", fontsize = fontsize)
+    plot.ylabel(r"Growth Rate", fontsize = fontsize)
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     #mass_ticks = np.arange(min_mass, max_mass, delta_mass)
@@ -354,9 +366,9 @@ def make_plot(show = False):
     #par3.set_xticks(tick_locations)
     #par3.set_xticklabels(tick_labels)
 
-    host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
-    host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
-    par1.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 15)
+    #host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
+    #host.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+    #par1.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 15)
     #par2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 20)
     #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
     #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
@@ -372,13 +384,13 @@ def make_plot(show = False):
     plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Annotate
-    tkw = dict(size=4, width=1.5)
-    host.tick_params(axis = 'y', colors = p1.get_color(), **tkw)
-    par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
+    #tkw = dict(size=4, width=1.5)
+    #host.tick_params(axis = 'y', colors = p1.get_color(), **tkw)
+    #par1.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     #par3.tick_params(axis = 'x', **tkw)
     #par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
-    host.tick_params(axis = 'x', **tkw)
+    #host.tick_params(axis = 'x', **tkw)
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
