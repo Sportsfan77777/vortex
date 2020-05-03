@@ -300,7 +300,10 @@ def make_plot(show = False):
 
     # Axes
     ax1.set_yscale('log')
-    ax1.yaxis.set_major_formatter(ScalarFormatter())
+
+    formatter = FuncFormatter(log_10_product)
+    #ax1.yaxis.set_major_formatter(ScalarFormatter())
+    ax1.yaxis.set_major_formatter(formatter)
 
     ax1.set_xlim(x[0], x[-1])
     ax1.set_ylim(1, 15)
@@ -348,7 +351,7 @@ def make_plot(show = False):
     #ax3 = plot.subplot(3, 1, number)
 
     # Plot
-    p4, = ax3.plot(x, y4, c = 'purple', linewidth = linewidth, zorder = 90)
+    p4, = ax3.plot(x[:-5], y4[:-5], c = 'purple', linewidth = linewidth, zorder = 90)
 
     # Axes
     ax3.set_xlim(x[0], x[-1])
