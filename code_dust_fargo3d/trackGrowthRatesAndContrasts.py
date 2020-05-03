@@ -308,7 +308,6 @@ def make_plot(show = False):
     ax1.set_xlim(x[0], x[-1])
     ax1.set_ylim(1, 15)
 
-    ax1.set_yticklabels([])
     ax1.set_yticks([1, 3, 10])
 
     # Annotate
