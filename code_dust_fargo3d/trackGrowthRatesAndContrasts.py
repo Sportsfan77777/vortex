@@ -285,8 +285,10 @@ def make_plot(show = False):
     y2 = minima_over_time
     y3 = contrasts_over_time
 
+    y5 = smooth(np.array(differences_over_time), 5)
+
     y4 = np.zeros(len(x)) 
-    y4[:-1] = np.diff(smooth(np.array(differences_over_time), 5)) / dt
+    y4[:-1] = np.diff(np.log(y5)) / dt
 
     ##### Top Plot #####
     number = 1
@@ -296,13 +298,13 @@ def make_plot(show = False):
     p3, = ax1.plot(x, y3, c = 'r', linewidth = linewidth, zorder = 10)
 
     # Axes
-    plot.xlim(x[0], x[-1])
-    plot.ylim(1, 15)
-    plot.yscale('log')
+    ax1.set_xlim(x[0], x[-1])
+    ax1.set_ylim(1, 15)
+    ax1.set_yscale('log')
 
     # Annotate
-    #plot.xlabel("", fontsize = fontsize)
-    plot.ylabel("Contrast", fontsize = fontsize)
+    #ax1.set_xlabel("", fontsize = fontsize)
+    ax1.set_ylabel("Contrast", fontsize = fontsize)
 
     ##### Middle Plot #####
     number = 2
@@ -312,13 +314,15 @@ def make_plot(show = False):
     p1, = ax2.plot(x, y1, c = 'k', linewidth = linewidth, label = r"$\Sigma_\mathrm{max}$", zorder = 99)
     p2, = ax2.plot(x, y2, c = 'b', linewidth = linewidth, label = r"$\Sigma_\mathrm{min}$", zorder = 90)
 
+    p5, = ax2.plot(x, y5, c = 'g', linewidth = linewidth, zorder = 90)
+
     # Axes
-    plot.xlim(x[0], x[-1])
-    plot.ylim(0, 2.5)
+    ax2.set_xlim(x[0], x[-1])
+    ax2.set_ylim(0, 2.5)
 
     # Annotate
-    #plot.xlabel("", fontsize = fontsize)
-    plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+    #ax2.set_xlabel("", fontsize = fontsize)
+    ax2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
 
     ax2.legend(loc = "upper right")
 
@@ -330,14 +334,14 @@ def make_plot(show = False):
     p4, = ax3.plot(x, y4, c = 'purple', linewidth = linewidth, zorder = 90)
 
     # Axes
-    plot.xlim(x[0], x[-1])
+    ax3.set_xlim(x[0], x[-1])
     #plot.ylim(0.001, 0.1)
-    plot.ylim(min(y4), max(y4))
-    plot.yscale('log')
+    ax3.set_ylim(min(abs(y4)), max(y4))
+    ax3.set_yscale('log')
 
     # Annotate
-    #plot.xlabel("", fontsize = fontsize)
-    plot.ylabel(r"Growth Rate", fontsize = fontsize)
+    #ax3.set_xlabel("", fontsize = fontsize)
+    ax3.set_ylabel(r"Growth Rate", fontsize = fontsize)
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     #mass_ticks = np.arange(min_mass, max_mass, delta_mass)
@@ -380,8 +384,8 @@ def make_plot(show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
-    #title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
-    title1 = r"$A = %.2f$" % (accretion)
+    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
+    #title1 = r"$A = %.2f$" % (accretion)
     plot.suptitle("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Annotate
