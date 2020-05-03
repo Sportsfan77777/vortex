@@ -353,7 +353,7 @@ def make_plot(show = False):
     # Axes
     ax3.set_xlim(x[0], x[-1])
     #plot.ylim(0.001, 0.1)
-    ax3.set_ylim(0.6 * 10**(-5), 0.6 * 10**(-2))
+    ax3.set_ylim(0.4 * 10**(-5), 0.4 * 10**(-2))
     ax3.set_yscale('log')
 
     ax3.set_yticks([10**(-5), 10**(-4), 10**(-3)])
