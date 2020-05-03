@@ -302,9 +302,21 @@ def make_plot(show = False):
     ax1.set_ylim(1, 15)
     ax1.set_yscale('log')
 
+    ax1.set_yticks([1, 3, 10])
+
     # Annotate
     #ax1.set_xlabel("", fontsize = fontsize)
     ax1.set_ylabel("Contrast", fontsize = fontsize)
+
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+
+    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
+    #title1 = r"$A = %.2f$" % (accretion)
+    ax1.set_title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     ##### Middle Plot #####
     number = 2
@@ -336,11 +348,11 @@ def make_plot(show = False):
     # Axes
     ax3.set_xlim(x[0], x[-1])
     #plot.ylim(0.001, 0.1)
-    ax3.set_ylim(0.01 * max(y4), max(y4))
+    ax3.set_ylim(10**(-5), 10**(-2))
     ax3.set_yscale('log')
 
     # Annotate
-    #ax3.set_xlabel("", fontsize = fontsize)
+    ax3.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     ax3.set_ylabel(r"Growth Rate", fontsize = fontsize)
 
     #min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
@@ -377,16 +389,6 @@ def make_plot(show = False):
     #par2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 20)
     #par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
     #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
-
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
-
-    title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
-    #title1 = r"$A = %.2f$" % (accretion)
-    plot.suptitle("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Annotate
     #tkw = dict(size=4, width=1.5)
