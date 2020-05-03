@@ -302,7 +302,7 @@ def make_plot(show = False):
     ax1.set_ylim(1, 15)
     ax1.set_yscale('log')
 
-    ax1.set_yticks([1, 3, 10])
+    ax1.set_yticks([1, 3, 10], ["1", "3", "10"])
 
     # Annotate
     #ax1.set_xlabel("", fontsize = fontsize)
@@ -332,6 +332,8 @@ def make_plot(show = False):
     ax2.set_xlim(x[0], x[-1])
     ax2.set_ylim(0, 2.5)
 
+    ax2.set_yticks([0, 0.5, 1, 1.5, 2, 2.5])
+
     # Annotate
     #ax2.set_xlabel("", fontsize = fontsize)
     ax2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
@@ -350,6 +352,8 @@ def make_plot(show = False):
     #plot.ylim(0.001, 0.1)
     ax3.set_ylim(10**(-5), 10**(-2))
     ax3.set_yscale('log')
+
+    ax3.set_yticks([10**(-5), 10**(-4), 10**(-3), 10**(-2)])
 
     # Annotate
     ax3.set_xlabel("Time (planet orbits)", fontsize = fontsize)
