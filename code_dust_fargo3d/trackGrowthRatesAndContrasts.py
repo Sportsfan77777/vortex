@@ -272,7 +272,7 @@ def make_patch_spines_invisible(ax):
 
 def make_plot(show = False):
     # Figure
-    fig, ax = plot.subplots(3, 1, figsize = (6, 10), gridspec_kw={'width_ratios': [2, 3, 2]})
+    fig, ax = plot.subplots(3, 1, figsize = (6, 10), gridspec_kw={'height_ratios': [2, 3, 2]})
     #fig.subplots_adjust(right = 0.75)
     #fig.subplots_adjust(right = 0.65)
 
@@ -309,8 +309,8 @@ def make_plot(show = False):
     ax2 = plot.subplot(3, 1, number)
 
     # Plot
-    p1, = host.plot(x, y1, c = 'k', linewidth = linewidth, label = r"$\Sigma_\mathrm{max}$", zorder = 99)
-    p2, = host.plot(x, y2, c = 'b', linewidth = linewidth, label = r"$\Sigma_\mathrm{min}$", zorder = 90)
+    p1, = ax2.plot(x, y1, c = 'k', linewidth = linewidth, label = r"$\Sigma_\mathrm{max}$", zorder = 99)
+    p2, = ax2.plot(x, y2, c = 'b', linewidth = linewidth, label = r"$\Sigma_\mathrm{min}$", zorder = 90)
 
     # Axes
     plot.xlim(x[0], x[-1])
@@ -327,7 +327,7 @@ def make_plot(show = False):
     ax3 = plot.subplot(3, 1, number)
 
     # Plot
-    p4, = host.plot(x, y4, c = 'purple', linewidth = linewidth, zorder = 90)
+    p4, = ax3.plot(x, y4, c = 'purple', linewidth = linewidth, zorder = 90)
 
     # Axes
     plot.xlim(x[0], x[-1])
