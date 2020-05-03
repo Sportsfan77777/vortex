@@ -23,6 +23,7 @@ from scipy.ndimage import filters as ff
 import matplotlib
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
+from matplotlib.ticker import ScalarFormatter
 
 from pylab import rcParams
 from pylab import fromfile
@@ -302,6 +303,7 @@ def make_plot(show = False):
     ax1.set_ylim(1, 15)
     ax1.set_yscale('log')
 
+    ax1.yaxis.set_major_formatter(ScalarFormatter())
     ax1.set_yticks([1, 3, 10], ["1", "3", "10"])
 
     # Annotate
