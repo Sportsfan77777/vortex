@@ -272,11 +272,11 @@ def make_patch_spines_invisible(ax):
 
 def make_plot(show = False):
     # Figure
-    fig, ax = plot.subplots(3, 1, figsize = (6, 10), gridspec_kw={'height_ratios': [2, 3, 2]})
+    fig, (ax1, ax2, ax3) = plot.subplots(3, 1, figsize = (6, 10), gridspec_kw={'height_ratios': [2, 3, 2]})
     #fig.subplots_adjust(right = 0.75)
     #fig.subplots_adjust(right = 0.65)
 
-    par1 = host.twinx()
+    #par1 = host.twinx()
     #par2 = host.twinx()
 
     # Data
@@ -290,7 +290,7 @@ def make_plot(show = False):
 
     ##### Top Plot #####
     number = 1
-    ax1 = plot.subplot(3, 1, number)
+    #ax1 = plot.subplot(3, 1, number)
 
     # Plot
     p3, = ax1.plot(x, y3, c = 'r', linewidth = linewidth, zorder = 10)
@@ -306,7 +306,7 @@ def make_plot(show = False):
 
     ##### Middle Plot #####
     number = 2
-    ax2 = plot.subplot(3, 1, number)
+    #ax2 = plot.subplot(3, 1, number)
 
     # Plot
     p1, = ax2.plot(x, y1, c = 'k', linewidth = linewidth, label = r"$\Sigma_\mathrm{max}$", zorder = 99)
@@ -320,18 +320,19 @@ def make_plot(show = False):
     #plot.xlabel("", fontsize = fontsize)
     plot.ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
 
-    host.legend(loc = "upper right")
+    ax2.legend(loc = "upper right")
 
     ##### Bottom Plot #####
     number = 3
-    ax3 = plot.subplot(3, 1, number)
+    #ax3 = plot.subplot(3, 1, number)
 
     # Plot
     p4, = ax3.plot(x, y4, c = 'purple', linewidth = linewidth, zorder = 90)
 
     # Axes
     plot.xlim(x[0], x[-1])
-    plot.ylim(0.001, 0.1)
+    #plot.ylim(0.001, 0.1)
+    plot.ylim(min(y4), max(y4))
     plot.yscale('log')
 
     # Annotate
@@ -381,7 +382,7 @@ def make_plot(show = False):
 
     #title1 = r"$h = %.2f$     $\alpha = %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2, accretion)
     title1 = r"$A = %.2f$" % (accretion)
-    plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
+    plot.suptitle("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Annotate
     #tkw = dict(size=4, width=1.5)
