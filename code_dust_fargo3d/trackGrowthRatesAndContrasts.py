@@ -336,7 +336,7 @@ def make_plot(show = False):
     # Axes
     ax3.set_xlim(x[0], x[-1])
     #plot.ylim(0.001, 0.1)
-    ax3.set_ylim(min(abs(y4)), max(y4))
+    ax3.set_ylim(0.01 * max(y4), max(y4))
     ax3.set_yscale('log')
 
     # Annotate
