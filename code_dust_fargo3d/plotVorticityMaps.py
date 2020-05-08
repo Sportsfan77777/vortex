@@ -248,7 +248,7 @@ def shift_density(normalized_density, vorticity, fargo_par, option = "away", ref
 
     # Shift
     shifted_vorticity = np.roll(vorticity, shift_c)
-    shifted_density = np.roll(normalized_density, shift_c)
+    shifted_density = np.roll(normalized_density, shift_c, axis = -1)
     return shifted_density, shifted_vorticity, shift_c
 
 ###############################################################################
