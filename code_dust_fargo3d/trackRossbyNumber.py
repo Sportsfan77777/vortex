@@ -223,7 +223,7 @@ def get_contrasts(args_here):
 
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-    averagedDensity = np.average(normalized_density, axis = -1)
+    averagedDensity = np.average(density, axis = -1)
     peak_rad, peak_density = get_radial_peak(averagedDensity, fargo_par)
 
     vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
