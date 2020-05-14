@@ -192,7 +192,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_data(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+def shift_data(data, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -231,7 +231,7 @@ def get_contrasts(args_here):
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
-    vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
+    #vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
 
     # Find minimum
     peak_rad_i = np.searchsorted(rad, peak_rad) # Is this necessary?
