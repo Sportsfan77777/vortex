@@ -293,7 +293,7 @@ def make_plot(show = False):
     y2 = rossby_number_over_time_98
     y3 = rossby_number_over_time_95
 
-    #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
+    ref, = host.plot([x[0], x[-1]], [-0.15, 0.15], c = 'k', linewidth = 1) # to compare to Ro = -0.15 (from Surville+ 15)
 
     #p3, = par1.plot(x, y3, c = 'r', linewidth = linewidth - 1, label = "contrast", zorder = 10)
 
