@@ -238,8 +238,8 @@ def get_contrasts(args_here):
     azimuthal_profile = vorticity[peak_rad_i]
 
     rossby_number_over_time[i] = min(azimuthal_profile)
-    rossby_number_over_time_98[i] = np.percentile(azimuthal_profile, 98)
-    rossby_number_over_time_95[i] = np.percentile(azimuthal_profile, 95)
+    rossby_number_over_time_98[i] = np.percentile(azimuthal_profile, 2)
+    rossby_number_over_time_95[i] = np.percentile(azimuthal_profile, 5)
 
     print i, frame, rossby_number_over_time[i], rossby_number_over_time_98[i], rossby_number_over_time_95[i]
 
