@@ -258,14 +258,14 @@ rossby_number_over_time_95 = mp_array("d", len(frame_range))
 #minima_over_time = mp_array("d", len(frame_range))
 #contrasts_over_time = mp_array("d", len(frame_range))
 
-for i, frame in enumerate(frame_range):
-    get_contrasts((i, frame))
+#for i, frame in enumerate(frame_range):
+#    get_contrasts((i, frame))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-#p = Pool(num_cores)
-#p.map(get_extents, pool_args)
-#p.terminate()
+p = Pool(num_cores)
+p.map(get_contrasts, pool_args)
+p.terminate()
 
 ##### Helper Functions #####
 
