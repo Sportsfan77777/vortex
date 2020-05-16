@@ -234,12 +234,13 @@ def get_contrasts(args_here):
     #vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
 
     # Find minimum
-    peak_rad_i = np.searchsorted(rad, peak_rad) # Is this necessary?
-    azimuthal_profile = vorticity[peak_rad_i]
+    start_rad_i = np.searchsorted(rad, peak_rad - 0.1) # Is this necessary?
+    end_rad_i = np.searchsorted(rad, peak_rad + 1.0)
+    azimuthal_profile = vorticity[start_rad_i : end_rad_i]
 
     rossby_number_over_time[i] = min(azimuthal_profile)
-    rossby_number_over_time_98[i] = np.percentile(azimuthal_profile, 2)
-    rossby_number_over_time_95[i] = np.percentile(azimuthal_profile, 5)
+    rossby_number_over_time_98[i] = np.percentile(azimuthal_profile, 0.2)
+    rossby_number_over_time_95[i] = np.percentile(azimuthal_profile, 0.5)
 
     print i, frame, rossby_number_over_time[i], rossby_number_over_time_98[i], rossby_number_over_time_95[i]
 
