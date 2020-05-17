@@ -111,8 +111,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'sub_sample in radius (default: 6)')
     parser.add_argument('--rate_y', dest = "quiver_rate_y", type = int, default = 100,
                          help = 'sub_sample in angle (default: 24)')
-    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.25,
-                         help = 'bigger scale means smaller arrow (default: 1)')
+    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.2,
+                         help = 'bigger scale means smaller arrow (default: 0.2)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
@@ -415,7 +415,7 @@ def make_plot(frames, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.06, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.08, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
