@@ -83,7 +83,7 @@ master_end_times[871] = [4000, 4745, 9000, 11700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 9200, 50], [0, 12700, 50]]
+master_frame_ranges[87] = [[0, 8900, 50], [0, 7000, 50], [0, 9200, 50], [0, 12700, 50]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -261,6 +261,9 @@ def get_rossby_number(args_here):
     # Unwrap Args
     i, frame, directory = args_here
 
+    if frame == 8800:
+        frame = 8801 # Remove problem frame
+
     # Get Data
     density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
     averagedDensity = np.average(density, axis = -1)
@@ -277,7 +280,7 @@ def get_rossby_number(args_here):
     end_rad_i = np.searchsorted(rad, peak_rad + 1.0)
     azimuthal_profile = vorticity[start_rad_i : end_rad_i]
 
-    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.1)
+    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.15)
 
     print i, frame, rossby_number_over_time[i]
 
@@ -355,7 +358,7 @@ def make_plot(show = False):
         # Basic
         x = frame_range
         y = this_rossby_number_over_time
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth + 3, zorder = 99, label = label)
+        result = plot.plot(x, y, c = colors[i], linewidth = linewidth + 1, zorder = 99, label = label)
 
         # Vortex Lifetime
         if start_time > 0:
@@ -368,14 +371,17 @@ def make_plot(show = False):
             if args.choice > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
+    # Reference Line
+    plot.plot([0, frame_range[3]], [-0.15, -0.15], c = 'k', linewidth = 1) # Ro = -0.15 is critical value
+
     if args.choice > 0:
-        plot.legend(loc = "upper right", fontsize = fontsize - 4)
+        plot.legend(loc = "lower right", fontsize = fontsize - 4)
     else:
         plot.legend(loc = "upper left", fontsize = fontsize - 4)
 
     # Axes
     if args.choice > 0:
-        plot.xlim(0, frame_range[-1])
+        plot.xlim(0, frame_range[3])
     else:
         plot.xlim(0, frame_ranges[0][1])
 
