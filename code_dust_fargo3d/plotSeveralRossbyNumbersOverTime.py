@@ -83,7 +83,7 @@ master_end_times[871] = [4000, 4745, 9000, 11700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[300, 8900, 50], [850, 7400, 50], [1750, 9200, 50], [2850, 12700, 50]]
+master_frame_ranges[87] = [[300, 8900, 50], [850, 7400, 50], [1750, 9200, 50], [2850, 13000, 50]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -276,12 +276,12 @@ def get_rossby_number(args_here):
     #vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
 
     # Find minimum
-    start_rad = min([peak_rad - 0.2, 1.5])
+    start_rad = min([peak_rad - 0.05, 1.5])
     start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
     end_rad_i = np.searchsorted(rad, 2.5)
     azimuthal_profile = vorticity[start_rad_i : end_rad_i]
 
-    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.2)
+    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.25)
 
     print i, frame, rossby_number_over_time[i]
 
@@ -421,8 +421,8 @@ def make_plot(show = False):
 
     top_text = "Incompressible (Ro > -0.15)"; top_y = -0.02
     bottom_text = "Compressible (Ro < -0.15)"; bottom_y = -0.38
-    plot.text(0.9 * x_max, top_y, top_text, horizontalalignment = 'right', fontsize = fontsize)
-    plot.text(0.1 * x_max, bottom_y, bottom_text, horizontalalignment = 'left', fontsize = fontsize)
+    plot.text(0.95 * x_max, top_y, top_text, horizontalalignment = 'right', verticalalignment = 'top', fontsize = fontsize - 3)
+    plot.text(0.1 * x_max, bottom_y, bottom_text, horizontalalignment = 'left', verticalalignment = 'bottom', fontsize = fontsize - 3)
 
     #title = readTitle()
 
