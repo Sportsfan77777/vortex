@@ -281,7 +281,7 @@ def get_rossby_number(args_here):
     end_rad_i = np.searchsorted(rad, 2.5)
     azimuthal_profile = vorticity[start_rad_i : end_rad_i]
 
-    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.115)
+    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.2)
 
     print i, frame, rossby_number_over_time[i]
 
@@ -399,9 +399,9 @@ def make_plot(show = False):
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
     if args.choice > 0:
-        plot.ylabel("Rossby number", fontsize = fontsize)
+        plot.ylabel("Minimum Rossby number", fontsize = fontsize)
     else:
-        plot.ylabel("Rossby number", fontsize = fontsize)
+        plot.ylabel("Minimum Rossby number", fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
