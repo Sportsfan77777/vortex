@@ -83,7 +83,7 @@ master_end_times[871] = [4000, 4745, 9000, 11700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[0, 8900, 50], [0, 7000, 50], [0, 9200, 50], [0, 12700, 50]]
+master_frame_ranges[87] = [[0, 8900, 50], [0, 7400, 50], [0, 9200, 50], [0, 12700, 50]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -276,7 +276,7 @@ def get_rossby_number(args_here):
     #vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
 
     # Find minimum
-    start_rad_i = np.searchsorted(rad, peak_rad - 0.1) # Is this necessary?
+    start_rad_i = np.searchsorted(rad, peak_rad - 0.15) # Is this necessary?
     end_rad_i = np.searchsorted(rad, peak_rad + 1.0)
     azimuthal_profile = vorticity[start_rad_i : end_rad_i]
 
