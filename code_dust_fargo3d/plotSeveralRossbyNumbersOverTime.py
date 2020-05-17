@@ -28,6 +28,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import utilVorticity
 import azimuthal as az
 from readTitle import readTitle
 
