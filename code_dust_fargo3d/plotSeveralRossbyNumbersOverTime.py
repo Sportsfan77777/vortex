@@ -83,7 +83,7 @@ master_end_times[871] = [4000, 4745, 9000, 11700, 0]
 master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
-master_frame_ranges[87] = [[0, 8900, 50], [0, 7400, 50], [0, 9200, 50], [0, 12700, 50]]
+master_frame_ranges[87] = [[300, 8900, 50], [850, 7400, 50], [1750, 9200, 50], [2850, 12700, 50]]
 master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -382,9 +382,11 @@ def make_plot(show = False):
 
     # Axes
     if args.choice > 0:
-        plot.xlim(0, frame_ranges[3][1])
+        x_max = frame_ranges[3][1]
+        plot.xlim(0, x_max)
     else:
-        plot.xlim(0, frame_ranges[0][1])
+        x_max = frame_ranges[0][1]
+        plot.xlim(0, x_max)
 
     if args.choice > 0:
         plot.ylim(-0.4, 0)
@@ -416,7 +418,11 @@ def make_plot(show = False):
     #title = r"$h = %.02f$          $\alpha_\mathrm{disk} = 3 \times 10^{-%d}$" % (scale_height, log_viscosity)
     if args.choice > 0:
         plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 2)
-    #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    top_text = "Incompressible (Ro > -0.15)"; top_y = -0.02
+    bottom_text = "Compressible (Ro < -0.15)"; bottom_y = -0.38
+    plot.text(0.9 * x_max, top_y, top_text, horizontalalignment = 'right', fontsize = fontsize)
+    plot.text(0.1 * x_max, bottom_y, bottom_text, horizontalalignment = 'left', fontsize = fontsize)
 
     #title = readTitle()
 
