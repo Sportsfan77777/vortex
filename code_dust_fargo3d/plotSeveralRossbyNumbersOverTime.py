@@ -257,15 +257,15 @@ def get_min(args_here):
 
 def get_rossby_number(args_here):
     # Unwrap Args
-    i, frame = args_here
+    i, frame, directory = args_here
 
     # Get Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
     averagedDensity = np.average(density, axis = -1)
     peak_rad, peak_density = az.get_radial_peak(averagedDensity, fargo_par)
 
-    vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    vrad = (fromfile("../%s/gasvy%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    vtheta = (fromfile("../%s/gasvx%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
     #vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
