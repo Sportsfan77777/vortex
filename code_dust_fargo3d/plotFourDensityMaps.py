@@ -333,26 +333,26 @@ def make_plot(frames, show = False):
             plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
         if quiver:
-        # Velocity
-        radial_velocity = np.array(fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # Radial
-        azimuthal_velocity = np.array(fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # Azimuthal
-        keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
-        azimuthal_velocity -= keplerian_velocity[:, None]
+            # Velocity
+            radial_velocity = np.array(fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # Radial
+            azimuthal_velocity = np.array(fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # Azimuthal
+            keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
+            azimuthal_velocity -= keplerian_velocity[:, None]
 
-        if center:
-            radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
-            azimuthal_velocity = np.roll(azimuthal_velocity, shift_c, axis = -1)
+            if center:
+                radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
+                azimuthal_velocity = np.roll(azimuthal_velocity, shift_c, axis = -1)
 
-        # Sub-sample the grid
-        start_i = np.searchsorted(rad, start_quiver)
-        end_i = np.searchsorted(rad, end_quiver)
+            # Sub-sample the grid
+            start_i = np.searchsorted(rad, start_quiver)
+            end_i = np.searchsorted(rad, end_quiver)
 
-        x_q = x[start_i:end_i]
-        y_q = y[:]
-        u = np.transpose(radial_velocity)[:, start_i:end_i]
-        v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
+            x_q = x[start_i:end_i]
+            y_q = y[:]
+            u = np.transpose(radial_velocity)[:, start_i:end_i]
+            v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
 
-        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
+            plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
         # Axes
         plot.xlim(x_min, x_max)
