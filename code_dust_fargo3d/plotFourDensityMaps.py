@@ -208,6 +208,18 @@ if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
 
+# Plot Parameters (quiver)
+quiver = args.quiver
+start_quiver = args.start_quiver
+end_quiver = args.end_quiver
+rate_x = args.quiver_rate_x
+rate_y = args.quiver_rate_y
+scale = args.quiver_scale
+if start_quiver is None:
+   start_quiver = x_min
+if end_quiver is None:
+   end_quiver = x_max
+
 # Plot Parameters (constant)
 cmap = args.cmap
 clim = [0, args.cmax]
