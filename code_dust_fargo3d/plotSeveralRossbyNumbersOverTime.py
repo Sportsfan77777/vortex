@@ -372,7 +372,7 @@ def make_plot(show = False):
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     # Reference Line
-    plot.plot([0, frame_range[3]], [-0.15, -0.15], c = 'k', linewidth = 1) # Ro = -0.15 is critical value
+    plot.plot([0, frame_ranges[3]], [-0.15, -0.15], c = 'k', linewidth = 1) # Ro = -0.15 is critical value
 
     if args.choice > 0:
         plot.legend(loc = "lower right", fontsize = fontsize - 4)
@@ -381,7 +381,7 @@ def make_plot(show = False):
 
     # Axes
     if args.choice > 0:
-        plot.xlim(0, frame_range[3])
+        plot.xlim(0, frame_ranges[3])
     else:
         plot.xlim(0, frame_ranges[0][1])
 
