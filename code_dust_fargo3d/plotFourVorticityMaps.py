@@ -299,7 +299,7 @@ def generate_colors(n):
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (12, 6), dpi = dpi)
+    fig = plot.figure(figsize = (16, 4), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
