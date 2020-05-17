@@ -120,9 +120,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
                          help = 'maximum density in colorbar (default: 2)')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
                          help = 'fontsize of plot annotations (default: 17)')
-    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 18,
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -440,7 +440,7 @@ def make_plot(frames, show = False):
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
-    plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.10, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
