@@ -276,11 +276,12 @@ def get_rossby_number(args_here):
     #vorticity, shift_c = shift_data(vorticity, fargo_par, reference_density = density)
 
     # Find minimum
-    start_rad_i = np.searchsorted(rad, peak_rad - 0.23) # Is this necessary?
-    end_rad_i = np.searchsorted(rad, peak_rad + 1.0)
+    start_rad = min([peak_rad - 0.2, 1.5])
+    start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
+    end_rad_i = np.searchsorted(rad, 2.5)
     azimuthal_profile = vorticity[start_rad_i : end_rad_i]
 
-    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.12)
+    rossby_number_over_time[i] = np.percentile(azimuthal_profile, 0.115)
 
     print i, frame, rossby_number_over_time[i]
 
