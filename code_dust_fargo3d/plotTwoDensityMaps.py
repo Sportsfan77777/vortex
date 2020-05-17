@@ -99,6 +99,20 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of contours (choose this or separation) (default: None)')
     parser.add_argument('--separation', dest = "separation", type = float, default = 0.1,
                          help = 'separation between contours (choose this or num_levels) (default: 0.1)')
+
+    # Plot Parameters (quiver)
+    parser.add_argument('--quiver', dest = "quiver", action = 'store_true', default = False,
+                         help = 'use velocity quivers or not (default: do not use quivers)')
+    parser.add_argument('--start', dest = "start_quiver", type = float, default = None,
+                         help = 'start of quiver region in radius (default: r_lim[0])')
+    parser.add_argument('--end', dest = "end_quiver", type = float, default = None,
+                         help = 'end of quiver region in radius (default: r_lim[1])')
+    parser.add_argument('--rate_x', dest = "quiver_rate_x", type = int, default = 6,
+                         help = 'sub_sample in radius (default: 6)')
+    parser.add_argument('--rate_y', dest = "quiver_rate_y", type = int, default = 100,
+                         help = 'sub_sample in angle (default: 24)')
+    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.2,
+                         help = 'bigger scale means smaller arrow (default: 0.2)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "viridis",
@@ -193,6 +207,18 @@ num_levels = args.num_levels
 if num_levels is None:
     separation = args.separation
     num_levels = int(round((high_contour - low_contour) / separation + 1, 0))
+
+# Plot Parameters (quiver)
+quiver = args.quiver
+start_quiver = args.start_quiver
+end_quiver = args.end_quiver
+rate_x = args.quiver_rate_x
+rate_y = args.quiver_rate_y
+scale = args.quiver_scale
+if start_quiver is None:
+   start_quiver = x_min
+if end_quiver is None:
+   end_quiver = x_max
 
 # Plot Parameters (constant)
 cmap = args.cmap
@@ -313,7 +339,7 @@ def generate_colors(n):
 
 def make_plot(frames, show = False):
     # Set up figure
-    fig = plot.figure(figsize = (8, 6), dpi = dpi)
+    fig = plot.figure(figsize = (8, 4), dpi = dpi)
 
     # Indvidual Subplots
     def add_to_plot(i):
@@ -339,6 +365,28 @@ def make_plot(frames, show = False):
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
             plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+
+        if quiver:
+            # Velocity
+            radial_velocity = np.array(fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # Radial
+            azimuthal_velocity = np.array(fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # Azimuthal
+            keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
+            azimuthal_velocity -= keplerian_velocity[:, None]
+
+            if center:
+                radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
+                azimuthal_velocity = np.roll(azimuthal_velocity, shift_c, axis = -1)
+
+            # Sub-sample the grid
+            start_i = np.searchsorted(rad, start_quiver)
+            end_i = np.searchsorted(rad, end_quiver)
+
+            x_q = x[start_i:end_i]
+            y_q = y[:]
+            u = np.transpose(radial_velocity)[:, start_i:end_i]
+            v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
+
+            plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
         # Axes
         plot.xlim(x_min, x_max)
@@ -392,7 +440,7 @@ def make_plot(frames, show = False):
         alpha_coefficent = "6"
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
-    plot.suptitle("%s" % (title), y = 1.07, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.10, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
