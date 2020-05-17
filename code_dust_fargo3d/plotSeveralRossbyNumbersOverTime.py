@@ -419,9 +419,9 @@ def make_plot(show = False):
     if args.choice > 0:
         plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 2)
 
-    top_text = "Incompressible (Ro > -0.15)"; top_y = -0.02
-    bottom_text = "Compressible (Ro < -0.15)"; bottom_y = -0.38
-    plot.text(0.95 * x_max, top_y, top_text, horizontalalignment = 'right', verticalalignment = 'top', fontsize = fontsize - 3)
+    top_text = "Incompressible"; top_y = -0.02
+    bottom_text = "Compressible"; bottom_y = -0.38
+    plot.text(0.9 * x_max, top_y, top_text, horizontalalignment = 'right', verticalalignment = 'top', fontsize = fontsize - 3)
     plot.text(0.1 * x_max, bottom_y, bottom_text, horizontalalignment = 'left', verticalalignment = 'bottom', fontsize = fontsize - 3)
 
     #title = readTitle()
