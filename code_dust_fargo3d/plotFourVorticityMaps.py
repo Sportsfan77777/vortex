@@ -321,7 +321,7 @@ def make_plot(frames, show = False):
         ### Plot ###
         x = rad
         y = theta * (180.0 / np.pi)
-        result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+        result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
         result.set_clim(clim[0], clim[1])
 
         # Contours
