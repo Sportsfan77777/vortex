@@ -238,7 +238,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"($\nabla \times v$)$_\mathrm{z}$ $/$ $\Sigma$ [$v_\mathrm{K}$ $/$ $r_\mathrm{p}$ $\Sigma_0$]", fontsize = fontsize)
+    plot.ylabel(r"($\nabla \times v$)$_\mathrm{z}$ $\times$ $\Sigma$ [$\Sigma_0$ $v_\mathrm{K}$ $/$ $r_\mathrm{p}$]", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
