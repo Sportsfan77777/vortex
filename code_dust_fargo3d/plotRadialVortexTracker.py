@@ -68,8 +68,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-1, 0],
-                         help = 'range in y-axis (default: [-1, 0])')
+    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.5, 0],
+                         help = 'range in y-axis (default: [-0.5, 0])')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
@@ -191,7 +191,7 @@ def make_plot(frame, show = False):
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
-    vortex_tracker = np.percentile(normalized_density, 98, axis = 1) * np.percentile(vorticity, 2, axis = 1)
+    vortex_tracker = np.percentile(normalized_density, 98, axis = 1)[1:] * np.percentile(vorticity, 2, axis = 1)
 
     ### Plot ###
     x = rad[1:]
@@ -246,13 +246,13 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
+    y_text = 0.1
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    plot.text(x_mid, y_text * plot.ylim()[0], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
