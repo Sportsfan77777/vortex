@@ -246,7 +246,7 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = -0.12
+    y_text = -0.14
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
