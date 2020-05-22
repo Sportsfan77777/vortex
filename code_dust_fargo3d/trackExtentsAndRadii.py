@@ -305,7 +305,7 @@ def get_extents(args_here):
         back_i = radial_center_i + az.my_searchsorted(back_side, cutoff)
 
         radial_peak_over_time[i] = radial_center
-        radial_extent_over_time[i] = rad[back_i - front_i]
+        radial_extent_over_time[i] = (rad[back_i] - rad[front_i]) / scale_height
         azimuthal_extent_over_time[i] = theta[right_i - left_i] * (180.0 / np.pi)
 
     #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
