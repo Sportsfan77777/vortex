@@ -77,7 +77,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--delta_mass', dest = "delta_mass", type = float, default = 0.1,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
 
-
+    parser.add_argument('-r', dest = "check_rossby", type = int, default = 1000000,
+                         help = 'frame at which you start using the Rossby number for measuring everything (default: infinity)')
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
     
@@ -164,6 +165,7 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
 
+check_rossby = args.check_rossby
 negative = args.negative
 
 # Plot Parameters (constant)
