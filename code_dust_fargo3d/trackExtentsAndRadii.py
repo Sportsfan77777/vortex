@@ -278,9 +278,9 @@ def get_extents(args_here):
         back_side = zoom_vorticity[rad_min_i:, theta_min_i]
 
         cutoff = -0.04
-        left_i = theta_min_i + len(left_side) - az.my_searchsorted(left_side[::-1], cutoff) # at location of minimum
+        left_i = theta_min_i - az.my_searchsorted(left_side[::-1], cutoff) # at location of minimum
         right_i = theta_min_i + az.my_searchsorted(right_side, cutoff)
-        front_i = rad_min_i + len(front_side) - az.my_searchsorted(front_side[::-1], cutoff)
+        front_i = rad_min_i - az.my_searchsorted(front_side[::-1], cutoff)
         back_i = rad_min_i + az.my_searchsorted(back_side, cutoff)
 
         radial_center_i = int((front_i + back_i) / 2.0)
@@ -298,9 +298,9 @@ def get_extents(args_here):
         front_side = zoom_vorticity[:radial_center_i, azimuthal_center_i]
         back_side = zoom_vorticity[radial_center_i:, azimuthal_center_i]
 
-        left_i = azimuthal_center_i + len(left_side) - az.my_searchsorted(left_side[::-1], cutoff) # relative to center
+        left_i = azimuthal_center_i - az.my_searchsorted(left_side[::-1], cutoff) # relative to center
         right_i = azimuthal_center_i + az.my_searchsorted(right_side, cutoff)
-        front_i = radial_center_i + len(front_side) - az.my_searchsorted(front_side[::-1], cutoff)
+        front_i = radial_center_i - az.my_searchsorted(front_side[::-1], cutoff)
         back_i = radial_center_i + az.my_searchsorted(back_side, cutoff)
 
         radial_peak_over_time[i] = radial_center
