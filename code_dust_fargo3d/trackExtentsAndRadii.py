@@ -192,6 +192,33 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+### Helper Functions ###
+
+def shift_density(normalized_density, vorticity, fargo_par, option = "away", reference_density = None, frame = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_vorticity = np.roll(vorticity, shift_c)
+    shifted_density = np.roll(normalized_density, shift_c, axis = -1)
+    return shifted_density, shifted_vorticity, shift_c
+
+###############################################################################
+
 ### Data ###
 
 def get_extents(args_here):
@@ -229,6 +256,9 @@ def get_extents(args_here):
         radial_peak_over_time[i] = radial_peak_a # radial_peak
         #radial_peak_over_time_a[i] = radial_peak_a
     else:
+        # Shift everything
+        density, vorticity, shift_c = shift_density(density, vorticity, fargo_par, reference_density = density)
+
         # Locate minimum
         start_rad = min([peak_rad - 0.05, 1.5])
         start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
@@ -273,6 +303,8 @@ def get_extents(args_here):
         radial_peak_over_time[i] = radial_center
         radial_extent_over_time[i] = rad[back_i - front_i]
         azimuthal_extent_over_time[i] = theta[right_i - left_i] * (180.0 / np.pi)
+
+        print i, frame, 
 
     #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
 
