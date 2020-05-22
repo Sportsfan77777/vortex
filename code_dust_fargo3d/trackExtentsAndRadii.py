@@ -272,7 +272,7 @@ def get_extents(args_here):
 
         radial_peak_over_time[i] = radial_center
         radial_extent_over_time[i] = rad[back_i - front_i]
-        azimuthal_extent_over_time[i] = theta[right_i - left_i]
+        azimuthal_extent_over_time[i] = theta[right_i - left_i] * (180.0 / np.pi)
 
     #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
 
@@ -350,7 +350,7 @@ def make_plot(show = False):
 
     p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
-    p3, = par2.plot(x, y3a, c = 'g', linewidth = linewidth)
+    p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
 
