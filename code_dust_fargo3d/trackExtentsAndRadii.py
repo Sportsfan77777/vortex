@@ -80,6 +80,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('-r', dest = "check_rossby", type = int, default = 1000000,
                          help = 'frame at which you start using the Rossby number for measuring everything (default: infinity)')
+    parser.add_argument('-e', dest = "extreme_cutoff", type = int, default = 1000000,
+                         help = 'frame at which you start using the extreme Rossby number cutoff (default: infinity)')
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
     
@@ -167,6 +169,7 @@ else:
 max_y = args.max_y
 
 check_rossby = args.check_rossby
+extreme_cutoff = args.extreme_cutoff
 negative = args.negative
 
 # Plot Parameters (constant)
@@ -277,7 +280,11 @@ def get_extents(args_here):
         front_side = zoom_vorticity[:rad_min_i, theta_min_i]
         back_side = zoom_vorticity[rad_min_i:, theta_min_i]
 
-        cutoff = -0.04
+        if frame > extreme_cutoff:
+            cutoff = -0.04
+        else:
+            cutoff = -0.12
+
         left_i = theta_min_i - az.my_searchsorted(left_side[::-1], cutoff) # at location of minimum
         right_i = theta_min_i + az.my_searchsorted(right_side, cutoff)
         front_i = rad_min_i - az.my_searchsorted(front_side[::-1], cutoff)
