@@ -308,7 +308,7 @@ def get_extents(args_here):
         radial_extent_over_time[i] = (rad[back_i] - rad[front_i]) / scale_height
         azimuthal_extent_over_time[i] = theta[right_i - left_i] * (180.0 / np.pi)
 
-        print i, frame, rad[start_rad_i + front_i], radial_center, rad[start_rad_i + back_i], "Final Radial: Left, Center, Right"
+        print i, frame, rad[front_i], radial_center, rad[back_i], "Final Radial: Left, Center, Right"
         print i, frame, theta[left_i] * (180.0 / np.pi), azimuthal_center, theta[right_i] * (180.0 / np.pi), "Final Azimuthal: Left, Center, Right"
 
     #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
