@@ -289,9 +289,9 @@ def get_extents(args_here):
         radial_center = (rad[start_rad_i + front_i] + rad[start_rad_i + back_i]) / 2.0
         azimuthal_center = ((theta[left_i] + theta[right_i]) / 2.0) * (180.0 / np.pi)
 
-        print i, frame, rad[start_rad_i + rad_min_i], theta[theta_min_i]
-        print i, frame, rad[start_rad_i + front_i], radial_center, rad[start_rad_i + back_i]
-        print i, frame, theta[left_i] * (180.0 / np.pi), azimuthal_center, theta[right_i] * (180.0 / np.pi)
+        print i, frame, rad[start_rad_i + rad_min_i], theta[theta_min_i] * (180.0 / np.pi), "Minimum Rossby Number"
+        print i, frame, rad[start_rad_i + front_i], radial_center, rad[start_rad_i + back_i], "Radial: Left, Center, Right"
+        print i, frame, theta[left_i] * (180.0 / np.pi), azimuthal_center, theta[right_i] * (180.0 / np.pi), "Azimuthal: Left, Center, Right"
 
         # Measure radial and azimuthal extents
         left_side = zoom_vorticity[radial_center_i, :azimuthal_center_i]
@@ -307,8 +307,6 @@ def get_extents(args_here):
         radial_peak_over_time[i] = radial_center
         radial_extent_over_time[i] = rad[back_i - front_i]
         azimuthal_extent_over_time[i] = theta[right_i - left_i] * (180.0 / np.pi)
-
-        print i, frame, 
 
     #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
 
