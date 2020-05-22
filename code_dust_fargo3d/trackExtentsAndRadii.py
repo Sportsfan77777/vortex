@@ -253,8 +253,8 @@ def get_extents(args_here):
         front_i = len(front_side) - az.my_searchsorted(front_side[::-1], cutoff)
         back_i = az.my_searchsorted(back_side, cutoff)
 
-        radial_center_i = (front_i + back_i) / 2.0
-        azimuthal_center_i = (left_i + right_i) / 2.0
+        radial_center_i = int((front_i + back_i) / 2.0)
+        azimuthal_center_i = int((left_i + right_i) / 2.0)
 
         radial_center = (rad[start_rad_i + front_i] + rad[start_rad_i + back_i]) / 2.0
         azimuthal_center = (theta[left_i] + theta[right_i]) / 2.0
