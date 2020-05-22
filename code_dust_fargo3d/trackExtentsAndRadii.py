@@ -266,8 +266,8 @@ def get_extents(args_here):
         zoom_vorticity = vorticity[start_rad_i : end_rad_i]
 
         min_rossby_number = np.percentile(zoom_vorticity, 0.25)
-        zoom_vorticity = np.abs(zoom_vorticity - min_rossby_number)
-        minimum_location = np.argmin(zoom_vorticity)
+        abs_zoom_vorticity = np.abs(zoom_vorticity - min_rossby_number)
+        minimum_location = np.argmin(abs_zoom_vorticity)
 
         rad_min_i, theta_min_i = np.unravel_index(minimum_location, np.shape(zoom_vorticity))
 
