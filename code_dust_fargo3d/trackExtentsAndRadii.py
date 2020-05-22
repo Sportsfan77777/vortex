@@ -198,19 +198,79 @@ def get_extents(args_here):
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     avg_density = np.average(density, axis = 1)
+    peak_rad, peak_density = az.get_radial_peak(avg_density, fargo_par)
 
-    azimuthal_extent = az.get_extent(density, fargo_par, threshold = 1.0)
-    radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 1.0)
-    radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
+    normal = True
+    if frame > check_rossby:
+        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
-    azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
-    radial_extent_over_time[i] = radial_extent / scale_height
-    radial_peak_over_time[i] = radial_peak
-    radial_peak_over_time_a[i] = radial_peak_a
+        # Find minimum
+        start_rad = min([peak_rad - 0.05, 1.5])
+        start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
+        end_rad_i = np.searchsorted(rad, 2.5)
+        zoom_vorticity = vorticity[start_rad_i : end_rad_i]
+
+        min_rossby_number = np.percentile(zoom_vorticity, 0.25)
+        if min_rossby_number < -0.15:
+            normal = False # Compressible regime from Surville+ 15
+
+    if normal:
+        azimuthal_extent = az.get_extent(density, fargo_par, threshold = 1.0) # Use 0.9 for h = 0.08 (Add as a parameter)
+        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 1.0)
+        radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
+
+        azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
+        radial_extent_over_time[i] = radial_extent / scale_height
+        radial_peak_over_time[i] = radial_peak_a # radial_peak
+        #radial_peak_over_time_a[i] = radial_peak_a
+    else:
+        # Locate minimum
+        start_rad = min([peak_rad - 0.05, 1.5])
+        start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
+        end_rad_i = np.searchsorted(rad, 2.5)
+        zoom_vorticity = vorticity[start_rad_i : end_rad_i]
+
+        min_rossby_number = np.percentile(zoom_vorticity, 0.25)
+        zoom_vorticity = np.abs(zoom_vorticity - min_rossby_number)
+        minimum_location = np.argmin(zoom_vorticity)
+
+        rad_min_i, theta_min_i = np.unravel(minimum_location, np.shape(zoom_vorticity))
+
+        # Locate radial and azimuthal center
+        left_side = zoom_vorticity[rad_min_i, :theta_min_i]
+        right_side = zoom_vorticity[rad_min_i, theta_min_i:]
+        front_side = zoom_vorticity[:rad_min_i, theta_min_i]
+        back_side = zoom_vorticity[rad_min_i:, theta_min_i]
+
+        cutoff = -0.04
+        left_i = len(left_side) - az.my_searchsorted(left_side[::-1], cutoff) # at location of minimum
+        right_i = az.my_searchsorted(right_side, cutoff)
+        front_i = len(front_side) - az.my_searchsorted(front_side[::-1], cutoff)
+        back_i = az.my_searchsorted(back_side, cutoff)
+
+        radial_center = (rad[start_rad_i + front_i] + rad[start_rad_i + back_i]) / 2.0
+        azimuthal_center = (theta[left_i] + theta[right_i]) / 2.0
+
+        # Measure radial and azimuthal extents
+        left_side = zoom_vorticity[radial_center_i, :azimuthal_center_i]
+        right_side = zoom_vorticity[radial_center_i, azimuthal_center_i:]
+        front_side = zoom_vorticity[:radial_center_i, azimuthal_center_i]
+        back_side = zoom_vorticity[radial_center_i:, azimuthal_center_i]
+
+        left_i = len(left_side) - az.my_searchsorted(left_side[::-1], cutoff) # relative to center
+        right_i = az.my_searchsorted(right_side, cutoff)
+        front_i = len(front_side) - az.my_searchsorted(front_side[::-1], cutoff)
+        back_i = az.my_searchsorted(back_side, cutoff)
+
+        radial_peak_over_time[i] = radial_center
+        radial_extent_over_time[i] = rad[back_i - front_i]
+        azimuthal_extent_over_time[i] = theta[right_i - left_i]
 
     #contrasts_over_time[i] = az.get_contrast(density, fargo_par)
 
-    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i], radial_peak_over_time_a[i]
+    print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i]
     #print i, frame, azimuthal_extent_over_time[i], radial_extent_over_time[i], radial_peak_over_time[i], radial_peak_over_time_a[i], contrasts_over_time[i]
 
 
@@ -278,7 +338,7 @@ def make_plot(show = False):
     y1 = azimuthal_extent_over_time
     y2 = radial_extent_over_time
     y3 = radial_peak_over_time
-    y3a = radial_peak_over_time_a
+    #y3a = radial_peak_over_time_a
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
