@@ -247,8 +247,8 @@ def get_extents(args_here):
             normal = False # Compressible regime from Surville+ 15
 
     if normal:
-        azimuthal_extent = az.get_extent(density, fargo_par, threshold = 0.8) # Use 0.9 for h = 0.08 (Add as a parameter)
-        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 0.8)
+        azimuthal_extent = az.get_extent(density, fargo_par, threshold = 0.85) # Use 0.9 for h = 0.08 (Add as a parameter)
+        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 0.85)
         radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
 
         azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
@@ -289,7 +289,8 @@ def get_extents(args_here):
         radial_center = (rad[start_rad_i + front_i] + rad[start_rad_i + back_i]) / 2.0
         azimuthal_center = ((theta[left_i] + theta[right_i]) / 2.0) * (180.0 / np.pi)
 
-        print i, frame, radial_center, azimuthal_center
+        print i, frame, rad[start_rad_i + front_i], radial_center, rad[start_rad_i + back_i]
+        print i, frame, theta[left_i] * (180.0 / np.pi), azimuthal_center, theta[right_i] * (180.0 / np.pi)
 
         # Measure radial and azimuthal extents
         left_side = zoom_vorticity[radial_center_i, :azimuthal_center_i]
