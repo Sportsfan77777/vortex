@@ -283,7 +283,7 @@ def get_extents(args_here):
         front_i = rad_min_i - az.my_searchsorted(front_side[::-1], cutoff)
         back_i = rad_min_i + az.my_searchsorted(back_side, cutoff)
 
-        radial_center_i = int((front_i + back_i) / 2.0)
+        radial_center_i = start_rad_i + int((front_i + back_i) / 2.0)
         azimuthal_center_i = int((left_i + right_i) / 2.0)
 
         radial_center = (rad[start_rad_i + front_i] + rad[start_rad_i + back_i]) / 2.0
@@ -294,10 +294,10 @@ def get_extents(args_here):
         print i, frame, theta[left_i] * (180.0 / np.pi), azimuthal_center, theta[right_i] * (180.0 / np.pi), "Azimuthal: Left, Center, Right"
 
         # Measure radial and azimuthal extents
-        left_side = zoom_vorticity[radial_center_i, :azimuthal_center_i]
-        right_side = zoom_vorticity[radial_center_i, azimuthal_center_i:]
-        front_side = zoom_vorticity[:radial_center_i, azimuthal_center_i]
-        back_side = zoom_vorticity[radial_center_i:, azimuthal_center_i]
+        left_side = vorticity[radial_center_i, :azimuthal_center_i]
+        right_side = vorticity[radial_center_i, azimuthal_center_i:]
+        front_side = vorticity[:radial_center_i, azimuthal_center_i]
+        back_side = vorticity[radial_center_i:, azimuthal_center_i]
 
         left_i = azimuthal_center_i - az.my_searchsorted(left_side[::-1], cutoff) # relative to center
         right_i = azimuthal_center_i + az.my_searchsorted(right_side, cutoff)
