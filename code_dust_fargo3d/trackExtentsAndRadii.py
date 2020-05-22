@@ -289,6 +289,7 @@ def get_extents(args_here):
         radial_center = (rad[start_rad_i + front_i] + rad[start_rad_i + back_i]) / 2.0
         azimuthal_center = ((theta[left_i] + theta[right_i]) / 2.0) * (180.0 / np.pi)
 
+        print i, frame, rad[start_rad_i + rad_min_i], theta[theta_min_i]
         print i, frame, rad[start_rad_i + front_i], radial_center, rad[start_rad_i + back_i]
         print i, frame, theta[left_i] * (180.0 / np.pi), azimuthal_center, theta[right_i] * (180.0 / np.pi)
 
