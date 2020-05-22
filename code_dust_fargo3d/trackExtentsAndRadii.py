@@ -280,10 +280,10 @@ def get_extents(args_here):
         front_side = zoom_vorticity[:rad_min_i, theta_min_i]
         back_side = zoom_vorticity[rad_min_i:, theta_min_i]
 
-        if frame > extreme_cutoff:
+        if frame < extreme_cutoff:
             cutoff = -0.04
         else:
-            cutoff = -0.12
+            cutoff = -0.12 # Extreme! (neglects "vortex" that develops around the minimum)
 
         left_i = theta_min_i - az.my_searchsorted(left_side[::-1], cutoff) # at location of minimum
         right_i = theta_min_i + az.my_searchsorted(right_side, cutoff)
