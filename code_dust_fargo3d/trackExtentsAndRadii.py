@@ -239,7 +239,7 @@ def get_extents(args_here):
         zoom_vorticity = np.abs(zoom_vorticity - min_rossby_number)
         minimum_location = np.argmin(zoom_vorticity)
 
-        rad_min_i, theta_min_i = np.unravel(minimum_location, np.shape(zoom_vorticity))
+        rad_min_i, theta_min_i = np.unravel_index(minimum_location, np.shape(zoom_vorticity))
 
         # Locate radial and azimuthal center
         left_side = zoom_vorticity[rad_min_i, :theta_min_i]
