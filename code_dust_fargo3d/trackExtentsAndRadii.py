@@ -396,7 +396,7 @@ def make_plot(show = False):
     # Axes
     host.set_ylim(0, 360)
     par1.set_ylim(0, 10)
-    par2.set_ylim(1.2, 2.0)
+    par2.set_ylim(1.0, 2.5)
     #par4.set_ylim(0, 3)
 
     min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
