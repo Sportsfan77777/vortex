@@ -233,7 +233,7 @@ def get_extents(args_here):
     i, frame = args_here
 
     if frame in problem_frames:
-        frame += 1 # switch to adjact frame
+        frame += 3 # switch to an adjacent frame
 
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
