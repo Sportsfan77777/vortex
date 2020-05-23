@@ -417,7 +417,7 @@ def make_plot(show = False):
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     if args.include_aspect:
-        p4, = par4.plot(x, y4, c = 'r', linewidth = linewidth)
+        p4, = par4.plot(x, y4, c = 'r', linewidth = linewidth, linestyle = "--")
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
@@ -427,7 +427,9 @@ def make_plot(show = False):
     host.set_ylim(0, 360)
     par1.set_ylim(0, 10)
     par2.set_ylim(1.0, 2.5)
-    #par4.set_ylim(0, 3)
+
+    if args.include_aspect:
+        par4.set_ylim(0, 20)
 
     angles = np.linspace(0, 360, 7)
     host.set_yticks(angles)
