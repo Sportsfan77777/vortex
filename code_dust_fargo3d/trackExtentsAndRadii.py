@@ -79,7 +79,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'maximum mass on plot (default: 1.0 Jupiter mass)')
     parser.add_argument('--delta', dest = "delta_mass", type = float, default = 0.1,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
-    parser.add_argument('--minor_delta', dest = "delta_mass", type = float, default = None,
+    parser.add_argument('--minor_delta', dest = "minor_delta_mass", type = float, default = None,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
 
     parser.add_argument('-r', dest = "check_rossby", type = int, default = 1000000,
