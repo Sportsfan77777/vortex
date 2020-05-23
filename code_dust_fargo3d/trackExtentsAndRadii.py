@@ -407,7 +407,8 @@ def make_plot(show = False):
     y3 = radial_peak_over_time
     #y3a = radial_peak_over_time_a
 
-    y4 = radial_peak_over_time * (azimuthal_extent_over_time * np.pi / 180.0) / (radial_extent_over_time * scale_height)
+    if args.include_aspect
+        y4 = np.array(radial_peak_over_time) * (np.array(azimuthal_extent_over_time) * np.pi / 180.0) / (np.array(radial_extent_over_time) * scale_height)
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
