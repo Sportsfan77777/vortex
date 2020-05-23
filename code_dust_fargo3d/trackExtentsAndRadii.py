@@ -470,7 +470,7 @@ def make_plot(show = False):
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize, rotation = 270, labelpad = 15)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
     par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
-    if include_aspect:
+    if args.include_aspect:
         par4.set_ylabel("Aspect Ratio", fontsize = fontsize, rotation = 270, labelpad = 20)
 
     alpha_coefficent = "3"
