@@ -271,9 +271,13 @@ def get_extents(args_here):
         density, vorticity, shift_c = shift_density(density, vorticity, fargo_par, reference_density = density)
 
         # Locate minimum
-        start_rad = min([peak_rad - 0.05, 1.5])
-        start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
-        end_rad_i = np.searchsorted(rad, 2.5)
+        if accretion > 0.015:
+            start_rad = min([peak_rad - 0.05, 1.5])
+            start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
+            end_rad_i = np.searchsorted(rad, 2.5)
+        else:
+            start_rad_i = np.searchsorted(rad, 1.0) # Is this necessary?
+            end_rad_i = np.searchsorted(rad, 1.8)
         zoom_vorticity = vorticity[start_rad_i : end_rad_i]
 
         min_rossby_number = np.percentile(zoom_vorticity, 0.25)
@@ -373,7 +377,9 @@ def make_plot(show = False):
 
     par1 = host.twinx()
     par2 = host.twinx()
-    #par4 = host.twinx()
+
+    if include_aspect:
+        par4 = host.twinx()
 
     par3 = host.twiny()
     par3.xaxis.set_ticks_position('bottom')
@@ -387,9 +393,10 @@ def make_plot(show = False):
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
-    #par4.spines["right"].set_position(("axes", 1.4))
-    #make_patch_spines_invisible(par4)
-    #par4.spines["right"].set_visible(True)
+    if include_aspect:
+        par4.spines["right"].set_position(("axes", 1.4))
+        make_patch_spines_invisible(par4)
+        par4.spines["right"].set_visible(True)
 
     # Plot
     x = frame_range
@@ -398,13 +405,16 @@ def make_plot(show = False):
     y3 = radial_peak_over_time
     #y3a = radial_peak_over_time_a
 
+    y4 = radial_peak_over_time * (azimuthal_extent_over_time * np.pi / 180.0) / (radial_extent_over_time * scale_height)
+
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
     p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
-    #p4, = par4.plot(x, y3a, c = 'r', linewidth = linewidth)
+    if include_aspect:
+        p4, = par4.plot(x, y4, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
@@ -474,7 +484,8 @@ def make_plot(show = False):
     par1.tick_params(axis = 'y', colors = p2.get_color(), **tkw)
     par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     par3.tick_params(axis = 'x', **tkw)
-    #par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
+    if include_aspect:
+        par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
     host.tick_params(axis = 'x', **tkw)
 
     # Save, Show, and Close
