@@ -490,6 +490,7 @@ def make_plot(show = False):
     par3.tick_params(axis = 'x', **tkw)
     if args.include_aspect:
         par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
+        par4.yaxis.set_minor_locator(MultipleLocator(1))
     host.tick_params(axis = 'x', **tkw)
 
     # Save, Show, and Close
