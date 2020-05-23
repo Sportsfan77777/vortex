@@ -87,6 +87,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'frame at which you start using the Rossby number for measuring everything (default: infinity)')
     parser.add_argument('-e', dest = "extreme_cutoff", type = int, default = 1000000,
                          help = 'frame at which you start using the extreme Rossby number cutoff (default: infinity)')
+    parser.add_argument('-i', dest = "include_aspect", action = 'store_true', default = False,
+                         help = 'include aspect ratio (default: do not)')
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
     
@@ -378,7 +380,7 @@ def make_plot(show = False):
     par1 = host.twinx()
     par2 = host.twinx()
 
-    if include_aspect:
+    if args.include_aspect:
         par4 = host.twinx()
 
     par3 = host.twiny()
@@ -393,7 +395,7 @@ def make_plot(show = False):
     make_patch_spines_invisible(par3)
     par3.spines["bottom"].set_visible(True)
 
-    if include_aspect:
+    if args.include_aspect:
         par4.spines["right"].set_position(("axes", 1.4))
         make_patch_spines_invisible(par4)
         par4.spines["right"].set_visible(True)
@@ -413,7 +415,7 @@ def make_plot(show = False):
     p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
-    if include_aspect:
+    if args.include_aspect:
         p4, = par4.plot(x, y4, c = 'r', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
@@ -467,7 +469,8 @@ def make_plot(show = False):
     par1.set_ylabel("Radial Extent (scale heights)", fontsize = fontsize, rotation = 270, labelpad = 15)
     par2.set_ylabel("Radial Center (planet radii)", fontsize = fontsize, rotation = 270, labelpad = 20)
     par3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
-    #par4.set_ylabel("Contrast", fontsize = fontsize, rotation = 270, labelpad = 20)
+    if include_aspect:
+        par4.set_ylabel("Aspect Ratio", fontsize = fontsize, rotation = 270, labelpad = 20)
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -484,7 +487,7 @@ def make_plot(show = False):
     par1.tick_params(axis = 'y', colors = p2.get_color(), **tkw)
     par2.tick_params(axis = 'y', colors = p3.get_color(), **tkw)
     par3.tick_params(axis = 'x', **tkw)
-    if include_aspect:
+    if args.include_aspect:
         par4.tick_params(axis = 'y', colors = p4.get_color(), **tkw)
     host.tick_params(axis = 'x', **tkw)
 
