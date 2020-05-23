@@ -406,6 +406,9 @@ def make_plot(show = False):
     par2.set_ylim(1.0, 2.5)
     #par4.set_ylim(0, 3)
 
+    angles = np.linspace(0, 360, 7)
+    host.set_yticks(angles)
+
     min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     mass_ticks = np.arange(min_mass, max_mass, delta_mass)
 
