@@ -22,6 +22,7 @@ import numpy as np
 import matplotlib
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
+from matplotlib.ticker import MultipleLocator
 
 from pylab import rcParams
 from pylab import fromfile
@@ -408,7 +409,7 @@ def make_plot(show = False):
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
-    host.xaxis.set_tick_params(which = 'minor', bottom = True)
+    host.xaxis.set_minor_locator(MultipleLocator(500))
 
     host.set_ylim(0, 360)
     par1.set_ylim(0, 10)
