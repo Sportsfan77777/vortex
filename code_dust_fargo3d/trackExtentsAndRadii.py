@@ -232,7 +232,7 @@ def get_extents(args_here):
     # Unwrap Args
     i, frame = args_here
 
-    if frame is in problem_frames:
+    if frame in problem_frames:
         frame += 1 # switch to adjact frame
 
     # Get Data
