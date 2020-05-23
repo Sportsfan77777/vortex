@@ -408,6 +408,8 @@ def make_plot(show = False):
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     # Axes
+    host.xaxis.set_tick_params(which = 'minor', bottom = False)
+
     host.set_ylim(0, 360)
     par1.set_ylim(0, 10)
     par2.set_ylim(1.0, 2.5)
