@@ -250,9 +250,13 @@ def get_extents(args_here):
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
         # Find minimum
-        start_rad = min([peak_rad - 0.05, 1.5])
-        start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
-        end_rad_i = np.searchsorted(rad, 2.5)
+        if accretion > 0.015:
+            start_rad = min([peak_rad - 0.05, 1.5])
+            start_rad_i = np.searchsorted(rad, start_rad) # Is this necessary?
+            end_rad_i = np.searchsorted(rad, 2.5)
+        else:
+            start_rad_i = np.searchsorted(rad, 1.0) # Is this necessary?
+            end_rad_i = np.searchsorted(rad, 1.8)
         zoom_vorticity = vorticity[start_rad_i : end_rad_i]
 
         min_rossby_number = np.percentile(zoom_vorticity, 0.25)
