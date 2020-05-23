@@ -38,6 +38,8 @@ from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
+problem_frames = np.array([3000, 3125, 3200, 3250, 3550, 7425]]) # h = 0.08, A = 0.167
+
 ###############################################################################
 
 ### Input Parameters ###
@@ -71,11 +73,13 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
 
-    parser.add_argument('--min_mass', dest = "min_mass", type = float, default = 0.1,
+    parser.add_argument('--min', dest = "min_mass", type = float, default = 0.1,
                          help = 'minimum mass on plot (default: 0.1 Jupiter mass)')
-    parser.add_argument('--max_mass', dest = "max_mass", type = float, default = 1.0,
+    parser.add_argument('--max', dest = "max_mass", type = float, default = 1.0,
                          help = 'maximum mass on plot (default: 1.0 Jupiter mass)')
-    parser.add_argument('--delta_mass', dest = "delta_mass", type = float, default = 0.1,
+    parser.add_argument('--delta', dest = "delta_mass", type = float, default = 0.1,
+                         help = 'delta mass on plot (default: 0.1 Jupiter mass)')
+    parser.add_argument('--minor_delta', dest = "delta_mass", type = float, default = None,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
 
     parser.add_argument('-r', dest = "check_rossby", type = int, default = 1000000,
@@ -227,6 +231,9 @@ def shift_density(normalized_density, vorticity, fargo_par, option = "away", ref
 def get_extents(args_here):
     # Unwrap Args
     i, frame = args_here
+
+    if frame is in problem_frames:
+        frame += 1 # switch to adjact frame
 
     # Get Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
@@ -436,6 +443,11 @@ def make_plot(show = False):
     par3.set_xlim(host.get_xlim())
     par3.set_xticks(tick_locations)
     par3.set_xticklabels(tick_labels)
+
+    if minor_delta_mass is not None:
+        minor_mass_ticks = np.arange(min_mass, max_mass, minor_delta_mass)
+        minor_tick_locations, _ = tick_function(minor_mass_ticks)
+        par3.set_xticks(minor_tick_locations, minor = True)
 
     host.set_xlabel("Time (planet orbits)", fontsize = fontsize)
     host.set_ylabel("Azimuthal Extent (degrees)", fontsize = fontsize)
