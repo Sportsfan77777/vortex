@@ -396,7 +396,7 @@ def make_plot(show = False):
     par3.spines["bottom"].set_visible(True)
 
     if args.include_aspect:
-        par4.spines["right"].set_position(("axes", 1.4))
+        par4.spines["right"].set_position(("axes", 1.5))
         make_patch_spines_invisible(par4)
         par4.spines["right"].set_visible(True)
 
