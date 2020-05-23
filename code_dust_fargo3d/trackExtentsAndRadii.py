@@ -38,7 +38,7 @@ from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
-problem_frames = np.array([3000, 3125, 3200, 3250, 3550, 7425]]) # h = 0.08, A = 0.167
+problem_frames = np.array([3000, 3125, 3200, 3250, 3550, 7425]) # h = 0.08, A = 0.167
 
 ###############################################################################
 
@@ -444,8 +444,8 @@ def make_plot(show = False):
     par3.set_xticks(tick_locations)
     par3.set_xticklabels(tick_labels)
 
-    if minor_delta_mass is not None:
-        minor_mass_ticks = np.arange(min_mass, max_mass, minor_delta_mass)
+    if args.minor_delta_mass is not None:
+        minor_mass_ticks = np.arange(min_mass, max_mass, args.minor_delta_mass)
         minor_tick_locations, _ = tick_function(minor_mass_ticks)
         par3.set_xticks(minor_tick_locations, minor = True)
 
