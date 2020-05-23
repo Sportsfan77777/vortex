@@ -400,7 +400,7 @@ def make_plot(show = False):
     par3.spines["bottom"].set_visible(True)
 
     if args.include_aspect:
-        par4.spines["right"].set_position(("axes", 1.5))
+        par4.spines["right"].set_position(("axes", 1.44))
         make_patch_spines_invisible(par4)
         par4.spines["right"].set_visible(True)
 
@@ -421,7 +421,7 @@ def make_plot(show = False):
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     if args.include_aspect:
-        p4, = par4.plot(x, y4, c = 'r', linewidth = linewidth, linestyle = "--")
+        p4, = par4.plot(x, y4, c = 'purple', linewidth = linewidth)
 
     #p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
