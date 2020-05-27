@@ -137,8 +137,8 @@ frame_range = util.get_frame_range(args.frames)
 num_cores = args.num_cores
 
 # Dust
-sizes[0] = args.size
-size_names[0] = args.name
+size = args.size
+size_name = args.name
 negative_vorticity_only = args.negative_vorticity_only
 
 # System Parameters
@@ -203,30 +203,23 @@ fargo_par["new_r_min"] = new_r_min; fargo_par["new_r_max"] = new_r_max
 
 def retrieve_density(frame, size_names):
     """ Step 0: Retrieve density """
-    density = np.zeros((num_rad, num_theta, len(sizes)))
-    starting_sizes = sizes
+    starting_size = size
 
-    for i, size_name in enumerate(size_names):
-        directory = "."
+    directory = "."
+    density = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = args.n)
 
-        if zero == i:
-            # For debugging purposes to test contribution of a single grain size
-            pass
-        else:
-            density[:, :, i] = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = args.n)
-
-    return density, starting_sizes
+    return density, starting_size
 
 def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
     """ Step 1: get rid of inner cavity, scale dust densities to different grain size, and only keep dust with negative vorticity """
     # Cavity
     if cavity_cutoff is not None:
         cavity_cutoff_i = np.searchsorted(rad, cavity_cutoff)
-        density[:cavity_cutoff_i, ] = 0.0
+        density[:cavity_cutoff_i] = 0.0
 
     # Scale
     density *= scale_density
-    sizes *= scale_sizes
+    size *= scale_sizes
 
     if negative_vorticity_only > 0:
         tmp_density = density[1:, 1:]
@@ -247,7 +240,7 @@ def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density =
         threshold = negative_vorticity_only
         density[gas_density < threshold] = 0.0
 
-    return density, sizes
+    return density, size
 
 def center_vortex(density, frame, reference_density = None):
     """ Step 2: center the vortex so that the peak is at 180 degrees """
