@@ -96,11 +96,13 @@ r_min = p.ymin; r_max = p.ymax
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.epsilon
 
-planet_mass = 1.0
-taper_time = p.masstaper
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
 
 scale_height = p.aspectratio
 viscosity = p.nu
+taper_time = p.masstaper
 
 dt = p.ninterm * p.dt
 
@@ -165,6 +167,12 @@ dpi = args.dpi
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+# Planet File
+# Data
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7]
+accreted_mass = data[:, 8] / jupiter_mass
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -228,9 +236,11 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
+    current_mass += accreted_mass[frame]
+
     planet_size = current_mass / planet_mass
     plot.scatter(0, 0, c = "white", s = 300, marker = "*", zorder = 100) # star
-    plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70 * planet_size), marker = "D", zorder = 100) # planet
+    plot.scatter(planet_x * arc_weight, planet_y * arc_weight, c = "white", s = int(70), marker = "D", zorder = 100) # planet
 
     # Axes
     box_size = args.box * arc_weight

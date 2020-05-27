@@ -205,6 +205,8 @@ def make_plot(frame, show = False):
             _, azimuthal_profile_c = az.get_profiles(intensity_polar_c, fargo_par, args, shift = None)
             plot.plot(x, azimuthal_profile_c, linewidth = linewidth, alpha = alpha, label = "%s" % i)
 
+        plot.legend(loc = "upper left")
+
     # Locate Planet
     if shift is None:
         planet_loc = theta[0]
