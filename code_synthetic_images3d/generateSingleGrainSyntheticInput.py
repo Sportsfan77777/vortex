@@ -210,7 +210,7 @@ def retrieve_density(frame, size_names):
 
     return density, starting_size
 
-def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
+def polish(density, frame, shift_i, size, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
     """ Step 1: get rid of inner cavity, scale dust densities to different grain size, and only keep dust with negative vorticity """
     # Cavity
     if cavity_cutoff is not None:
