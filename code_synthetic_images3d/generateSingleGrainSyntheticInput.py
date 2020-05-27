@@ -38,8 +38,8 @@ from labelOpacities import label_opacities
 from advanced import Parameters
 from reader import Fields
 
-size_names = ["hcm"] # , "hmm", hum", "um"]
-sizes = np.array([0.3]) #, 0.03, 0.01, 0.0001])
+size_names = "hcm" # , "hmm", hum", "um"]
+sizes = 0.3 #, 0.03, 0.01, 0.0001])
 
 ### Input Parameters ###
 
@@ -84,7 +84,7 @@ def new_argument_parser(description = "Generate input for synthetic images."):
     parser.add_argument('-p', dest = "number_density_power", type = float, default = 3.5,
                          help = 'negative power in grain size power law (default: 3.5)')
     parser.add_argument('--scale-density', dest = "scale_density", type = float, default = 100,
-                         help = 'scaling of grain size distribution (default: 1)')
+                         help = 'scaling of grain size distribution (default: 100)')
     parser.add_argument('--scale-sizes', dest = "scale_sizes", type = float, default = 1,
                          help = 'scaling of grain size distribution (default: 1)')
 
@@ -222,7 +222,7 @@ def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density =
     # Cavity
     if cavity_cutoff is not None:
         cavity_cutoff_i = np.searchsorted(rad, cavity_cutoff)
-        density[:cavity_cutoff_i, ] /= 100.0
+        density[:cavity_cutoff_i, ] = 0.0
 
     # Scale
     density *= scale_density
@@ -237,7 +237,7 @@ def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density =
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
         # Remember to shift the vorticity!
-        vorticity = np.roll(vorticity, shift_i, axis = -1)
+        vorticity = np.roll(vorticity, shift_i, axis = 1)
 
         tmp_density[vorticity > 0] = 0.0
         density[1:, 1:] = tmp_density
@@ -252,24 +252,22 @@ def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density =
 def center_vortex(density, frame, reference_density = None):
     """ Step 2: center the vortex so that the peak is at 180 degrees """
     if taper_time < 1.1:
-        for i, size in enumerate(sizes):
-            shift_i = az.get_azimuthal_peak(density[:, :, i], fargo_par)
-            density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
+        shift_i = az.get_azimuthal_peak(density, fargo_par)
+        density = np.roll(density, shift_i, axis = 1)
         return density, shift_i
 
     elif taper_time > 1.1:
-        for i, size_name in enumerate(size_names):
-            if center == "lookup":
-                pass
-                #shift_i = az.get_lookup_shift(frame, directory = "../%s-size" % size_name)
-            elif center == "threshold":
-                threshold = util.get_threshold(size) * surface_density_zero
-                shift_i = az.get_azimuthal_center(density[:, :, i], fargo_par, threshold = threshold)
-            elif center == "away":
-                shift_i = az.shift_away_from_minimum(reference_density, fargo_par)
-            else:
-                print "invalid centering option"
-            density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
+        if center == "lookup":
+            pass
+            #shift_i = az.get_lookup_shift(frame, directory = "../%s-size" % size_name)
+        elif center == "threshold":
+            threshold = util.get_threshold(size) * surface_density_zero
+            shift_i = az.get_azimuthal_center(density, fargo_par, threshold = threshold)
+        elif center == "away":
+            shift_i = az.shift_away_from_minimum(reference_density, fargo_par)
+        else:
+            print "invalid centering option"
+        density = np.roll(density, shift_i, axis = 1)
         return density, shift_i
 
 def resample(density, new_num_rad = 400, new_num_theta = 400):
@@ -280,9 +278,8 @@ def resample(density, new_num_rad = 400, new_num_theta = 400):
     new_rad = np.linspace(new_r_min, new_r_max, new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
 
-    for i, _ in enumerate(sizes):
-        interpolator = sp_int.interp2d(theta, rad, density[:, :, i]) # Careful: z is flattened!
-        new_density[:, :, i] = (interpolator(new_theta, new_rad)).T # Note: result needs to be transposed
+    interpolator = sp_int.interp2d(theta, rad, density) # Careful: z is flattened!
+    new_density = (interpolator(new_theta, new_rad)).T # Note: result needs to be transposed
     
     return new_rad, new_theta, new_density
 
@@ -449,10 +446,10 @@ def full_procedure(frame):
     density, sizes = polish(density, frame, shift_i, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)    
 
-    if interpolate:
-        density, new_sizes = interpolate_density(density, num_grains)
-    else:
-        density, new_sizes = distribute_density(density)
+    #if interpolate:
+    #    density, new_sizes = interpolate_density(density, num_grains)
+    #else:
+    #    density, new_sizes = distribute_density(density)
 
     density = convert_units(density)
     output_density_txt(density, frame)
