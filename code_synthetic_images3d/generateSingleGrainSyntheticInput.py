@@ -58,6 +58,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'choose size (default: 0.3)')
     parser.add_argument('--name', dest = "name", default = "hcm",
                          help = 'choose size name (default: hcm)')
+    parser.add_argument('--only', dest = "negative_vorticity_only", type = float, default = -1,
+                         help = 'normalized density threshold to filter out to only have the vortex (default: -1, meaning to ignore)')
 
     # System Parameters
     parser.add_argument('-m', dest = "mass", type = float, default = 1.0,
@@ -136,6 +138,7 @@ num_cores = args.num_cores
 # Dust
 sizes[0] = args.size
 size_names[0] = args.name
+negative_vorticity_only = args.negative_vorticity_only
 
 # System Parameters
 mass = args.mass # (in solar masses)
