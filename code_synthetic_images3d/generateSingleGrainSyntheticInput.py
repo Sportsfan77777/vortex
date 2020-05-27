@@ -449,7 +449,7 @@ def full_procedure(frame):
     output_density_pickle(density, frame)
 
     if frame == frame_range[0]:
-        generate_secondary_files(new_rad, new_theta, new_sizes)
+        generate_secondary_files(new_rad, new_theta, sizes)
         save_id_parameters()
 
 ###############################################################################
