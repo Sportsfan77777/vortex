@@ -214,7 +214,7 @@ def retrieve_density(frame, size_names):
     return density, starting_sizes
 
 def polish(density, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
-    """ Step 1: get rid of inner cavity and scale dust densities to different grain size """
+    """ Step 1: get rid of inner cavity, scale dust densities to different grain size, and only keep dust with negative vorticity """
     # Cavity
     if cavity_cutoff is not None:
         cavity_cutoff_i = np.searchsorted(rad, cavity_cutoff)
@@ -223,6 +223,22 @@ def polish(density, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes 
     # Scale
     density *= scale_density
     sizes *= scale_sizes
+
+    if negative_vorticity_only > 0:
+        tmp_density = density[1:]
+
+        # Get rid of dust where there is positive vorticity
+        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
+
+        tmp_density[vorticity > 0] /= 1000.0
+        density[1:] = tmp_density
+
+        # Get rid of dust where density is below a threshold
+        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
+        threshold = negative_vorticity_only
+        density[gas_density < threshold] /= 1000.0
 
     return density, sizes
 
