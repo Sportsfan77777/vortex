@@ -266,7 +266,7 @@ def center_vortex(density, frame, reference_density = None):
 def resample(density, new_num_rad = 400, new_num_theta = 400):
     """ Step 3: lower resolution (makes txt output smaller) """
 
-    new_density = np.zeros((new_num_theta, new_num_rad, len(sizes)))
+    new_density = np.zeros((new_num_theta, new_num_rad))
 
     new_rad = np.linspace(new_r_min, new_r_max, new_num_rad)
     new_theta = np.linspace(0, 2 * np.pi, new_num_theta)
