@@ -229,7 +229,7 @@ def polish(density, frame, sizes, cavity_cutoff = 0.92, scale_density = 1, scale
     sizes *= scale_sizes
 
     if negative_vorticity_only > 0:
-        tmp_density = density[1:]
+        tmp_density = density[1:, 1:]
 
         # Get rid of dust where there is positive vorticity
         vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
@@ -237,7 +237,7 @@ def polish(density, frame, sizes, cavity_cutoff = 0.92, scale_density = 1, scale
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
         tmp_density[vorticity > 0] /= 1000.0
-        density[1:] = tmp_density
+        density[1:, 1:] = tmp_density
 
         # Get rid of dust where density is below a threshold
         gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
@@ -438,11 +438,11 @@ def full_procedure(frame):
     """ Every Step """
     gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
     density, sizes = retrieve_density(frame, size_names)
-
-    density, sizes = polish(density, frame, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
     if center != "off":
         density = center_vortex(density, frame, reference_density = gas_density)
-    new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
+
+    density, sizes = polish(density, frame, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
+    new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)    
 
     if interpolate:
         density, new_sizes = interpolate_density(density, num_grains)
