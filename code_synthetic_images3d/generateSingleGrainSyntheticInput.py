@@ -245,7 +245,7 @@ def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density =
         # Get rid of dust where density is below a threshold
         gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
         threshold = negative_vorticity_only
-        density[gas_density < threshold] = 1000.0
+        density[gas_density < threshold] = 0.0
 
     return density, sizes
 
