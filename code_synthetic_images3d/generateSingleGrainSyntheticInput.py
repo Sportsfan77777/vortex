@@ -216,7 +216,7 @@ def retrieve_density(frame, size_names):
 
     return density, starting_sizes
 
-def polish(density, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
+def polish(density, frame, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
     """ Step 1: get rid of inner cavity, scale dust densities to different grain size, and only keep dust with negative vorticity """
     # Cavity
     if cavity_cutoff is not None:
@@ -438,7 +438,7 @@ def full_procedure(frame):
     gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
     density, sizes = retrieve_density(frame, size_names)
 
-    density, sizes = polish(density, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
+    density, sizes = polish(density, frame, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
     if center != "off":
         density = center_vortex(density, frame, reference_density = gas_density)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)
