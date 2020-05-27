@@ -31,6 +31,7 @@ import argparse
 from pylab import fromfile
 
 import util
+import utilVorticity
 import azimuthal as az
 from labelOpacities import label_opacities
 
