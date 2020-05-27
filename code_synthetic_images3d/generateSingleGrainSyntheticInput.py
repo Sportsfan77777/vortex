@@ -38,8 +38,8 @@ from labelOpacities import label_opacities
 from advanced import Parameters
 from reader import Fields
 
-size_names = "hcm" # , "hmm", hum", "um"]
-sizes = 0.3 #, 0.03, 0.01, 0.0001])
+size_name = "hcm" # , "hmm", hum", "um"]
+size = 0.3 #, 0.03, 0.01, 0.0001])
 
 ### Input Parameters ###
 
