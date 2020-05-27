@@ -217,7 +217,7 @@ def retrieve_density(frame, size_names):
 
     return density, starting_sizes
 
-def polish(density, frame, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
+def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
     """ Step 1: get rid of inner cavity, scale dust densities to different grain size, and only keep dust with negative vorticity """
     # Cavity
     if cavity_cutoff is not None:
@@ -236,13 +236,16 @@ def polish(density, frame, sizes, cavity_cutoff = 0.92, scale_density = 1, scale
         vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
-        tmp_density[vorticity > 0] /= 1000.0
+        # Remember to shift the vorticity!
+        vorticity = np.roll(vorticity, shift_c, axis = -1)
+
+        tmp_density[vorticity > 0] = 0.0
         density[1:, 1:] = tmp_density
 
         # Get rid of dust where density is below a threshold
         gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
         threshold = negative_vorticity_only
-        density[gas_density < threshold] /= 1000.0
+        density[gas_density < threshold] = 1000.0
 
     return density, sizes
 
@@ -252,7 +255,7 @@ def center_vortex(density, frame, reference_density = None):
         for i, size in enumerate(sizes):
             shift_i = az.get_azimuthal_peak(density[:, :, i], fargo_par)
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
-        return density
+        return density, shift_i
 
     elif taper_time > 1.1:
         for i, size_name in enumerate(size_names):
@@ -267,7 +270,7 @@ def center_vortex(density, frame, reference_density = None):
             else:
                 print "invalid centering option"
             density[:, :, i] = np.roll(density[:, :, i], shift_i, axis = 1)
-        return density
+        return density, shift_i
 
 def resample(density, new_num_rad = 400, new_num_theta = 400):
     """ Step 3: lower resolution (makes txt output smaller) """
@@ -438,10 +441,12 @@ def full_procedure(frame):
     """ Every Step """
     gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
     density, sizes = retrieve_density(frame, size_names)
-    if center != "off":
-        density = center_vortex(density, frame, reference_density = gas_density)
 
-    density, sizes = polish(density, frame, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
+    shift_i = 0
+    if center != "off":
+        density, shift_i = center_vortex(density, frame, reference_density = gas_density)
+
+    density, sizes = polish(density, frame, shift_i, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)    
 
     if interpolate:
