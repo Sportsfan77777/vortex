@@ -371,12 +371,12 @@ def generate_secondary_files(rad, theta, new_sizes):
     # Save Files
     np.savetxt("%s/id%04d_radial.dat" % (save_directory, id_number), rad * radius_unit)
     np.savetxt("%s/id%04d_azimuthal.dat" % (save_directory, id_number), theta)
-    np.savetxt("%s/id%04d_grain.dat" % (save_directory, id_number), new_sizes)
+    np.savetxt("%s/id%04d_grain.dat" % (save_directory, id_number), [new_sizes])
     np.savetxt("%s/id%04d_temperature.dat" % (save_directory, id_number), temperatures)
 
     # Make and Label Opacities
     if make_opacities:
-        np.savetxt("%s/grain.dat" % (save_directory), new_sizes) # need grain size distribution to make opacities
+        np.savetxt("%s/grain.dat" % (save_directory), [new_sizes]) # need grain size distribution to make opacities
         np.savetxt("%s/temperature.dat" % (save_directory), temperatures) # not sure you need temperature
 
         os.system("./makeopac")
