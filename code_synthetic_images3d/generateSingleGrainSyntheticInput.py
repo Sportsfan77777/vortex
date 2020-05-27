@@ -59,6 +59,8 @@ def new_argument_parser(description = "Generate input for synthetic images."):
                          help = 'choose size (default: 0.3)')
     parser.add_argument('--name', dest = "name", default = "hcm",
                          help = 'choose size name (default: hcm)')
+    parser.add_argument('--cavity', dest = "cavity", type = float, default = 0.92,
+                         help = 'filter out everything else than the cavity (default: 0.92)')
     parser.add_argument('--only', dest = "negative_vorticity_only", type = float, default = -1,
                          help = 'normalized density threshold to filter out to only have the vortex (default: -1, meaning to ignore)')
 
@@ -139,6 +141,7 @@ num_cores = args.num_cores
 # Dust
 size = args.size
 size_name = args.name
+cavity = args.cavity
 negative_vorticity_only = args.negative_vorticity_only
 
 # System Parameters
@@ -438,7 +441,7 @@ def full_procedure(frame):
     if center != "off":
         density, shift_i = center_vortex(density, frame, reference_density = gas_density)
 
-    density, sizes = polish(density, frame, shift_i, sizes, scale_density = scale_density, scale_sizes = scale_sizes)
+    density, sizes = polish(density, frame, shift_i, sizes, cavity_cutoff = cavity, scale_density = scale_density, scale_sizes = scale_sizes)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)    
 
     #if interpolate:
