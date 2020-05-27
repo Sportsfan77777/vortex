@@ -237,7 +237,7 @@ def polish(density, frame, shift_i, sizes, cavity_cutoff = 0.92, scale_density =
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
 
         # Remember to shift the vorticity!
-        vorticity = np.roll(vorticity, shift_c, axis = -1)
+        vorticity = np.roll(vorticity, shift_i, axis = -1)
 
         tmp_density[vorticity > 0] = 0.0
         density[1:, 1:] = tmp_density
