@@ -267,7 +267,7 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/averagedVortsity_%04d.png" % (save_directory, frame)
+        save_fn = "%s/averagedVortensity_%04d.png" % (save_directory, frame)
     else:
         save_fn = "%s/v%04d_averagedVortensity_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
