@@ -218,8 +218,8 @@ def make_plot(frame_range, show = False):
     plot.xlim(x_min, x_max)
     plot.ylim(y_range[0], y_range[1])
 
-    plot.ylim(10**(-3), 3.0)
-    plot.yscale("log")
+    #plot.ylim(10**(-3), 3.0)
+    #plot.yscale("log")
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
