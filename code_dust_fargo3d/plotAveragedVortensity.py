@@ -59,6 +59,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'plot rossby number instead of vorticity (default: plot vorticity)')
     parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
                          help = 'use v_theta or v_theta - v_kep (default: use residual)')
+    parser.add_argument('--full', dest = "full_term", action = 'store_false', default = True,
+                         help = 'use full term for extremum condition (default: just use the vortensity part)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -146,6 +148,7 @@ if not os.path.isdir(save_directory):
 # Quantity to Plot
 rossby = args.rossby
 residual = args.residual
+full_term = args.full_term
 
 # Plot Parameters (variable)
 show = args.show
@@ -194,6 +197,9 @@ def make_plot(frame, show = False):
     averaged_vorticity = np.average(vorticity, axis = 1)
     averaged_density = np.average(normalized_density, axis = 1)
     averaged_vortensity = averaged_vorticity / averaged_density[1:]
+
+    if full_term:
+        averaged_vortensity *= (2.0 * np.pi) * np.power(rad[1:], 4) / np.power(scale_height, 2)
 
     ### Plot ###
     x = rad[1:]
