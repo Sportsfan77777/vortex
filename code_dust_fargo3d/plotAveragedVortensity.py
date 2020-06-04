@@ -200,7 +200,7 @@ def make_plot(frame, show = False):
     averaged_vortensity = averaged_vorticity / averaged_density[1:]
 
     if full_term:
-        averaged_vortensity *= (2.0 * np.pi) * np.power(rad[1:], 4) / np.power(scale_height, 2)
+        averaged_vortensity *= np.power(rad[1:], 1) / np.power(scale_height, 2)
 
     ### Plot ###
     x = rad[1:]
