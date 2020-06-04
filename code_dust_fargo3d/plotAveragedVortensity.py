@@ -59,7 +59,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'plot rossby number instead of vorticity (default: plot vorticity)')
     parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
                          help = 'use v_theta or v_theta - v_kep (default: use residual)')
-    parser.add_argument('--full', dest = "full_term", action = 'store_false', default = True,
+    parser.add_argument('--full', dest = "full_term", action = 'store_true', default = False,
                          help = 'use full term for extremum condition (default: just use the vortensity part)')
 
     # Plot Parameters (variable)
