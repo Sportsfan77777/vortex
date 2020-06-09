@@ -72,7 +72,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [0, 0.2],
                          help = 'range in y-axis (default: [0, 0.2])')
-    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-1, 1],
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-1.5, 1.5],
                          help = 'range in y-axis (default: [-1, 1])')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
@@ -210,8 +210,8 @@ def make_plot(frame, show = False):
     x = rad[1:]
     y = maximum_condition
     y2 = diff_maximum_condition
-    result = host.plot(x, y, c = 'b', linewidth = linewidth, zorder = 99)
-    result2 = twin.plot(x[1:], y2, c = 'purple', linewidth = linewidth, zorder = 99)
+    result = host.plot(x, y, c = 'b', linewidth = linewidth + 1, zorder = 99, label = "Condition")
+    result2 = twin.plot(x[1:], y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -233,7 +233,7 @@ def make_plot(frame, show = False):
         y_compare = normalized_density_compare
         result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "compare")
 
-        plot.legend()
+    plot.legend(loc = "upper left")
 
     # Axes
     host.set_xlim(x_min, x_max)
@@ -254,7 +254,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     host.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    host.set_ylabel(r"($c_s^2$ $\Sigma$ $/$ $\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
+    host.set_ylabel(r"$c_s^2$ $\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
@@ -268,7 +268,7 @@ def make_plot(frame, show = False):
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    plot.text(x_mid, y_text * y_range[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
