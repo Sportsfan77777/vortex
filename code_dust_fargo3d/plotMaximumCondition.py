@@ -70,7 +70,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [0, 0.2],
+    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [0, 0.1],
                          help = 'range in y-axis (default: [0, 0.2])')
     parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-1.5, 1.5],
                          help = 'range in y-axis (default: [-1, 1])')
@@ -206,6 +206,20 @@ def make_plot(frame, show = False):
     dr = rad[1] - rad[0]
     diff_maximum_condition = np.diff(maximum_condition) / dr
 
+    # Diagnostics
+    peak_rad, peak_density = az.get_radial_peak(normalized_density, fargo_par)
+    peak_rad_i = np.searchsorted(rad, peak_rad)
+    inner_limit_i = np.searchsorted(rad, 1.05) # Make inner limit a variable in the future
+    outer_limit_i = np.searchsorted(rad, 2.00) # Make outer limit a variable in the future
+
+    inner_max_diff_i = np.argmax(diff_maximum_condition[inner_limit_i : peak_rad_i])
+    outer_max_diff_i = np.argmin(diff_maximum_condition[peak_rad_i : outer_limit_i])
+    outer_max_diff_i += peak_rad_i
+
+    inner_rossby_rad = rad[inner_max_diff_i]
+    outer_rossby_rad = rad[outer_max_diff_i]
+    difference = outer_rossby_rad - inner_rossby_rad
+
     ### Plot ###
     x = rad[1:]
     y = maximum_condition
@@ -278,8 +292,15 @@ def make_plot(frame, show = False):
     host.text(x_mid, y_text * y_range[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
-    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
-    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
+    x_text = x_min + 0.8 * (x_max - x_min) 
+    y_text = 0.95 * y_range[-1]
+    linebreak = 0.04 * y_range[-1]
+    host.text(x_text, y_text - 0.0 * linebreak, "%.2f" % inner_rossby_rad, c = 'k')
+    host.text(x_text, y_text - 1.0 * linebreak, "%.2f" % outer_rossby_rad, c = 'k')
+    host.text(x_text, y_text - 2.0 * linebreak, "%.2f" % difference, c = 'k')
+
+    #text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
+    #text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
