@@ -209,8 +209,8 @@ def make_plot(frame, show = False):
     # Diagnostics
     peak_rad, peak_density = az.get_radial_peak(averaged_density, fargo_par)
     peak_rad_i = np.searchsorted(rad, peak_rad)
-    inner_limit_i = np.searchsorted(rad, 1.05) # Make inner limit a variable in the future
-    outer_limit_i = np.searchsorted(rad, 2.00) # Make outer limit a variable in the future
+    inner_limit_i = np.searchsorted(rad, 1.1) # Make inner limit a variable in the future
+    outer_limit_i = np.searchsorted(rad, 2.0) # Make outer limit a variable in the future
 
     inner_max_diff_i = np.argmax(diff_maximum_condition[inner_limit_i : peak_rad_i])
     outer_max_diff_i = np.argmin(diff_maximum_condition[peak_rad_i : outer_limit_i])
