@@ -223,7 +223,7 @@ def make_plot(frame, show = False):
     difference = outer_rossby_rad - inner_rossby_rad
 
     inner_rossby_value = diff_maximum_condition[inner_max_diff_i]
-    outer_rossby_value = diff_maximum_condition[outer_max_diff_i]
+    outer_rossby_value = diff_maximum_condition[outer_max_diff_i] * -1.0 # absolute value
 
     ### Plot ###
     x = rad[1:]
@@ -299,7 +299,7 @@ def make_plot(frame, show = False):
     host.text(x_mid, y_text * y_range[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
-    x_text = x_min + 0.8 * (x_max - x_min) 
+    x_text = x_min + 0.75 * (x_max - x_min) 
     y_text = 0.95 * y_range[-1]
     linebreak = 0.04 * y_range[-1]
     host.text(x_text, y_text - 0.0 * linebreak, r"$r_1 = %.2f$     ($%.3f$)" % (inner_rossby_rad, inner_rossby_value), color = 'black')
