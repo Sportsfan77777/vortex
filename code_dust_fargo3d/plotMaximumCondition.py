@@ -235,6 +235,7 @@ def make_plot(frame, show = False):
     result2 = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
 
     # Reference
+    y_min = y_range[0]; y_max = y_range[-1]
     host.plot([inner_rossby_rad, inner_rossby_rad], [y_min, y_min + 0.8 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
     host.plot([outer_rossby_rad, outer_rossby_rad], [y_min, y_min + 0.8 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
 
