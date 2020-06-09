@@ -268,7 +268,7 @@ def make_plot(frame, show = False):
     twin.set_ylim(y2_range[0], y2_range[1])
 
     tkw = dict(size=4, width=1.5)
-    host.tick_params(axis = 'y', colors = result1.get_color(), **tkw)
+    host.tick_params(axis = 'y', colors = result.get_color(), **tkw)
     twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
 
     # Annotate Axes
