@@ -295,9 +295,9 @@ def make_plot(frame, show = False):
     x_text = x_min + 0.8 * (x_max - x_min) 
     y_text = 0.95 * y_range[-1]
     linebreak = 0.04 * y_range[-1]
-    host.text(x_text, y_text - 0.0 * linebreak, "%.2f" % inner_rossby_rad, c = 'k')
-    host.text(x_text, y_text - 1.0 * linebreak, "%.2f" % outer_rossby_rad, c = 'k')
-    host.text(x_text, y_text - 2.0 * linebreak, "%.2f" % difference, c = 'k')
+    host.text(x_text, y_text - 0.0 * linebreak, "%.2f" % inner_rossby_rad, color = 'black')
+    host.text(x_text, y_text - 1.0 * linebreak, "%.2f" % outer_rossby_rad, color = 'black')
+    host.text(x_text, y_text - 2.0 * linebreak, "%.2f" % difference, color = 'black')
 
     #text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
     #text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
