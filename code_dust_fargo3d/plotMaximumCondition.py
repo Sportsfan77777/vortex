@@ -228,11 +228,11 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad[1:]
     y = maximum_condition
-    result = host.plot(x, y, c = 'b', linewidth = linewidth + 1, zorder = 99, label = "Condition")
+    result, = host.plot(x, y, c = 'b', linewidth = linewidth + 1, zorder = 99, label = "Condition")
 
     x2 = x[:-1]
     y2 = diff_maximum_condition
-    result2 = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
+    result2, = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
 
     # Reference
     y_min = y_range[0]; y_max = y_range[-1]
