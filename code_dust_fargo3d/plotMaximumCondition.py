@@ -215,19 +215,24 @@ def make_plot(frame, show = False):
     inner_max_diff_i = np.argmax(diff_maximum_condition[inner_limit_i : peak_rad_i])
     outer_max_diff_i = np.argmin(diff_maximum_condition[peak_rad_i : outer_limit_i])
 
-    inner_max_diff_i += inner_limit_i
+    inner_max_diff_i += inner_limit_i # put the "inner disk" back
     outer_max_diff_i += peak_rad_i
 
     inner_rossby_rad = rad[inner_max_diff_i]
     outer_rossby_rad = rad[outer_max_diff_i]
     difference = outer_rossby_rad - inner_rossby_rad
 
+    inner_rossby_value = diff_maximum_condition[inner_max_diff_i]
+    outer_rossby_value = diff_maximum_condition[outer_max_diff_i]
+
     ### Plot ###
     x = rad[1:]
     y = maximum_condition
-    y2 = diff_maximum_condition
     result = host.plot(x, y, c = 'b', linewidth = linewidth + 1, zorder = 99, label = "Condition")
-    result2 = twin.plot(x[1:], y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
+
+    x2 = x[:-1]
+    y2 = diff_maximum_condition
+    result2 = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -297,8 +302,8 @@ def make_plot(frame, show = False):
     x_text = x_min + 0.8 * (x_max - x_min) 
     y_text = 0.95 * y_range[-1]
     linebreak = 0.04 * y_range[-1]
-    host.text(x_text, y_text - 0.0 * linebreak, r"$r_1 = %.2f$" % inner_rossby_rad, color = 'black')
-    host.text(x_text, y_text - 1.0 * linebreak, r"$r_2 = %.2f$" % outer_rossby_rad, color = 'black')
+    host.text(x_text, y_text - 0.0 * linebreak, r"$r_1 = %.2f$     ($%.3f$)" % (inner_rossby_rad, inner_rossby_value), color = 'black')
+    host.text(x_text, y_text - 1.0 * linebreak, r"$r_2 = %.2f$     ($%.3f$)" % (outer_rossby_rad, outer_rossby_value), color = 'black')
     host.text(x_text, y_text - 2.0 * linebreak, r"$\Delta r = %.2f$" % difference, color = 'black')
 
     #text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
