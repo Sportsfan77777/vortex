@@ -57,6 +57,7 @@ movie_dictionary["rotationSpeed"] = "vortexRotationSpeedMap_"
 movie_dictionary["averagedStress"] = "averagedStress_"
 movie_dictionary["azimuthalProfile"] = "azimuthalProfile_"
 movie_dictionary["waveAction"] = "waveAction_"
+movie_dictionary["maximumCondition"] = "maximumCondition_"
 movie_dictionary["radialVortexTracker"] = "radialVortexTracker_"
 
 ###############################################################################
