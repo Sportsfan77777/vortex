@@ -210,8 +210,8 @@ def make_plot(frame, show = False):
     x = rad[1:]
     y = maximum_condition
     y2 = diff_maximum_condition
-    result = host.plot(x, y, linewidth = linewidth, zorder = 99)
-    result2 = twin.plot(x[1:], y2, linewidth = linewidth, zorder = 99)
+    result = host.plot(x, y, c = 'b', linewidth = linewidth, zorder = 99)
+    result2 = twin.plot(x[1:], c = 'purple', y2, linewidth = linewidth, zorder = 99)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
