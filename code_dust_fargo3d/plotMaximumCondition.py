@@ -72,7 +72,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [0, 0.1],
                          help = 'range in y-axis (default: [0, 0.2])')
-    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-1.5, 1.5],
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-0.5, 0.5],
                          help = 'range in y-axis (default: [-1, 1])')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
@@ -239,6 +239,8 @@ def make_plot(frame, show = False):
     host.plot([inner_rossby_rad, inner_rossby_rad], [y_min, y_min + 0.7 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
     host.plot([peak_rad, peak_rad], [y_min, y_min + 0.8 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
     host.plot([outer_rossby_rad, outer_rossby_rad], [y_min, y_min + 0.7 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
+
+    twin.plot([x_min, x_max], [0, 0], c = 'k', linewidth = 1, zorder = 1)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
