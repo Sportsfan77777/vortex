@@ -165,6 +165,7 @@ if args.r_lim is None:
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 y_range = args.y_range
+y2_range = args.y2_range
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
