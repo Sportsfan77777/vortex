@@ -234,6 +234,10 @@ def make_plot(frame, show = False):
     y2 = diff_maximum_condition
     result2 = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99, label = "Derivative")
 
+    # Reference
+    host.plot([inner_rossby_rad, inner_rossby_rad], [y_min, y_min + 0.8 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
+    host.plot([outer_rossby_rad, outer_rossby_rad], [y_min, y_min + 0.8 * (y_max - y_min)], c = 'k', linewidth = 1, zorder = 1)
+
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
         averagedDensity_zero = np.average(density_zero, axis = 1)
