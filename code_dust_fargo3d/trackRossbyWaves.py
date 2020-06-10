@@ -313,14 +313,14 @@ outer_peak_difference_over_time = mp_array("d", len(frame_range))
 inner_rossby_value_over_time = mp_array("d", len(frame_range))
 outer_rossby_value_over_time = mp_array("d", len(frame_range))
 
-for i, frame in enumerate(frame_range):
-    get_rossby_criteria((i, frame))
+#for i, frame in enumerate(frame_range):
+#    get_rossby_criteria((i, frame))
 
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-#p = Pool(num_cores)
-#p.map(get_rossby_criteria, pool_args)
-#p.terminate()
+p = Pool(num_cores)
+p.map(get_rossby_criteria, pool_args)
+p.terminate()
 
 ##### Helper Functions #####
 
