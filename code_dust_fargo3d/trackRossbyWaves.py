@@ -355,7 +355,7 @@ def make_plot(show = False):
     # Axes
     #host.xaxis.set_minor_locator(MultipleLocator(500))
     par1.set_xlim(x[0], x[-1])
-    par1.set_ylim(10**(-2), 10**2)
+    par1.set_ylim(10**(-2), 10**1)
 
     par1.set_yscale('log')
 
@@ -374,7 +374,7 @@ def make_plot(show = False):
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     par2.set_xlim(x[0], x[-1])
-    par2.set_ylim(1, 2)
+    par2.set_ylim(1.1, 1.7)
 
     par2.set_ylabel("Radii", fontsize = fontsize)
 
