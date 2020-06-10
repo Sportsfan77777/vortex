@@ -336,7 +336,7 @@ def make_patch_spines_invisible(ax):
 
 def make_plot(show = False):
     # Set up figure
-    fig = plot.figure(figsize = (8, 10), dpi = dpi)
+    fig = plot.figure(figsize = (7, 12), dpi = dpi)
 
     ##### PLOT 1 #####
     par1 = plot.subplot(3, 1, 1)
@@ -404,7 +404,7 @@ def make_plot(show = False):
         alpha_coefficent = "6"
 
     title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
+    par1.set_title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
