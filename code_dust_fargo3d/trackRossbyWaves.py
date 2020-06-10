@@ -57,6 +57,12 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--dir', dest = "save_directory", default = "rossbyWavesOverTime",
                          help = 'save directory (default: .)')
 
+    # Quantity to plot
+    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
+                         help = 'plot rossby number instead of vorticity (default: plot vorticity)')
+    parser.add_argument('--residual', dest = "residual", action = 'store_true', default = False,
+                         help = 'use v_theta or v_theta - v_kep (default: do not use residual)')
+
     # Reference
     parser.add_argument('--ref', dest = "ref", type = int, default = 0,
                          help = 'reference taper time for prescribed growth curve (default: no reference)')
@@ -158,6 +164,10 @@ num_cores = args.num_cores
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Quantity to Plot
+rossby = args.rossby
+residual = args.residual
 
 # Reference
 ref = args.ref
