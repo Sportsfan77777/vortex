@@ -112,6 +112,11 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'select directories to compare planet growth rates')
 
+    # Quantity to plot
+    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
+                         help = 'plot rossby number instead of vorticity (default: plot vorticity)')
+    parser.add_argument('--residual', dest = "residual", action = 'store_true', default = False,
+                         help = 'use v_theta or v_theta - v_kep (default: do not use residual)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -196,6 +201,10 @@ num_cores = args.num_cores
 
 # Reference
 ref = args.ref
+
+# Quantity to Plot
+rossby = args.rossby
+residual = args.residual
 
 # Plot Parameters (variable)
 show = args.show
