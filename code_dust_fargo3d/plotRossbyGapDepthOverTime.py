@@ -235,7 +235,7 @@ def find_min(averagedDensity):
 
     return min_density
 
-def find_rossby_min(averaged_density):
+def find_rossby_density(averaged_density):
     # Maximum Condition (and its derivative)
     vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
