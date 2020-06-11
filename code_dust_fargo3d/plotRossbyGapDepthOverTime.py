@@ -59,7 +59,7 @@ master_accretion_rates[86] = [0.17, 0.05, 0.02]
 master_accretion_rates[66] = [0.50, 0.17, 0.05]
 master_accretion_rates[0] = [0, 0]
 master_accretion_rates[871] = [0.17, 0.05, 0.02, 0.01, 0.25]
-master_accretion_rates[671] = [0.50, 0.17, 0.05, 0.02, 0.125]
+master_accretion_rates[671] = [0.50, 0.17, 0.05, 0.02, 0.125, 1.0]
 
 master_start_times = {}
 master_start_times[87] = [349, 913, 1751, 2875]
