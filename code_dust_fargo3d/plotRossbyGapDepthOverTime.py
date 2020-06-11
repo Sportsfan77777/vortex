@@ -63,7 +63,7 @@ master_accretion_rates[671] = [0.50, 0.17, 0.05, 0.02, 0.125]
 
 master_start_times = {}
 master_start_times[87] = [349, 913, 1751, 2875]
-master_start_times[67] = [0, 0, 0, 0] #[108, 217, 451, 788]
+master_start_times[67] = [108, 217, 451, 788]
 master_start_times[47] = [59, 70, 104, 223]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
@@ -83,7 +83,7 @@ master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
 master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 9000, 50], [0, 11700, 50]]
-master_frame_ranges[67] = [[75, 3000, 250], [100, 3500, 250], [300, 7000, 250], [600, 8500, 250]]
+master_frame_ranges[67] = [[75, 3000, 25], [100, 3500, 25], [300, 7000, 25], [600, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -390,7 +390,7 @@ def make_plot(show = False):
         plot.xlim(0, frame_ranges[0][1])
 
     if args.choice > 0:
-        plot.ylim(1, 10**(5))
+        plot.ylim(1, 10**(2))
         plot.yscale('log')
     else:
         plot.ylim(1, 5)
