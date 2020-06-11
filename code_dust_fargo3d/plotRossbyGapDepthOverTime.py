@@ -49,7 +49,7 @@ master_directories[86] = ["h08_nu6_a167-offset", "h08_nu6_a05-offset", "h08_nu6_
 master_directories[66] = ["h06_nu6_a50-offset", "h06_nu6_a167-offset", "h06_nu6_a05-offset"]
 master_directories[0] = ["hi_res_high_density-2000", "hi_res_high_density-2000-m2500"]
 master_directories[871] = ["h08_nu7_a167-offset", "h08_nu7_a05-offset", "h08_nu7_a02-offset", "h08_nu7_a01-offset", "h08_nu7_a25-low_mass-offset"]
-master_directories[671] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_a05-offset", "h06_nu7_a02-offset", "h06_nu7_a125-low_mass-offset"]
+master_directories[671] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_a05-offset", "h06_nu7_a02-offset", "h06_nu7_a125-low_mass-offset", "h06_nu7_a100-low_mass-offset"]
 
 master_accretion_rates = {}
 master_accretion_rates[87] = [0.17, 0.05, 0.02, 0.01]
@@ -69,7 +69,7 @@ master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
 master_start_times[0] = [600, 2500]
 master_start_times[871] = [349, 913, 1751, 2875, 0]
-master_start_times[671] = [108, 217, 451, 788, 0]
+master_start_times[671] = [108, 217, 451, 788, 0, 0]
 
 master_end_times = {}
 master_end_times[87] = [5000, 4745, 9000, 11700]
@@ -79,7 +79,7 @@ master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
 master_end_times[0] = [5000, 3000]
 master_end_times[871] = [4000, 4745, 9000, 11700, 0]
-master_end_times[671] = [2512, 2502, 6918, 7500, 0]
+master_end_times[671] = [2512, 2502, 6918, 7500, 0, 0]
 
 master_frame_ranges = {}
 master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 9000, 50], [0, 11700, 50]]
@@ -89,7 +89,7 @@ master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
 master_frame_ranges[871] = [[0, 8000, 200], [0, 7000, 200], [0, 9000, 200], [0, 11700, 200], [0, 2500, 25]]
-master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
+master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25], 0, 3000, 25]]
 
 ###############################################################################
 
@@ -300,7 +300,7 @@ gap_depth_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges[0
 
 ##### PLOTTING #####
 
-colors = ['k', 'cornflowerblue', 'darkorange', 'r', 'green']
+colors = ['k', 'cornflowerblue', 'darkorange', 'r', 'green', 'purple']
 labelsize = 19
 size = 100
 
@@ -358,7 +358,7 @@ def make_plot(show = False):
         num_frames = len(frame_range)
         this_gap_depth_over_time = np.array(gap_depth_over_time[:num_frames])
 
-        if i == 4:
+        if i >= 4:
             this_gap_depth_over_time = this_gap_depth_over_time * (0.3) # low-mass case
 
         ### Plot ###
@@ -390,7 +390,7 @@ def make_plot(show = False):
         plot.xlim(0, frame_ranges[0][1])
 
     if args.choice > 0:
-        plot.ylim(1, 10**(2))
+        plot.ylim(1, 3.0 * 10**(1))
         plot.yscale('log')
     else:
         plot.ylim(1, 5)
