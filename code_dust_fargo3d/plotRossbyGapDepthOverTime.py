@@ -235,13 +235,8 @@ def find_min(averagedDensity):
 
     return min_density
 
-def find_rossby_density(frame, averaged_density):
+def find_rossby_density(averaged_density, averaged_vorticity):
     # Maximum Condition (and its derivative)
-    vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
-
-    averaged_vorticity = np.average(vorticity, axis = 1)
     maximum_condition = (averaged_density[1:] / averaged_vorticity) * (np.power(scale_height, 2) / np.power(rad[1:], 1))
 
     dr = rad[1] - rad[0]
@@ -270,9 +265,15 @@ def get_min(args_here):
     density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
+
+    vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+
+    averaged_vorticity = np.average(vorticity, axis = 1)
     
     # Get Minima
-    min_density = find_rossby_density(frame, normalized_density)
+    min_density = find_rossby_density(normalized_density, averaged_vorticity)
 
     # Print Update
     print "%d: %.3f, %.3f" % (frame, min_density, 1.0 / min_density)
