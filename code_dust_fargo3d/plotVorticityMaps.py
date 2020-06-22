@@ -322,7 +322,7 @@ def make_plot(frame, show = False):
         radial_velocity = vrad
         azimuthal_velocity = vtheta
         keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
-        azimuthal_velocity -= keplerian_velocity[:, None]
+        #azimuthal_velocity -= keplerian_velocity[:, None]
 
         if center:
             radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
