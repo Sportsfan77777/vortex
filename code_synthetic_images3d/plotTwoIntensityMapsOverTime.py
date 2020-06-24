@@ -37,7 +37,7 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = 3,
+    parser.add_argument('frames', type = int, nargs = 2,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
