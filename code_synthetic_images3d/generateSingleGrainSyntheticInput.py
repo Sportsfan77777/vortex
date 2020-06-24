@@ -221,8 +221,8 @@ def polish(density, frame, shift_i, size, cavity_cutoff = 0.92, scale_density = 
         density[:cavity_cutoff_i] = 0.0
 
         outer_cutoff = 2.75
-        outer_cavity = np.searchsorted(rad, outer_cutoff)
-        density[cavity_cutoff_i:] = 0.0
+        outer_cutoff_i = np.searchsorted(rad, outer_cutoff)
+        density[outer_cutoff_i:] = 0.0
 
     # Scale
     density *= scale_density
