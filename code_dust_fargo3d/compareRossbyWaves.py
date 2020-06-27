@@ -268,7 +268,7 @@ def get_rossby_criteria(args_here):
     outer_max_diff_i += peak_rad_i
 
     # Alternate: For inner rossby rad, use minimum in vorticity profile
-    inner_rossby_rad, _ = az.get_radial_peak(-1.0 / averaged_vorticity, fargo_par)
+    inner_rossby_rad, _ = az.get_radial_peak(-1.0 * averaged_vorticity, fargo_par)
 
     #inner_rossby_rad = rad[inner_max_diff_i]
     outer_rossby_rad = rad[outer_max_diff_i]
