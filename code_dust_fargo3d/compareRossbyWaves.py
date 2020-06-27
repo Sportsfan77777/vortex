@@ -267,7 +267,10 @@ def get_rossby_criteria(args_here):
     inner_max_diff_i += inner_limit_i # put the "inner disk" back
     outer_max_diff_i += peak_rad_i
 
-    inner_rossby_rad = rad[inner_max_diff_i]
+    # Alternate: For inner rossby rad, use minimum in vorticity profile
+    inner_rossby_rad, _ = az.get_radial_peak(1.0 / averaged_vorticity, fargo_par)
+
+    #inner_rossby_rad = rad[inner_max_diff_i]
     outer_rossby_rad = rad[outer_max_diff_i]
     difference = outer_rossby_rad - inner_rossby_rad
 
@@ -404,7 +407,7 @@ def make_plot(show = False):
         x_max = frame_ranges[0][1]
         plot.xlim(0, x_max)
 
-    plot.ylim(0, 0.3)
+    plot.ylim(1.1, 1.45)
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
