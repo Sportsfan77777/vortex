@@ -238,13 +238,13 @@ fargo_par["theta"] = theta
 
 def get_rossby_criteria(args_here):
     # Unwrap Args
-    i, frame = args_here
+    i, frame, directory = args_here
 
     # Data
-    normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
+    normalized_density = (fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) / surface_density_zero
 
-    vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    vrad = (fromfile("../%s/gasvy%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+    vtheta = (fromfile("../%s/gasvx%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
     averaged_vorticity = np.average(vorticity, axis = 1)
