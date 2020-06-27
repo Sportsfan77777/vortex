@@ -357,7 +357,7 @@ def make_plot(show = False):
         pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
         p = Pool(num_cores)
-        p.map(get_rossby_number, pool_args)
+        p.map(get_rossby_criteria, pool_args)
         p.terminate()
 
         #if np.max(gap_depth_over_time) > max_gap_depth:
