@@ -403,15 +403,7 @@ def make_plot(show = False):
         x_max = frame_ranges[0][1]
         plot.xlim(0, x_max)
 
-    if args.choice > 0:
-        plot.ylim(-0.4, 0)
-    else:
-        plot.ylim(1, 5)
-        plot.yscale('log')
-        ax.set_major_formatter(ScalarFormatter())
-        plot.yticks([1, 3, 5], ["1", "3", "5"])
-
-    #title = readTitle()
+    plot.ylim(1.1, 1.7)
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
