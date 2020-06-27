@@ -435,7 +435,7 @@ def make_plot(show = False):
     if version is None:
         save_fn = "%s/rossbyWaves_choice%d.png" % (save_directory, args.choice)
     else:
-        save_fn = "%s/v%04d_rossbyWaves_choice%d.png" % (save_directory, version, arg.choice)
+        save_fn = "%s/v%04d_rossbyWaves_choice%d.png" % (save_directory, version, args.choice)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
