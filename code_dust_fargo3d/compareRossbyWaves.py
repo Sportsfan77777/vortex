@@ -404,7 +404,7 @@ def make_plot(show = False):
         x_max = frame_ranges[0][1]
         plot.xlim(0, x_max)
 
-    plot.ylim(1.1, 1.7)
+    plot.ylim(1.1, 1.45)
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
