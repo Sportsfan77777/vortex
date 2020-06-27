@@ -377,7 +377,7 @@ def make_plot(show = False):
         # Basic
         x = frame_range
         y = this_inner_rossby_rad_over_time
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth + 1, zorder = 99, label = label)
+        result = plot.plot(x, y, c = colors[i], linewidth = linewidth + 1, zorder = 99, label = label, alpha = 0.65)
 
         # Vortex Lifetime
         if start_time > 1e6:
@@ -407,7 +407,7 @@ def make_plot(show = False):
         x_max = frame_ranges[0][1]
         plot.xlim(0, x_max)
 
-    plot.ylim(1.1, 1.45)
+    plot.ylim(1.1, 1.5)
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
