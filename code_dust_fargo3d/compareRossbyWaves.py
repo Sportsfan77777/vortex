@@ -365,7 +365,7 @@ def make_plot(show = False):
         #    max_gap_depth = np.max(gap_depth_over_time)
 
         num_frames = len(frame_range)
-        this_inner_rossby_rad_over_time = np.array(inner_rossby_rad_over_time[:num_frames])
+        this_peak_rad_over_time = np.array(peak_rad_over_time[:num_frames])
 
         #if i == 4:
         #    this_gap_depth_over_time = this_gap_depth_over_time * (0.3) # low-mass case
@@ -373,7 +373,7 @@ def make_plot(show = False):
         ### Plot ###
         # Basic
         x = frame_range
-        y = this_inner_rossby_rad_over_time
+        y = this_peak_rad_over_time
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth + 1, zorder = 99, label = label)
 
         # Vortex Lifetime
@@ -404,7 +404,7 @@ def make_plot(show = False):
         x_max = frame_ranges[0][1]
         plot.xlim(0, x_max)
 
-    plot.ylim(1.1, 1.45)
+    plot.ylim(1.3, 1.6)
 
     unit = "planet orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
