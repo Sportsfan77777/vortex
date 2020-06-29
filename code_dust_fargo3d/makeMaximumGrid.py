@@ -49,13 +49,13 @@ iniital_density_maxima_h4 = []
 iniital_critical_maxima_h6 = [1.168, 1.182, 1.200, 1.217]
 iniital_density_maxima_h6 = [1.220, 1.228, 1.242, 1.257]
 
-iniital_critical_maxima_h8 = [1.168, 1.182, 1.200, 1.217]
-iniital_density_maxima_h8 = [1.220, 1.228, 1.242, 1.257]
+iniital_critical_maxima_h8 = [1.261, 1.287, 1.316, 1.343]
+iniital_density_maxima_h8 = [1.318, 1.348, 1.372, 1.389]
 
 # Later Generation Vortices
 
 second_accretion_numbers_h4 = [2, 3, 3, 4, 4, 4]
-second_critical_maxima_h4 = [1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 1.178, 1.193]
+second_critical_maxima_h4 = [1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 1.178]
 second_density_maxima_h4 = [1.343, 1.300, 1.310, 1.250, 1.257, 1.264, 1.275]
 
 second_accretion_numbers_h6 = [3, 3, 4, 4, 4]
@@ -159,46 +159,49 @@ def make_plot(show = False):
 
         return np.where(x < 0.05, option1(x), option2(x))
 
-    x_ref = np.logspace(-2, -1, 201)
-    y_h4 = marginally_stable(x_ref, h = 0.04)
-    y_h6 = marginally_stable(x_ref, h = 0.06)
-    y_h8 = marginally_stable(x_ref, h = 0.08)
-    ref_h4, = plot.plot(x_ref, y_h4, linewidth = linewidth, c = colors[0], label = r"$h = 0.04$")
-    ref_h6, = plot.plot(x_ref, y_h6, linewidth = linewidth, c = colors[1], label = r"$h = 0.06$")
-    ref_h8, = plot.plot(x_ref, y_h8, linewidth = linewidth, c = colors[2], label = r"$h = 0.08$")
+    x_ref = np.linspace(1, 2, 201)
+    y_ref = x_ref
+    ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
+    #y_h4 = marginally_stable(x_ref, h = 0.04)
+    #y_h6 = marginally_stable(x_ref, h = 0.06)
+    #y_h8 = marginally_stable(x_ref, h = 0.08)
+    #ref_h4, = plot.plot(x_ref, y_h4, linewidth = linewidth, c = colors[0], label = r"$h = 0.04$")
+    #ref_h6, = plot.plot(x_ref, y_h6, linewidth = linewidth, c = colors[1], label = r"$h = 0.06$")
+    #ref_h8, = plot.plot(x_ref, y_h8, linewidth = linewidth, c = colors[2], label = r"$h = 0.08$")
 
-    # Actual Values (Initial, Secondary, Stable)
-    i_h4 = plot.scatter(initial_widths_h4, initial_amplitudes_h4, s = 100, c = colors[0], zorder = 100)
-    i_h6 = plot.scatter(initial_widths_h6, initial_amplitudes_h6, s = 100, c = colors[1], zorder = 100)
-    i_h8 = plot.scatter(initial_widths_h8, initial_amplitudes_h8, s = 100, c = colors[2], zorder = 100)
+    # Actual Values (Initial, Secondary, Interior, Too Interior)
+    i_h4 = plot.scatter(iniital_critical_maxima_h4, iniital_density_maxima_h4, s = 100, c = colors[0], zorder = 100)
+    i_h6 = plot.scatter(iniital_critical_maxima_h6, iniital_density_maxima_h6, s = 100, c = colors[1], zorder = 100)
+    i_h8 = plot.scatter(iniital_critical_maxima_h8, iniital_density_maxima_h8, s = 100, c = colors[2], zorder = 100)
 
-    s_h4 = plot.scatter(second_widths_h4, second_amplitudes_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
-    s_h6 = plot.scatter(second_widths_h6, second_amplitudes_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
-    #s_h8, = plot.scatter(second_widths_h8, second_amplitudes_h8, s = 150, c = colors[2], zorder = 100, marker = "")
+    s_h4 = plot.scatter(second_critical_maxima_h4, second_density_maxima_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
+    s_h6 = plot.scatter(second_critical_maxima_h6, second_density_maxima_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
+    #s_h8, = plot.scatter(second_critical_maxima_h8, second_critical_maxima_h8, s = 150, c = colors[2], zorder = 100, marker = "")
 
-    d_h4 = plot.scatter(death_widths_h4, death_amplitudes_h4, s = 100, c = colors[0], zorder = 100, marker = "D", alpha = 0.5)
-    d_h6 = plot.scatter(death_widths_h6, death_amplitudes_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
-    #d_h8, = plot.scatter(death_widths_h8, death_amplitudes_h8, s = 100, c = colors[2], zorder = 100, marker = "")
+    d_h4 = plot.scatter(interior_critical_maxima_h4, interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "D", alpha = 0.5)
+    d_h6 = plot.scatter(interior_critical_maxima_h6, interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
+    #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "")
 
     # Axes
-    plot.xlim(0.028, 0.1)
-    plot.ylim(0.03, 3.5)
-    plot.xscale("log"); plot.yscale("log")
+    plot.xlim(1, 1.6)
+    plot.ylim(1, 1.6)
+    #plot.xscale("log"); plot.yscale("log")
 
-    plot.xticks([0.04, 0.06, 0.08, 0.1], ["0.04", "0.06", "0.08", "0.10"])
-    plot.yticks([0.1, 0.3, 1], ["0.1", "0.3", "1.0"])
+    #plot.xticks([0.04, 0.06, 0.08, 0.1], ["0.04", "0.06", "0.08", "0.10"])
+    #plot.yticks([0.1, 0.3, 1], ["0.1", "0.3", "1.0"])
 
     # Annotate
-    plot.xlabel(r"$\Delta w$ $/$ $r$", fontsize = fontsize)
-    plot.ylabel(r"$\bar{A}$ $/$ $\Sigma_0$", fontsize = fontsize)
-    plot.title(r"Stability of gap-edge bumps", y = 1.02, fontsize = fontsize + 2)
+    unit = "r_\mathrm{p}"
+    plot.xlabel(r"Radius of Critical Function Maximum [$%s$]" % unit, fontsize = fontsize)
+    plot.ylabel(r"Radius of Density Maximum [$%s$]" % unit, fontsize = fontsize)
+    #plot.title(r"Locations of Maxima", y = 1.02, fontsize = fontsize + 2)
 
-    plot.text(0.0295, 2.35, "Unstable", fontsize = fontsize)
-    plot.text(0.078, 0.038, "Stable", fontsize = fontsize)
+    #plot.text(0.0295, 2.35, "Unstable", fontsize = fontsize)
+    #plot.text(0.078, 0.038, "Stable", fontsize = fontsize)
     
-    first_legend = plot.legend([d_h6, s_h6, i_h6], ["RWI-stable", "Re-triggered Vortex", "Initial Vortex"], loc = "lower left", fontsize = fontsize - 2, scatterpoints = 1)
-    second_legend = plot.legend([ref_h4, ref_h6, ref_h8], [r"$h = 0.04$", r"$h = 0.06$", r"$h = 0.08$"], loc = "upper right", fontsize = fontsize - 2)
-    ax = plot.gca().add_artist(first_legend)
+    #first_legend = plot.legend([d_h6, s_h6, i_h6], ["RWI-stable", "Re-triggered Vortex", "Initial Vortex"], loc = "lower left", fontsize = fontsize - 2, scatterpoints = 1)
+    #second_legend = plot.legend([ref_h4, ref_h6, ref_h8], [r"$h = 0.04$", r"$h = 0.06$", r"$h = 0.08$"], loc = "upper right", fontsize = fontsize - 2)
+    #ax = plot.gca().add_artist(first_legend)
 
 
     #if version is None:
