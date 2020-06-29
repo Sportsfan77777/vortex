@@ -68,13 +68,13 @@ second_density_maxima_h8 = []
 
 # Vortices that reform interior
 
-interior_accretion_numbers_h4 = []
-interior_critical_maxima_h4 = []
-interior_density_maxima_h4 = []
+interior_accretion_numbers_h4 = [4]
+interior_critical_maxima_h4 = [1.193]
+interior_density_maxima_h4 = [1.304]
 
-interior_accretion_numbers_h6 = []
-interior_critical_maxima_h6 = []
-interior_density_maxima_h6 = []
+interior_accretion_numbers_h6 = [3, 3]
+interior_critical_maxima_h6 = [1.224, 1.235]
+interior_density_maxima_h6 = [1.432, 1.457]
 
 interior_accretion_numbers_h8 = []
 interior_critical_maxima_h8 = []
@@ -82,13 +82,13 @@ interior_density_maxima_h8 = []
 
 # Vortices that reform too interior
 
-too_interior_accretion_numbers_h4 = []
-too_interior_critical_maxima_h4 = []
-too_interior_density_maxima_h4 = []
+too_interior_accretion_numbers_h4 = [1, 2, 3, 3, 4]
+too_interior_critical_maxima_h4 = [1.202, 1.200, 1.189, 1.185, 1.164]
+too_interior_density_maxima_h4 = [1.382, 1.357, 1.325, 1.332, 1.304]
 
-too_interior_accretion_numbers_h6 = []
-too_interior_critical_maxima_h6 = []
-too_interior_density_maxima_h6 = []
+too_interior_accretion_numbers_h6 = [1, 2]
+too_interior_critical_maxima_h6 = [1.264, 1.256]
+too_interior_density_maxima_h6 = [1.540, 1.465]
 
 too_interior_accretion_numbers_h8 = []
 too_interior_critical_maxima_h8 = []
@@ -176,11 +176,16 @@ def make_plot(show = False):
 
     s_h4 = plot.scatter(second_critical_maxima_h4, second_density_maxima_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
     s_h6 = plot.scatter(second_critical_maxima_h6, second_density_maxima_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
-    #s_h8, = plot.scatter(second_critical_maxima_h8, second_critical_maxima_h8, s = 150, c = colors[2], zorder = 100, marker = "")
+    #s_h8, = plot.scatter(second_critical_maxima_h8, second_critical_maxima_h8, s = 150, c = colors[2], zorder = 100, marker = "*")
 
     d_h4 = plot.scatter(interior_critical_maxima_h4, interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "D", alpha = 0.5)
     d_h6 = plot.scatter(interior_critical_maxima_h6, interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
-    #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "")
+    #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "D")
+
+    d_h4 = plot.scatter(too_interior_critical_maxima_h4, too_interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "x", alpha = 0.5)
+    d_h6 = plot.scatter(too_interior_critical_maxima_h6, too_interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "x", alpha = 0.5)
+    #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "x")
+
 
     # Axes
     plot.xlim(1, 1.6)
