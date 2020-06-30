@@ -39,60 +39,64 @@ for key in cmaps:
 
 ###############################################################################
 
+scale_height_version = True
+
+###############################################################################
+
 #### Subtracting the Initial Profile ####
 
 # Initial Vortices
 
-iniital_critical_maxima_h4 = []
-iniital_density_maxima_h4 = []
+initial_critical_maxima_h4 = np.array([1.120, 1.127, 1.130, 1.117])
+initial_density_maxima_h4 = np.array([1.160, 1.160, 1.156, 1.146])
 
-iniital_critical_maxima_h6 = [1.168, 1.182, 1.200, 1.217]
-iniital_density_maxima_h6 = [1.220, 1.228, 1.242, 1.257]
+initial_critical_maxima_h6 = np.array([1.168, 1.182, 1.200, 1.217])
+initial_density_maxima_h6 = np.array([1.220, 1.228, 1.242, 1.257])
 
-iniital_critical_maxima_h8 = [1.261, 1.287, 1.316, 1.343]
-iniital_density_maxima_h8 = [1.318, 1.348, 1.372, 1.389]
+initial_critical_maxima_h8 = np.array([1.261, 1.287, 1.316, 1.343])
+initial_density_maxima_h8 = np.array([1.318, 1.348, 1.372, 1.389])
 
 # Later Generation Vortices
 
-second_accretion_numbers_h4 = [2, 3, 3, 4, 4, 4]
-second_critical_maxima_h4 = [1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 1.178]
-second_density_maxima_h4 = [1.343, 1.300, 1.310, 1.250, 1.257, 1.264, 1.275]
+second_accretion_numbers_h4 = np.array([2, 3, 3, 4, 4, 4])
+second_critical_maxima_h4 = np.array([1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 1.178])
+second_density_maxima_h4 = np.array([1.343, 1.300, 1.310, 1.250, 1.257, 1.264, 1.275])
 
-second_accretion_numbers_h6 = [3, 3, 4, 4, 4]
-second_critical_maxima_h6 = [1.228, 1.228, 1.250, 1.248, 1.304]
-second_density_maxima_h6 = [1.396, 1.414, 1.364, 1.375, 1.382]
+second_accretion_numbers_h6 = np.array([3, 3, 4, 4, 4])
+second_critical_maxima_h6 = np.array([1.228, 1.228, 1.250, 1.248, 1.304])
+second_density_maxima_h6 = np.array([1.396, 1.414, 1.364, 1.375, 1.382])
 
-second_accretion_numbers_h8 = []
-second_critical_maxima_h8 = []
-second_density_maxima_h8 = []
+second_accretion_numbers_h8 = np.array([])
+second_critical_maxima_h8 = np.array([])
+second_density_maxima_h8 = np.array([])
 
 # Vortices that reform interior
 
-interior_accretion_numbers_h4 = [4]
-interior_critical_maxima_h4 = [1.193]
-interior_density_maxima_h4 = [1.304]
+interior_accretion_numbers_h4 = np.array([4])
+interior_critical_maxima_h4 = np.array([1.193])
+interior_density_maxima_h4 = np.array([1.304])
 
-interior_accretion_numbers_h6 = [3, 3]
-interior_critical_maxima_h6 = [1.224, 1.235]
-interior_density_maxima_h6 = [1.432, 1.457]
+interior_accretion_numbers_h6 = np.array([3, 3])
+interior_critical_maxima_h6 = np.array([1.224, 1.235])
+interior_density_maxima_h6 = np.array([1.432, 1.457])
 
-interior_accretion_numbers_h8 = []
-interior_critical_maxima_h8 = []
-interior_density_maxima_h8 = []
+interior_accretion_numbers_h8 = np.array([])
+interior_critical_maxima_h8 = np.array([])
+interior_density_maxima_h8 = np.array([])
 
 # Vortices that reform too interior
 
-too_interior_accretion_numbers_h4 = [1, 2, 3, 3, 4]
-too_interior_critical_maxima_h4 = [1.202, 1.200, 1.189, 1.185, 1.164]
-too_interior_density_maxima_h4 = [1.382, 1.357, 1.325, 1.332, 1.304]
+too_interior_accretion_numbers_h4 = np.array([1, 2, 3, 3, 4])
+too_interior_critical_maxima_h4 = np.array([1.202, 1.200, 1.189, 1.185, 1.164])
+too_interior_density_maxima_h4 = np.array([1.382, 1.357, 1.325, 1.332, 1.304])
 
-too_interior_accretion_numbers_h6 = [1, 2]
-too_interior_critical_maxima_h6 = [1.264, 1.256]
-too_interior_density_maxima_h6 = [1.540, 1.465]
+too_interior_accretion_numbers_h6 = np.array([1, 2])
+too_interior_critical_maxima_h6 = np.array([1.264, 1.256])
+too_interior_density_maxima_h6 = np.array([1.540, 1.465])
 
-too_interior_accretion_numbers_h8 = []
-too_interior_critical_maxima_h8 = []
-too_interior_density_maxima_h8 = []
+too_interior_accretion_numbers_h8 = np.array([])
+too_interior_critical_maxima_h8 = np.array([])
+too_interior_density_maxima_h8 = np.array([])
 
 #### Subtracting \Sigma = 0.667 ####
 
@@ -122,6 +126,39 @@ too_interior_density_maxima_h8 = []
 
 #death_widths_h6 = [0.061, 0.064, 0.077]
 #death_amplitudes_h6 = [0.687, 0.687, 0.518]
+
+if scale_height_version:
+    initial_critical_maxima_h4 = (initial_critical_maxima_h4 - 1.0) / 0.04
+    initial_critical_maxima_h6 = (initial_critical_maxima_h6 - 1.0) / 0.06
+    initial_critical_maxima_h8 = (initial_critical_maxima_h8 - 1.0) / 0.08
+
+    initial_density_maxima_h4 = (initial_density_maxima_h4 - 1.0) / 0.04
+    initial_density_maxima_h6 = (initial_density_maxima_h6 - 1.0) / 0.06
+    initial_density_maxima_h8 = (initial_density_maxima_h8 - 1.0) / 0.08
+
+    second_critical_maxima_h4 = (second_critical_maxima_h4 - 1.0) / 0.04
+    second_critical_maxima_h6 = (second_critical_maxima_h6 - 1.0) / 0.06
+    second_critical_maxima_h8 = (second_critical_maxima_h8 - 1.0) / 0.08
+
+    second_density_maxima_h4 = (second_density_maxima_h4 - 1.0) / 0.04
+    second_density_maxima_h6 = (second_density_maxima_h6 - 1.0) / 0.06
+    second_density_maxima_h8 = (second_density_maxima_h8 - 1.0) / 0.08
+
+    interior_critical_maxima_h4 = (interior_critical_maxima_h4 - 1.0) / 0.04
+    interior_critical_maxima_h6 = (interior_critical_maxima_h6 - 1.0) / 0.06
+    interior_critical_maxima_h8 = (interior_critical_maxima_h8 - 1.0) / 0.08
+
+    interior_density_maxima_h4 = (interior_density_maxima_h4 - 1.0) / 0.04
+    interior_density_maxima_h6 = (interior_density_maxima_h6 - 1.0) / 0.06
+    interior_density_maxima_h8 = (interior_density_maxima_h8 - 1.0) / 0.08
+
+    too_interior_critical_maxima_h4 = (too_interior_critical_maxima_h4 - 1.0) / 0.04
+    too_interior_critical_maxima_h6 = (too_interior_critical_maxima_h6 - 1.0) / 0.06
+    too_interior_critical_maxima_h8 = (too_interior_critical_maxima_h8 - 1.0) / 0.08
+
+    too_interior_density_maxima_h4 = (too_interior_density_maxima_h4 - 1.0) / 0.04
+    too_interior_density_maxima_h6 = (too_interior_density_maxima_h6 - 1.0) / 0.06
+    too_interior_density_maxima_h8 = (too_interior_density_maxima_h8 - 1.0) / 0.08
 
 ###############################################################################
 
@@ -159,7 +196,7 @@ def make_plot(show = False):
 
         return np.where(x < 0.05, option1(x), option2(x))
 
-    x_ref = np.linspace(1, 2, 201)
+    x_ref = np.linspace(0, 10, 201)
     y_ref = x_ref
     ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
     #y_h4 = marginally_stable(x_ref, h = 0.04)
@@ -170,9 +207,9 @@ def make_plot(show = False):
     #ref_h8, = plot.plot(x_ref, y_h8, linewidth = linewidth, c = colors[2], label = r"$h = 0.08$")
 
     # Actual Values (Initial, Secondary, Interior, Too Interior)
-    i_h4 = plot.scatter(iniital_critical_maxima_h4, iniital_density_maxima_h4, s = 100, c = colors[0], zorder = 100)
-    i_h6 = plot.scatter(iniital_critical_maxima_h6, iniital_density_maxima_h6, s = 100, c = colors[1], zorder = 100)
-    i_h8 = plot.scatter(iniital_critical_maxima_h8, iniital_density_maxima_h8, s = 100, c = colors[2], zorder = 100)
+    i_h4 = plot.scatter(initial_critical_maxima_h4, initial_density_maxima_h4, s = 100, c = colors[0], zorder = 100)
+    i_h6 = plot.scatter(initial_critical_maxima_h6, initial_density_maxima_h6, s = 100, c = colors[1], zorder = 100)
+    i_h8 = plot.scatter(initial_critical_maxima_h8, initial_density_maxima_h8, s = 100, c = colors[2], zorder = 100)
 
     s_h4 = plot.scatter(second_critical_maxima_h4, second_density_maxima_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
     s_h6 = plot.scatter(second_critical_maxima_h6, second_density_maxima_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
@@ -182,39 +219,53 @@ def make_plot(show = False):
     d_h6 = plot.scatter(interior_critical_maxima_h6, interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
     #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "D")
 
-    d_h4 = plot.scatter(too_interior_critical_maxima_h4, too_interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "x", alpha = 0.5)
-    d_h6 = plot.scatter(too_interior_critical_maxima_h6, too_interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "x", alpha = 0.5)
+    t_h4 = plot.scatter(too_interior_critical_maxima_h4, too_interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "x", alpha = 0.5)
+    t_h6 = plot.scatter(too_interior_critical_maxima_h6, too_interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "x", alpha = 0.5)
     #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "x")
 
 
     # Axes
     plot.xlim(1, 1.6)
     plot.ylim(1, 1.6)
+
+    if scale_height_version:
+        plot.xlim(0, 10)
+        plot.ylim(0, 10)
+
     #plot.xscale("log"); plot.yscale("log")
 
     #plot.xticks([0.04, 0.06, 0.08, 0.1], ["0.04", "0.06", "0.08", "0.10"])
     #plot.yticks([0.1, 0.3, 1], ["0.1", "0.3", "1.0"])
 
     # Annotate
-    unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius of Critical Function Maximum [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"Radius of Density Maximum [$%s$]" % unit, fontsize = fontsize)
+    if scale_height_version:
+        unit = "(r - r_\mathrm{p}) / h"
+        plot.xlabel(r"Critical Function Maximum [$%s$]" % unit, fontsize = fontsize)
+        plot.ylabel(r"Density Maximum [$%s$]" % unit, fontsize = fontsize)
+    else:
+        unit = "r_\mathrm{p}"
+        plot.xlabel(r"Radius of Critical Function Maximum [$%s$]" % unit, fontsize = fontsize)
+        plot.ylabel(r"Radius of Density Maximum [$%s$]" % unit, fontsize = fontsize)
     #plot.title(r"Locations of Maxima", y = 1.02, fontsize = fontsize + 2)
 
     #plot.text(0.0295, 2.35, "Unstable", fontsize = fontsize)
     #plot.text(0.078, 0.038, "Stable", fontsize = fontsize)
     
-    #first_legend = plot.legend([d_h6, s_h6, i_h6], ["RWI-stable", "Re-triggered Vortex", "Initial Vortex"], loc = "lower left", fontsize = fontsize - 2, scatterpoints = 1)
-    #second_legend = plot.legend([ref_h4, ref_h6, ref_h8], [r"$h = 0.04$", r"$h = 0.06$", r"$h = 0.08$"], loc = "upper right", fontsize = fontsize - 2)
-    #ax = plot.gca().add_artist(first_legend)
+    first_legend = plot.legend([t_h6, d_h6, s_h6, i_h6], ["No Vortex", "Interior Re-trigger", "Re-triggered Vortex", "Initial Vortex"], loc = "lower right", fontsize = fontsize - 2, scatterpoints = 1)
+    second_legend = plot.legend([i_h8, i_h6, i_h4], [r"$h = 0.08$", r"$h = 0.06$", r"$h = 0.04$"], loc = "upper right", fontsize = fontsize - 2, scatterpoints = 1)
+    ax = plot.gca().add_artist(first_legend)
 
 
     #if version is None:
     #    save_fn = "%s_onoGrid.png" % ()
     #else:
     #    save_fn = "v%04d_%s_onoGrid.png" % (version)
-    plot.savefig("maximumGrid.png", bbox_inches = 'tight', dpi = dpi)
-    plot.savefig("maximumGrid.pdf", bbox_inches = 'tight', dpi = dpi, format = "pdf")
+    if scale_height_version:
+        plot.savefig("maximumGrid-h.png", bbox_inches = 'tight', dpi = dpi)
+        plot.savefig("maximumGrid-h.pdf", bbox_inches = 'tight', dpi = dpi, format = "pdf")
+    else:
+        plot.savefig("maximumGrid.png", bbox_inches = 'tight', dpi = dpi)
+        plot.savefig("maximumGrid.pdf", bbox_inches = 'tight', dpi = dpi, format = "pdf")
 
     if show:
         plot.show()
