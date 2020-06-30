@@ -201,6 +201,7 @@ def make_plot(show = False):
     ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
 
     if scale_height_version:
+        # Reference lines for each scale height of separation
         for i in range(10):
             plot.plot(x_ref, y_ref + i + 1, linewidth = 1 + (i % 2), c = 'k', alpha = 0.4)
 
