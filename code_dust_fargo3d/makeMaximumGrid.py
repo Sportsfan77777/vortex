@@ -199,6 +199,11 @@ def make_plot(show = False):
     x_ref = np.linspace(0, 10, 201)
     y_ref = x_ref
     ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
+
+    if scale_height_version:
+        for i in range(10):
+            plot.plot(x_ref, y_ref + i + 1, linewidth = 1 + (i % 2), c = 'k', alpha = 0.4)
+
     #y_h4 = marginally_stable(x_ref, h = 0.04)
     #y_h6 = marginally_stable(x_ref, h = 0.06)
     #y_h8 = marginally_stable(x_ref, h = 0.08)
