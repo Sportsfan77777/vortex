@@ -198,12 +198,12 @@ def make_plot(show = False):
 
     x_ref = np.linspace(0, 10, 201)
     y_ref = x_ref
-    ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
+    #ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
 
-    if scale_height_version:
-        # Reference lines for each scale height of separation
-        for i in range(10):
-            plot.plot(x_ref, y_ref + i + 1, linewidth = 1 + (i % 2), c = 'k', alpha = 0.4)
+    #if scale_height_version:
+    #    # Reference lines for each scale height of separation
+    #    for i in range(10):
+    #        plot.plot(x_ref, y_ref + i + 1, linewidth = 1 + (i % 2), c = 'k', alpha = 0.4)
 
     #y_h4 = marginally_stable(x_ref, h = 0.04)
     #y_h6 = marginally_stable(x_ref, h = 0.06)
@@ -213,30 +213,30 @@ def make_plot(show = False):
     #ref_h8, = plot.plot(x_ref, y_h8, linewidth = linewidth, c = colors[2], label = r"$h = 0.08$")
 
     # Actual Values (Initial, Secondary, Interior, Too Interior)
-    i_h4 = plot.scatter(initial_critical_maxima_h4, initial_density_maxima_h4, s = 100, c = colors[0], zorder = 100)
-    i_h6 = plot.scatter(initial_critical_maxima_h6, initial_density_maxima_h6, s = 100, c = colors[1], zorder = 100)
-    i_h8 = plot.scatter(initial_critical_maxima_h8, initial_density_maxima_h8, s = 100, c = colors[2], zorder = 100)
+    i_h4 = plot.scatter(initial_critical_maxima_h4, initial_density_maxima_h4 - initial_critical_maxima_h4, s = 100, c = colors[0], zorder = 100)
+    i_h6 = plot.scatter(initial_critical_maxima_h6, initial_density_maxima_h6 - initial_critical_maxima_h6, s = 100, c = colors[1], zorder = 100)
+    i_h8 = plot.scatter(initial_critical_maxima_h8, initial_density_maxima_h8 - initial_critical_maxima_h8, s = 100, c = colors[2], zorder = 100)
 
-    s_h4 = plot.scatter(second_critical_maxima_h4, second_density_maxima_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
-    s_h6 = plot.scatter(second_critical_maxima_h6, second_density_maxima_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
+    s_h4 = plot.scatter(second_critical_maxima_h4, second_density_maxima_h4 - second_critical_maxima_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
+    s_h6 = plot.scatter(second_critical_maxima_h6, second_density_maxima_h6 - second_critical_maxima_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
     #s_h8, = plot.scatter(second_critical_maxima_h8, second_critical_maxima_h8, s = 150, c = colors[2], zorder = 100, marker = "*")
 
-    d_h4 = plot.scatter(interior_critical_maxima_h4, interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "D", alpha = 0.5)
-    d_h6 = plot.scatter(interior_critical_maxima_h6, interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
+    d_h4 = plot.scatter(interior_critical_maxima_h4, interior_density_maxima_h4 - interior_critical_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "D", alpha = 0.5)
+    d_h6 = plot.scatter(interior_critical_maxima_h6, interior_density_maxima_h6 - interior_critical_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
     #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "D")
 
-    t_h4 = plot.scatter(too_interior_critical_maxima_h4, too_interior_density_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "x", alpha = 0.5)
-    t_h6 = plot.scatter(too_interior_critical_maxima_h6, too_interior_density_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "x", alpha = 0.5)
+    t_h4 = plot.scatter(too_interior_critical_maxima_h4, too_interior_density_maxima_h4 - too_interior_critical_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "x", alpha = 0.5)
+    t_h6 = plot.scatter(too_interior_critical_maxima_h6, too_interior_density_maxima_h6 - too_interior_critical_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "x", alpha = 0.5)
     #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "x")
 
 
     # Axes
     plot.xlim(1, 1.6)
-    plot.ylim(1, 1.6)
+    plot.ylim(0, 1.6)
 
     if scale_height_version:
         plot.xlim(0, 10)
-        plot.ylim(0, 10)
+        plot.ylim(0, 6)
 
     #plot.xscale("log"); plot.yscale("log")
 
