@@ -68,7 +68,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [0, 0.5],
+    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.5, 0],
                          help = 'range in y-axis (default: [-1, 0])')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
@@ -189,7 +189,7 @@ def make_plot(frame, show = False):
     normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
 
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    keplerian_velocity = 1.0 # put in rotating frame of spiral waves
+    #keplerian_velocity = 0.0 # put in rotating frame of spiral waves (it's already in rotating frame!)
     #keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     vtheta -= keplerian_velocity
 
