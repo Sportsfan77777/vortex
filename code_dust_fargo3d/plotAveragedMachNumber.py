@@ -191,7 +191,7 @@ def make_plot(frame, show = False):
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     #keplerian_velocity = 0.0 # put in rotating frame of spiral waves (it's already in rotating frame!)
     #keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
-    vtheta -= keplerian_velocity
+    #vtheta -= keplerian_velocity
 
     averaged_vtheta = np.average(vtheta, axis = 1)
 
