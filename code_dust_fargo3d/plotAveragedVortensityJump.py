@@ -201,7 +201,7 @@ def make_plot(frame, show = False):
     vortensityJump = dvtheta / averaged_density[1:]
 
     ### Plot ###
-    x = rad
+    x = rad[1:]
     y = vortensityJump
     result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
 
