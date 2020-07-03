@@ -196,7 +196,7 @@ def make_plot(frame, show = False):
 
     averaged_vtheta = np.average(vtheta, axis = 1)
     dr = rad[1] - rad[0]
-    dvtheta = np.diff(averaged_density) / dr
+    dvtheta = np.diff(averaged_vtheta) / dr
 
     vortensityJump = dvtheta / averaged_density[1:]
 
