@@ -189,7 +189,7 @@ def make_plot(frame, show = False):
     normalized_density = (fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)) / surface_density_zero
 
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    keplerian_velocity = 1 # put in rotating frame of spiral waves
+    keplerian_velocity = 1.0 # put in rotating frame of spiral waves
     #keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     vtheta -= keplerian_velocity
 
@@ -240,7 +240,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"($v_\mathrm{r}$", fontsize = fontsize)
+    plot.ylabel(r"$v_\mathrm{\phi} - v_\mathrm{K, r=1}$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
