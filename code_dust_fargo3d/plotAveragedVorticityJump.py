@@ -204,7 +204,8 @@ def make_plot(frame, show = False):
     averaged_dvtheta = np.diff(averaged_vtheta) / dr
 
     mach_number = averaged_vtheta / (scale_height * keplerian_frequency) # u_perp / c_s
-    coefficient_one = np.power(np.power(mach_number, 2) - 1, 2) / np.power(mach_number, 2)
+    
+    coefficient_one = -1.0 * np.power(np.power(mach_number, 2) - 1, 2) / np.power(mach_number, 2)
     coefficient_two = np.power(mach_number, 2) - 1
 
     vorticityJump = coefficient_one[1:] * averaged_dvtheta + coefficient_two[1:] * averaged_vorticity
