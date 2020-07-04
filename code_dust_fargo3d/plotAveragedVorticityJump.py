@@ -207,7 +207,7 @@ def make_plot(frame, show = False):
     coefficient_one = np.power(np.power(mach_number, 2) - 1, 2) / np.power(mach_number, 2)
     coefficient_two = np.power(mach_number, 2) - 1
 
-    vorticityJump = coefficient_one * averaged_dvtheta + coefficient_two * averaged_vorticity
+    vorticityJump = coefficient_one[1:] * averaged_dvtheta + coefficient_two[1:] * averaged_vorticity
 
     ### Plot ###
     x = rad[1:]
