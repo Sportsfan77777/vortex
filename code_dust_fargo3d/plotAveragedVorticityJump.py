@@ -203,12 +203,16 @@ def make_plot(frame, show = False):
     dr = rad[1] - rad[0]
     averaged_dvtheta = np.diff(averaged_vtheta) / dr
 
-    mach_number = averaged_vtheta / (scale_height * keplerian_frequency) # u_perp / c_s
-    
+    sound_speed_sq = np.power(scale_height * rad * keplerian_frequency, 2)
+    diff_sound_speed_sq = np.diff(sound_speed_sq) / dr
+
+    mach_number = averaged_vtheta / (scale_height * rad * keplerian_frequency) # u_perp / c_s
+
     coefficient_one = -1.0 * np.power(np.power(mach_number, 2) - 1, 2) / np.power(mach_number, 2)
     coefficient_two = np.power(mach_number, 2) - 1
+    coefficient_three = -1.0 * np.power(mach_number, 2) - 1 / averaged_vtheta
 
-    vorticityJump = coefficient_one[1:] * averaged_dvtheta + coefficient_two[1:] * averaged_vorticity
+    vorticityJump = coefficient_one[1:] * averaged_dvtheta + coefficient_two[1:] * averaged_vorticity + coefficient_three[1:] * diff_sound_speed_sq
 
     ### Plot ###
     x = rad[1:]
