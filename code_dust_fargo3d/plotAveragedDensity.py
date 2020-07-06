@@ -235,7 +235,7 @@ def make_plot(frame, show = False):
 
         plot.legend()
 
-        twin.set_ylim(-5, 5)
+        twin.set_ylim(-10, 10)
 
     # Axes
     if args.max_y is None:
