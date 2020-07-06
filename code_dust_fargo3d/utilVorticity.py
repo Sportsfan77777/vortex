@@ -9,11 +9,20 @@ import numpy as np
 # Curl function
 def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, residual = True):
     """ z-component of the curl (because this is a 2-D simulation)"""
-    # subtract Keplerian velocity
-    if residual:
-        v_keplerian = np.power(rad, -0.5)
-        v_theta -= v_keplerian[:, None]
+    # subtract rotating frame and add real Keplerian velocity
+    keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
+    v_theta -= keplerian_velocity[:, None]
 
+    v_keplerian_real = np.power(rad, -0.5)
+    v_theta += v_keplerian_real[:, None]
+
+    v_theta_average = np.average(v_theta, axis = 1)
+
+    if residual:
+        # subtract out the real Keplerian velocity
+        #v_keplerian = np.power(rad, -0.5)
+        v_theta -= v_keplerian_real[:, None]
+        
     ### Start Differentials ###
     d_rad = np.diff(rad)
     d_theta = np.diff(theta)
@@ -36,7 +45,8 @@ def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, re
 
     # Convert to Rossby number (divide by [2 * angular velocity])
     if rossby:
-        omega = np.power(rad, -1.5)
+        #omega = np.power(rad, -1.5) # Change this to v_theta / r ????????
+        omega = v_theta_average / rad
         z_curl /= (2.0 * omega[1:, None])
 
     return z_curl
