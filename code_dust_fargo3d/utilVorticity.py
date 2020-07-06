@@ -45,8 +45,8 @@ def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, re
 
     # Convert to Rossby number (divide by [2 * angular velocity])
     if rossby:
-        #omega = np.power(rad, -1.5) # Change this to v_theta / r ????????
-        omega = v_theta_average / rad
+        omega = np.power(rad, -1.5) # Change this to v_theta / r ????????
+        #omega = v_theta_average / rad
         z_curl /= (2.0 * omega[1:, None])
 
     return z_curl
