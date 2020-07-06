@@ -68,6 +68,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
 
+    parser.add_argument('--derivative', dest = "derivative", action = 'store_true', default = False,
+                         help = 'show derivative (default: do not do it!)')
+
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
@@ -219,6 +222,21 @@ def make_plot(frame, show = False):
 
         plot.legend()
 
+    if args.derivative:
+        twin = ax.twinx()
+
+        ### Plot ###
+        dr = rad[1] - rad[0]
+        normalized_density_derivative = np.diff(normalized_density) / dr
+
+        x2 = rad[1:]
+        y2 = normalized_density_derivative
+        result = twin.plot(x2, y2, c = "purple", linewidth = linewidth, alpha = 0.6, zorder = 99, label = "derivative")
+
+        plot.legend()
+
+        twin.set_ylim(-5, 5)
+
     # Axes
     if args.max_y is None:
         x_min_i = np.searchsorted(x, x_min)
@@ -227,8 +245,8 @@ def make_plot(frame, show = False):
     else:
         max_y = args.max_y
 
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    ax.set_xlim(x_min, x_max)
+    ax.set_ylim(0, max_y)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
@@ -243,8 +261,8 @@ def make_plot(frame, show = False):
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
+    ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    ax.set_ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
@@ -258,7 +276,7 @@ def make_plot(frame, show = False):
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
