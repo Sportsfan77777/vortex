@@ -41,7 +41,7 @@ def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, re
         z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[1:, None]
 
     # Shift out of rotating frame (http://arxiv.org/pdf/astro-ph/0605237v2.pdf)
-    z_curl += 2
+    #z_curl += 2
 
     # Convert to Rossby number (divide by [2 * angular velocity])
     if rossby:
