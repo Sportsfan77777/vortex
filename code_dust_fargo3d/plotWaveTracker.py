@@ -344,6 +344,13 @@ def make_plot(frame, show = False):
     coefficients = np.polyfit(wave_x, wave_y, 3) # coefficients
     fit = np.poly1d(coefficients) # polynomial function
 
+    derivative_coefficients = np.polyder(coefficients) # derivative
+    fit_derivative = np.poly1d(derivative_coefficients)
+
+    normal_vector_x = -1.0 * fit_derivative(wave_x)
+    normal_vector_y = 1
+    normal_angle = np.arctan2(normal_vector_x, 1)
+
     fit_y = fit(wave_x)
     fit_r = np.sqrt(np.power(wave_x, 2), np.power(wave_y, 2))
     fit_angle = np.arctan2(wave_y, wave_x)
@@ -358,6 +365,8 @@ def make_plot(frame, show = False):
 
     plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
     plot.plot(radii, fit_angle * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
+
+    plot.quiver([radii, fit_angle * (180.0 / np.pi)], fit_r, fit_angle, scale = 0.1, c = "b")
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
