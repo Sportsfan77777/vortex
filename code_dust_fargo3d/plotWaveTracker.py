@@ -349,6 +349,7 @@ def make_plot(frame, show = False):
 
     normal_vector_x = -1.0 * fit_derivative(wave_x)
     normal_vector_y = 1
+    normal_r = np.sqrt(np.power(normal_vector_x, 2) + np.power(normal_vector_y, 2))
     normal_angle = np.arctan2(normal_vector_x, 1)
 
     fit_y = fit(wave_x)
@@ -368,7 +369,7 @@ def make_plot(frame, show = False):
 
     print len(radii), len(fit_angle), len(normal_angle)
 
-    plot.quiver([radii, fit_angle * (180.0 / np.pi)], 1, normal_angle, scale = 0.1, color = "b")
+    plot.quiver([radii, fit_angle * (180.0 / np.pi)], 0, normal_angle, scale = 01, color = "b")
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
