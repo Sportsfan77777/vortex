@@ -343,7 +343,7 @@ def make_plot(frame, show = False):
 
     # Wave
     radii, wave_locations = getWaveLocations(density)
-    wave_x, wave_y = cartesian_wave(radii, wave_locations - np.pi / 2.0)
+    wave_x, wave_y = cartesian_wave(radii, wave_locations + np.pi / 2.0)
     coefficients = np.polyfit(wave_x, wave_y, 3) # coefficients
     fit = np.poly1d(coefficients) # polynomial function
 
