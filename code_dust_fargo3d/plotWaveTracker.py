@@ -320,6 +320,8 @@ def generate_colors(n):
 
 ##### PLOTTING #####
 
+linewidth = 3
+
 def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
