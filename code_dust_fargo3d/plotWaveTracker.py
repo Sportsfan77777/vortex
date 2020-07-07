@@ -367,7 +367,7 @@ def make_plot(frame, show = False):
     plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
     plot.plot(radii, fit_angle * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
 
-    print len(radii), len(fit_angle), len(normal_r), len(normal_angle)
+    print len(radii), len(fit_angle), np.shape(normal_r), np.shape(normal_angle)
 
     plot.quiver([radii, wave_locations * (180.0 / np.pi)], normal_r, normal_angle, scale = 0.1, color = "b")
 
