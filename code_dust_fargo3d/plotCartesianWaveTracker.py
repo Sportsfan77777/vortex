@@ -343,7 +343,7 @@ def make_plot(frame, show = False):
 
     # Wave
     radii, wave_locations = getWaveLocations(density)
-    wave_x, wave_y = cartesian_wave(radii, wave_locations + np.pi / 2.0)
+    wave_x, wave_y = cartesian_wave(radii, wave_locations)
     coefficients = np.polyfit(wave_x, wave_y, 3) # coefficients
     fit = np.poly1d(coefficients) # polynomial function
 
@@ -357,6 +357,10 @@ def make_plot(frame, show = False):
 
     normal_vector_x = -1.0 * fit_derivative(wave_x)
     normal_vector_y = 1
+    normalization = np.sqrt(1.0 + np.power(normal_vector_x, 2))
+
+    normal_vector_x /= normalization
+    normal_vector_y /= normalization
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -375,6 +379,7 @@ def make_plot(frame, show = False):
 
     # Show normal
     #plot.quiver(radii, wave_locations * (180.0 / np.pi), normal_r, normal_angle, scale = 0.1, color = "b")
+    plot.quiver(wave_x, wave_y, normal_vector_x, normal_vector_y, scale = 0.1, color = "b")
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
