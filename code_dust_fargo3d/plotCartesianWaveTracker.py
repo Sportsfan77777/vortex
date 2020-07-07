@@ -45,6 +45,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import square as sq
 import azimuthal as az
 from readTitle import readTitle
 
@@ -338,7 +339,7 @@ def make_plot(frame, show = False):
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
-    xs, ys, _, _, cartesian_density = polar_to_cartesian(normalized_density, rad, theta)
+    xs, ys, _, _, cartesian_density = sq.polar_to_cartesian(normalized_density, rad, theta)
 
     # Wave
     radii, wave_locations = getWaveLocations(density)
