@@ -352,7 +352,7 @@ def make_plot(frame, show = False):
     normal_angle = np.arctan2(normal_vector_x, 1)
 
     fit_y = fit(wave_x)
-    fit_r = np.sqrt(np.power(wave_x, 2), np.power(wave_y, 2))
+    fit_r = np.sqrt(np.power(wave_x, 2) + np.power(wave_y, 2))
     fit_angle = np.arctan2(wave_y, wave_x)
 
     if center:
