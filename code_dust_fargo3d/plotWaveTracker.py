@@ -345,12 +345,12 @@ def make_plot(frame, show = False):
     fit = np.poly1d(coefficients) # polynomial function
 
     derivative_coefficients = np.polyder(coefficients) # derivative
-    fit_derivative = np.poly1d(derivative_coefficients)
+    fit_derivative = np.poly1d(derivative_coefficients) # derivative function
 
     normal_vector_x = -1.0 * fit_derivative(wave_x)
     normal_vector_y = 1
     normal_r = np.sqrt(np.power(normal_vector_x, 2) + np.power(normal_vector_y, 2))
-    normal_angle = np.arctan2(normal_vector_x, 1)
+    normal_angle = np.arctan2(normal_vector_x, normal_vector_y)
 
     fit_y = fit(wave_x)
     fit_r = np.sqrt(np.power(wave_x, 2) + np.power(wave_y, 2))
