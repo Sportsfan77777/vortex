@@ -378,7 +378,7 @@ def make_plot(frame, show = False):
     #print len(radii), len(fit_angle), np.shape(normal_r), np.shape(normal_angle)
 
     # Show normal
-    rate = 10
+    rate = 4
     #plot.quiver(radii, wave_locations * (180.0 / np.pi), normal_r, normal_angle, scale = 0.1, color = "b")
     plot.quiver(wave_x[::rate], wave_y[::rate], normal_vector_x[::rate], normal_vector_y[::rate], scale = 10, color = "b")
 
