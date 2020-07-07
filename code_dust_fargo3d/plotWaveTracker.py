@@ -237,6 +237,7 @@ fargo_par["theta"] = theta
 ### Helper Functions ###
 
 def getWaveLocations(density, start_radius = 1.05, end_radius = 1.30):
+    """ Find wave locations """
     # Find Limits
     start_i = np.searchsorted(rad, start_radius)
     end_i = np.searchsorted(rad, end_radius)
@@ -287,6 +288,12 @@ def getWaveLocations(density, start_radius = 1.05, end_radius = 1.30):
 
     return radii, wave_locations
 
+def cartesian_wave(radii, wave_locations):
+    """ convert to cartesian """
+    wave_x = radii * np.cos(wave_locations)
+    wave_y = radii * np.sin(wave_locations)
+    return wave_x, wave_y
+
 def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
@@ -331,9 +338,15 @@ def make_plot(frame, show = False):
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     normalized_density = density / surface_density_zero
 
+    # Wave
     radii, wave_locations = getWaveLocations(density)
-    z = np.polyfit(radii, wave_locations, 3) # coefficients
-    fit = np.poly1d(z) # polynomial function
+    wave_x, wave_y = cartesian_wave(radii, wave_locations)
+    coefficients = np.polyfit(wave_x, wave_y, 3) # coefficients
+    fit = np.poly1d(coefficients) # polynomial function
+
+    fit_y = fit(wave_x)
+    fit_r = np.sqrt(np.power(wave_x, 2), np.power(wave_y, 2))
+    fit_angle = np.arctan2(wave_y, wave_x)
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -344,7 +357,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
     plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
-    plot.plot(radii, fit(radii) * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
+    plot.plot(radii, fit_angle * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
