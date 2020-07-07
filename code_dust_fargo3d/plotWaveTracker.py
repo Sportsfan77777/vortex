@@ -332,7 +332,8 @@ def make_plot(frame, show = False):
     normalized_density = density / surface_density_zero
 
     radii, wave_locations = getWaveLocations(density)
-    z = np.polyfit(radii, wave_locations, 3) # fit 3rd-order polynomial
+    z = np.polyfit(radii, wave_locations, 3) # coefficients
+    fit = np.poly1d(z) # polynomial function
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -343,7 +344,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
     plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
-    plot.plot(radii, np.poly1d(z) * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
+    plot.plot(radii, fit(radii) * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
