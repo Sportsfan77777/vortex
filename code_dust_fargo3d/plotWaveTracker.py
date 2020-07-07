@@ -341,7 +341,7 @@ def make_plot(frame, show = False):
     y = theta * (180.0 / np.pi)
     result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
-    plot.plot(radii, wave_locations, linewidth = linewidth, c = 'white')
+    plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
