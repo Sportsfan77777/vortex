@@ -366,7 +366,9 @@ def make_plot(frame, show = False):
     plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
     plot.plot(radii, fit_angle * (180.0 / np.pi), linewidth = linewidth, c = 'r', alpha = 0.75)
 
-    plot.quiver([radii, fit_angle * (180.0 / np.pi)], fit_r, fit_angle, scale = 0.1, color = "b")
+    print len(radii), len(fit_angle), len(normal_angle)
+
+    plot.quiver([radii, fit_angle * (180.0 / np.pi)], 1, normal_angle, scale = 0.1, color = "b")
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
