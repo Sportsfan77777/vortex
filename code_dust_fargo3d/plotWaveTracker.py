@@ -369,7 +369,7 @@ def make_plot(frame, show = False):
 
     print len(radii), len(fit_angle), len(normal_angle)
 
-    plot.quiver([radii, fit_angle * (180.0 / np.pi)], 0, normal_angle, scale = 01, color = "b")
+    plot.quiver([radii, wave_locations * (180.0 / np.pi)], normal_r, normal_angle, scale = 0.1, color = "b")
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
