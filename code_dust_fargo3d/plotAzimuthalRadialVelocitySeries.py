@@ -54,8 +54,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radius at which to take the azimuthal profile (default: 1.2 r_p)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalVelocityProfileSeries",
-                         help = 'save directory (default: azimuthalVelocityProfileSeries)')
+    parser.add_argument('--dir', dest = "save_directory", default = "radialVelocityProfileSeries",
+                         help = 'save directory (default: radialVelocityProfileSeries)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -182,7 +182,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_density(normalized_density, azimuthal_velocity, fargo_par, option = "away", reference_density = None, frame = None):
+def shift_density(normalized_density, radial_velocity, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -202,8 +202,8 @@ def shift_density(normalized_density, azimuthal_velocity, fargo_par, option = "a
 
     # Shift
     shifted_density = np.roll(normalized_density, shift_c, axis = -1)
-    shifted_azimuthal_velocity = np.roll(azimuthal_velocity, shift_c, axis = -1)
-    return shifted_density, shifted_azimuthal_velocity, shift_c
+    shifted_radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
+    return shifted_density, shifted_radial_velocity, shift_c
 
 ###############################################################################
 
@@ -216,16 +216,13 @@ def make_plot(frame, show = False):
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-    azimuthal_velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
-
-    keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
-    azimuthal_velocity -= keplerian_velocity[:, None]
+    radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
 
     if center:
-        density, azimuthal_velocity, shift_c = shift_density(density, azimuthal_velocity, fargo_par, reference_density = density)
+        density, radial_velocity, shift_c = shift_density(density, radial_velocity, fargo_par, reference_density = density)
 
     target_rad_i = np.searchsorted(rad, args.target_rad)
-    azimuthal_profile = azimuthal_velocity[target_rad_i]
+    azimuthal_profile = radial_velocity[target_rad_i]
 
     #### PLOT SERIES!!!!!! ####
 
@@ -233,7 +230,7 @@ def make_plot(frame, show = False):
     target_rad = np.linspace(1.05, 1.30, 6)
     for target_radius in target_rad:
         target_rad_i = np.searchsorted(rad, target_radius)
-        azimuthal_profile = azimuthal_velocity[target_rad_i]
+        azimuthal_profile = radial_velocity[target_rad_i]
 
         x = theta * (180.0 / np.pi)
         y = azimuthal_profile
@@ -315,9 +312,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/azimuthalVelocityProfile_%04d.png" % (save_directory, frame)
+        save_fn = "%s/radialVelocityProfile_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_azimuthalVelocityProfile_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_radialVelocityProfile_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
