@@ -268,7 +268,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(0, 360)
-    plot.ylim(-1, 0)
+    plot.ylim(-0.6, 0)
 
     angles = np.linspace(0, 360, 7)
     plot.xticks(angles)
@@ -287,7 +287,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.ylabel(r"$v_mathrm{phi} - v_\mathrm{p}$", fontsize = fontsize)
+    plot.ylabel(r"$v_\mathrm{phi} - v_\mathrm{p}$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
