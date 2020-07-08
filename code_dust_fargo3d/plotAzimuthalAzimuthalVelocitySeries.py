@@ -218,8 +218,10 @@ def make_plot(frame, show = False):
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     azimuthal_velocity = fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)
 
-    keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
-    azimuthal_velocity -= keplerian_velocity[:, None]
+    #keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
+    rotating_frame = 1
+    #azimuthal_velocity -= keplerian_velocity[:, None]
+    azimuthal_velocity -= rotating_frame
 
     if center:
         density, azimuthal_velocity, shift_c = shift_density(density, azimuthal_velocity, fargo_par, reference_density = density)
@@ -269,7 +271,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(0, 360)
-    plot.ylim(-0.02, 0.05)
+    plot.ylim(-1, 0)
 
     angles = np.linspace(0, 360, 7)
     plot.xticks(angles)
