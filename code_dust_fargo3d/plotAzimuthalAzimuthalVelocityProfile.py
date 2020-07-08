@@ -224,7 +224,7 @@ def make_plot(frame, show = False):
     if center:
         density, azimuthal_velocity, shift_c = shift_density(density, azimuthal_velocity, fargo_par, reference_density = density)
 
-    target_rad_i = np.searchsorted(rad, target_rad)
+    target_rad_i = np.searchsorted(rad, args.target_rad)
     azimuthal_profile = azimuthal_velocity[target_rad_i]
 
     ### Plot ###
