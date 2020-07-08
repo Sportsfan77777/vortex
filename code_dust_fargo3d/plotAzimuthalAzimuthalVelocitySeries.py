@@ -232,12 +232,12 @@ def make_plot(frame, show = False):
     ### Plot ###
     target_rad = np.linspace(1.05, 1.30, 6)
     for target_radius in target_rad:
-        target_rad_i = np.searchsorted(rad, args.target_rad)
+        target_rad_i = np.searchsorted(rad, target_radius)
         azimuthal_profile = azimuthal_velocity[target_rad_i]
 
         x = theta * (180.0 / np.pi)
         y = azimuthal_profile
-        result = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%.2f" % target_rad)
+        result = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%.2f" % target_radius)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
