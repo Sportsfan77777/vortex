@@ -50,8 +50,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Radius Selection
-    parser.add_argument('--rad', dest = "target_rad", type = float, default = 1.2,
-                         help = 'radius at which to take the azimuthal profile (default: 1.2 r_p)')
+    parser.add_argument('--radii', dest = "radii", type = float, default = [1.05, 1.30, 6], nargs = 3,
+                         help = 'select start, end, and number of radii (default: 1.05, 1.30, 6)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "radialVelocityProfileSeries",
@@ -221,13 +221,12 @@ def make_plot(frame, show = False):
     if center:
         density, radial_velocity, shift_c = shift_density(density, radial_velocity, fargo_par, reference_density = density)
 
-    target_rad_i = np.searchsorted(rad, args.target_rad)
-    azimuthal_profile = radial_velocity[target_rad_i]
-
     #### PLOT SERIES!!!!!! ####
 
     ### Plot ###
-    target_rad = np.linspace(1.05, 1.30, 6)
+    start_rad = radii[0]; end_rad = radii[1]; num_rad = radii[2]
+    target_rad = np.linspace(start_rad, end_rad, num_rad)
+
     for target_radius in target_rad:
         target_rad_i = np.searchsorted(rad, target_radius)
         azimuthal_profile = radial_velocity[target_rad_i]
@@ -285,7 +284,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.ylabel(r"$\phi$", fontsize = fontsize)
-    plot.ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
+    plot.ylabel(r"$v_mathrm{r}$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
