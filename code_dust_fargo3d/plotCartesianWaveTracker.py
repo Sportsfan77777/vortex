@@ -355,6 +355,9 @@ def make_plot(frame, show = False):
     derivative_coefficients = np.polyder(coefficients) # derivative
     fit_derivative = np.poly1d(derivative_coefficients) # derivative function
 
+    print coefficients
+    print derivative_coefficients
+
     normal_vector_x = -1.0 * fit_derivative(wave_x)
     normal_vector_y = 1.0
     normalization = np.sqrt(1.0 + np.power(normal_vector_x, 2))
