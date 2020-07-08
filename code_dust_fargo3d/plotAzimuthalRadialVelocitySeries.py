@@ -224,7 +224,7 @@ def make_plot(frame, show = False):
     #### PLOT SERIES!!!!!! ####
 
     ### Plot ###
-    start_rad = radii[0]; end_rad = radii[1]; count = radii[2]
+    start_rad = args.radii[0]; end_rad = args.radii[1]; count = args.radii[2]
     target_rad = np.linspace(start_rad, end_rad, count)
 
     for target_radius in target_rad:
