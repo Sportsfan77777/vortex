@@ -356,7 +356,7 @@ def make_plot(frame, show = False):
     fit_derivative = np.poly1d(derivative_coefficients) # derivative function
 
     normal_vector_x = -1.0 * fit_derivative(wave_x)
-    normal_vector_y = 1
+    normal_vector_y = 1.0
     normalization = np.sqrt(1.0 + np.power(normal_vector_x, 2))
 
     normal_vector_x /= normalization
@@ -373,7 +373,7 @@ def make_plot(frame, show = False):
 
     # Trace wave
     #plot.plot(radii, wave_locations * (180.0 / np.pi), linewidth = linewidth, c = 'b', alpha = 0.75)
-    plot.plot(wave_x, wave_y, linewidth = linewidth, c = 'r', alpha = 0.75)
+    plot.plot(wave_x, fit_y, linewidth = linewidth, c = 'r', alpha = 0.75)
 
     #print len(radii), len(fit_angle), np.shape(normal_r), np.shape(normal_angle)
 
