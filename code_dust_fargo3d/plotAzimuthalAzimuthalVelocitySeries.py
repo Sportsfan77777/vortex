@@ -227,8 +227,8 @@ def make_plot(frame, show = False):
         density, azimuthal_velocity, shift_c = shift_density(density, azimuthal_velocity, fargo_par, reference_density = density)
 
     ### Plot ###
-    start_rad = radii[0]; end_rad = radii[1]; num_rad = radii[2]
-    target_rad = np.linspace(start_rad, end_rad, num_rad)
+    start_rad = radii[0]; end_rad = radii[1]; count = radii[2]
+    target_rad = np.linspace(start_rad, end_rad, count)
 
     for target_radius in target_rad:
         target_rad_i = np.searchsorted(rad, target_radius)
