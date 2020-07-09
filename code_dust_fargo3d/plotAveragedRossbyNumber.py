@@ -241,7 +241,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"(Rossby Number", fontsize = fontsize)
+    plot.ylabel(r"Rossby Number", fontsize = fontsize)
 
     if full_term:
         plot.ylabel(r"($\nabla \times v$)$_\mathrm{z}$ $/$ $\Sigma$ $/$ $S$ [$v_\mathrm{K}$ $/$ $r_\mathrm{p}$ $\Sigma_0$ $/$ $S$]", fontsize = fontsize)
@@ -258,7 +258,7 @@ def make_plot(frame, show = False):
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    plot.text(x_mid, y_text * (plot.ylim()[0] + plot.ylim()[-1]), title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
