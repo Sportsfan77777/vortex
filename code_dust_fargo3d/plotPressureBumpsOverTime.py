@@ -21,7 +21,7 @@ import numpy as np
 
 import matplotlib
 import matplotlib.style
-matplotlib.style.use('classic')
+#matplotlib.style.use('classic')
 from matplotlib.ticker import ScalarFormatter
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
@@ -423,7 +423,7 @@ def make_plot(show = False):
 
     unit_x = "planet orbits"; unit_y = "r_\mathrm{p}"
     plot.xlabel(r"Time [%s]" % unit_x, fontsize = fontsize)
-    plot.ylabel(r"$r_\mathrm{pressure-bump}$ [$%s$]" % unit_y, fontsize = fontsize)
+    plot.ylabel(r"$r_\mathrm{pressure-bump}$ [$%s$]" % unit_y, fontsize = fontsize, usetex = True)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
@@ -445,7 +445,7 @@ def make_plot(show = False):
     # Set twin axis
     twin = ax.twinx()
     twin.set_ylim(0, (end_y - start_y) / scale_height)
-    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30)
+    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30, usetex = True)
 
     # Save, Show, and Close
     if version is None:
