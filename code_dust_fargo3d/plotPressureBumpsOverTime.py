@@ -443,7 +443,7 @@ def make_plot(show = False):
     # Set twin axis
     twin = ax.twinx()
     twin.set_ylim(0, (end_y - start_y) / scale_height)
-    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 15)
+    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
