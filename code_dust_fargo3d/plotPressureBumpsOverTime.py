@@ -418,7 +418,7 @@ def make_plot(show = False):
 
     unit_x = "planet orbits"; unit_y = "r_\mathrm{p}"
     plot.xlabel(r"Time [%s]" % unit_x, fontsize = fontsize)
-    plot.ylabel(r"Location of Pressure Bump $r_\mathrm{p-bump}$ [%s]" % unit_y, fontsize = fontsize)
+    plot.ylabel(r"Location of Pressure Bump $r_\mathrm{p-bump}$ [$%s$]" % unit_y, fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
