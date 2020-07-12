@@ -82,8 +82,8 @@ master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
 master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 9000, 50], [0, 11700, 50]]
-master_frame_ranges[67] = [[0, 3000, 25], [0, 3500, 25], [0, 7000, 25], [0, 8500, 25]]
-master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
+master_frame_ranges[67] = [[50, 3000, 25], [75, 3500, 25], [100, 7000, 25], [200, 8500, 25]]
+master_frame_ranges[47] = [[25, 3000, 25], [50, 3000, 25], [50, 3000, 25], [50, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
@@ -313,7 +313,7 @@ radial_peak_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges
 
 ##### PLOTTING #####
 
-colors = ['k', 'cornflowerblue', 'darkorange', 'r', 'green']
+colors = np.array(['k', 'cornflowerblue', 'darkorange', 'r', 'green'])
 labelsize = 19
 size = 100
 
@@ -388,6 +388,18 @@ def make_plot(show = False):
             if args.choice > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
+    # Scatter critical points
+    if scale_height == 0.04:
+        i_h4 = plot.scatter(initial_times_h4, initial_density_maxima_h4, s = 100, c = colors[initial_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha)
+        s_h4 = plot.scatter(second_times_h4, second_density_maxima_h4, s = 150, c = colors[second_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "*")
+        d_h4 = plot.scatter(interior_times_h4, interior_density_maxima_h4, s = 100, c = colors[interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "D")
+        t_h4 = plot.scatter(too_interior_times_h4, too_interior_density_maxima_h4, s = 100, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
+    elif scale_height == 0.06:
+        i_h6 = plot.scatter(initial_times_h6, initial_density_maxima_h6, s = 100, c = colors[initial_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha)
+        s_h4 = plot.scatter(second_times_h6, second_density_maxima_h6, s = 150, c = colors[second_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "*")
+        d_h4 = plot.scatter(interior_times_h6, interior_density_maxima_h6, s = 100, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
+        t_h4 = plot.scatter(too_interior_times_h6, too_interior_density_maxima_h6, s = 100, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
+
     if args.choice > 0:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
     else:
@@ -403,10 +415,9 @@ def make_plot(show = False):
 
     #title = readTitle()
 
-    unit_x = "planet orbits"
-    unit_y = "r_\mathrm{p}"
+    unit_x = "planet orbits"; unit_y = "r_\mathrm{p}"
     plot.xlabel(r"Time [%s]" % unit_x, fontsize = fontsize)
-    plot.xlabel(r"Pressure Bump r_\mathrm{p-bump} [%s]" % unit_y, fontsize = fontsize)
+    plot.ylabel(r"Pressure Bump r_\mathrm{p-bump} [%s]" % unit_y, fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
