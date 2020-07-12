@@ -62,8 +62,10 @@ master_accretion_rates[671] = [0.50, 0.17, 0.05, 0.02, 0.125]
 
 master_start_times = {}
 master_start_times[87] = [349, 913, 1751, 2875]
-master_start_times[67] = [108, 217, 451, 788]
-master_start_times[47] = [59, 70, 104, 223]
+#master_start_times[67] = [108, 217, 451, 788]
+master_start_times[67] = [75, 175, 380, 770]
+#master_start_times[47] = [59, 70, 104, 223]
+master_start_times[47] = ([36, 40, 58, 75]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
 master_start_times[0] = [600, 2500]
@@ -401,10 +403,10 @@ def make_plot(show = False):
         d_h4 = plot.scatter(interior_times_h6, interior_critical_maxima_h6, s = 120, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
         t_h4 = plot.scatter(too_interior_times_h6, too_interior_critical_maxima_h6, s = 120, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
 
-    if args.choice > 0:
+    if scale_height == 0.04:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
-    else:
-        plot.legend(loc = "upper left", fontsize = fontsize - 4)
+    elif scale_height == 0.06:
+        plot.legend(loc = "lower right", fontsize = fontsize - 4)
 
     # Axes
     if args.choice > 0:
@@ -418,7 +420,7 @@ def make_plot(show = False):
 
     unit_x = "planet orbits"; unit_y = "r_\mathrm{p}"
     plot.xlabel(r"Time [%s]" % unit_x, fontsize = fontsize)
-    plot.ylabel(r"Location of Pressure Bump $r_\mathrm{p-bump}$ [$%s$]" % unit_y, fontsize = fontsize)
+    plot.ylabel(r"$r_\mathrm{pressure-bump}$ [$%s$]" % unit_y, fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
