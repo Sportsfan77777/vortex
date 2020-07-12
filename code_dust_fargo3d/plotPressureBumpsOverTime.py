@@ -237,7 +237,7 @@ initial_density_maxima_h6 = np.array([1.220, 1.228, 1.242, 1.257])
 # Later Generation Vortices
 
 second_accretion_numbers_h4 = np.array([2, 3, 3, 4, 4, 4, 4])
-second_times_h4 = np.array([790, 900, 1220, 1010, 1230, 1530, 1770, 2140, 3000])
+second_times_h4 = np.array([790, 900, 1220, 1010, 1230, 1530, 1770])
 second_critical_maxima_h4 = np.array([1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 1.178])
 second_density_maxima_h4 = np.array([1.343, 1.300, 1.310, 1.250, 1.257, 1.264, 1.275])
 
