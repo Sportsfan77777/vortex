@@ -330,6 +330,7 @@ def make_plot(show = False):
     else:
         fig = plot.figure(figsize = (7, 2), dpi = dpi)
     ax = fig.add_subplot(111)
+    twin = ax.twinx()
 
     # Iterate
     max_gap_depth = 0
@@ -414,7 +415,8 @@ def make_plot(show = False):
     else:
         plot.xlim(0, frame_ranges[0][1])
 
-    plot.ylim(1.0, 1.6)
+    start_y = 1.0; end_y = 1.6
+    plot.ylim(start_y, end_y)
 
     #title = readTitle()
 
@@ -438,6 +440,9 @@ def make_plot(show = False):
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     #title = readTitle()
+
+    # Set twin axis
+    twin.set_ylim(0, (end_y - start_y) / scale_height)
 
     # Save, Show, and Close
     if version is None:
