@@ -404,7 +404,7 @@ def make_plot(show = False):
         t_h4 = plot.scatter(too_interior_times_h6, too_interior_critical_maxima_h6, s = 120, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
 
     if scale_height == 0.04:
-        plot.legend(loc = "upper right", fontsize = fontsize - 4)
+        plot.legend(loc = "upper left", fontsize = fontsize - 4)
     elif scale_height == 0.06:
         plot.legend(loc = "lower right", fontsize = fontsize - 4)
 
