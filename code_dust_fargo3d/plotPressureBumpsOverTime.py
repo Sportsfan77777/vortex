@@ -315,6 +315,7 @@ radial_peak_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges
 
 colors = np.array(['k', 'cornflowerblue', 'darkorange', 'r', 'green'])
 labelsize = 19
+alpha = 0.7
 size = 100
 
 rc['xtick.labelsize'] = labelsize
