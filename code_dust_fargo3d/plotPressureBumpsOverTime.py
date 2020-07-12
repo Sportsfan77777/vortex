@@ -315,7 +315,7 @@ radial_peak_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges
 
 colors = np.array(['k', 'cornflowerblue', 'darkorange', 'r', 'green'])
 labelsize = 19
-alpha = 0.7
+alpha = 1.0
 size = 100
 
 rc['xtick.labelsize'] = labelsize
@@ -385,21 +385,21 @@ def make_plot(show = False):
 
             result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
-            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
+            #plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
             if args.choice > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     # Scatter critical points
     if scale_height == 0.04:
-        i_h4 = plot.scatter(initial_times_h4, initial_critical_maxima_h4, s = 100, c = colors[initial_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha)
-        s_h4 = plot.scatter(second_times_h4, second_critical_maxima_h4, s = 150, c = colors[second_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "*")
-        d_h4 = plot.scatter(interior_times_h4, interior_critical_maxima_h4, s = 100, c = colors[interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "D")
-        t_h4 = plot.scatter(too_interior_times_h4, too_interior_critical_maxima_h4, s = 100, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
+        i_h4 = plot.scatter(initial_times_h4, initial_critical_maxima_h4, s = 120, c = colors[initial_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha)
+        s_h4 = plot.scatter(second_times_h4, second_critical_maxima_h4, s = 170, c = colors[second_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "*")
+        d_h4 = plot.scatter(interior_times_h4, interior_critical_maxima_h4, s = 120, c = colors[interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "D")
+        t_h4 = plot.scatter(too_interior_times_h4, too_interior_critical_maxima_h4, s = 120, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
     elif scale_height == 0.06:
-        i_h6 = plot.scatter(initial_times_h6, initial_critical_maxima_h6, s = 100, c = colors[initial_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha)
-        s_h4 = plot.scatter(second_times_h6, second_critical_maxima_h6, s = 150, c = colors[second_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "*")
-        d_h4 = plot.scatter(interior_times_h6, interior_critical_maxima_h6, s = 100, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
-        t_h4 = plot.scatter(too_interior_times_h6, too_interior_critical_maxima_h6, s = 100, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
+        i_h6 = plot.scatter(initial_times_h6, initial_critical_maxima_h6, s = 120, c = colors[initial_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha)
+        s_h4 = plot.scatter(second_times_h6, second_critical_maxima_h6, s = 170, c = colors[second_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "*")
+        d_h4 = plot.scatter(interior_times_h6, interior_critical_maxima_h6, s = 120, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
+        t_h4 = plot.scatter(too_interior_times_h6, too_interior_critical_maxima_h6, s = 120, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
 
     if args.choice > 0:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
@@ -418,7 +418,7 @@ def make_plot(show = False):
 
     unit_x = "planet orbits"; unit_y = "r_\mathrm{p}"
     plot.xlabel(r"Time [%s]" % unit_x, fontsize = fontsize)
-    plot.ylabel(r"Pressure Bump r_\mathrm{p-bump} [%s]" % unit_y, fontsize = fontsize)
+    plot.ylabel(r"Location of Pressure Bump $r_\mathrm{p-bump}$ [%s]" % unit_y, fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
