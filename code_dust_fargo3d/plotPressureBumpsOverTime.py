@@ -330,7 +330,6 @@ def make_plot(show = False):
     else:
         fig = plot.figure(figsize = (7, 2), dpi = dpi)
     ax = fig.add_subplot(111)
-    twin = ax.twinx()
 
     # Iterate
     max_gap_depth = 0
@@ -442,8 +441,9 @@ def make_plot(show = False):
     #title = readTitle()
 
     # Set twin axis
+    twin = ax.twinx()
     twin.set_ylim(0, (end_y - start_y) / scale_height)
-    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p}) / h", fontsize = fontsize, rotation = 270)
+    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p}) / h$", fontsize = fontsize, rotation = 270)
 
     # Save, Show, and Close
     if version is None:
