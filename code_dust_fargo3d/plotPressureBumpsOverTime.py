@@ -297,7 +297,7 @@ def get_min(args_here):
     normalized_density = avg_density / surface_density_zero
     
     # Get Minima
-    radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
+    radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par, end = 1.6)
 
     # Print Update
     print "%d: %.3f" % (frame, radial_peak_a)
@@ -391,15 +391,15 @@ def make_plot(show = False):
 
     # Scatter critical points
     if scale_height == 0.04:
-        i_h4 = plot.scatter(initial_times_h4, initial_density_maxima_h4, s = 100, c = colors[initial_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha)
-        s_h4 = plot.scatter(second_times_h4, second_density_maxima_h4, s = 150, c = colors[second_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "*")
-        d_h4 = plot.scatter(interior_times_h4, interior_density_maxima_h4, s = 100, c = colors[interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "D")
-        t_h4 = plot.scatter(too_interior_times_h4, too_interior_density_maxima_h4, s = 100, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
+        i_h4 = plot.scatter(initial_times_h4, initial_critical_maxima_h4, s = 100, c = colors[initial_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha)
+        s_h4 = plot.scatter(second_times_h4, second_critical_maxima_h4, s = 150, c = colors[second_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "*")
+        d_h4 = plot.scatter(interior_times_h4, interior_critical_maxima_h4, s = 100, c = colors[interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "D")
+        t_h4 = plot.scatter(too_interior_times_h4, too_critical_density_maxima_h4, s = 100, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
     elif scale_height == 0.06:
-        i_h6 = plot.scatter(initial_times_h6, initial_density_maxima_h6, s = 100, c = colors[initial_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha)
-        s_h4 = plot.scatter(second_times_h6, second_density_maxima_h6, s = 150, c = colors[second_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "*")
-        d_h4 = plot.scatter(interior_times_h6, interior_density_maxima_h6, s = 100, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
-        t_h4 = plot.scatter(too_interior_times_h6, too_interior_density_maxima_h6, s = 100, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
+        i_h6 = plot.scatter(initial_times_h6, initial_critical_maxima_h6, s = 100, c = colors[initial_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha)
+        s_h4 = plot.scatter(second_times_h6, second_critical_maxima_h6, s = 150, c = colors[second_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "*")
+        d_h4 = plot.scatter(interior_times_h6, interior_critical_maxima_h6, s = 100, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
+        t_h4 = plot.scatter(too_interior_times_h6, too_critical_density_maxima_h6, s = 100, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
 
     if args.choice > 0:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
