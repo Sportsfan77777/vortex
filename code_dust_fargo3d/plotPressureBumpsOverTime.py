@@ -100,8 +100,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('choice', type = int,
                          help = 'choice of directories')
-    parser.add_argument('--dir', dest = "save_directory", default = "gapDepth",
-                         help = 'save directory (default: gapDepth)')
+    parser.add_argument('--dir', dest = "save_directory", default = "pressureBumps",
+                         help = 'save directory (default: pressureBumps)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
 
@@ -438,9 +438,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/gapDepth_choice%d.png" % (save_directory, args.choice)
+        save_fn = "%s/pressureBumps_choice%d.png" % (save_directory, args.choice)
     else:
-        save_fn = "%s/v%04d_gapDepth_choice%d.png" % (save_directory, version, arg.choice)
+        save_fn = "%s/v%04d_pressureBumps_choice%d.png" % (save_directory, version, arg.choice)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
