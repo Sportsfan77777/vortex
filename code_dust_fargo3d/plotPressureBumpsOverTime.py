@@ -394,12 +394,12 @@ def make_plot(show = False):
         i_h4 = plot.scatter(initial_times_h4, initial_critical_maxima_h4, s = 100, c = colors[initial_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha)
         s_h4 = plot.scatter(second_times_h4, second_critical_maxima_h4, s = 150, c = colors[second_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "*")
         d_h4 = plot.scatter(interior_times_h4, interior_critical_maxima_h4, s = 100, c = colors[interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "D")
-        t_h4 = plot.scatter(too_interior_times_h4, too_critical_maxima_h4, s = 100, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
+        t_h4 = plot.scatter(too_interior_times_h4, too_interior_critical_maxima_h4, s = 100, c = colors[too_interior_accretion_numbers_h4 - 1], zorder = 100, alpha = alpha, marker = "x")
     elif scale_height == 0.06:
         i_h6 = plot.scatter(initial_times_h6, initial_critical_maxima_h6, s = 100, c = colors[initial_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha)
         s_h4 = plot.scatter(second_times_h6, second_critical_maxima_h6, s = 150, c = colors[second_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "*")
         d_h4 = plot.scatter(interior_times_h6, interior_critical_maxima_h6, s = 100, c = colors[interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "D")
-        t_h4 = plot.scatter(too_interior_times_h6, too_critical_maxima_h6, s = 100, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
+        t_h4 = plot.scatter(too_interior_times_h6, too_interior_critical_maxima_h6, s = 100, c = colors[too_interior_accretion_numbers_h6 - 1], zorder = 100, alpha = alpha, marker = "x")
 
     if args.choice > 0:
         plot.legend(loc = "upper right", fontsize = fontsize - 4)
