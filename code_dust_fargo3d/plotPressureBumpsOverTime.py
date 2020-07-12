@@ -365,8 +365,8 @@ def make_plot(show = False):
         p.map(get_min, pool_args)
         p.terminate()
 
-        if np.max(gap_depth_over_time) > max_gap_depth:
-            max_gap_depth = np.max(radial_peak_over_time)
+        #if np.max(gap_depth_over_time) > max_gap_depth:
+        #    max_gap_depth = np.max(radial_peak_over_time)
 
         num_frames = len(frame_range)
         this_radial_peak_over_time = np.array(radial_peak_over_time[:num_frames])
