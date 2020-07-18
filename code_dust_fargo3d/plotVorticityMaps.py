@@ -273,7 +273,7 @@ def shift_density(normalized_density, vorticity, fargo_par, option = "away", ref
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
-    shifted_vorticity = np.roll(vorticity, shift_c)
+    shifted_vorticity = np.roll(vorticity, shift_c, axis = -1)
     shifted_density = np.roll(normalized_density, shift_c, axis = -1)
     return shifted_density, shifted_vorticity, shift_c
 
@@ -322,7 +322,7 @@ def make_plot(frame, show = False):
         radial_velocity = vrad
         azimuthal_velocity = vtheta
         keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
-        #azimuthal_velocity -= keplerian_velocity[:, None]
+        azimuthal_velocity -= keplerian_velocity[:, None]
 
         if center:
             radial_velocity = np.roll(radial_velocity, shift_c, axis = -1)
