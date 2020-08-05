@@ -351,7 +351,7 @@ def make_plot(show = False):
         this_growth_rates_over_time = np.diff(np.log(this_smoothed_differences_over_time)) / dt
 
         ##### Top Plot #####
-        
+
         # Plot
         x = frame_range
         y1 = this_contrasts_over_time
@@ -408,7 +408,7 @@ def make_plot(show = False):
             ax2.set_yticks([0, 0.5, 1, 1.5, 2, 2.5])
         else:
             ax2.set_ylim(0, 1.8)
-            ax2.set_yticks([0, 0.5, 1, 1.5, 2])
+            ax2.set_yticks([0, 0.5, 1, 1.5])
 
         # Annotate
         ax2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
