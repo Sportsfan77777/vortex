@@ -229,7 +229,6 @@ fargo_par["theta"] = theta
 ### Helper Functions ###
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
-
 def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
@@ -302,6 +301,7 @@ def make_plot(show = False):
     for i, directory in enumerate(directories):
         # Frame Range 
         frame_range = util.get_frame_range(frame_ranges[i])
+        dt = (frame_range[1] - frame_range[0]) * (2.0 * np.pi) # for growth rate calculation
 
         # Label
         if args.choice > 0:
@@ -342,7 +342,9 @@ def make_plot(show = False):
         this_minima_over_time = np.array(minima_over_time[:num_frames])
         this_contrasts_over_time = np.array(contrasts_over_time[:num_frames])
         this_differences_over_time = np.array(differences_over_time[:num_frames])
-        this_growth_rates_over_time = np.diff(np.log(smooth(this_differences_over_time, 5))) / dt
+
+        this_smoothed_differences_over_time = smooth(this_differences_over_time, 5)
+        this_growth_rates_over_time = np.diff(np.log(this_smoothed_differences_over_time)) / dt
 
         ##### Top Plot #####
         # Plot
