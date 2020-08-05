@@ -91,7 +91,7 @@ master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
-master_frame_ranges[871] = [[0, 3900, 20], [0, 4700, 20], [0, 8900, 20], [0, 12500, 20], [0, 7500, 20]]
+master_frame_ranges[871] = [[0, 3900, 25], [0, 4700, 25], [0, 8900, 25], [0, 12500, 25], [0, 7500, 25]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
 
 ###############################################################################
@@ -319,7 +319,7 @@ def make_plot(show = False):
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         if args.choice > 0:
             if i == 4:
-                master_label = r"$0.3 \Sigma_0$"
+                master_label = r"$0.3$ $\Sigma_0$"
             else:
                 master_label = r"$A = %.02f$" % (accretion_rate)
         else:
@@ -377,7 +377,7 @@ def make_plot(show = False):
 
         title1 = r"$h = %.2f$    $\alpha = %s \times 10^{%d}$" % (scale_height, alpha_coefficent, int(round(np.log(viscosity) / np.log(10), 0)) + 2)
         #title1 = r"$A = %.2f$" % (accretion)
-        ax1.set_title("%s" % (title1), y = 1.035, fontsize = fontsize + 1)
+        ax1.set_title("%s" % (title1), y = 1.035, fontsize = fontsize + 2)
 
         ##### Middle Plot #####
         label1 = ""; label2 = ""
