@@ -21,9 +21,10 @@ import numpy as np
 from scipy.ndimage import filters as ff
 
 import matplotlib
-from matplotlib.ticker import ScalarFormatter
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
+from matplotlib.ticker import ScalarFormatter
+from matplotlib.ticker import NullFormatter
 
 from pylab import rcParams
 from pylab import fromfile
