@@ -71,7 +71,7 @@ master_start_times[47] = [59, 70, 104, 223]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
 master_start_times[0] = [600, 2500]
-master_start_times[871] = [349, 913, 1751, 2875, 0]
+master_start_times[871] = [250, 800, 1650, 2750, 600]
 master_start_times[671] = [108, 217, 451, 788, 0]
 
 master_end_times = {}
