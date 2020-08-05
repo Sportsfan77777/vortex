@@ -103,7 +103,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('choice', type = int,
                          help = 'choice of directories')
-    parser.add_argument('--dir', dest = "save_directory", default = "vorticity",
+    parser.add_argument('--dir', dest = "save_directory", default = "growthRates",
                          help = 'save directory (default: vorticity)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
