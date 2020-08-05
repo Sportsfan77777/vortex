@@ -296,7 +296,7 @@ rc['ytick.labelsize'] = labelsize
 
 def make_plot(show = False):
     # Set up figure
-    fig, (ax1, ax2, ax3) = plot.subplots(3, 1, figsize = (6, 10), gridspec_kw={'height_ratios': [2, 3, 2]})
+    fig, (ax1, ax2, ax3) = plot.subplots(3, 1, figsize = (6, 12), gridspec_kw={'height_ratios': [4, 6, 5]})
 
     # Iterate
     for i, directory in enumerate(directories):
@@ -319,7 +319,7 @@ def make_plot(show = False):
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         if args.choice > 0:
             if i == 4:
-                master_label = "Low Disc Mass"
+                master_label = r"$0.3 \Sigma_0$"
             else:
                 master_label = r"$A = %.02f$" % (accretion_rate)
         else:
