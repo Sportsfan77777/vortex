@@ -348,7 +348,7 @@ def make_plot(show = False):
         # Plot
         x = frame_range
         y1 = this_contrasts_over_time
-        p1, = ax1.plot(x, y1, c = colors[i], linewidth = linewidth + 1, zorder = 99)
+        p1, = ax1.plot(x, y1, c = colors[i], linewidth = linewidth, zorder = 99)
 
         # Axes
         ax1.set_yscale('log')
@@ -356,7 +356,8 @@ def make_plot(show = False):
         ax1.yaxis.set_major_formatter(ScalarFormatter())
         ax1.yaxis.set_minor_formatter(NullFormatter())
 
-        ax1.set_xlim(x[0], x[-1])
+        if i == 3:
+            ax1.set_xlim(x[0], x[-1])
         ax1.set_ylim(1, 15)
 
         ax1.set_yticks([1, 3, 10])
@@ -387,7 +388,8 @@ def make_plot(show = False):
         p3, = ax2.plot(x, y3, c = colors[i], linewidth = linewidth - 2, label = label2, zorder = 90)
 
         # Axes
-        ax2.set_xlim(x[0], x[-1])
+        if i == 3:
+            ax2.set_xlim(x[0], x[-1])
         ax2.set_ylim(0, 2.5)
         ax2.set_yticks([0, 0.5, 1, 1.5, 2, 2.5])
 
@@ -402,7 +404,8 @@ def make_plot(show = False):
         p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, zorder = 90)
 
         # Axes
-        ax3.set_xlim(x[0], x[-1])
+        if i == 3:
+            ax3.set_xlim(x[0], x[-1])
         ax3.set_ylim(0.4 * 10**(-5), 0.4 * 10**(-2))
         ax3.set_yscale('log')
 
