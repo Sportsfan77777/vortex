@@ -254,10 +254,10 @@ def get_contrasts(args_here):
 
 ###############################################################################
 
-maxima_over_time = mp_array("d", 10 * len(frame_range))
-minima_over_time = mp_array("d", 10 * len(frame_range))
-contrasts_over_time = mp_array("d", 10 * len(frame_range))
-differences_over_time = mp_array("d", 10 * len(frame_range))
+maxima_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges[0])))
+minima_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges[0])))
+contrasts_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges[0])))
+differences_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges[0])))
 
 ###############################################################################
 
