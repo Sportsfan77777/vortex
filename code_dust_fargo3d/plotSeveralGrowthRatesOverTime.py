@@ -91,7 +91,7 @@ master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
-master_frame_ranges[871] = [[0, 3900, 25], [0, 4700, 25], [0, 8500, 25], [0, 12300, 25], [0, 7500, 25]]
+master_frame_ranges[871] = [[0, 3900, 20], [0, 4700, 20], [0, 8900, 20], [0, 12500, 20], [0, 7500, 20]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
 
 ###############################################################################
@@ -318,9 +318,9 @@ def make_plot(show = False):
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         if args.choice > 0:
             if i == 4:
-                label = "Low Disc Mass"
+                master_label = "Low Disc Mass"
             else:
-                label = r"$A = %.02f$" % (accretion_rate)
+                master_label = r"$A = %.02f$" % (accretion_rate)
         else:
             labels = ["Default", "Restart"]
             label = labels[i]
@@ -390,7 +390,7 @@ def make_plot(show = False):
         # Axes
         if i == 3:
             ax2.set_xlim(x[0], x[-1])
-        ax2.set_ylim(0, 2.5)
+        ax2.set_ylim(0, 2.8)
         ax2.set_yticks([0, 0.5, 1, 1.5, 2, 2.5])
 
         # Annotate
