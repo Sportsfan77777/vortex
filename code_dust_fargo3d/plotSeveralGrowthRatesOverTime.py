@@ -66,7 +66,7 @@ master_accretion_rates[671] = [0.50, 0.17, 0.05, 0.02, 0.125]
 master_start_times = {}
 master_start_times[87] = [349, 913, 1751, 2875]
 master_start_times[87] = [0, 0, 0, 0]
-master_start_times[67] = [20, 70, 250, 550]
+master_start_times[67] = [20, 50, 200, 575]
 master_start_times[47] = [59, 70, 104, 223]
 master_start_times[86] = [376, 1064, 0]
 master_start_times[66] = [116, 247, 677]
@@ -351,6 +351,7 @@ def make_plot(show = False):
         this_growth_rates_over_time = np.diff(np.log(this_smoothed_differences_over_time)) / dt
 
         ##### Top Plot #####
+        
         # Plot
         x = frame_range
         y1 = this_contrasts_over_time
@@ -370,7 +371,7 @@ def make_plot(show = False):
             ax1.set_yticks([1, 3, 10])
         else:
             ax1.set_ylim(1, 7)
-            ax1.set_yticks([1, 3, 6])
+            ax1.set_yticks([1, 3, 7])
 
         # Annotate
         #ax1.set_xlabel("", fontsize = fontsize)
@@ -387,6 +388,7 @@ def make_plot(show = False):
         ax1.set_title("%s" % (title1), y = 1.035, fontsize = fontsize + 2)
 
         ##### Middle Plot #####
+
         label1 = ""; label2 = ""
         if i == 0:
             label1 = r"$\Sigma_\mathrm{max}$"
@@ -405,7 +407,7 @@ def make_plot(show = False):
             ax2.set_ylim(0, 2.8)
             ax2.set_yticks([0, 0.5, 1, 1.5, 2, 2.5])
         else:
-            ax2.set_ylim(0, 2.2)
+            ax2.set_ylim(0, 1.8)
             ax2.set_yticks([0, 0.5, 1, 1.5, 2])
 
         # Annotate
