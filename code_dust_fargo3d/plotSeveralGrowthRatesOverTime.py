@@ -289,6 +289,7 @@ differences_over_time = mp_array("d", 10 * len(util.get_frame_range(frame_ranges
 colors = ['k', 'cornflowerblue', 'darkorange', 'r', 'purple']
 labelsize = 19
 size = 100
+alpha = 0.8
 
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
@@ -403,7 +404,7 @@ def make_plot(show = False):
 
         # Plot
         y4 = this_growth_rates_over_time
-        p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, zorder = 90 - i)
+        p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, alpha = alpha, label = master_label, zorder = 90 - i)
 
         # Axes
         if i == 3:
@@ -416,6 +417,7 @@ def make_plot(show = False):
         # Annotate
         ax3.set_xlabel("Time (planet orbits)", fontsize = fontsize)
         ax3.set_ylabel(r"Growth Rate", fontsize = fontsize)
+        ax3.legend(loc = "upper right", fontsize = fontsize - 5)
 
     # Save, Show, and Close
     if version is None:
