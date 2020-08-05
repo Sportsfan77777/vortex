@@ -304,6 +304,9 @@ def make_plot(show = False):
         frame_range = util.get_frame_range(frame_ranges[i])
         dt = (frame_range[1] - frame_range[0]) * (2.0 * np.pi) # for growth rate calculation
 
+        start_time = start_times[i]
+        start_time_i = az.my_searchsorted(frame_range, start_time)
+
         # Label
         if args.choice > 0:
             scale_height = float(directories[0].split("_")[0][1:]) / 100.0
@@ -351,7 +354,7 @@ def make_plot(show = False):
         # Plot
         x = frame_range
         y1 = this_contrasts_over_time
-        p1, = ax1.plot(x, y1, c = colors[i], linewidth = linewidth, zorder = 99 - i)
+        p1, = ax1.plot(x[start_time_i:], y1[start_time_i:], c = colors[i], linewidth = linewidth, zorder = 99 - i)
 
         # Axes
         ax1.set_yscale('log')
@@ -386,9 +389,9 @@ def make_plot(show = False):
             label2 = r"$\Sigma_\mathrm{min}$"
 
         y2 = this_maxima_over_time
-        p2, = ax2.plot(x, y2, c = colors[i], linewidth = linewidth, label = label1, zorder = 99 - i)
+        p2, = ax2.plot(x[start_time_i:], y2[start_time_i:], c = colors[i], linewidth = linewidth, label = label1, zorder = 99 - i)
         y3 = this_minima_over_time
-        p3, = ax2.plot(x, y3, c = colors[i], linewidth = linewidth - 2, label = label2, zorder = 90 - i)
+        p3, = ax2.plot(x[start_time_i:], y3[start_time_i:], c = colors[i], linewidth = linewidth - 2, label = label2, zorder = 90 - i)
 
         # Axes
         if i == 3:
@@ -404,7 +407,7 @@ def make_plot(show = False):
 
         # Plot
         y4 = this_growth_rates_over_time
-        p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, alpha = alpha, label = master_label, zorder = 90 - i)
+        p4, = ax3.plot(x[start_time_i:-5], y4[start_time_i:-4], c = colors[i], linewidth = linewidth, alpha = alpha, label = master_label, zorder = 90 - i)
 
         # Axes
         if i == 3:
