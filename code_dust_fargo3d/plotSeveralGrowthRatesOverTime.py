@@ -91,7 +91,7 @@ master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
-master_frame_ranges[871] = [[0, 3900, 10], [0, 4700, 10], [0, 8900, 10], [0, 12500, 10], [0, 7500, 10]]
+master_frame_ranges[871] = [[0, 3900, 20], [0, 4700, 20], [0, 8900, 20], [0, 12500, 20], [0, 7500, 20]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
 
 ###############################################################################
@@ -348,7 +348,7 @@ def make_plot(show = False):
         # Plot
         x = frame_range
         y1 = this_contrasts_over_time
-        p1, = ax1.plot(x, y1, c = colors[i], linewidth = linewidth, zorder = 99)
+        p1, = ax1.plot(x, y1, c = colors[i], linewidth = linewidth, zorder = 99 - i)
 
         # Axes
         ax1.set_yscale('log')
@@ -383,9 +383,9 @@ def make_plot(show = False):
             label2 = r"$\Sigma_\mathrm{min}$"
 
         y2 = this_maxima_over_time
-        p2, = ax2.plot(x, y2, c = colors[i], linewidth = linewidth, label = label1, zorder = 99)
+        p2, = ax2.plot(x, y2, c = colors[i], linewidth = linewidth, label = label1, zorder = 99 - i)
         y3 = this_minima_over_time
-        p3, = ax2.plot(x, y3, c = colors[i], linewidth = linewidth - 2, label = label2, zorder = 90)
+        p3, = ax2.plot(x, y3, c = colors[i], linewidth = linewidth - 2, label = label2, zorder = 90 - i)
 
         # Axes
         if i == 3:
@@ -401,7 +401,7 @@ def make_plot(show = False):
 
         # Plot
         y4 = this_growth_rates_over_time
-        p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, zorder = 90)
+        p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, zorder = 90 - i)
 
         # Axes
         if i == 3:
