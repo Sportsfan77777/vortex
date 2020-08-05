@@ -91,7 +91,7 @@ master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
-master_frame_ranges[871] = [[0, 3900, 50], [0, 4700, 50], [0, 8500, 50], [0, 12000, 50], [0, 7500, 50]]
+master_frame_ranges[871] = [[0, 3900, 25], [0, 4700, 25], [0, 8500, 25], [0, 12300, 25], [0, 7500, 25]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
 
 ###############################################################################
@@ -267,7 +267,7 @@ def get_contrasts(args_here):
     azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5, end = 1.85)
 
     if "low_mass" in directory:
-        azimuthal_profile *= (0.3) # low-mass case
+        azimuthal_profile /= (0.3) # low-mass case
 
     maxima_over_time[i] = np.percentile(azimuthal_profile, 90)
     minima_over_time[i] = np.percentile(azimuthal_profile, 5)
