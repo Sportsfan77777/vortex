@@ -228,6 +228,29 @@ fargo_par["theta"] = theta
 ### Helper Functions ###
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
+
+def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+    """ shift density based on option """
+    if reference_density is None:
+       reference_density = normalized_density
+
+    # Options
+    if option == "peak":
+       shift_c = az.get_azimuthal_peak(reference_density, fargo_par)
+    elif option == "threshold":
+       threshold = util.get_threshold(fargo_par["PSIZE"])
+       shift_c = az.get_azimuthal_center(reference_density, fargo_par, threshold = threshold)
+    elif option == "away":
+       shift_c = az.shift_away_from_minimum(reference_density, fargo_par)
+    elif option == "lookup":
+       shift_c = az.get_lookup_shift(frame)
+    else:
+       print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
+
+    # Shift
+    shifted_density = np.roll(normalized_density, shift_c, axis = -1)
+    return shifted_density, shift_c
+
 ### Data ###
 
 def get_contrasts(args_here):
