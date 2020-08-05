@@ -399,7 +399,7 @@ def make_plot(show = False):
 
         # Plot
         y4 = this_growth_rates_over_time
-        p4, = ax3.plot(x[:-5], y4[:-5], c = colors[i], linewidth = linewidth, zorder = 90)
+        p4, = ax3.plot(x[:-5], y4[:-4], c = colors[i], linewidth = linewidth, zorder = 90)
 
         # Axes
         ax3.set_xlim(x[0], x[-1])
