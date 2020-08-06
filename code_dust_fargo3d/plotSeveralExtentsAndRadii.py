@@ -229,9 +229,8 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 ### Helper Functions ###
-smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
-def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+def shift_density(normalized_density, vorticity, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -250,32 +249,9 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
+    shifted_vorticity = np.roll(vorticity, shift_c)
     shifted_density = np.roll(normalized_density, shift_c, axis = -1)
-    return shifted_density, shift_c
-
-### Data ###
-
-def get_contrasts(args_here):
-    # Unwrap Args
-    i, frame, directory = args_here
-
-    if frame == 8800:
-        frame = 8801 # Remove problem frame
-
-    # Get Data
-    density = fromfile("../%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta) / surface_density_zero
-    density, shift_c = shift_density(density, fargo_par, reference_density = density)
-    azimuthal_profile = az.get_mean_azimuthal_profile(density, fargo_par, sliver_width = 1.5, end = 1.85)
-
-    if "low_mass" in directory:
-        azimuthal_profile /= (0.3) # low-mass case
-
-    maxima_over_time[i] = np.percentile(azimuthal_profile, 90)
-    minima_over_time[i] = np.percentile(azimuthal_profile, 5)
-    contrasts_over_time[i] = maxima_over_time[i] / minima_over_time[i]
-    differences_over_time[i] = maxima_over_time[i] - minima_over_time[i]
-
-    print i, frame, differences_over_time[i], maxima_over_time[i], minima_over_time[i], contrasts_over_time[i]
+    return shifted_density, shifted_vorticity, shift_c
 
 ### Data ###
 
@@ -452,7 +428,7 @@ def make_plot(show = False):
         pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
         p = Pool(num_cores)
-        p.map(get_contrasts, pool_args)
+        p.map(get_extents, pool_args)
         p.terminate()
 
         num_frames = len(frame_range)
