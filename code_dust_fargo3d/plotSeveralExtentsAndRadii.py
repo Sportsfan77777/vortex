@@ -299,8 +299,8 @@ def get_extents(args_here):
             normal = False # Compressible regime from Surville+ 15
 
     if normal:
-        azimuthal_extent = az.get_extent(density, fargo_par, threshold = 0.85) # Use 0.9 for h = 0.08 (Add as a parameter)
-        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 0.85)
+        azimuthal_extent = az.get_extent(density, fargo_par, threshold = 0.9) # Use 0.9 for h = 0.08 (Add as a parameter)
+        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 0.9)
         radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
 
         azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
