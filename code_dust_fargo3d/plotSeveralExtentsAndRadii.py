@@ -365,7 +365,7 @@ def get_extents(args_here):
         back_i = radial_center_i + az.my_searchsorted(back_side, cutoff)
 
         radial_peak_over_time[i] = radial_center
-        radial_extent_over_time[i] = (rad[back_i] - rad[front_i]) / scale_height
+        radial_extent_over_time[i] = (rad[back_i] - rad[front_i]) # / scale_height
         azimuthal_extent_over_time[i] = theta[right_i - left_i] * (180.0 / np.pi)
 
         print i, frame, rad[front_i], radial_center, rad[back_i], "Final Radial: Left, Center, Right"
@@ -459,7 +459,7 @@ def make_plot(show = False):
 
         # Axes
         if i == 3:
-            ax1.set_xlim(x[0], x[-1])
+            ax1.set_xlim(0, x[-1])
 
         angles = np.linspace(0, 360, 7)
         ax1.set_ylim(0, 360)
@@ -485,7 +485,7 @@ def make_plot(show = False):
 
         # Axes
         if i == 3:
-            ax2.set_xlim(x[0], x[-1])
+            ax2.set_xlim(0, x[-1])
 
         if scale_height == 0.08:
             ax2.set_ylim(0, 0.75)
@@ -503,7 +503,7 @@ def make_plot(show = False):
 
         # Axes
         if i == 3:
-            ax3.set_xlim(x[0], x[-1])
+            ax3.set_xlim(0, x[-1])
 
         if scale_height == 0.08:
             ax3.set_ylim(1.0, 2.5)
