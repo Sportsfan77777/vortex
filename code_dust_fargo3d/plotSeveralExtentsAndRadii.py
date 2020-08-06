@@ -129,6 +129,12 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
 
+    parser.add_argument('-r', dest = "check_rossby", type = int, default = 1000000,
+                         help = 'frame at which you start using the Rossby number for measuring everything (default: infinity)')
+    parser.add_argument('-e', dest = "extreme_cutoff", type = int, default = 1000000,
+                         help = 'frame at which you start using the extreme Rossby number cutoff (default: infinity)')
+    parser.add_argument('-i', dest = "include_aspect", action = 'store_true', default = False,
+                         help = 'include aspect ratio (default: do not)')
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
     
@@ -215,6 +221,8 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
 
+check_rossby = args.check_rossby
+extreme_cutoff = args.extreme_cutoff
 negative = args.negative
 
 # Plot Parameters (constant)
