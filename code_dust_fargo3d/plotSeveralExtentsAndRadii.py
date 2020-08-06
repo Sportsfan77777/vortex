@@ -268,7 +268,7 @@ check_rossby = [2000, 2700, 8000, 12100, 100000]
 
 def get_extents(args_here):
     # Unwrap Args
-    i, frame, directory = args_here
+    i, frame, directory, check_rossby = args_here
 
     if frame in problem_frames:
         frame += 3 # switch to an adjacent frame
@@ -279,7 +279,7 @@ def get_extents(args_here):
     peak_rad, peak_density = az.get_radial_peak(avg_density, fargo_par)
 
     normal = True
-    if frame > check_rossby[i]:
+    if frame > check_rossby:
         vrad = (fromfile("../%s/gasvy%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
         vtheta = (fromfile("../%s/gasvx%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
@@ -408,6 +408,8 @@ def make_plot(show = False):
         start_time = start_times[i]
         start_time_i = az.my_searchsorted(frame_range, start_time)
 
+        check_rossby = check_rossby[i]
+
         # Label
         if args.choice > 0:
             scale_height = float(directories[0].split("_")[0][1:]) / 100.0
@@ -431,14 +433,14 @@ def make_plot(show = False):
             label = labels[i]
 
         # Data
-        for j, frame in enumerate(frame_range):
-            get_extents((j, frame, directory))
+        #for j, frame in enumerate(frame_range):
+        #    get_extents((j, frame, directory))
 
-        #pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
+        pool_args = [(j, frame, directory, check_rossby) for j, frame in enumerate(frame_range)]
 
-        #p = Pool(num_cores)
-        #p.map(get_extents, pool_args)
-        #p.terminate()
+        p = Pool(num_cores)
+        p.map(get_extents, pool_args)
+        p.terminate()
 
         num_frames = len(frame_range)
         this_azimuthal_extent_over_time = np.array(azimuthal_extent_over_time[:num_frames])
