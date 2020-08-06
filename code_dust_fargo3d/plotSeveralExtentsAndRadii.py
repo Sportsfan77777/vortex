@@ -96,6 +96,8 @@ master_frame_ranges[0] = [[0, 5000, 25], [2500, 3000, 25]]
 master_frame_ranges[871] = [[400, 10000, 25], [950, 8500, 25], [1750, 9200, 25], [2900, 12500, 25], [600, 7500, 25]]
 master_frame_ranges[671] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25], [0, 4000, 25]]
 
+check_rossby[87] = 
+
 ###############################################################################
 
 ### Input Parameters ###
@@ -264,6 +266,8 @@ def shift_density(normalized_density, vorticity, fargo_par, option = "away", ref
 
 ### Data ###
 
+check_rossby = [2000, 2700, 8000, 12100, 100000]
+
 def get_extents(args_here):
     # Unwrap Args
     i, frame, directory = args_here
@@ -277,7 +281,7 @@ def get_extents(args_here):
     peak_rad, peak_density = az.get_radial_peak(avg_density, fargo_par)
 
     normal = True
-    if frame > check_rossby:
+    if frame > check_rossby[i]:
         vrad = (fromfile("../%s/gasvy%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
         vtheta = (fromfile("../%s/gasvx%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = True, residual = True)
