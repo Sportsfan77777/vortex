@@ -18,6 +18,7 @@ import argparse
 
 import math
 import numpy as np
+from scipy.ndimage import filters as ff
 
 import matplotlib
 from matplotlib import rcParams as rc
@@ -203,6 +204,7 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 ### Helper Functions ###
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
 
 def shift_density(normalized_density, vorticity, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
@@ -413,6 +415,7 @@ def make_plot(show = False):
 
     if args.include_aspect:
         y4 = np.array(radial_peak_over_time) * (np.array(azimuthal_extent_over_time) * np.pi / 180.0) / (np.array(radial_extent_over_time) * scale_height)
+        y4 = smooth(y4, 5)
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
@@ -433,7 +436,7 @@ def make_plot(show = False):
     par2.set_ylim(1.0, 2.5)
 
     if args.include_aspect:
-        par4.set_ylim(0, 20)
+        par4.set_ylim(0, 25)
 
     angles = np.linspace(0, 360, 7)
     host.set_yticks(angles)
