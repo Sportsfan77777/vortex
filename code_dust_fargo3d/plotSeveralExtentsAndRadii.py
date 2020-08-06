@@ -432,7 +432,7 @@ def make_plot(show = False):
 
         # Data
         for j, frame in enumerate(frame_range):
-            get_min((j, frame, directory))
+            get_extents((j, frame, directory))
 
         #pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
