@@ -431,16 +431,14 @@ def make_plot(show = False):
             label = labels[i]
 
         # Data
-        #gap_depth_over_time = np.zeros(len(frame_range))
+        for j, frame in enumerate(frame_range):
+            get_min((j, frame, directory))
 
-        #for i, frame in enumerate(frame_range):
-        #    get_min((i, frame))
+        #pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
 
-        pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
-
-        p = Pool(num_cores)
-        p.map(get_extents, pool_args)
-        p.terminate()
+        #p = Pool(num_cores)
+        #p.map(get_extents, pool_args)
+        #p.terminate()
 
         num_frames = len(frame_range)
         this_azimuthal_extent_over_time = np.array(azimuthal_extent_over_time[:num_frames])
