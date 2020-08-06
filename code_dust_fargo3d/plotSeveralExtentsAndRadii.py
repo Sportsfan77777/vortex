@@ -447,8 +447,8 @@ def make_plot(show = False):
         this_radial_extent_over_time = np.array(radial_extent_over_time[:num_frames])
         this_radial_peak_over_time = np.array(radial_peak_over_time[:num_frames])
 
-        this_smoothed_differences_over_time = smooth(this_differences_over_time, 5)
-        this_growth_rates_over_time = np.diff(np.log(this_smoothed_differences_over_time)) / dt
+        #this_smoothed_differences_over_time = smooth(this_differences_over_time, 5)
+        #this_growth_rates_over_time = np.diff(np.log(this_smoothed_differences_over_time)) / dt
 
         ##### Top Plot #####
 
