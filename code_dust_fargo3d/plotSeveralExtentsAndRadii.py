@@ -264,7 +264,7 @@ def shift_density(normalized_density, vorticity, fargo_par, option = "away", ref
 
 ### Data ###
 
-check_rossby = [2000, 2700, 8000, 12100, 100000]
+check_rossby_frames = [2000, 2700, 8000, 12100, 100000]
 
 def get_extents(args_here):
     # Unwrap Args
@@ -408,7 +408,7 @@ def make_plot(show = False):
         start_time = start_times[i]
         start_time_i = az.my_searchsorted(frame_range, start_time)
 
-        check_rossby = check_rossby[i]
+        check_rossby = check_rossby_frames[i]
 
         # Label
         if args.choice > 0:
