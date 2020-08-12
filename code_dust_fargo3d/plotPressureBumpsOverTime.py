@@ -432,7 +432,7 @@ def make_plot(show = False):
         plot.legend(loc = "upper left", fontsize = fontsize - 4)
 
         # Pressure Bump label
-        x1 = 1500; x2 = 2500
+        x1 = 1200; x2 = 2800
         x_center = x1 + (x2 - x1) / 2.0; y_text = 1.56
 
         plot.text(x_center, y_text, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
@@ -460,11 +460,11 @@ def make_plot(show = False):
 
         # Critical Bump label
         x1 = 1800; x2 = 4200
-        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.06
+        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.04
 
         plot.text(x_center, y_text, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
-        plot.plot(bottom_brace_x, 1.48 - bottom_brace_y, c = "k", linewidth = 2)
+        plot.plot(bottom_brace_x, 1.12 - bottom_brace_y, c = "k", linewidth = 2)
 
 
     # Axes
