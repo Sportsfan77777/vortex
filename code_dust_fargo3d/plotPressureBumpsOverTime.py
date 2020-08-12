@@ -441,7 +441,7 @@ def make_plot(show = False):
 
         # Critical Bump label
         x1 = 800; x2 = 2200; x_center = x1 + (x2 - x1) / 2.0
-        y_base = 1.1; dy = 0.06
+        y_base = 1.14; dy = 0.10
 
         plot.text(x_center, y_base - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
@@ -460,7 +460,7 @@ def make_plot(show = False):
 
         # Critical Bump label
         x1 = 1800; x2 = 4200; x_center = x1 + (x2 - x1) / 2.0
-        y_base = 1.1; dy = 0.06
+        y_base = 1.14; dy = 0.10
 
         plot.text(x_center, y_base - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
