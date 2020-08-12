@@ -113,8 +113,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'sub_sample in radius (default: 6)')
     parser.add_argument('--rate_y', dest = "quiver_rate_y", type = int, default = 100,
                          help = 'sub_sample in angle (default: 24)')
-    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.2,
-                         help = 'bigger scale means smaller arrow (default: 0.2)')
+    parser.add_argument('--scale', dest = "quiver_scale", type = float, default = 0.1,
+                         help = 'bigger scale means smaller arrow (default: 0.1)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
@@ -371,7 +371,7 @@ def make_plot(frames, show = False):
         if use_contours:
             levels = np.linspace(low_contour, high_contour, num_levels)
             colors = generate_colors(num_levels)
-            plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+            plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
         if quiver:
             # Velocity
