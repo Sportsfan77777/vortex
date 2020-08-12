@@ -445,7 +445,7 @@ def make_plot(show = False):
 
         plot.text(x_center, y_text, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
-        plot.plot(bottom_brace_x, 1.48 - bottom_brace_y, c = "k", linewidth = 2)
+        plot.plot(bottom_brace_x, 1.12 - bottom_brace_y, c = "k", linewidth = 2)
 
     elif scale_height == 0.06:
         plot.legend(loc = "lower right", fontsize = fontsize - 4)
