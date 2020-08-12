@@ -432,7 +432,7 @@ def make_plot(show = False):
         plot.legend(loc = "upper left", fontsize = fontsize - 4)
 
         # Pressure Bump label
-        x1 = 1200; x2 = 2800; x_center = x1 + (x2 - x1) / 2.0
+        x1 = 1200; x2 = 2800; x_center = (x1 + x2) / 2.0
         y_base = 1.45; dy = 0.08
 
         plot.text(x_center, y_base + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
@@ -440,7 +440,7 @@ def make_plot(show = False):
         plot.plot(top_brace_x, y_base + top_brace_y, c = "k", linewidth = 2)
 
         # Critical Bump label
-        x1 = 800; x2 = 2200; x_center = x1 + (x2 - x1) / 2.0
+        x1 = 800; x2 = 2200; x_center = (x1 + x2) / 2.0
         y_base = 1.14; dy = 0.10
 
         plot.text(x_center, y_base - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
@@ -451,7 +451,7 @@ def make_plot(show = False):
         plot.legend(loc = "lower right", fontsize = fontsize - 4)
 
         # Pressure Bump label
-        x1 = 4000; x2 = 6000; x_center = x1 + (x2 - x1) / 2.0
+        x1 = 4000; x2 = 6000; x_center =(x1 + x2) / 2.0
         y_base = 1.48; dy = 0.08
 
         plot.text(x_center, y_base + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
@@ -459,7 +459,7 @@ def make_plot(show = False):
         plot.plot(top_brace_x, y_base + top_brace_y, c = "k", linewidth = 2)
 
         # Critical Bump label
-        x1 = 1800; x2 = 4200; x_center = x1 + (x2 - x1) / 2.0
+        x1 = 1500; x2 = 4800; x_center = (x1 + x2) / 2.0
         y_base = 1.18; dy = 0.10
 
         plot.text(x_center, y_base - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
