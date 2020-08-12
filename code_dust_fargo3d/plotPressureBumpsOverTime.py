@@ -432,39 +432,39 @@ def make_plot(show = False):
         plot.legend(loc = "upper left", fontsize = fontsize - 4)
 
         # Pressure Bump label
-        x1 = 1200; x2 = 2800
-        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.56
+        x1 = 1200; x2 = 2800; x_center = x1 + (x2 - x1) / 2.0
+        y_base = 1.45; dy = 0.08
 
-        plot.text(x_center, y_text, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_brace + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
         top_brace_x, top_brace_y = range_brace(x1, x2, height = 0.06)
-        plot.plot(top_brace_x, 1.48 + top_brace_y, c = "k", linewidth = 2)
+        plot.plot(top_brace_x, y_base + top_brace_y, c = "k", linewidth = 2)
 
         # Critical Bump label
-        x1 = 800; x2 = 2200
-        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.06
+        x1 = 800; x2 = 2200; x_center = x1 + (x2 - x1) / 2.0
+        y_brace = 1.1; dy = 0.06
 
-        plot.text(x_center, y_text, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_brace - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
-        plot.plot(bottom_brace_x, 1.12 - bottom_brace_y, c = "k", linewidth = 2)
+        plot.plot(bottom_brace_x, y_brace - bottom_brace_y, c = "k", linewidth = 2)
 
     elif scale_height == 0.06:
         plot.legend(loc = "lower right", fontsize = fontsize - 4)
 
         # Pressure Bump label
-        x1 = 4000; x2 = 6000
-        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.56
+        x1 = 4000; x2 = 6000; x_center = x1 + (x2 - x1) / 2.0
+        y_brace = 1.48; dy = 0.08
 
-        plot.text(x_center, y_text, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_brace + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
         top_brace_x, top_brace_y = range_brace(x1, x2, height = 0.06)
-        plot.plot(top_brace_x, 1.48 + top_brace_y, c = "k", linewidth = 2)
+        plot.plot(top_brace_x, y_base + top_brace_y, c = "k", linewidth = 2)
 
         # Critical Bump label
-        x1 = 1800; x2 = 4200
-        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.04
+        x1 = 1800; x2 = 4200; x_center = x1 + (x2 - x1) / 2.0
+        y_brace = 1.1; dy = 0.06
 
-        plot.text(x_center, y_text, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_brace - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
-        plot.plot(bottom_brace_x, 1.12 - bottom_brace_y, c = "k", linewidth = 2)
+        plot.plot(bottom_brace_x, y_brace - bottom_brace_y, c = "k", linewidth = 2)
 
 
     # Axes
@@ -502,7 +502,7 @@ def make_plot(show = False):
     # Set twin axis
     twin = ax.twinx()
     twin.set_ylim(0, (end_y - start_y) / scale_height)
-    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30)
+    twin.set_ylabel(r"$(r - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30)
 
     # Save, Show, and Close
     if version is None:
