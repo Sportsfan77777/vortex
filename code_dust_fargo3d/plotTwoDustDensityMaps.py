@@ -359,8 +359,8 @@ def make_plot(frames, show = False):
         normalized_density = density / dust_surface_density_zero
 
         if center:
-            normalized_gas_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
             normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
+            normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
 
         ### Plot ###
         x = rad
