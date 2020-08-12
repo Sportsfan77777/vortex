@@ -278,6 +278,29 @@ too_interior_density_maxima_h6 = np.array([1.540, 1.465])
 
 ### Helper Functions ###
 
+def range_brace(x_min, x_max, mid=0.75, 
+                beta1=50.0, beta2=100.0, height=1, 
+                initial_divisions=11, resolution_factor=1.5):
+    # Source: http://stackoverflow.com/questions/1289681/drawing-braces-with-pyx
+    # determine x0 adaptively values using second derivitive
+    # could be replaced with less snazzy:
+    #   x0 = np.arange(0, 0.5, .001)
+    x0 = np.array(())
+    tmpx = np.linspace(0, 0.5, initial_divisions)
+    tmp = beta1**2 * (np.exp(beta1*tmpx)) * (1-np.exp(beta1*tmpx)) / np.power((1+np.exp(beta1*tmpx)),3)
+    tmp += beta2**2 * (np.exp(beta2*(tmpx-0.5))) * (1-np.exp(beta2*(tmpx-0.5))) / np.power((1+np.exp(beta2*(tmpx-0.5))),3)
+    for i in range(0, len(tmpx)-1):
+        t = int(np.ceil(resolution_factor*max(np.abs(tmp[i:i+2]))/float(initial_divisions)))
+        x0 = np.append(x0, np.linspace(tmpx[i],tmpx[i+1],t))
+    x0 = np.sort(np.unique(x0)) # sort and remove dups
+    # half brace using sum of two logistic functions
+    y0 = mid*2*((1/(1.+np.exp(-1*beta1*x0)))-0.5)
+    y0 += (1-mid)*2*(1/(1.+np.exp(-1*beta2*(x0-0.5))))
+    # concat and scale x
+    x = np.concatenate((x0, 1-x0[::-1])) * float((x_max-x_min)) + x_min
+    y = np.concatenate((y0, y0[::-1])) * float(height)
+    return (x,y)
+
 def find_min(averagedDensity):
     outer_disk_start = np.searchsorted(rad, 0.9) # look for max radial density beyond r = 1.1
     outer_disk_end = np.searchsorted(rad, 1.25) # look for max radial density before r = 2.3
@@ -407,8 +430,42 @@ def make_plot(show = False):
 
     if scale_height == 0.04:
         plot.legend(loc = "upper left", fontsize = fontsize - 4)
+
+        # Pressure Bump label
+        x1 = 1500; x2 = 2500
+        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.56
+
+        plot.text(x_center, y_text, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
+        top_brace_x, top_brace_y = range_brace(x1, x2, height = 0.06)
+        plot.plot(top_brace_x, 1.48 + top_brace_y, c = "k", linewidth = 2)
+
+        # Critical Bump label
+        x1 = 800; x2 = 2200
+        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.06
+
+        plot.text(x_center, y_text, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
+        bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
+        plot.plot(bottom_brace_x, 1.48 - bottom_brace_y, c = "k", linewidth = 2)
+
     elif scale_height == 0.06:
         plot.legend(loc = "lower right", fontsize = fontsize - 4)
+
+        # Pressure Bump label
+        x1 = 4000; x2 = 6000
+        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.56
+
+        plot.text(x_center, y_text, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
+        top_brace_x, top_brace_y = range_brace(x1, x2, height = 0.06)
+        plot.plot(top_brace_x, 1.48 + top_brace_y, c = "k", linewidth = 2)
+
+        # Critical Bump label
+        x1 = 1800; x2 = 4200
+        x_center = x1 + (x2 - x1) / 2.0; y_text = 1.06
+
+        plot.text(x_center, y_text, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
+        bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
+        plot.plot(bottom_brace_x, 1.48 - bottom_brace_y, c = "k", linewidth = 2)
+
 
     # Axes
     if args.choice > 0:
@@ -423,7 +480,7 @@ def make_plot(show = False):
 
     unit_x = "planet orbits"; unit_y = "r_\mathrm{p}"
     plot.xlabel(r"Time [%s]" % unit_x, fontsize = fontsize)
-    plot.ylabel(r"$r_\mathrm{pressure-bump}$ [$%s$]" % unit_y, fontsize = fontsize, usetex = True)
+    plot.ylabel(r"$r$ [$%s$]" % unit_y, fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
@@ -445,7 +502,7 @@ def make_plot(show = False):
     # Set twin axis
     twin = ax.twinx()
     twin.set_ylim(0, (end_y - start_y) / scale_height)
-    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30, usetex = True)
+    twin.set_ylabel(r"$(r_\mathrm{pressure-bump} - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30)
 
     # Save, Show, and Close
     if version is None:
