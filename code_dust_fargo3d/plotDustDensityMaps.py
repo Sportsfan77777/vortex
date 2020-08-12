@@ -261,7 +261,7 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
-    shifted_density = np.roll(normalized_density, shift_c)
+    shifted_density = np.roll(normalized_density, shift_c, axis = -1)
     return shifted_density, shift_c
 
 ###############################################################################
@@ -333,7 +333,7 @@ def make_plot(frame, show = False):
         u = np.transpose(radial_velocity)[:, start_i:end_i]
         v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
 
-        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
+        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale, color = "white")
 
     # Axes
     plot.xlim(x_min, x_max)
@@ -427,7 +427,7 @@ def old_make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\phi$", fontsize = fontsize)
+    plot.ylabel(r"$\phi$ (degrees)", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)

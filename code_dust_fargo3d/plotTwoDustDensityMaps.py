@@ -70,8 +70,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "twoGasDensityMaps",
-                         help = 'save directory (default: twoGasDensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "twoDustDensityMaps%d",
+                         help = 'save directory (default: twoDustDensityMaps%d)')
+    parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
+                         help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -115,8 +117,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'bigger scale means smaller arrow (default: 0.2)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
-                         help = 'color map (default: viridis)')
+    parser.add_argument('--cmap', dest = "cmap", default = "inferno",
+                         help = 'color map (default: inferno)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
                          help = 'maximum density in colorbar (default: 2)')
 
@@ -141,6 +143,7 @@ num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
+dust_surface_density_zero = p.sigma0 * p.epsilon
 
 dt = p.ninterm * p.dt
 
@@ -179,10 +182,11 @@ frame_range = args.frames
 num_cores = args.num_cores
 
 # Files
-save_directory = args.save_directory
+save_directory = args.save_directory % args.dust_number
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+dust_number = args.dust_number
 merge = args.merge
 mpi = args.mpi
 
@@ -348,8 +352,11 @@ def make_plot(frames, show = False):
         ax = plot.subplot(1, 2, number)
 
         # Data
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-        normalized_density = density / surface_density_zero
+        gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+        density = fromfile("dust%ddens%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
+
+        normalized_gas_density = gas_density / surface_density_zero
+        normalized_density = density / dust_surface_density_zero
 
         if center:
             normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -386,7 +393,7 @@ def make_plot(frames, show = False):
             u = np.transpose(radial_velocity)[:, start_i:end_i]
             v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
 
-            plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
+            plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale, c = "cyan")
 
         # Axes
         plot.xlim(x_min, x_max)
@@ -444,9 +451,9 @@ def make_plot(frames, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/densityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1])
+        save_fn = "%s/dustDensityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1])
     else:
-        save_fn = "%s/v%04d_densityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1])
+        save_fn = "%s/v%04d_dustDensityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.15)
 
     if show:
