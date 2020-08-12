@@ -435,7 +435,7 @@ def make_plot(show = False):
         x1 = 1200; x2 = 2800; x_center = x1 + (x2 - x1) / 2.0
         y_base = 1.45; dy = 0.08
 
-        plot.text(x_center, y_brace + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_base + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
         top_brace_x, top_brace_y = range_brace(x1, x2, height = 0.06)
         plot.plot(top_brace_x, y_base + top_brace_y, c = "k", linewidth = 2)
 
@@ -443,7 +443,7 @@ def make_plot(show = False):
         x1 = 800; x2 = 2200; x_center = x1 + (x2 - x1) / 2.0
         y_base = 1.1; dy = 0.06
 
-        plot.text(x_center, y_brace - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_base - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
         plot.plot(bottom_brace_x, y_base - bottom_brace_y, c = "k", linewidth = 2)
 
@@ -454,7 +454,7 @@ def make_plot(show = False):
         x1 = 4000; x2 = 6000; x_center = x1 + (x2 - x1) / 2.0
         y_base = 1.48; dy = 0.08
 
-        plot.text(x_center, y_brace + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_base + dy, r"$r_\mathrm{pressure}$", horizontalalignment = 'center', fontsize = fontsize)
         top_brace_x, top_brace_y = range_brace(x1, x2, height = 0.06)
         plot.plot(top_brace_x, y_base + top_brace_y, c = "k", linewidth = 2)
 
@@ -462,7 +462,7 @@ def make_plot(show = False):
         x1 = 1800; x2 = 4200; x_center = x1 + (x2 - x1) / 2.0
         y_base = 1.1; dy = 0.06
 
-        plot.text(x_center, y_brace - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
+        plot.text(x_center, y_base - dy, r"$r_\mathrm{crit}$", horizontalalignment = 'center', fontsize = fontsize)
         bottom_brace_x, bottom_brace_y = range_brace(x1, x2, height = 0.06)
         plot.plot(bottom_brace_x, y_base - bottom_brace_y, c = "k", linewidth = 2)
 
