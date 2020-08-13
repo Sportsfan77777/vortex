@@ -359,10 +359,10 @@ radial_peak_over_time = mp_array("d", len(frame_range))
 radial_peak_over_time_a = mp_array("d", len(frame_range))
 #contrasts_over_time = mp_array("d", len(frame_range))
 
-for i, frame in enumerate(frame_range):
-    get_extents((i, frame))
+#for i, frame in enumerate(frame_range):
+#    get_extents((i, frame))
 
-#pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
 p = Pool(num_cores)
 p.map(get_extents, pool_args)
