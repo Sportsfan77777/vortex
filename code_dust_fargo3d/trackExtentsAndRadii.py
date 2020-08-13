@@ -92,6 +92,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'include aspect ratio (default: do not)')
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
+
+    parser.add_argument('-t', dest = "threshold", type = float, default = 0.85,
+                         help = 'threshold for extents (default: 0.85)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
@@ -266,8 +269,8 @@ def get_extents(args_here):
             normal = False # Compressible regime from Surville+ 15
 
     if normal:
-        azimuthal_extent = az.get_extent(density, fargo_par, threshold = 0.85) # Use 0.9 for h = 0.08 (Add as a parameter)
-        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = 0.85)
+        azimuthal_extent = az.get_extent(density, fargo_par, threshold = args.threshold) # Use 0.9 for h = 0.08 (Add as a parameter)
+        radial_extent, radial_peak = az.get_radial_extent(density, fargo_par, threshold = args.threshold)
         radial_peak_a, _ = az.get_radial_peak(avg_density, fargo_par)
 
         azimuthal_extent_over_time[i] = azimuthal_extent * (180.0 / np.pi)
@@ -504,11 +507,12 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
+    threshold_name = int(100 * args.threshold)
 
     if version is None:
-        save_fn = "%s/%s_radiiAndExtentsOverTime.png" % (save_directory, directory_name)
+        save_fn = "%s/%s_radiiAndExtentsOverTime_t%03d.png" % (save_directory, directory_name, threshold_name)
     else:
-        save_fn = "%s/v%04d_%s_radiiAndExtentsOverTime.png" % (save_directory, version, directory_name)
+        save_fn = "%s/v%04d_%s_radiiAndExtentsOverTime_t%03d.png" % (save_directory, version, directory_name, threshold_name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
