@@ -362,11 +362,11 @@ radial_peak_over_time_a = mp_array("d", len(frame_range))
 for i, frame in enumerate(frame_range):
     get_extents((i, frame))
 
-pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+#pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-#p = Pool(num_cores)
-#p.map(get_extents, pool_args)
-#p.terminate()
+p = Pool(num_cores)
+p.map(get_extents, pool_args)
+p.terminate()
 
 ##### Helper Functions #####
 
@@ -439,7 +439,7 @@ def make_plot(show = False):
     par2.set_ylim(1.0, 2.5)
 
     if args.include_aspect:
-        par4.set_ylim(0, 25)
+        par4.set_ylim(0, 35)
 
     angles = np.linspace(0, 360, 7)
     host.set_yticks(angles)
