@@ -380,6 +380,8 @@ def make_patch_spines_invisible(ax):
 
 ##### PLOTTING #####
 
+alpha = 0.5
+
 def make_plot(show = False):
     # Figure
     fig, host = plot.subplots()
@@ -416,14 +418,20 @@ def make_plot(show = False):
     y3 = radial_peak_over_time
     #y3a = radial_peak_over_time_a
 
+    y1_smooth = smooth(y1, 5)
+    y2_smooth = smooth(y2, 5)
+
     if args.include_aspect:
-        y4 = np.array(radial_peak_over_time) * (np.array(azimuthal_extent_over_time) * np.pi / 180.0) / (np.array(radial_extent_over_time) * scale_height)
-        y4 = smooth(y4, 5)
+        #y4 = np.array(radial_peak_over_time) * (np.array(azimuthal_extent_over_time) * np.pi / 180.0) / (np.array(radial_extent_over_time) * scale_height)
+        y4 = np.array(y3) * (np.array(y1_smooth) * np.pi / 180.0) / (np.array(y2_smooth) * scale_height)
+        #y4 = smooth(y4, 5)
 
     #ref, = par2.plot([x[0], x[-1]], [1.6, 1.6], c = 'k', linewidth = linewidth - 1) # to compare to Lindblad resonances (which we showed was useless)
 
-    p1, = host.plot(x, y1, c = 'b', linewidth = linewidth)
-    p2, = par1.plot(x, y2, c = 'orange', linewidth = linewidth)
+    p1, = host.plot(x, y1_smooth, c = 'b', linewidth = linewidth)
+    q1, = host.plot(x, y1, c = 'b', linewidth = 1, alpha = alpha)
+    p2, = par1.plot(x, y2_smooth, c = 'orange', linewidth = linewidth)
+    q2, = par1.plot(x, y2, c = 'orange', linewidth = 1, alpha = alpha)
     p3, = par2.plot(x, y3, c = 'g', linewidth = linewidth)
 
     if args.include_aspect:
