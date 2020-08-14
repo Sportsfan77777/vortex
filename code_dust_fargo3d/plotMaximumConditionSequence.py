@@ -210,12 +210,12 @@ def make_plot(frame_range, show = False):
 
         ### Plot ###
         x = rad[1:]
-        y = maximum_condition
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        y = maximum_condition # Highlight middle two!
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (3 - 2 * abs(1.5 - i)), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
         # Reference line for pressure bump
         bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
-        plot.plot([bump, bump], y_range, c = colors[i % len(colors)], linewidth = linewidth, linestyle = "--", zorder = 20)
+        plot.plot([bump, bump], y_range, c = colors[i % len(colors)], linewidth = linewidth + (3 - 2 * abs(1.5 - i)), linestyle = "--", zorder = 20)
 
     legend = plot.legend(loc = "upper right", fontsize = fontsize - 7, framealpha = 1.0, fancybox = False)
     legend.set_zorder(150)
