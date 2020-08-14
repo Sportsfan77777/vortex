@@ -185,7 +185,7 @@ fargo_par["theta"] = theta
 
 linestyles = ["-", "-"]
 #colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
-colors = ['k', 'b', '#17becf', 'r', 'gold']
+colors = ['k', 'b', '#17becf', 'darkorange', 'gold']
 
 labelsize = 18
 rc['xtick.labelsize'] = labelsize
@@ -217,7 +217,7 @@ def make_plot(frame_range, show = False):
         bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
         plot.plot([bump, bump], y_range, c = colors[i % len(colors)], linewidth = linewidth, linestyle = "--", zorder = 20)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 7, framealpha = None)
+    plot.legend(loc = "upper right", fontsize = fontsize - 7, fancybox = False)
 
     # Axes
     plot.xlim(x_min, x_max)
