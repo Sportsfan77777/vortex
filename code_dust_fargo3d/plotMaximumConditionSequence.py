@@ -282,11 +282,15 @@ def make_plot(frame_range, show = False):
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
+    frame_string = ""
+    for frame in frame_range:
+        frame_string.append("%d-" % frame)
+    frame_string = frame_string[:-1] # get rid of trailing '-'
 
     if version is None:
-        save_fn = "%s/maximumCondition_%s_%04d-%04d-%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/maximumCondition_%s_%s.png" % (save_directory, directory_name, frame_string)
     else:
-        save_fn = "%s/v%04d_maximumCondition_%s_%04d-%04d-%04d.png" % (save_directory, version, directory_name, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/v%04d_maximumCondition_%s_%s.png" % (save_directory, version, directory_name, frame_string)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
