@@ -210,9 +210,9 @@ def make_plot(frame_range, show = False):
         ### Plot ###
         x = rad[1:]
         y = maximum_condition
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        result = plot.plot(x, y, c = colors[2 * i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "lower right", fontsize = fontsize - 7)
+    plot.legend(loc = "upper right", fontsize = fontsize - 7)
 
     # Axes
     plot.xlim(x_min, x_max)
