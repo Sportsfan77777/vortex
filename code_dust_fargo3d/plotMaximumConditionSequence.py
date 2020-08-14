@@ -214,7 +214,10 @@ def make_plot(frame_range, show = False):
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (3 - 2 * abs(1.5 - i)), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
         # Reference line for pressure bump
-        bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
+        if scale_height == 0.08:
+            bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 3.0)
+        else:
+            bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
         plot.plot([bump, bump], y_range, c = colors[i % len(colors)], linewidth = linewidth, linestyle = "--", zorder = 20)
 
     legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, framealpha = 1.0, fancybox = False)
