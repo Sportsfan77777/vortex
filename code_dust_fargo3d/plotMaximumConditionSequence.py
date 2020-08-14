@@ -176,8 +176,8 @@ times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
 ### Add new parameters to dictionary ###
-#fargo_par["rad"] = rad
-#fargo_par["theta"] = theta
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
 ###############################################################################
 
