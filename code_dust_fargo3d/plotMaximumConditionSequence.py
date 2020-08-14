@@ -183,7 +183,7 @@ accreted_mass = data[:, 8] / jupiter_mass
 
 ##### PLOTTING #####
 
-linestyles = ["-", "--"]
+linestyles = ["-", "-"]
 colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 
 labelsize = 18
