@@ -284,7 +284,7 @@ def make_plot(frame_range, show = False):
     directory_name = os.getcwd().split("/")[-1].split("-")[0]
     frame_string = ""
     for frame in frame_range:
-        frame_string.append("%d-" % frame)
+        frame_string += ("%d-" % frame)
     frame_string = frame_string[:-1] # get rid of trailing '-'
 
     if version is None:
