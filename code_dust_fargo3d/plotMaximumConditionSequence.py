@@ -224,7 +224,7 @@ def make_plot(frame_range, show = False):
     plot.xlim(x_min, x_max)
     plot.ylim(y_range[0], y_range[1])
 
-    plot.yticks(np.linspace(y_range[0], y_range[1], 0.005))
+    plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
     #plot.ylim(10**(-3), 3.0)
     #plot.yscale("log")
