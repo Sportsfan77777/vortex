@@ -173,7 +173,8 @@ accreted_mass = data[:, 8] / jupiter_mass
 ##### PLOTTING #####
 
 linestyles = ["-", "-"]
-colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
+#colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
+colors = ['k', 'b', '#17becf', '#8c564b', 'darkorange', 'darkviolet']
 
 labelsize = 18
 rc['xtick.labelsize'] = labelsize
@@ -193,7 +194,7 @@ def make_plot(frame_range, show = False):
         ### Plot ###
         x = rad
         y = normalized_density
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (i % 2), linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
     plot.legend(loc = "lower right", fontsize = fontsize - 5)
 
