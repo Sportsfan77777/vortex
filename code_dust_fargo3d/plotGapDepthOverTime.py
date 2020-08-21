@@ -341,8 +341,8 @@ def make_plot(show = False):
             if args.choice > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
-    if args.choice > 0:
-        plot.legend(loc = "lower left", fontsize = fontsize - 4)
+    if args.choice > 50:
+        plot.legend(loc = "lower right", fontsize = fontsize - 4)
     else:
         plot.legend(loc = "lower left", fontsize = fontsize - 4)
 
