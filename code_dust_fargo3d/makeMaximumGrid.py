@@ -47,12 +47,15 @@ scale_height_version = True
 
 # Initial Vortices
 
+initial_accretion_numbers_h4 = np.array([1, 2, 3, 4])
 initial_critical_maxima_h4 = np.array([1.120, 1.127, 1.130, 1.117])
 initial_density_maxima_h4 = np.array([1.160, 1.160, 1.156, 1.146])
 
+initial_accretion_numbers_h6 = np.array([1, 2, 3, 4])
 initial_critical_maxima_h6 = np.array([1.168, 1.182, 1.200, 1.217])
 initial_density_maxima_h6 = np.array([1.220, 1.228, 1.242, 1.257])
 
+initial_accretion_numbers_h8 = np.array([1, 2, 3, 4])
 initial_critical_maxima_h8 = np.array([1.261, 1.287, 1.316, 1.343])
 initial_density_maxima_h8 = np.array([1.318, 1.348, 1.372, 1.389])
 
@@ -63,8 +66,8 @@ second_critical_maxima_h4 = np.array([1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 
 second_density_maxima_h4 = np.array([1.343, 1.300, 1.310, 1.250, 1.257, 1.264, 1.275])
 
 second_accretion_numbers_h6 = np.array([3, 3, 4, 4, 4])
-second_critical_maxima_h6 = np.array([1.228, 1.228, 1.250, 1.248, 1.304])
-second_density_maxima_h6 = np.array([1.396, 1.414, 1.364, 1.375, 1.382])
+second_critical_maxima_h6 = np.array([1.228, 1.228, 1.297, 1.250, 1.248])
+second_density_maxima_h6 = np.array([1.396, 1.414, 1.354, 1.364, 1.375])
 
 second_accretion_numbers_h8 = np.array([])
 second_critical_maxima_h8 = np.array([])
@@ -76,9 +79,9 @@ interior_accretion_numbers_h4 = np.array([4])
 interior_critical_maxima_h4 = np.array([1.193])
 interior_density_maxima_h4 = np.array([1.304])
 
-interior_accretion_numbers_h6 = np.array([3, 3])
-interior_critical_maxima_h6 = np.array([1.224, 1.235])
-interior_density_maxima_h6 = np.array([1.432, 1.457])
+interior_accretion_numbers_h6 = np.array([3, 3, 4])
+interior_critical_maxima_h6 = np.array([1.224, 1.235, 1.304])
+interior_density_maxima_h6 = np.array([1.432, 1.457, 1.382])
 
 interior_accretion_numbers_h8 = np.array([])
 interior_critical_maxima_h8 = np.array([])
@@ -86,9 +89,9 @@ interior_density_maxima_h8 = np.array([])
 
 # Vortices that reform too interior
 
-too_interior_accretion_numbers_h4 = np.array([1, 2, 3, 3, 4])
-too_interior_critical_maxima_h4 = np.array([1.202, 1.200, 1.189, 1.185, 1.164])
-too_interior_density_maxima_h4 = np.array([1.382, 1.357, 1.325, 1.332, 1.304])
+too_interior_accretion_numbers_h4 = np.array([1, 2, 3, 4])
+too_interior_critical_maxima_h4 = np.array([1.202, 1.200, 1.189, 1.164])
+too_interior_density_maxima_h4 = np.array([1.382, 1.357, 1.325, 1.304])
 
 too_interior_accretion_numbers_h6 = np.array([1, 2])
 too_interior_critical_maxima_h6 = np.array([1.264, 1.256])
@@ -167,9 +170,11 @@ if scale_height_version:
 
 linewidth = 3
 labelsize = 17
-fontsize = 19
+fontsize = 22
 markersize = 9
+alpha = 0.7
 dpi = 100
+size_offsets = np.array([75, 50, 25, 0])
 
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
@@ -200,6 +205,11 @@ def make_plot(show = False):
     y_ref = x_ref
     #ref, = plot.plot(x_ref, y_ref, linewidth = linewidth, c = 'k')
 
+    if scale_height_version:
+        # Dividing lines between regimes
+        ref1, = plot.plot( [1, 1], [0, 200],linewidth = 1, linestyle = "--", c = "k")
+        ref2, = plot.plot( [3.25, 3.25],[0, 200], linewidth = 1, linestyle = "--", c = "k")
+
     #if scale_height_version:
     #    # Reference lines for each scale height of separation
     #    for i in range(10):
@@ -213,20 +223,20 @@ def make_plot(show = False):
     #ref_h8, = plot.plot(x_ref, y_h8, linewidth = linewidth, c = colors[2], label = r"$h = 0.08$")
 
     # Actual Values (Initial, Secondary, Interior, Too Interior)
-    i_h4 = plot.scatter(initial_critical_maxima_h4, initial_density_maxima_h4 - initial_critical_maxima_h4, s = 100, c = colors[0], zorder = 100)
-    i_h6 = plot.scatter(initial_critical_maxima_h6, initial_density_maxima_h6 - initial_critical_maxima_h6, s = 100, c = colors[1], zorder = 100)
-    i_h8 = plot.scatter(initial_critical_maxima_h8, initial_density_maxima_h8 - initial_critical_maxima_h8, s = 100, c = colors[2], zorder = 100)
+    i_h4 = plot.scatter(initial_density_maxima_h4 - initial_critical_maxima_h4, initial_critical_maxima_h4, s = 100 + size_offsets[initial_accretion_numbers_h4 - 1], c = colors[0], zorder = 100, alpha = alpha)
+    i_h6 = plot.scatter(initial_density_maxima_h6 - initial_critical_maxima_h6, initial_critical_maxima_h6, s = 100 + size_offsets[initial_accretion_numbers_h6 - 1], c = colors[1], zorder = 100, alpha = alpha)
+    i_h8 = plot.scatter(initial_density_maxima_h8 - initial_critical_maxima_h8, initial_critical_maxima_h8, s = 100 + size_offsets[initial_accretion_numbers_h8 - 1], c = colors[2], zorder = 100, alpha = alpha)
 
-    s_h4 = plot.scatter(second_critical_maxima_h4, second_density_maxima_h4 - second_critical_maxima_h4, s = 150, c = colors[0], zorder = 100, marker = "*", alpha = 0.5)
-    s_h6 = plot.scatter(second_critical_maxima_h6, second_density_maxima_h6 - second_critical_maxima_h6, s = 150, c = colors[1], zorder = 100, marker = "*", alpha = 0.5)
+    s_h4 = plot.scatter(second_density_maxima_h4 - second_critical_maxima_h4, second_critical_maxima_h4, s = 175 + size_offsets[second_accretion_numbers_h4 - 1], c = colors[0], zorder = 100, marker = "*", alpha = alpha)
+    s_h6 = plot.scatter(second_density_maxima_h6 - second_critical_maxima_h6, second_critical_maxima_h6, s = 175 + size_offsets[second_accretion_numbers_h6 - 1], c = colors[1], zorder = 100, marker = "*", alpha = alpha)
     #s_h8, = plot.scatter(second_critical_maxima_h8, second_critical_maxima_h8, s = 150, c = colors[2], zorder = 100, marker = "*")
 
-    d_h4 = plot.scatter(interior_critical_maxima_h4, interior_density_maxima_h4 - interior_critical_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "D", alpha = 0.5)
-    d_h6 = plot.scatter(interior_critical_maxima_h6, interior_density_maxima_h6 - interior_critical_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "D", alpha = 0.5)
+    d_h4 = plot.scatter(interior_density_maxima_h4 - interior_critical_maxima_h4, interior_critical_maxima_h4, s = 100 + size_offsets[interior_accretion_numbers_h4 - 1], c = colors[0], zorder = 100, marker = "D", alpha = alpha)
+    d_h6 = plot.scatter(interior_density_maxima_h6 - interior_critical_maxima_h6, interior_critical_maxima_h6, s = 100 + size_offsets[interior_accretion_numbers_h6 - 1], c = colors[1], zorder = 100, marker = "D", alpha = alpha)
     #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "D")
 
-    t_h4 = plot.scatter(too_interior_critical_maxima_h4, too_interior_density_maxima_h4 - too_interior_critical_maxima_h4, s = 100, c = colors[0], zorder = 100, marker = "x", alpha = 0.5)
-    t_h6 = plot.scatter(too_interior_critical_maxima_h6, too_interior_density_maxima_h6 - too_interior_critical_maxima_h6, s = 100, c = colors[1], zorder = 100, marker = "x", alpha = 0.5)
+    t_h4 = plot.scatter(too_interior_density_maxima_h4 - too_interior_critical_maxima_h4, too_interior_critical_maxima_h4, s = 100 + size_offsets[too_interior_accretion_numbers_h4 - 1], c = colors[0], zorder = 100, marker = "x", alpha = alpha)
+    t_h6 = plot.scatter(too_interior_density_maxima_h6 - too_interior_critical_maxima_h6, too_interior_critical_maxima_h6, s = 100 + size_offsets[too_interior_accretion_numbers_h6 - 1], c = colors[1], zorder = 100, marker = "x", alpha = alpha)
     #d_h8, = plot.scatter(interior_critical_maxima_h8, interior_density_maxima_h8, s = 100, c = colors[2], zorder = 100, marker = "x")
 
 
@@ -235,8 +245,8 @@ def make_plot(show = False):
     plot.ylim(0, 1.6)
 
     if scale_height_version:
-        plot.xlim(0, 10)
-        plot.ylim(0, 6)
+        plot.ylim(0, 8)
+        plot.xlim(0, 5)
 
     #plot.xscale("log"); plot.yscale("log")
 
@@ -245,20 +255,23 @@ def make_plot(show = False):
 
     # Annotate
     if scale_height_version:
-        unit = "(r - r_\mathrm{p}) / h"
-        plot.xlabel(r"Critical Function Maximum [$%s$]" % unit, fontsize = fontsize)
-        plot.ylabel(r"Density Maximum [$%s$]" % unit, fontsize = fontsize)
+        unit1 = "(r_\mathrm{crit} - r_\mathrm{p}) / h"
+        unit2 = "(r_\mathrm{pressure} - r_\mathrm{crit}) / h"
+        plot.ylabel(r"$%s$" % unit1, fontsize = fontsize)
+        #plot.ylabel(r"Density Maximum [$%s$]" % unit, fontsize = fontsize)
+        plot.xlabel(r"Separation: $%s$" % unit2, fontsize = fontsize)
     else:
         unit = "r_\mathrm{p}"
         plot.xlabel(r"Radius of Critical Function Maximum [$%s$]" % unit, fontsize = fontsize)
-        plot.ylabel(r"Radius of Density Maximum [$%s$]" % unit, fontsize = fontsize)
-    #plot.title(r"Locations of Maxima", y = 1.02, fontsize = fontsize + 2)
+        plot.ylabel(r"Radius of Density Maximum [%s$]" % unit, fontsize = fontsize)
+    plot.title(r"Vortex Outcomes", y = 1.02, fontsize = fontsize + 2)
 
     #plot.text(0.0295, 2.35, "Unstable", fontsize = fontsize)
     #plot.text(0.078, 0.038, "Stable", fontsize = fontsize)
     
-    first_legend = plot.legend([t_h6, d_h6, s_h6, i_h6], ["No Vortex", "Interior Re-trigger", "Re-triggered Vortex", "Initial Vortex"], loc = "lower right", fontsize = fontsize - 2, scatterpoints = 1)
-    second_legend = plot.legend([i_h8, i_h6, i_h4], [r"$h = 0.08$", r"$h = 0.06$", r"$h = 0.04$"], loc = "upper right", fontsize = fontsize - 2, scatterpoints = 1)
+    #first_legend = plot.legend([t_h6, d_h6, s_h6, i_h6], ["No Vortex", "Interior Re-trigger", "Re-triggered Vortex", "Initial Vortex"], loc = "lower right", fontsize = fontsize - 2, scatterpoints = 1)
+    first_legend = plot.legend([i_h6, s_h6, d_h6, t_h6], ["Initial Vortex", "Re-triggered Vortex", "Re-trigger (interior)", "No Vortex"], loc = "lower right", fontsize = fontsize - 2, scatterpoints = 1)
+    second_legend = plot.legend([i_h4, i_h6, i_h8], [r"$h = 0.04$", r"$h = 0.06$", r"$h = 0.08$"], loc = "upper right", fontsize = fontsize - 2, scatterpoints = 1)
     ax = plot.gca().add_artist(first_legend)
 
 

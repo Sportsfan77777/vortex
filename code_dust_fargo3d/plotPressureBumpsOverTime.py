@@ -246,9 +246,9 @@ second_critical_maxima_h4 = np.array([1.243, 1.192, 1.204, 1.172, 1.164, 1.174, 
 second_density_maxima_h4 = np.array([1.343, 1.300, 1.310, 1.250, 1.257, 1.264, 1.275])
 
 second_accretion_numbers_h6 = np.array([3, 3, 4, 4, 4])
-second_times_h6 = np.array([2370, 3400, 3080, 3550, 3910])
-second_critical_maxima_h6 = np.array([1.228, 1.228, 1.250, 1.248, 1.304])
-second_density_maxima_h6 = np.array([1.396, 1.414, 1.364, 1.375, 1.382])
+second_times_h6 = np.array([2370, 3400, 2510, 3080, 3550])
+second_critical_maxima_h6 = np.array([1.228, 1.228, 1.297, 1.250, 1.248])
+second_density_maxima_h6 = np.array([1.396, 1.414, 1.354, 1.364, 1.375])
 
 # Vortices that reform interior
 
@@ -257,10 +257,10 @@ interior_times_h4 = np.array([2140])
 interior_critical_maxima_h4 = np.array([1.193])
 interior_density_maxima_h4 = np.array([1.304])
 
-interior_accretion_numbers_h6 = np.array([3, 3])
-interior_times_h6 = np.array([4300, 6000])
-interior_critical_maxima_h6 = np.array([1.224, 1.235])
-interior_density_maxima_h6 = np.array([1.432, 1.457])
+interior_accretion_numbers_h6 = np.array([3, 3, 4])
+interior_times_h6 = np.array([4300, 6000, 3910])
+interior_critical_maxima_h6 = np.array([1.224, 1.235, 1.304])
+interior_density_maxima_h6 = np.array([1.432, 1.457, 1.382])
 
 # Vortices that reform too interior
 
