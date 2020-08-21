@@ -82,7 +82,7 @@ master_end_times[671] = [2512, 2502, 6918, 7500, 0]
 
 master_frame_ranges = {}
 master_frame_ranges[87] = [[0, 8000, 50], [0, 7000, 50], [0, 9000, 50], [0, 11700, 50]]
-master_frame_ranges[67] = [[0, 3000, 25], [0, 3000, 25], [0, 7000, 25], [0, 8500, 25]]
+master_frame_ranges[67] = [[0, 3000, 25], [0, 3500, 25], [0, 7000, 25], [0, 8500, 25]]
 master_frame_ranges[47] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25], [0, 3000, 25]]
 master_frame_ranges[86] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
 master_frame_ranges[66] = [[0, 3000, 25], [0, 3000, 25], [0, 3000, 25]] 
@@ -342,9 +342,9 @@ def make_plot(show = False):
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
     if args.choice > 0:
-        plot.legend(loc = "upper right", fontsize = fontsize - 4)
+        plot.legend(loc = "lower right", fontsize = fontsize - 4)
     else:
-        plot.legend(loc = "upper left", fontsize = fontsize - 4)
+        plot.legend(loc = "lower left", fontsize = fontsize - 4)
 
     # Axes
     if args.choice > 0:
@@ -360,6 +360,7 @@ def make_plot(show = False):
         plot.yscale('log')
         ax.set_major_formatter(ScalarFormatter())
         plot.yticks([1, 3, 5], ["1", "3", "5"])
+    plot.gca().invert_yaxis()
 
     #title = readTitle()
 
