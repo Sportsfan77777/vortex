@@ -350,7 +350,7 @@ def make_plot(frames, show = False):
         unit = "r_\mathrm{p}"
         plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
         if number == 1:
-           plot.ylabel(r"$\phi$", fontsize = fontsize)
+           plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
