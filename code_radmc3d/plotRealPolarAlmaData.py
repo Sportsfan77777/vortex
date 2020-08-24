@@ -111,11 +111,10 @@ def make_plot(show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    fits_file = fits.open(filename)[0]
-    intensity = fits_file.data[0, 0, :, :]; header = fits_file.header
-
     if deproject:
-        intensity = deproject_image(incl_rad, pa_rad, intensity)
+        intensity = deprojected_intensity
+    else:
+        intensity = default_intensity
 
     px_scale = header['cdelt2'] * 3600
     num_x = header['naxis1']; num_y = header['naxis2']
