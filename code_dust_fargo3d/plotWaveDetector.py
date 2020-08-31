@@ -283,7 +283,7 @@ def make_plot(frame, show = False):
 
     # Subtract adjacent in azimuth
     adjacent = np.roll(normalized_density, 1, axis = -1)
-    normalized_density -= adjacent
+    normalized_density = (normalized_density - adjacent) / normalized_density
 
     ### Plot ###
     x = rad
