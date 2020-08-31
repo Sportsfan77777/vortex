@@ -116,8 +116,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.1,
-                         help = 'maximum and minimum density in colorbar (default: 0.1)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.05,
+                         help = 'maximum and minimum density in colorbar (default: 0.05)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -283,12 +283,12 @@ def make_plot(frame, show = False):
 
     # Subtract adjacent in azimuth
     adjacent = np.roll(normalized_density, 1, axis = -1)
-    normalized_density = (normalized_density - adjacent) / normalized_density
+    wave_detector = (normalized_density - adjacent) / normalized_density
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(wave_detector), cmap = cmap)
 
     fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
