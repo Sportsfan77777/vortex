@@ -71,6 +71,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-0.2, 0.2],
                          help = 'range in y-axis (default: [-0.2, 0.2])')
 
+    parser.add_argument('-l', dest = "maximum_condition", action = 'store_true', default = False,
+                         help = 'plot maximum condition (default: do not do it!)')
+
     parser.add_argument('--derivative', dest = "derivative", action = 'store_true', default = False,
                          help = 'show derivative (default: do not do it!)')
 
