@@ -355,7 +355,7 @@ def make_plot(frame, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
-    title1 = r"$H/R = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$     $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
