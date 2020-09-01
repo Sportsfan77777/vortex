@@ -321,7 +321,7 @@ def make_plot(frame, show = False):
 
         x2 = rad[1:]
         y2 = maximum_condition
-        result2, = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99)
+        result2, = twin.plot(x2, y2, c = 'darkviolet', linewidth = linewidth, zorder = 99)
 
         # Axes
         twin.set_ylim(y2_range[0], y2_range[1])
