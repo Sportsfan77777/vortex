@@ -293,7 +293,7 @@ def make_plot(frame, show = False):
     y = theta * (180.0 / np.pi)
     result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
-    fig.colorbar(result)
+    cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
     if use_contours:
@@ -355,11 +355,13 @@ def make_plot(frame, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
-    title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title1 = r"$H/R = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    cbar.set_label(r"Gas Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
