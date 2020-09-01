@@ -82,6 +82,12 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--compare', dest = "compare", default = None,
                          help = 'compare to another directory (default: do not do it!)')
+
+    # Quantity to plot for maximum condition
+    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
+                         help = 'plot rossby number instead of vorticity (default: plot vorticity)')
+    parser.add_argument('--residual', dest = "residual", action = 'store_true', default = False,
+                         help = 'use v_theta or v_theta - v_kep (default: do not use residual)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
@@ -165,6 +171,10 @@ if args.r_lim is None:
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
+
+# Quantity to Plot
+rossby = args.rossby
+residual = args.residual
 
 # Plot Parameters (constant)
 fontsize = args.fontsize
