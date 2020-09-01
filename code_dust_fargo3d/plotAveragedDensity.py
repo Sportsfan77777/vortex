@@ -327,7 +327,7 @@ def make_plot(frame, show = False):
         twin.set_ylim(y2_range[0], y2_range[1])
         twin.set_yticks(np.arange(y2_range[0], y2_range[1] + 1e-9, 0.005))
 
-        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
+        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize, rotation = 270, labelpad = 15)
 
         tkw = dict(size=4, width=1.5)
         ax.tick_params(axis = 'y', colors = result.get_color(), **tkw)
