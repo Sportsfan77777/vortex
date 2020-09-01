@@ -90,8 +90,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'use v_theta or v_theta - v_kep (default: do not use residual)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 21,
+                         help = 'fontsize of plot annotations (default: 21)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 4,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -327,7 +327,7 @@ def make_plot(frame, show = False):
         twin.set_ylim(y2_range[0], y2_range[1])
         twin.set_yticks(np.arange(y2_range[0], y2_range[1] + 1e-9, 0.005))
 
-        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize, rotation = 270, labelpad = 15)
+        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
         tkw = dict(size=4, width=1.5)
         ax.tick_params(axis = 'y', colors = result.get_color(), **tkw)
