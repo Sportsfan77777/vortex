@@ -84,9 +84,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'compare to another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
                          help = 'fontsize of plot annotations (default: 16)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 4,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -184,6 +184,10 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 ##### PLOTTING #####
+
+labelsize = 18
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 def make_plot(frame, show = False):
     # Set up figure
