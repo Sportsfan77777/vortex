@@ -222,8 +222,8 @@ def make_plot(frame, show = False):
         vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
 
         averaged_vorticity = np.average(vorticity, axis = 1)
-        averaged_density = np.average(normalized_density, axis = 1)
-        maximum_condition = (averaged_density[1:] / averaged_vorticity) * (np.power(scale_height, 2) / np.power(rad[1:], 1))
+        #averaged_density = np.average(normalized_density, axis = 1) # normalized_density
+        maximum_condition = (normalized_density[1:] / averaged_vorticity) * (np.power(scale_height, 2) / np.power(rad[1:], 1))
 
         x2 = rad[1:]
         y2 = maximum_condition
