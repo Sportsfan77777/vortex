@@ -310,7 +310,7 @@ def make_plot(frame, show = False):
 
     if args.maximum_condition:
         bump, _ = az.get_radial_peak(normalized_density, fargo_par, end = 1.6)
-        plot.plot([bump, bump], y_range, c = "b", linewidth = linewidth, linestyle = "--", zorder = 20)
+        plot.plot([bump, bump], [0, max_y], c = "b", linewidth = linewidth, linestyle = "--", zorder = 20)
 
         twin = ax.twinx()
 
@@ -327,7 +327,7 @@ def make_plot(frame, show = False):
         result2, = twin.plot(x2, y2, c = 'darkviolet', linewidth = linewidth, zorder = 99)
 
         bump, _ = az.get_radial_peak(maximum_condition, fargo_par, end = 1.6)
-        plot.plot([bump, bump], y_range, c = "darkviolet", linewidth = linewidth, linestyle = "--", zorder = 20)
+        plot.plot([bump, bump], y2_range, c = "darkviolet", linewidth = linewidth, linestyle = "--", zorder = 20)
 
         # Axes
         twin.set_ylim(y2_range[0], y2_range[1])
