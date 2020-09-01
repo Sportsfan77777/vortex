@@ -68,7 +68,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
-    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-0.2, 0.2],
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [0, 0.2],
                          help = 'range in y-axis (default: [-0.2, 0.2])')
 
     parser.add_argument('-l', dest = "maximum_condition", action = 'store_true', default = False,
@@ -215,31 +215,6 @@ def make_plot(frame, show = False):
     y = normalized_density
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
 
-    if args.maximum_condition:
-        twin = ax.twinx()
-
-        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-        vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
-
-        averaged_vorticity = np.average(vorticity, axis = 1)
-        #averaged_density = np.average(normalized_density, axis = 1) # normalized_density
-        maximum_condition = (normalized_density[1:] / averaged_vorticity) * (np.power(scale_height, 2) / np.power(rad[1:], 1))
-
-        x2 = rad[1:]
-        y2 = maximum_condition
-        result2, = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99)
-
-        # Axes
-        twin.set_ylim(y2_range[0], y2_range[1])
-        twin.set_yticks(np.arange(y2_range[0], y2_range[1] + 1e-9, 0.005))
-
-        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
-
-        tkw = dict(size=4, width=1.5)
-        ax.tick_params(axis = 'y', colors = result.get_color(), **tkw)
-        twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
-
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
         averagedDensity_zero = np.average(density_zero, axis = 1)
@@ -333,6 +308,30 @@ def make_plot(frame, show = False):
     #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
+    if args.maximum_condition:
+        twin = ax.twinx()
+
+        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+
+        averaged_vorticity = np.average(vorticity, axis = 1)
+        #averaged_density = np.average(normalized_density, axis = 1) # normalized_density
+        maximum_condition = (normalized_density[1:] / averaged_vorticity) * (np.power(scale_height, 2) / np.power(rad[1:], 1))
+
+        x2 = rad[1:]
+        y2 = maximum_condition
+        result2, = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99)
+
+        # Axes
+        twin.set_ylim(y2_range[0], y2_range[1])
+        twin.set_yticks(np.arange(y2_range[0], y2_range[1] + 1e-9, 0.005))
+
+        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
+
+        tkw = dict(size=4, width=1.5)
+        ax.tick_params(axis = 'y', colors = result.get_color(), **tkw)
+        twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
 
     # Save, Show, and Close
     if version is None:
