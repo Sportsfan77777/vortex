@@ -202,10 +202,10 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = normalized_density
-    result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
 
     if args.maximum_condition:
-        twin = host.twinx()
+        twin = ax.twinx()
 
         vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
         vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
