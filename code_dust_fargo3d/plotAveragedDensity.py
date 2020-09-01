@@ -232,7 +232,7 @@ def make_plot(frame, show = False):
 
         # Axes
         twin.set_ylim(y2_range[0], y2_range[1])
-        twin.set_yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
+        twin.set_yticks(np.arange(y2_range[0], y2_range[1] + 1e-9, 0.005))
 
         twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
 
