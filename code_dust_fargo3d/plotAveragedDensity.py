@@ -171,6 +171,7 @@ if args.r_lim is None:
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
+y2_range = args.y2_range
 
 # Quantity to Plot
 rossby = args.rossby
