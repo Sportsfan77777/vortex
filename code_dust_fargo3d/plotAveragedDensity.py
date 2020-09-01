@@ -26,6 +26,7 @@ from pylab import rcParams
 from pylab import fromfile
 
 import util
+import utilVorticity
 import azimuthal as az
 from readTitle import readTitle
 
@@ -67,6 +68,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [-0.2, 0.2],
+                         help = 'range in y-axis (default: [-0.2, 0.2])')
 
     parser.add_argument('--derivative', dest = "derivative", action = 'store_true', default = False,
                          help = 'show derivative (default: do not do it!)')
@@ -103,6 +106,7 @@ surface_density_zero = p.sigma0
 planet_mass = 1.0
 taper_time = p.masstaper
 
+scale_height = p.aspectratio
 viscosity = p.nu
 
 dt = p.ninterm * p.dt
@@ -171,8 +175,8 @@ times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
 ### Add new parameters to dictionary ###
-#fargo_par["rad"] = rad
-#fargo_par["theta"] = theta
+fargo_par["rad"] = rad
+fargo_par["theta"] = theta
 
 ###############################################################################
 
@@ -184,21 +188,39 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    if merge > 0:
-        num_merged_cores = merge
-        density = util.read_merged_data(frame, num_merged_cores, num_rad, num_theta)
-    elif mpi:
-        field = "dens"
-        density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
-    else:
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
     ### Plot ###
     x = rad
     y = normalized_density
-    result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+    result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+
+    if args.maximum_condition:
+        twin = host.twinx()
+
+        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+        vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+
+        averaged_vorticity = np.average(vorticity, axis = 1)
+        averaged_density = np.average(normalized_density, axis = 1)
+        maximum_condition = (averaged_density[1:] / averaged_vorticity) * (np.power(scale_height, 2) / np.power(rad[1:], 1))
+
+        x2 = rad[1:]
+        y2 = maximum_condition
+        result2, = twin.plot(x2, y2, c = 'purple', linewidth = linewidth, zorder = 99)
+
+        # Axes
+        twin.set_ylim(y2_range[0], y2_range[1])
+        twin.set_yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
+
+        twin.set_ylabel(r"$\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
+
+        tkw = dict(size=4, width=1.5)
+        ax.tick_params(axis = 'y', colors = result.get_color(), **tkw)
+        twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -272,8 +294,15 @@ def make_plot(frame, show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)

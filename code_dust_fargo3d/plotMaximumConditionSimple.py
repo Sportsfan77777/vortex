@@ -236,9 +236,9 @@ def make_plot(frame, show = False):
 
     host.set_yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
-    #tkw = dict(size=4, width=1.5)
-    #host.tick_params(axis = 'y', colors = result.get_color(), **tkw)
-    #twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
+    tkw = dict(size=4, width=1.5)
+    host.tick_params(axis = 'y', colors = result.get_color(), **tkw)
+    twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
