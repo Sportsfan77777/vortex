@@ -68,7 +68,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
-    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [0, 0.02],
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [0, 0.025],
                          help = 'range in y-axis (default: [-0.2, 0.2])')
 
     parser.add_argument('-l', dest = "maximum_condition", action = 'store_true', default = False,
@@ -309,6 +309,9 @@ def make_plot(frame, show = False):
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     if args.maximum_condition:
+        bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
+        plot.plot([bump, bump], y_range, c = "b", linewidth = linewidth, linestyle = "--", zorder = 20)
+
         twin = ax.twinx()
 
         vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
@@ -322,6 +325,9 @@ def make_plot(frame, show = False):
         x2 = rad[1:]
         y2 = maximum_condition
         result2, = twin.plot(x2, y2, c = 'darkviolet', linewidth = linewidth, zorder = 99)
+
+        bump, _ = az.get_radial_peak(maximum_condition, fargo_par, end = 1.6)
+        plot.plot([bump, bump], y_range, c = "darkviolet", linewidth = linewidth, linestyle = "--", zorder = 20)
 
         # Axes
         twin.set_ylim(y2_range[0], y2_range[1])
