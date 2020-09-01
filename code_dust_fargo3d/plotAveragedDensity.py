@@ -309,7 +309,7 @@ def make_plot(frame, show = False):
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     if args.maximum_condition:
-        bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
+        bump, _ = az.get_radial_peak(normalized_density, fargo_par, end = 1.6)
         plot.plot([bump, bump], y_range, c = "b", linewidth = linewidth, linestyle = "--", zorder = 20)
 
         twin = ax.twinx()
