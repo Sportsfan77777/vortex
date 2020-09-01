@@ -80,7 +80,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'compare to another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 3)')
@@ -183,6 +183,10 @@ fargo_par["theta"] = theta
 
 ##### PLOTTING #####
 
+labelsize = 18
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
@@ -202,7 +206,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad[1:]
     y = maximum_condition
-    result, = host.plot(x, y, c = 'b', linewidth = linewidth + 1, zorder = 99, label = "Condition")
+    result, = host.plot(x, y, c = 'darkviolet', linewidth = linewidth + 1, zorder = 99, label = "Condition")
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -229,6 +233,8 @@ def make_plot(frame, show = False):
     # Axes
     host.set_xlim(x_min, x_max)
     host.set_ylim(y_range[0], y_range[1])
+
+    host.set_yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
     #tkw = dict(size=4, width=1.5)
     #host.tick_params(axis = 'y', colors = result.get_color(), **tkw)
