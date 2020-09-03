@@ -50,8 +50,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalProfileSeries",
-                         help = 'save directory (default: azimuthalProfileSeries)')
+    parser.add_argument('--dir', dest = "save_directory", default = "dustAzimuthalProfileSeries",
+                         help = 'save directory (default: dustAzimuthalProfileSeries)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
