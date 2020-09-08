@@ -278,7 +278,7 @@ def make_plot(frame, show = False):
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
-    midplane_density = density[num_z / 2 :, :]
+    midplane_density = density[num_z / 2, :, :]
 
     scale_height_function = scale_height * rad
     normalized_density = midplane_density # / surface_density_zero / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]

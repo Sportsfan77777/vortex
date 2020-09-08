@@ -211,7 +211,7 @@ def make_plot(frame, show = False):
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
-    midplane_density = density[num_z / 2 :, :]
+    midplane_density = density[num_z / 2, :, :]
 
     averagedDensity = np.average(midplane_density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
