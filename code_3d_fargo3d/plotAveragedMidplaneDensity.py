@@ -31,7 +31,7 @@ import azimuthal as az
 from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+from reader_mpiio import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -210,7 +210,10 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
+    field = "dens"
+    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+
+    #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
     midplane_density = density[num_z / 2, :, :]
 
     averagedDensity = np.average(midplane_density, axis = 1)
