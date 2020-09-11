@@ -1,3 +1,5 @@
+import numpy as np
+
 class Mesh():
     """
     Mesh class, convenient way to work the mesh data.
