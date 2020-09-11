@@ -283,7 +283,7 @@ def make_plot(frame, show = False):
     midplane_density = density[num_z / 2, :, :]
 
     scale_height_function = scale_height * rad
-    normalized_density = midplane_density # / surface_density_zero / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    normalized_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
