@@ -43,7 +43,7 @@ def parse_parameters(par_dictionary):
 
     # Find *.par file (assume there is only one *.par file)
     files = glob.glob("*.par")
-    par_file = files[0]
+    par_file = files[-1]
 
     # Read file line by line
     with open(par_file, "r") as f:
