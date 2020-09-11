@@ -211,7 +211,7 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta)
+    density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
 
     #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
     midplane_density = density[num_z / 2, :, :]
