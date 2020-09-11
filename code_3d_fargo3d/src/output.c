@@ -316,10 +316,11 @@ void WriteMerging(Field *f, int n) {
   for (k=0; k<NZ; k++) {
     for (j = 0; j<Ncpu_x; j++) {
       if ((J==j) && (k>=Z0) && (k<(Z0+Nz))) {
-	for (jj = NGHY; jj < Ny+NGHY; jj++)
-	  fwrite(f->field_cpu+(k-Z0+NGHZ)*Stride+jj*(Nx+2*NGHX)+NGHX, sizeof(real)*Nx, 1, fo);
+	       for (jj = NGHY; jj < Ny+NGHY; jj++)
+	         fwrite(f->field_cpu+(k-Z0+NGHZ)*Stride+jj*(Nx+2*NGHX)+NGHX, sizeof(real)*Nx, 1, fo);
+           fflush(fo);
       }
-      fflush(fo);
+      //fflush(fo);
       //MPI_Barrier(MPI_COMM_WORLD);
     }
   }
