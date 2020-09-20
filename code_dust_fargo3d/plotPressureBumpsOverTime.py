@@ -502,7 +502,7 @@ def make_plot(show = False):
     # Set twin axis
     twin = ax.twinx()
     twin.set_ylim(0, (end_y - start_y) / scale_height)
-    twin.set_ylabel(r"$(r - r_\mathrm{p})$ $/$ $h$", fontsize = fontsize, rotation = 270, labelpad = 30)
+    twin.set_ylabel(r"$(r - r_\mathrm{p})$ $/$ $H_0$", fontsize = fontsize, rotation = 270, labelpad = 30)
 
     # Save, Show, and Close
     if version is None:
