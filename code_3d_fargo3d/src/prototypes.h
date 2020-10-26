@@ -213,6 +213,7 @@ ex void planet2d(void);
 
 ex void compute_potential(real);
 //planets.c Prototypes
+ex void AccreteOntoPlanets(real);
 ex void Potential_cpu(void);
 ex Force ComputeForce(real, real, real, real, real);
 ex void  _ComputeForce_cpu(real, real, real, real, real);
