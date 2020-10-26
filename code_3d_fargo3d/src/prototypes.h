@@ -285,6 +285,7 @@ ex void GetHostsList (void);
 ex void SelectWrite(void);
 ex void Write_offset(int, char*, char*);
 ex MPI_Offset ParallelIO(Field *, int, int , MPI_Offset, int);
+ex void WriteDTFile(double);
 
 ex void WriteDim(void);
 

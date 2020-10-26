@@ -37,6 +37,9 @@ struct planetary_system {
   real *vy;		        /**< y-coordinate of the planets'velocities */
   real *vz;		        /**< z-coordinate of the planets'velocities */
   real *acc;			/**< The planets' accretion times^-1 */
+  real *accreted_mass; /**< accreted mass */
+  real *accreted_mass_cpu; /**< accreted mass */
+  real *accreted_mass_gpu; /**< accreted mass */
   char **name;  		/**< The planets' names */
   boolean *FeelDisk;		/**< For each planet tells if it feels the disk (ie migrates) */
   boolean *FeelOthers;		/**< For each planet tells if it feels

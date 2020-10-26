@@ -379,6 +379,8 @@ OMEGAFRAME (which is used afterwards to build the initial Vx field. */
       dt = StepTime; //cfl works with the 'StepTime' global variable.
 
       dtemp+=dt;
+
+      if(dtemp>DT) WriteDTFile(dt); // track dt (only one every DT!)
       if(dtemp>DT)  dt = DT - (dtemp-dt); //updating dt
       //------------------------------------------------------------------------
       
@@ -406,6 +408,12 @@ OMEGAFRAME (which is used afterwards to build the initial Vx field. */
 #endif
       
       MULTIFLUID(Transport(dt));
+
+      if (ThereArePlanets) {
+        //if (BONDI_LIMIT)
+          //MULTIFLUID(CalculationAccretionReductionFactor(dt)); // calculate reduction factor if necessary
+        MULTIFLUID(AccreteOntoPlanets(dt)); // added accretion
+      }
 
       PhysicalTime+=dt;
       Timestepcount++;

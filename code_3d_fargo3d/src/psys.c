@@ -19,7 +19,7 @@ int FindNumberOfPlanets(char *filename) {
 
 PlanetarySystem *AllocPlanetSystem(int nb) {
   char command[512];
-  real *mass, *x, *y, *z, *vx, *vy, *vz, *acc;
+  real *mass, *x, *y, *z, *vx, *vy, *vz, *acc, *accreted_mass;
   boolean *feeldisk, *feelothers;
   int i;
   PlanetarySystem *sys;
@@ -37,6 +37,7 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   vz   = (real*)malloc(sizeof(real)*(nb+1));
   mass = (real*)malloc(sizeof(real)*(nb+1));
   acc  = (real*)malloc(sizeof(real)*(nb+1));
+  accreted_mass = (real*)malloc(sizeof(real)*(nb+1));
   if ((x == NULL) || (y == NULL) || (z == NULL)	      \
       || (vx == NULL) || (vy == NULL) || (vz == NULL) \
       || (acc == NULL) || (mass == NULL)) {
@@ -57,10 +58,11 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   sys->vz= vz;
   sys->acc=acc;
   sys->mass = mass;
+  sys->accreted_mass = accreted_mass;
   sys->FeelDisk = feeldisk;
   sys->FeelOthers = feelothers;
   for (i = 0; i < nb; i++) {
-    x[i] = y[i] = z[i] = vx[i] = vy[i] = vz[i] = mass[i] = acc[i] = 0.0;
+    x[i] = y[i] = z[i] = vx[i] = vy[i] = vz[i] = mass[i] = acc[i] = accreted_mass[i] = 0.0;
     feeldisk[i] = feelothers[i] = YES;
   }
   for (i = 0; i < nb; i++) {
@@ -77,6 +79,7 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   sys->y_cpu = sys->y; //Alias
   sys->z_cpu = sys->z; //Alias
   sys->mass_cpu = sys->mass; //Alias
+  sys->accreted_mass_cpu = sys->accreted_mass; //Alias
 
   sys->vx= vx;
   sys->vy= vy;
@@ -93,6 +96,7 @@ PlanetarySystem *AllocPlanetSystem(int nb) {
   status = DevMalloc(&(sys->y_gpu),(sizeof(real)*(nb+1)));
   status = DevMalloc(&(sys->z_gpu),(sizeof(real)*(nb+1)));
   status = DevMalloc(&(sys->mass_gpu),(sizeof(real)*(nb+1)));
+  status = DevMalloc(&(sys->accreted_mass_gpu),(sizeof(real)*(nb+1)));
 //  status = DevMemcpyH2D(sys->x_gpu, sys->x_cpu, sizeof(real)*(nb+1));
 //  status = DevMemcpyH2D(sys->y_gpu, sys->y_cpu, sizeof(real)*(nb+1));
 //  status = DevMemcpyH2D(sys->z_gpu, sys->z_cpu, sizeof(real)*(nb+1));
@@ -108,6 +112,7 @@ void FreePlanetary () {
   free (Sys->y);
   free (Sys->vy);
   free (Sys->mass);
+  free (Sys->accreted_mass);
   free (Sys->acc);
   free (Sys->FeelOthers);
   free (Sys->FeelDisk);
@@ -144,7 +149,7 @@ PlanetarySystem *InitPlanetarySystem (char *filename) {
   PlanetarySystem *sys;
   int i=0, j, nb, nbstars=0, i_star1=-1, i_star2=-1;
   real xp,yp,zp,vxp,vyp,vzp,mp,M1,M2,r1,r2,v1,v2;
-  real mass, dist, accret;
+  real mass, dist, accret, accret_mass;
   boolean feeldis, feelothers;
   real newmass;
   real summass=0.0;
@@ -171,9 +176,9 @@ PlanetarySystem *InitPlanetarySystem (char *filename) {
     if (isalpha(s[0])) {
       s1 = s + strlen(nm);
 #ifdef FLOAT
-      sscanf(s1 + strspn(s1, "\t :=>_"), "%f %f %f %s %s", &dist, &mass, &accret, test1, test2);
+      sscanf(s1 + strspn(s1, "\t :=>_"), "%f %f %f %s %s %f", &dist, &mass, &accret, test1, test2, &accret_mass);
 #else
-      sscanf(s1 + strspn(s1, "\t :=>_"), "%lf %lf %lf %s %s", &dist, &mass, &accret, test1, test2);
+      sscanf(s1 + strspn(s1, "\t :=>_"), "%lf %lf %lf %s %s %f", &dist, &mass, &accret, test1, test2, &accret_mass);
 #endif
       if ((SEMIMAJORAXIS > 0.0) && (i == 0)) // SemiMajorAxis can be
 					     // used to overwrite the
@@ -188,6 +193,7 @@ PlanetarySystem *InitPlanetarySystem (char *filename) {
       mass *= MSTAR;
 #endif
       sys->mass[i] = mass;
+      sys->accreted_mass[i] = accret_mass;
       if (PLANETMASS > 1e-18)
 	sys->mass[0] = PLANETMASS;
       feeldis = feelothers = YES;

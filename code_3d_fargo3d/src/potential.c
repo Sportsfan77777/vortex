@@ -53,10 +53,22 @@ void Potential_cpu() {
 //<USER_DEFINED>
   OUTPUT(Pot);
   real planetmass_taper;
+  real negative_taper, negative_time;
   if (MASSTAPER == 0.0)
     planetmass_taper = 1.0;
   else
-    planetmass_taper = (PhysicalTime >= MASSTAPER ? 1.0 : .5*(1.0-cos(M_PI*PhysicalTime/MASSTAPER)));
+    planetmass_taper = (PhysicalTime >= (2.0 * M_PI * MASSTAPER) ? 1.0 : .5*(1.0-cos(M_PI*PhysicalTime/(2.0 * M_PI * MASSTAPER))));
+
+  if (PhysicalTime < 2.0 * M_PI * NEGATIVESTARTTIME)
+    negative_taper = 0.0;
+  else {
+    negative_time = PhysicalTime - 2.0 * M_PI * NEGATIVESTARTTIME;
+    if (negative_time < 0.0)
+      negative_taper = 0.0;
+    else
+      negative_taper = (negative_time >= (2.0 * M_PI * NEGATIVEMASSTAPER) ? 1.0 : .5*(1.0-cos(M_PI*negative_time/(2.0 * M_PI * NEGATIVEMASSTAPER))));
+  }
+
 //<\USER_DEFINED>
 
 //<EXTERNAL>
@@ -65,6 +77,7 @@ void Potential_cpu() {
   real* yplanet = Sys->y_cpu;
   real* zplanet = Sys->z_cpu;
   real* mplanet = Sys->mass_cpu;
+  real* accreted_mass = Sys->accreted_mass_cpu;
   int nb        = Sys->nb;
   int pitch  = Pitch_cpu;
   int stride = Stride_cpu;
@@ -140,7 +153,7 @@ void Potential_cpu() {
 #endif
 
 	for(n=0; n<nb; n++) {
-	  mp = mplanet[n]*taper;
+	  mp = mplanet[n]*taper + accreted_mass[n] - NEGATIVEMASS*negative_taper;
 	  
 
 	  planetdistance = sqrt(xplanet[n]*xplanet[n]+
