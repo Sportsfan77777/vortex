@@ -150,7 +150,7 @@ void WriteTorqueAndWork(int TimeStep, int n) {
 
   if (Sys == NULL) return;
 
-  m = Sys->mass[n] + Sys->accreted_mass[n] - NEGATIVEMASS*negative_taper;
+  m = Sys->mass[n] + Sys->accreted_mass[n]; // - NEGATIVEMASS*negative_taper;
   x = Sys->x[n];
   y = Sys->y[n];
   z = Sys->z[n];
