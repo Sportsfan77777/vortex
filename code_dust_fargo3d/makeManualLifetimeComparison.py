@@ -17,7 +17,7 @@ lifetimes.append([3573, 3875, 7249, 9625])
 final_masses.append([1.22, 0.59, 0.33, 0.18])
 
 master_directories.append(["h06_nu7_a50", "h06_nu7_a167", "h06_nu7_a05", "h06_nu7_a02"])
-lifetimes.append([2404, 2285, 6467, 6712])
+lifetimes.append([2424, 2236, 5822, 6712])
 final_masses.append([0.92, 0.63, 0.36, 0.21])
 
 master_directories.append(["h04_nu7_a100", "h04_nu7_a50", "h04_nu7_a167", "h04_nu7_a05"])
@@ -49,7 +49,7 @@ def get_final_mass(directory):
 ### PLOTTING ###
 linewidth = 6
 labelsize = 17
-fontsize = 19
+fontsize = 20
 markersize = 14
 
 rc['xtick.labelsize'] = labelsize
