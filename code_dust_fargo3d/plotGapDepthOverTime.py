@@ -72,7 +72,7 @@ master_start_times[671] = [108, 217, 451, 788, 0]
 
 master_end_times = {}
 master_end_times[87] = [5000, 4745, 9000, 11700]
-master_end_times[67] = [2512, 2502, 6918, 7500]
+master_end_times[67] = [2512, 2416, 6230, 7500]
 master_end_times[47] = [2097, 1225, 1898, 2918]
 master_end_times[86] = [1816, 2590, 0]
 master_end_times[66] = [675, 1336, 1607]
