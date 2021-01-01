@@ -149,6 +149,8 @@ void RestartPlanetarySystem (timestep, sys)
     sys->vy[k] = GetfromPlanetFile (timestep, 5, k);
     sys->mass[k] = GetfromPlanetFile (timestep, 6, k);
     sys->accreted_mass[k] = GetfromPlanetFile (timestep, 7, k);
+    //mdcp = GetfromPlanetFile (timestep, 11, k);
+    //exces_mdcp = GetfromPlanetFile (timestep, 12, k);
   }
 }
 

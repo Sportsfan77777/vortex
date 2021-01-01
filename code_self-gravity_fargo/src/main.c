@@ -159,9 +159,9 @@ main(argc, argv)
   if (Restart == YES) {
     begin_i         = NbRestart * NINTERM;
     RestartPlanetarySystem (NbRestart, sys);
-    LostMass = GetfromPlanetFile (NbRestart, 7, 0); /* 0 refers to planet #0 */
-    PhysicalTime  = GetfromPlanetFile (NbRestart, 8, 0);
-    OmegaFrame  = GetfromPlanetFile (NbRestart, 9, 0);
+    LostMass = GetfromPlanetFile (NbRestart, 8, 0); /* 0 refers to planet #0 */
+    PhysicalTime  = GetfromPlanetFile (NbRestart, 9, 0);
+    OmegaFrame  = GetfromPlanetFile (NbRestart, 10, 0);
   } else {			/* We initialize 'planet[i].dat' file */
     EmptyPlanetSystemFile (sys);
   }
