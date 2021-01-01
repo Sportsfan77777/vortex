@@ -39,7 +39,8 @@ void WritePlanetFile (TimeStep, n)
     fprintf (stderr, "Can't write 'planet%d.dat' file. Aborting.\n", n);
     prs_exit (1);
   }
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", \
+    TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
   fclose (output);
   printf ("done\n");
   fflush (stdout);
@@ -76,7 +77,8 @@ void WriteBigPlanetFile (TimeStep, n)
     fprintf (stderr, "Can't write 'bigplanet.dat' file. Aborting.\n");
     prs_exit (1);
   }
-  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
+  fprintf (output, "%d\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\t%#.18g\n", \ 
+    TimeStep, Xplanet, Yplanet, VXplanet, VYplanet, MplanetVirtual, AccretedMass, LostMass, PhysicalTime, OmegaFrame, mdcp, exces_mdcp);
   fclose (output);
 }
 
