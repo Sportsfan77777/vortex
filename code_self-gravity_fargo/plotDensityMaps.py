@@ -38,6 +38,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -143,7 +144,7 @@ if not os.path.isdir(save_directory):
 # Plot Parameters (variable)
 show = args.show
 
-rad = np.loadtxt("used_rad.txt")[:-1]
+rad = np.loadtxt("used_rad.dat")[:-1]
 theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
@@ -172,8 +173,8 @@ dpi = args.dpi
 # Planet File
 # Data
 data = np.loadtxt("planet0.dat")
-times = data[:, 0]; base_mass = data[:, 7]
-accreted_mass = data[:, 8] / jupiter_mass
+times = data[:, 0]; base_mass = data[:, 5]
+accreted_mass = data[:, 6] / jupiter_mass
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
