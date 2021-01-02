@@ -244,7 +244,7 @@ int TimeStep;
   printf ("_Updating 'timesteps dat'_");
   fflush (stdout);
   sprintf (name, "%stimesteps.dat", OUTPUTDIR);
-  output = fopenp (name, "a");
+  output = fopen (name, "a");
 
   // What is slowing things down and how much???
   fprintf (output, "%d\t%.9f\t%.9f\n", TimeStep, PhysicalTime, Recent_dt);
