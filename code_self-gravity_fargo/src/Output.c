@@ -5,6 +5,8 @@ extern real     LostMass, OmegaFrame;
 extern boolean  Write_Density, Write_Velocity, Write_Energy, IsDisk;
 extern boolean  Write_Temperature, Write_DivV, Write_Qplus;
 
+extern real     Recent_dt, printTimeStep;
+
 void EmptyPlanetSystemFile (sys)
      PlanetarySystem *sys;
 {
@@ -231,4 +233,24 @@ void SendOutput (index, dens, gasvr, gasvt, gasenerg, label)
   }
 }
 
+void WriteDTFile(TimeStep)
+int TimeStep;
+{
+  FILE *output;
+  char name[256];
+
+  if (!CPU_Master) return; // Only write one file
+
+  printf ("_Updating 'timesteps dat'_");
+  fflush (stdout);
+  sprintf (name, "%stimesteps.dat", OUTPUTDIR);
+  output = fopenp (name, "a");
+
+  // What is slowing things down and how much???
+  fprintf (output, "%d\t%.9f\t%.9f\n", TimeStep, PhysicalTime, Recent_dt);
+
+  fclose (output);
+  printf ("done\n");
+  fflush (stdout);
+}
  

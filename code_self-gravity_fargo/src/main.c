@@ -174,6 +174,7 @@ main(argc, argv)
     if (InnerOutputCounter == 1) {
       InnerOutputCounter = 0;
       WriteBigPlanetSystemFile (sys, TimeStep);
+      WriteDTFile(TimeStep);
       UpdateLog (force, sys, gas_density, gas_energy, TimeStep, PhysicalTime, dimfxy);
       if (Stockholm == YES)
 	UpdateLogStockholm (sys, gas_density, gas_energy, TimeStep, PhysicalTime);

@@ -22,6 +22,7 @@ int FirstGasStepFLAG=1;
 static int AlreadyCrashed = 0, GasTimeStepsCFL;
 extern boolean FastTransport, IsDisk;
 Pair DiskOnPrimaryAcceleration;
+real Recent_dt = 4.0;
 
 boolean DetectCrash (array)
      PolarGrid *array;
@@ -198,10 +199,11 @@ void AlgoGas (force, Rho, Vrad, Vtheta, Energy, Label, sys)
     if (IsDisk == YES) {
       CommunicateBoundaries (Rho, Vrad, Vtheta, Energy, Label);
       if (SloppyCFL == NO) {
-	gastimestepcfl = 1;
-	gastimestepcfl = ConditionCFL (Vrad, Vtheta, DT-dtemp);
-	MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
-	dt = (DT-dtemp)/(real)GasTimeStepsCFL;
+        	gastimestepcfl = 1;
+        	gastimestepcfl = ConditionCFL (Vrad, Vtheta, DT-dtemp);
+        	MPI_Allreduce (&gastimestepcfl, &GasTimeStepsCFL, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+        	dt = (DT-dtemp)/(real)GasTimeStepsCFL;
+          Recent_dt = dt;
       }
       AccreteOntoPlanets (Rho, Vrad, Vtheta, dt, sys);
     }
