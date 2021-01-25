@@ -44,8 +44,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "mass",
-                         help = 'save directory (default: mass)')
+    parser.add_argument('--dir', dest = "save_directory", default = "distance",
+                         help = 'save directory (default: distance)')
 
     # Reference
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
@@ -200,7 +200,8 @@ def make_plot(show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
-    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
@@ -212,15 +213,17 @@ def make_plot(show = False):
     text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
     #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
-    plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
-    plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+    #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
 
     # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+
     if version is None:
-        save_fn = "%s/distanceOverTime.png" % (save_directory)
+        save_fn = "%s/%s_distanceOverTime.png" % (save_directory, directory_name)
     else:
-        save_fn = "%s/v%04d_distanceOverTime.png" % (save_directory, version)
+        save_fn = "%s/v%04d_%s_distanceOverTime.png" % (save_directory, version, directory_name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
