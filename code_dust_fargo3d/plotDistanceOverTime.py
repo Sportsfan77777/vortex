@@ -201,6 +201,12 @@ def make_plot(show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
 
