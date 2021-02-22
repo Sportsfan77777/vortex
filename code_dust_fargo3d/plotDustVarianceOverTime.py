@@ -51,7 +51,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
+    parser.add_argument('--dir', dest = "save_directory", default = "dustVariance",
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
@@ -198,17 +198,17 @@ def get_excess_mass(args_here):
     if mpi:
         field = "dens"
         density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
-        background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
+        #background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
     else:
         density = fromfile("dust1dens%d.dat" % frame).reshape(num_rad, num_theta) / dust_surface_density_zero
-        background_density = fromfile("dust1dens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / dust_surface_density_zero
+        #background_density = fromfile("dust1dens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / dust_surface_density_zero
 
     if args.compare:
         fargo_directory = args.compare
         density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / dust_surface_density_zero
-        background_density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / dust_surface_density_zero
+        #background_density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / dust_surface_density_zero
 
-    def helper(density, background_density):
+    def helper(density):
         diff_density = density # - background_density
         #diff_density[diff_density < 0] = 0 # only include excess
 
@@ -239,9 +239,9 @@ def get_excess_mass(args_here):
 
         return variance / average, vortex_excess
 
-    excess_mass, vortex_excess = helper(density, background_density)
+    excess_mass, vortex_excess = helper(density)
     if args.compare:
-        excess_mass_compare, vortex_excess_compare = helper(density_compare, background_density_compare)
+        excess_mass_compare, vortex_excess_compare = helper(density_compare)
 
     # Get Peak
     peak_diff_density = np.max(vortex_excess)
@@ -341,10 +341,18 @@ def make_plot(show = False):
     plot.yscale('log')
 
     # Save + Close
-    plot.savefig("dustVariation.png")
-    plot.show()
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
 
-    plot.close()
+    if version is None:
+        save_fn = "%s/%s_dustVariation.png" % (save_directory, directory_name)
+    else:
+        save_fn = "%s/v%04d_%s_dustVariation.png" % (save_directory, version, directory_name)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
 
 ##### Make Plots! #####
 
