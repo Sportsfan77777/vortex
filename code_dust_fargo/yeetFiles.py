@@ -233,4 +233,10 @@ for directory in directories:
         delete_files()
         os.chdir(cwd)
 
+        # Reset counts
+        test_count = 0
+        delete_count = 0
+
+        save_count = 0
+
 
