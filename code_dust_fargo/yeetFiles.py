@@ -7,7 +7,6 @@ import glob, pickle
 import argparse
 
 import numpy as np
-import util
 
 ###############################################################################
 
