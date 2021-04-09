@@ -227,7 +227,7 @@ cwd = os.getcwd()
 directories = os.listdir(cwd) # all files
 
 for directory in directories:
-    if os.path.isdir(directory)
+    if os.path.isdir(directory):
         print "DIRECTORY:", directory
         os.chdir(directory)
         delete_files()
