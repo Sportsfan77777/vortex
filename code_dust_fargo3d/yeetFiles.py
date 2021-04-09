@@ -110,7 +110,7 @@ def get_frame_range(frame_selection):
 args = new_argument_parser().parse_args()
 
 # Frames
-save_range = util.get_frame_range(args.frames)
+save_range = get_frame_range(args.frames)
 print "Save: (%d)" % len(save_range)
 print save_range
 
