@@ -224,12 +224,13 @@ def delete_files():
 
 # Iterate through directories
 cwd = os.getcwd()
-directories = os.listdir(cwd)
+directories = os.listdir(cwd) # all files
 
 for directory in directories:
-    print "DIRECTORY:", directory
-    os.chdir(directory)
-    delete_files()
-    os.chdir(cwd)
+    if os.path.isdir(directory)
+        print "DIRECTORY:", directory
+        os.chdir(directory)
+        delete_files()
+        os.chdir(cwd)
 
 
