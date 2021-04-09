@@ -69,11 +69,31 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 
 ###############################################################################
 
+### Helper Function ###
+
+def get_frame_range(frame_selection):
+    """ return array of selected frames"""
+    if len(frame_selection) == 1:
+        frame_range = frame_selection
+    elif len(frame_selection) == 2:
+        start = frame_selection[0]; end = frame_selection[1]
+        frame_range = range(start, end + 1)
+    elif len(frame_selection) == 3:
+        start = frame_selection[0]; end = frame_selection[1]; rate = frame_selection[2]
+        frame_range = range(start, end + 1, rate)
+    else:
+        print "Error: Must supply 1, 2, or 3 frame arguments\nWith one argument, plots single frame\nWith two arguments, plots range(start, end + 1)\nWith three arguments, plots range(start, end + 1, rate)"
+        exit()
+
+    return frame_range
+
+###############################################################################
+
 ### Parse Arguments ###
 args = new_argument_parser().parse_args()
 
 # Frames
-save_range = util.get_frame_range(args.frames)
+save_range = get_frame_range(args.frames)
 print "Save: (%d)" % len(save_range)
 print save_range
 
