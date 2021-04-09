@@ -15,12 +15,12 @@ gas_files = ["gasdens%d.dat", "gasvrad%d.dat", "gasvtheta%d.dat", "gasenergy%d.d
 dust_files = ["gasddens%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat", "gasdenergy%d.dat"]
 
 gas_density_files = ["gasdens%d.dat"]
-dust_density_files = ["gasddens%d.dat", "gasTstop%d.dat", "gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat"]
+dust_density_files = ["gasddens%d.dat", "gasTStop%d.dat", "gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat"]
 
 gas_velocity_files = ["gasvrad%d.dat", "gasvtheta%d.dat"]
 dust_velocity_files = ["gasdvrad%d.dat", "gasdvtheta%d.dat"]
 
-density_files = ["gasdens%d.dat", "gasddens%d.dat", "gasTstop%d.dat", "gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat"]
+density_files = ["gasdens%d.dat", "gasddens%d.dat", "gasTStop%d.dat", "gasDiag1%d.dat", "gasDiag2%d.dat", "gasDiag3%d.dat"]
 velocity_files = ["gasvrad%d.dat", "gasvtheta%d.dat", "gasdvrad%d.dat", "gasdvtheta%d.dat"]
 energy_files = ["gasenergy%d.dat", "gasdenergy%d.dat"]
 
