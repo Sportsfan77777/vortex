@@ -118,7 +118,7 @@ planet_mass = 1.0
 taper_time = p.masstaper
 
 scale_height = p.aspectratio
-viscosity = p.nu
+viscosity = 1e-7 #p.nu
 
 dt = p.ninterm * p.dt
 
