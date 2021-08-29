@@ -29,7 +29,7 @@ from pylab import fromfile
 import util
 import utilVorticity
 import azimuthal as az
-from readTitle import readTitle
+#from readTitle import readTitle
 
 from advanced import Parameters
 from reader_mpiio import Fields
@@ -216,8 +216,9 @@ def make_plot(frame, show = False):
 
     #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
     midplane_density = density[num_z / 2, :, :]
+    scale_height_array = scale_height * rad
 
-    averagedDensity = np.average(midplane_density, axis = 1)
+    averagedDensity = np.average(midplane_density, axis = 1) / scale_height_array
     normalized_density = averagedDensity / surface_density_zero
 
     ### Plot ###
