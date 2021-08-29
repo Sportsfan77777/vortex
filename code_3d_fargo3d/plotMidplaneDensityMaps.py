@@ -149,7 +149,7 @@ accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
 scale_height = p.aspectratio
-viscosity = p.nu
+viscosity = 1e-7 #p.nu
 
 """
 
