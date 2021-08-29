@@ -218,7 +218,7 @@ def make_plot(frame, show = False):
     midplane_density = density[num_z / 2, :, :]
     scale_height_array = scale_height * rad
 
-    averagedDensity = np.average(midplane_density, axis = 1) / scale_height_array
+    averagedDensity = np.average(midplane_density, axis = 1) * scale_height_array * np.sqrt(2.0 * np.pi)
     normalized_density = averagedDensity / surface_density_zero
 
     ### Plot ###
