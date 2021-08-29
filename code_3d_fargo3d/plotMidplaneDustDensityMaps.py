@@ -38,6 +38,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -150,7 +151,7 @@ accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
 scale_height = p.aspectratio
-viscosity = p.nu
+viscosity = 1e-7 #p.nu
 
 """
 
