@@ -70,7 +70,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMaps",
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
@@ -140,7 +140,7 @@ r_min = p.ymin; r_max = p.ymax
 z_min = p.zmin; z_max = p.zmax
 
 surface_density_zero = p.sigma0
-dust_surface_density_zero = surface_density_zero * p.epsilon
+dust_surface_density_zero = surface_density_zero * p.metal
 
 dt = p.ninterm * p.dt
 
