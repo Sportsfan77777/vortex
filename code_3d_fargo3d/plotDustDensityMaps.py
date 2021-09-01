@@ -310,8 +310,12 @@ def make_plot(frame, show = False):
 
     if quiver:
         # Velocity
-        radial_velocity = np.array(fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # Radial
-        azimuthal_velocity = np.array(fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # Azimuthal
+        #radial_velocity = np.array(fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # Radial
+        radial_velocity = Fields("./", 'vy', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+        #azimuthal_velocity = np.array(fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # Azimuthal
+        azimuthal_velocity = Fields("./", 'vx', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+
+
         keplerian_velocity = rad * (np.power(rad, -1.5) - 1)
         azimuthal_velocity -= keplerian_velocity[:, None]
 
