@@ -213,12 +213,12 @@ def make_plot(frame, show = False):
     # Data
     field = "dens"
     density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
-
     #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
-    midplane_density = density[num_z / 2, :, :]
-    scale_height_array = scale_height * rad
 
-    averagedDensity = np.average(midplane_density, axis = 1) * scale_height_array * np.sqrt(2.0 * np.pi)
+    dz = z_angles[1] - z_angles[0]
+    surface_density = np.sum(density[:, :, :], axis = 0) * dz
+
+    averagedDensity = np.average(surface_density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
     ### Plot ###
