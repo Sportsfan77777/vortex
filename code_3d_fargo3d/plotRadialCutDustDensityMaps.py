@@ -335,7 +335,7 @@ def make_plot(frame, show = False):
 
     # Axes
     plot.xlim(0, 360)
-    plot.ylim(z_angles[0], z_angles[-1])
+    plot.ylim(z_angles[0] * 180.0 / np.pi, z_angles[-1] * 180.0 / np.pi)
 
     angles = np.linspace(0, 360, 7)
     plot.xticks(angles)
