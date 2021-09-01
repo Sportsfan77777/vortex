@@ -283,13 +283,17 @@ def make_plot(frame, show = False):
     density = Fields("./", 'dust1', frame).get_field(field).reshape(num_z, num_rad, num_theta)
     #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
 
+    gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+
     dz = z_angles[1] - z_angles[0]
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
+    gas_surface_density = np.sum(gas_density[:, :, :], axis = 0) * dz
 
     normalized_density = surface_density / dust_surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    normalized_gas_density = gas_surface_density / surface_density_zero
 
     if center:
-        normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
+        normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = gas_surface_density)
 
     ### Plot ###
     x = rad
@@ -302,7 +306,7 @@ def make_plot(frame, show = False):
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
-        plot.contour(x, y, np.transpose(normalized_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
+        plot.contour(x, y, np.transpose(normalized_gas_density), levels = levels, origin = 'upper', linewidths = 1, colors = colors)
 
     if quiver:
         # Velocity
