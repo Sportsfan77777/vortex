@@ -294,6 +294,7 @@ def make_plot(frame, show = False):
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = gas_surface_density)
+        normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = gas_surface_density)
 
     ### Plot ###
     x = rad
