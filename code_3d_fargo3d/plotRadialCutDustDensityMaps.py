@@ -292,7 +292,6 @@ def make_plot(frame, show = False):
     selected_radius_i = np.searchsorted(rad, selected_radius)
     midplane_density = density[:, selected_radius_i, :]
 
-    scale_height_function = scale_height * rad
     normalized_density = midplane_density / dust_surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     if center:
@@ -334,11 +333,11 @@ def make_plot(frame, show = False):
         plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
     # Axes
-    plot.xlim(0, 360)
-    plot.ylim(y[0], y[-1])
+    #plot.xlim(0, 360)
+    #plot.ylim(y[0], y[-1])
 
     angles = np.linspace(0, 360, 7)
-    plot.xticks(angles)
+    #plot.xticks(angles)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
@@ -367,7 +366,7 @@ def make_plot(frame, show = False):
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     cbar.set_label(r"Dust Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
