@@ -70,7 +70,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasDensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "midplaneGasDensityMaps",
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')

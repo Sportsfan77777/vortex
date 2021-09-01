@@ -38,6 +38,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -46,10 +47,10 @@ from pylab import fromfile
 
 import util
 import azimuthal as az
-from readTitle import readTitle
+#from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+from reader_mpiio import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -149,7 +150,7 @@ accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
 scale_height = p.aspectratio
-viscosity = p.nu
+viscosity = 1e-7 #p.nu
 
 """
 
@@ -277,11 +278,14 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
-    midplane_density = density[:, :, num_z / 2]
+    field = "dens"
+    density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+    #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
 
-    scale_height_function = scale_height * rad
-    normalized_density = density / surface_density_zero / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    dz = z_angles[1] - z_angles[0]
+    surface_density = np.sum(density[:, :, :], axis = 0) * dz
+
+    normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -336,7 +340,7 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    current_mass += accreted_mass[frame]
+    #current_mass += accreted_mass[frame]
 
     #title = readTitle()
 
