@@ -333,11 +333,11 @@ def make_plot(frame, show = False):
         plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
     # Axes
-    #plot.xlim(0, 360)
-    #plot.ylim(y[0], y[-1])
+    plot.xlim(0, 360)
+    plot.ylim(y[0], y[-1])
 
     angles = np.linspace(0, 360, 7)
-    #plot.xticks(angles)
+    plot.xticks(angles)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
