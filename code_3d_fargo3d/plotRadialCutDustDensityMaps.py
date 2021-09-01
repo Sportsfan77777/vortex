@@ -301,7 +301,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = theta * (180.0 / np.pi)
     y = z_angles * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, normalized_density, cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -334,11 +334,11 @@ def make_plot(frame, show = False):
         plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale)
 
     # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
+    plot.xlim(0, 360)
+    plot.ylim(z_angles[0], z_angles[-1])
 
     angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
+    plot.xticks(angles)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
