@@ -54,7 +54,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
                          help = 'save directory (default: averagedDensity)')
-    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
+    parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
@@ -212,9 +212,11 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
-
-    #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
+    if mpi:
+      density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+    else:
+      density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+      
     midplane_density = density[num_z / 2, :, :]
 
     averagedDensity = np.average(midplane_density, axis = 1)

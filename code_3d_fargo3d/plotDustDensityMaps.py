@@ -72,7 +72,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "dustDensityMaps",
                          help = 'save directory (default: gasDensityMaps)')
-    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
+    parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
@@ -280,10 +280,12 @@ def make_plot(frame, show = False):
 
     # Data
     field = "dens"
-    density = Fields("./", 'dust1', frame).get_field(field).reshape(num_z, num_rad, num_theta)
-    #density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta, num_z)
-
-    gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+    if mpi:
+      density = Fields("./", 'dust1', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+      gas_density = Fields("./", 'gas', frame).get_field(field).reshape(num_z, num_rad, num_theta)
+    else:
+      density = fromfile("dust1dens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+      gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
 
     dz = z_angles[1] - z_angles[0]
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
