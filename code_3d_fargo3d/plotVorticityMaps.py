@@ -71,7 +71,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "midplaneGasDensityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
@@ -253,7 +253,7 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def shift_density(normalized_density, fargo_par, option = "away", reference_density = None, frame = None):
+def shift_density(normalized_density, vorticity, fargo_par, option = "away", reference_density = None, frame = None):
     """ shift density based on option """
     if reference_density is None:
        reference_density = normalized_density
@@ -272,8 +272,9 @@ def shift_density(normalized_density, fargo_par, option = "away", reference_dens
        print "Invalid centering option. Choose (cm-)peak, (cm-)threshold, (cm-)away, or lookup"
 
     # Shift
+    shifted_vorticity = np.roll(vorticity, shift_c, axis = -1)
     shifted_density = np.roll(normalized_density, shift_c, axis = -1)
-    return shifted_density, shift_c
+    return shifted_density, shifted_vorticity, shift_c
 
 ###############################################################################
 
@@ -298,14 +299,15 @@ def make_plot(frame, show = False):
       vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
     else:
       density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
-      vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-      vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
+      vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+      vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
     midplane_density = density[num_z / 2, :, :]
+    midplane_vrad = vrad[num_z / 2, :, :]
+    midplane_vtheta = vtheta[num_z / 2, :, :]
 
-    scale_height_function = scale_height * rad
     normalized_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+    vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
 
     # Shift
     if center:
@@ -362,7 +364,7 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    current_mass += accreted_mass[frame]
+    #current_mass += accreted_mass[frame]
 
     #title = readTitle()
 
