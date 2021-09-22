@@ -294,7 +294,7 @@ def make_plot(frame, show = False):
     selected_radius_i = np.searchsorted(rad, selected_radius)
     midplane_density = density[:, selected_radius_i, :]
 
-    normalized_density = midplane_density / dust_surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    normalized_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     if center:
         normalized_density, shift_c = shift_density(normalized_density, fargo_par, reference_density = normalized_density)
@@ -370,7 +370,7 @@ def make_plot(frame, show = False):
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-    cbar.set_label(r"Dust Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+    cbar.set_label(r"Gas Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
