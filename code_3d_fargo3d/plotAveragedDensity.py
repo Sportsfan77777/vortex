@@ -54,7 +54,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "averagedDensity",
                          help = 'save directory (default: averagedDensity)')
-    parser.add_argument('-m', dest = "m", action = 'store_true', default = False,
+    parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
