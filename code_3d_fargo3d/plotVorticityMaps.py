@@ -84,6 +84,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
                          help = 'use v_theta or v_theta - v_kep (default: use residual)')
 
+     parser.add_argument('-z', dest = "sliver", type = int, default = 0,
+                         help = 'sliver above midplane to plot (default: 0)')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
@@ -301,9 +304,9 @@ def make_plot(frame, show = False):
       density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
       vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-    midplane_density = density[num_z / 2, :, :]
-    midplane_vrad = vrad[num_z / 2, :, :]
-    midplane_vtheta = vtheta[num_z / 2, :, :]
+    midplane_density = density[num_z / 2 + args.sliver, :, :]
+    midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+    midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
 
     normalized_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
