@@ -84,7 +84,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
                          help = 'use v_theta or v_theta - v_kep (default: use residual)')
 
-     parser.add_argument('-z', dest = "sliver", type = int, default = 0,
+    parser.add_argument('-z', dest = "sliver", type = int, default = 0,
                          help = 'sliver above midplane to plot (default: 0)')
 
     # Plot Parameters (variable)
