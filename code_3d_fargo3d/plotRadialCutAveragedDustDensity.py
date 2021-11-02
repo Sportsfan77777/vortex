@@ -55,7 +55,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radius at which to take the cut (default: 1.4)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "radialCutAveragedDensity",
+    parser.add_argument('--dir', dest = "save_directory", default = "radialCutAveragedDustDensity",
                          help = 'save directory (default: averagedDensity)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
