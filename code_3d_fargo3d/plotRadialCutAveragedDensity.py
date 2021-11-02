@@ -227,7 +227,7 @@ def make_plot(frame, show = False):
     radial_cut_density = density[:, selected_radius_i, :]
 
     averagedDensity = np.average(radial_cut_density, axis = 1)
-    normalized_density = averagedDensity / surface_density_zero
+    normalized_density = averagedDensity / surface_density_zero ####### FIX THIS!!!!! #######
 
     ### Plot ###
     x = z_angles * (180.0 / np.pi)
@@ -290,20 +290,19 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    current_mass += accreted_mass[frame]
+    #current_mass += accreted_mass[frame]
 
     #title = readTitle()
 
-    unit = "r_\mathrm{p}"
-    ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    ax.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+    ax.set_xlabel(r"$\theta$ [degrees]", fontsize = fontsize)
+    ax.set_ylabel(r"$\rho$ $/$ $\rho$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
     #else:
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
-    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    x_range = x[-1] - x[0]; x_mid = x[0] + x_range / 2.0
     y_text = 1.14
 
     alpha_coefficent = "3"
