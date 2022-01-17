@@ -151,7 +151,7 @@ def make_movies():
     path = "%s/tmp_%s%s.png" % (directory, base_name, "%04d")
     output = "%s/%s.mp4" % (save_directory, movie_name)
 
-    command = "/home/u28/mhammer/ffmpeg/bin/ffmpeg -f image2 -r %d -i %s -b:v %dk -vcodec mpeg4 -y %s" % (fps, path, bit_rate, output)
+    command = "ffmpeg -f image2 -r %d -i %s -b:v %dk -vcodec mpeg4 -y %s" % (fps, path, bit_rate, output)
     if speed_up:
        command += ' -c:v libx264 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"'
     process = subprocess.Popen(command.split())
