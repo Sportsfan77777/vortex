@@ -342,7 +342,7 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    #current_mass += accreted_mass[frame]
+    current_mass += accreted_mass[frame]
 
     #title = readTitle()
 
