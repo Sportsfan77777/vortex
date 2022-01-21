@@ -329,9 +329,17 @@ def make_plot(frame, show = False):
 
         twin = ax.twinx()
 
-        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-        vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+        if mpi:
+          vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
+          vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
+        else:
+          vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+          vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+
+        midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+        midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
+
+        vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
 
         averaged_vorticity = np.average(vorticity, axis = 1)
         #averaged_density = np.average(normalized_density, axis = 1) # normalized_density
