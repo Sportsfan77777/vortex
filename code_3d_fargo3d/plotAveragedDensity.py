@@ -89,6 +89,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'plot rossby number instead of vorticity (default: plot vorticity)')
     parser.add_argument('--residual', dest = "residual", action = 'store_true', default = False,
                          help = 'use v_theta or v_theta - v_kep (default: do not use residual)')
+
+    parser.add_argument('-z', dest = "sliver", type = int, default = 0,
+                         help = 'sliver above midplane to plot (default: 0)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 21,
