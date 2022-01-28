@@ -20,6 +20,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -28,10 +29,10 @@ from pylab import fromfile
 
 import util
 import azimuthal as az
-from readTitle import readTitle
+#from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+#from reader import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -93,11 +94,12 @@ args = new_argument_parser().parse_args()
 ### Get Fargo Parameters ###
 p = Parameters()
 
-num_rad = p.ny; num_theta = p.nx
+num_rad = p.ny; num_theta = p.nx; num_z = p.nz
 r_min = p.ymin; r_max = p.ymax
+z_min = p.zmin; z_max = p.zmax
 
 surface_density_zero = p.sigma0
-dust_surface_density_zero = p.sigma0 * p.epsilon
+dust_surface_density_zero = p.sigma0 * p.metal
 taper_time = p.masstaper
 
 viscosity = p.nu
