@@ -26,17 +26,6 @@ from matplotlib import pyplot as plot
 from pylab import rcParams
 from pylab import fromfile
 
-import util
-import azimuthal as az
-from readTitle import readTitle
-
-from advanced import Parameters
-from reader import Fields
-
-from colormaps import cmaps
-for key in cmaps:
-    plot.register_cmap(name = key, cmap = cmaps[key])
-
 # Input Parameter
 frame = int(sys.argv[1])
 
