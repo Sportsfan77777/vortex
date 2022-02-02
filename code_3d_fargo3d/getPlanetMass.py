@@ -39,7 +39,6 @@ total_mass = base_mass + accreted_mass
 
 jupiter_mass = 1e-3
 total_mass_i = total_mass[frame] / jupiter_mass
-gap_depth = get_min(frame)
 
 print total_mass_i
 
