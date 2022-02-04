@@ -308,7 +308,11 @@ def make_plot(frame, show = False):
     midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
     midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
 
-    normalized_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    dz = z_angles[1] - z_angles[0]
+    surface_density = np.sum(density[:, :, :], axis = 0) * dz
+
+    normalized_midplane_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
 
