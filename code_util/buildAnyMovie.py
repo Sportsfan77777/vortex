@@ -42,7 +42,7 @@ def new_argument_parser(description = "Manage movie input parameters."):
     # Files
     parser.add_argument('--dir', dest = "directory", default = ".",
                          help = 'location of files and output (default: current)')
-    parser.add_argument('--stem', dest = "movie_choice", default = "densityMap_"),
+    parser.add_argument('--stem', dest = "movie_choice", default = "densityMap_",
                          help = 'select file prefix (default: density)')
     parser.add_argument('--id', dest = "name_id", type = int, default = None,
                          help = 'id number for files -- useful for varying plot parameters (default: None)')
@@ -66,7 +66,7 @@ def new_argument_parser(description = "Manage movie input parameters."):
 
     # Command for ffmpeg
     parser.add_argument('-t', dest = "tw2", action = 'store_true', default = False,
-                         help = 'call correct ffmpeg command on tw2 (default: don't do it!)')
+                         help = 'call correct ffmpeg command on tw2 (default: do not do it!)')
 
     return parser
 
