@@ -28,39 +28,6 @@ optional arguments:
 import os, shutil, subprocess
 import argparse
 
-### Movie Options ###
-movie_dictionary = {}
-movie_dictionary["density"] = "densityMap_"
-movie_dictionary["dustDensity"] = "dustDensityMap_"
-movie_dictionary["polarDensity"] = "polarDensityMap_"
-movie_dictionary["averagedDensity"] = "averagedDensity_"
-movie_dictionary["averagedDustDensity"] = "averagedDustDensity_"
-movie_dictionary["averagedVortensity"] = "averagedVortensity_"
-movie_dictionary["azimuthalDensity"] = "azimuthalDensityProfiles_"
-movie_dictionary["bothDensity"] = "bothDensityMaps_"
-movie_dictionary["intensity"] = "intensityMap_"
-movie_dictionary["polarIntensity"] = "intensityMap_"
-movie_dictionary["cartesianIntensity"] = "intensityCartGrid_"
-movie_dictionary["azimuthalIntensity"] = "azimuthalIntensityProfiles_"
-movie_dictionary["vorticity"] = "vorticityMap_"
-movie_dictionary["diffDensity"] = "diffDensityMap_"
-movie_dictionary["tripleDensity"] = "multigrainDensityMaps_"
-movie_dictionary["radialPressure"] = "radialPressureGradientMap_"
-movie_dictionary["azimuthalPressure"] = "azimuthalPressureGradientMap_"
-movie_dictionary["limitingVelocity"] = "limitingVelocityMap_"
-movie_dictionary["maxLimitingVelocity"] = "maxLimitingVelocity_"
-movie_dictionary["alphaViscosity"] = "alphaViscosityMap_"
-movie_dictionary["radialVelocity"] = "radialVelocityMap_"
-movie_dictionary["azimuthalVelocity"] = "azimuthalVelocityMap_"
-movie_dictionary["speed"] = "speedMap_"
-movie_dictionary["angularMomentum"] = "angularMomentumMap_"
-movie_dictionary["rotationSpeed"] = "vortexRotationSpeedMap_"
-movie_dictionary["averagedStress"] = "averagedStress_"
-movie_dictionary["azimuthalProfile"] = "azimuthalProfile_"
-movie_dictionary["waveAction"] = "waveAction_"
-movie_dictionary["maximumCondition"] = "maximumCondition_"
-movie_dictionary["radialVortexTracker"] = "radialVortexTracker_"
-
 ###############################################################################
 
 ### Input Parameters ###
