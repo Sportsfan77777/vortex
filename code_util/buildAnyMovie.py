@@ -64,6 +64,10 @@ def new_argument_parser(description = "Manage movie input parameters."):
     parser.add_argument('--fast_off', dest = "speed_up", action = 'store_false', default = True,
                          help = 'speed up on elgato w/ x264 architecture (default: do it!)')
 
+    # Command for ffmpeg
+    parser.add_argument('-t', dest = "tw2", action = 'store_true', default = False,
+                         help = 'call correct ffmpeg command on tw2 (default: don't do it!)')
+
     return parser
 
 ## Parse Arguments ##
@@ -95,6 +99,11 @@ bit_rate = args.bit_rate
 # Speed Parameter
 speed_up = args.speed_up
 
+# Command
+ffmepg = "ffmpeg"
+if args.tw2:
+   ffmpeg = "/home/mhammer44444/ffmpeg/bin/ffmpeg"
+
 ###############################################################################
 
 ### Helper Functions ###
@@ -118,7 +127,7 @@ def make_movies():
     path = "%s/tmp_%s%s.png" % (directory, base_name, "%04d")
     output = "%s/%s.mp4" % (save_directory, movie_name)
 
-    command = "ffmpeg -f image2 -r %d -i %s -b:v %dk -vcodec mpeg4 -y %s" % (fps, path, bit_rate, output)
+    command = "%s -f image2 -r %d -i %s -b:v %dk -vcodec mpeg4 -y %s" % (ffmpeg, fps, path, bit_rate, output)
     if speed_up:
        command += ' -c:v libx264 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"'
     process = subprocess.Popen(command.split())
