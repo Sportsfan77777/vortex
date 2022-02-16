@@ -43,6 +43,8 @@ def parse_parameters(par_dictionary):
 
     # Find *.par file (assume there is only one *.par file)
     files = glob.glob("*.par")
+    if "variables.par" is in files:
+       files.remove("variables.par")
     par_file = files[0]
 
     # Read file line by line
