@@ -165,8 +165,8 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-max_y = args.max_y
-y2_range = args.y2_range
+#max_y = args.max_y
+y_range = args.y_range
 
 # Quantity to Plot
 rossby = args.rossby
@@ -223,20 +223,21 @@ def make_plot(frame, show = False):
 
     vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
 
-    minimum_vorticity = np.minimum(vorticity, axis = 1)
+    minimum_vorticity = np.percentile(vorticity, 0.0, axis = 1)
     minimum_vorticity_one = np.percentile(vorticity, 1.0, axis = 1) # 1% 
 
     ### Plot ###
-    x = rad
+    x = rad[:-1]
     y = minimum_vorticity
     y2 = minimum_vorticity_one
 
-    result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 99)
-    result2, = plot.plot(x, y2, linewidth = linewidth - 1, c = "k", label = "1%" zorder = 90)
+    result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
+    result2, = plot.plot(x, y2, linewidth = linewidth - 1, c = "k", label = "1%", zorder = 99)
 
     # Axes
-    plot.ylim(y2_range[0], y2_range[1])
-    plot.yticks(np.arange(y2_range[0], y2_range[1] + 1e-9, 0.005))
+    plot.xlim(x_min, x_max)
+    plot.ylim(y_range[0], y_range[1])
+    #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
     plot.ylabel(r"Minimum Rossby Number", fontsize = fontsize)
 
@@ -275,7 +276,7 @@ def make_plot(frame, show = False):
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    #ax.text(x_mid, y_text * plot.ylim()[0], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
