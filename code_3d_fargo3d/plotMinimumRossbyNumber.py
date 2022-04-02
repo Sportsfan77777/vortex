@@ -74,9 +74,9 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'compare to another directory (default: do not do it!)')
 
     # Quantity to plot for maximum condition
-    parser.add_argument('--rossby', dest = "rossby", action = 'store_true', default = False,
+    parser.add_argument('--rossby', dest = "rossby", action = 'store_false', default = True,
                          help = 'plot rossby number instead of vorticity (default: plot vorticity)')
-    parser.add_argument('--residual', dest = "residual", action = 'store_true', default = False,
+    parser.add_argument('--residual', dest = "residual", action = 'store_false', default = True,
                          help = 'use v_theta or v_theta - v_kep (default: do not use residual)')
 
     parser.add_argument('-z', dest = "sliver", type = int, default = 0,
