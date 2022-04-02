@@ -67,8 +67,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.4, 0],
-                         help = 'range in y-axis (default: [-0.4, 0.0])')
+    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.25, 0],
+                         help = 'range in y-axis (default: [-0.5, 0.0])')
 
     parser.add_argument('--compare', dest = "compare", default = None,
                          help = 'compare to another directory (default: do not do it!)')
@@ -222,17 +222,13 @@ def make_plot(frame, show = False):
     normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
-
-    minimum_vorticity = np.percentile(vorticity, 0.0, axis = 1)
-    minimum_vorticity_one = np.percentile(vorticity, 1.0, axis = 1) # 1% 
+    averaged_vorticity = np.average(vorticity, axis = 1)
 
     ### Plot ###
     x = rad[:-1]
-    y = minimum_vorticity
-    y2 = minimum_vorticity_one
+    y = averaged_vorticity
 
     result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
-    result2, = plot.plot(x, y2, linewidth = linewidth - 1, c = "k", label = "1%", zorder = 99)
 
     # Axes
     plot.xlim(x_min, x_max)
@@ -253,7 +249,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    ax.set_ylabel(r"Minimum Rossby Number", fontsize = fontsize)
+    ax.set_ylabel(r"Averaged Rossby Number", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
