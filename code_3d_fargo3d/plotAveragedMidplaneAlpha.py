@@ -52,8 +52,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "averagedRossbyNumber",
-                         help = 'save directory (default: averagedRossbyNumber)')
+    parser.add_argument('--dir', dest = "save_directory", default = "averagedMidplaneAlpha",
+                         help = 'save directory (default: averagedMidplaneAlpha)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -294,9 +294,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/averagedRossbyNumber_%04d.png" % (save_directory, frame)
+        save_fn = "%s/averagedReynoldsStress_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_averagedRossbyNumber_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_averagedReynoldsStress_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
