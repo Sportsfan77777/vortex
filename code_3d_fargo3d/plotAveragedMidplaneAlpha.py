@@ -225,7 +225,7 @@ def make_plot(frame, show = False):
     vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
     averaged_vorticity = np.average(vorticity, axis = 1)
 
-    delta_midplane_vtheta = midplane_vtheta - np.roll(midplane_vtheta, 1, axis = 1)
+    delta_midplane_vtheta = midplane_vtheta - np.average(midplane_vtheta, axis = 1)
     delta_midplane_velocity = midplane_vrad * delta_midplane_vtheta
 
     scale_height_function = scale_height * np.power(rad, 1.0 + flaring_index)
