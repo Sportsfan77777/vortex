@@ -236,7 +236,7 @@ def make_plot(frame, show = False):
     average_alpha = np.average(alpha, axis = 1)
 
     ### Plot ###
-    x = rad[:-1]
+    x = rad
     y = average_alpha
 
     result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
