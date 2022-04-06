@@ -243,7 +243,7 @@ def make_plot(frame, show = False):
 
     # Axes
     plot.xlim(x_min, x_max)
-    plot.ylim(10**(-5), 3 * 10**(-1))
+    plot.ylim(10**(-7), 3 * 10**(-1))
     plot.yscale('log')
     #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
