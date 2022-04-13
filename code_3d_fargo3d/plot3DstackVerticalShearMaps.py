@@ -175,7 +175,7 @@ size = fargo_par["PSIZE"]
 
 # Frame
 frame = args.frame
-zs_range = util.get_frame_range(args.frames)
+zs_range = util.get_frame_range(args.zs)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -297,7 +297,7 @@ def make_plot(z_level, show = False):
     omega_z = vtheta[num_z / 2 + z_level, :, :] / rad
     next_omega_z = vtheta[num_z / 2 + z_level - 1, :, :] / rad
 
-    dz = zs[1] - zs[0]
+    dz = z_angles[1] - z_angles[0]
     domega_dz_z = (omega_z - next_omega_z) / dz
 
     scale_height_function = scale_height * rad
@@ -309,7 +309,7 @@ def make_plot(z_level, show = False):
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(domega_dz_z), cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
