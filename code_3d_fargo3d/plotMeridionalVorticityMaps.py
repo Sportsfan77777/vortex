@@ -315,8 +315,7 @@ def make_plot(frame, show = False):
     normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     #vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
-    voriticity_cut = vorticity[:, :, num_theta / 2.0]
+    vorticity = utilVorticity.velocity_curl_3D(vrad, vtheta, rad, theta, rossby = rossby, residual = residual, phi = num_theta / 2.0)
 
     # Shift
     if center:
@@ -325,7 +324,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = z_angles # * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(voriticity_cut), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(voriticity), cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
