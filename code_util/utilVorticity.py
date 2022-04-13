@@ -53,6 +53,8 @@ def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, re
 
 def velocity_curl_3D(v_rad, v_theta, rad, theta, phi = 0, average = False, rossby = True, residual = True):
     """ z-component of the curl (because this is a 2-D simulation)"""
+    phi = int(round(phi, 0))
+
     # subtract rotating frame and add real Keplerian velocity
     keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     v_theta -= keplerian_velocity[:, None]
@@ -74,18 +76,18 @@ def velocity_curl_3D(v_rad, v_theta, rad, theta, phi = 0, average = False, rossb
     dv_rad = np.diff(v_rad, axis = 1)
     dv_theta = np.diff(rad[:, None] * v_theta, axis = 0)
 
-    dv_rad_cut = dv_rad[:, :, phi]
-    dv_theta_cut = dv_theta[:, :, phi]
+    dv_rad = dv_rad[:, :, phi]
+    dv_theta = dv_theta[:, :, phi]
     ### End Differentials ###
 
     # z-Determinant
-    partial_one = dv_theta / d_rad[None, :, None]
+    partial_one = dv_theta[:, 1:] / d_rad[None, :]
     partial_two = dv_rad / d_theta
 
     if average:
-        z_curl = (partial_one[:, 1:]) / rad[None, 1]
+        z_curl = (partial_one[:, :]) / rad[None, 1:]
     else:
-        z_curl = (partial_one[:, 1:] - partial_two[1:, :]) / rad[None, 1:]
+        z_curl = (partial_one[:, :] - partial_two[1:, :]) / rad[None, 1:]
 
     # Shift out of rotating frame (http://arxiv.org/pdf/astro-ph/0605237v2.pdf)
     #z_curl += 2
