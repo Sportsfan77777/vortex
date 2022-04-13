@@ -175,7 +175,7 @@ size = fargo_par["PSIZE"]
 
 # Frame
 frame = args.frame
-zs_range = util.get_frame_range(args.frames)
+zs_range = util.get_frame_range(args.zs)
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -344,7 +344,7 @@ def make_plot(z_level, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    #current_mass += accreted_mass[frame]
+    current_mass += accreted_mass[frame]
 
     #title = readTitle()
 

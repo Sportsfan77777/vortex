@@ -185,7 +185,7 @@ size = fargo_par["PSIZE"]
 
 # Frames
 frame = args.frame
-zs_range = util.get_frame_range(args.frames)
+zs_range = util.get_frame_range(args.zs)
 
 # Number of Cores 
 num_cores = args.num_cores
