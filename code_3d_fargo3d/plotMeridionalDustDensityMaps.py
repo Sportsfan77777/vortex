@@ -300,8 +300,8 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
+    y = z_angles
+    result = ax.pcolormesh(x, y, normalized_density, cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
