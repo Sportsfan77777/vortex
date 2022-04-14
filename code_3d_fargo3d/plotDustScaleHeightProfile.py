@@ -154,9 +154,6 @@ frame_range = util.get_frame_range(args.frames)
 # Number of Cores 
 num_cores = args.num_cores
 
-# Chosen Radius
-selected_radius = args.selected_radius
-
 # Files
 save_directory = args.save_directory
 if not os.path.isdir(save_directory):
@@ -232,7 +229,7 @@ def make_plot(frame, show = False):
     meridional_density = np.average(density, axis = -1)
 
     for i in range(num_rad):
-        popt, pcov = curve_fit(gaussian, z_angles, density[:, i])
+        popt, pcov = curve_fit(gaussian, z_angles, meridional_density[:, i])
         (A, sigma) = popt
         scale_height_function[i] = sigma # scale height (as an angle)
 
@@ -301,7 +298,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    ax.set_ylabel(r"$H_d$ $/$ $h$", fontsize = fontsize)
+    ax.set_ylabel(r"Dust Scale Height $H_d$ $/$ $h$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
