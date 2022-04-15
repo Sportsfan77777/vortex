@@ -237,8 +237,14 @@ def make_plot(frame, show = False):
         top = np.searchsorted(meridional_density[:, i], drop_off)
         bottom = num_z - np.searchsorted(meridional_density[::-1, i], drop_off) - 1
 
-        scale_height = (z_angles[bottom] - z_angles[top]) / 2
-        scale_height_function[i] = scale_height
+        if top >= num_z:
+           top = num_z - 1
+
+        if bottom >= num_z:
+           bottom = num_z - 1
+
+        this_scale_height = (z_angles[bottom] - z_angles[top]) / 2.0
+        scale_height_function[i] = this_scale_height
         mean_function[i] = z_angles[int((bottom + top) / 2)]
 
         #popt, pcov = curve_fit(gaussian, z_angles, meridional_density[:, i])
@@ -377,9 +383,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/dustScaleHeight_%04d.png" % (save_directory, frame)
+        save_fn = "%s/manualDustScaleHeight_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_dustScaleHeight_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_manualDustScaleHeight_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
