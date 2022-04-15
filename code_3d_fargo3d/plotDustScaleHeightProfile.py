@@ -200,8 +200,8 @@ fargo_par["theta"] = theta
 
 ##### Fitting Function #####
 
-def gaussian(x, A, sigma):
-    return A * np.exp(-np.power(x - np.pi / 2.0, 2) / (2 * np.power(sigma, 2)))
+def gaussian(x, A, mean, sigma):
+    return A * np.exp(-np.power(x - mean / 2.0, 2) / (2 * np.power(sigma, 2)))
 
 ###############################################################################
 
@@ -226,17 +226,21 @@ def make_plot(frame, show = False):
       density = fromfile("dust1dens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
 
     scale_height_function = np.zeros(num_rad)
+    mean_function = np.zeros(num_rad)
     meridional_density = np.average(density, axis = -1)
 
     for i in range(num_rad):
         popt, pcov = curve_fit(gaussian, z_angles, meridional_density[:, i])
-        (A, sigma) = popt
+        (A, mean, sigma) = popt
         scale_height_function[i] = sigma # scale height (as an angle)
+        mean_function[i] = np.abs(mean - np.pi / 2.0)
 
     ### Plot ###
     x = rad
     y = scale_height_function / scale_height
+    y2 = (mean_function + scale_height_function) / scale_height
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+    result2, = plot.plot(x, y2, linewidth = linewidth - 1, c = "r", zorder = 90)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
