@@ -452,9 +452,9 @@ def make_plot(frames, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/dustDensityMap_%04d-%04d.png" % (save_directory, frames[0], frames[1])
+        save_fn = "%s/dustDensityMap_%04d-%04d-%04d-%04d.png" % (save_directory, frames[0], frames[1], frames[2], frames[3])
     else:
-        save_fn = "%s/v%04d_dustDensityMap_%04d-%04d.png" % (save_directory, version, frames[0], frames[1])
+        save_fn = "%s/v%04d_dustDensityMap_%04d-%04d-%04d-%04d.png" % (save_directory, version, frames[0], frames[1], frames[2], frames[3])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.15)
 
     if show:
