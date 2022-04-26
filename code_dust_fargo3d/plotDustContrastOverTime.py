@@ -244,7 +244,7 @@ def get_excess_mass(args_here):
 
         #return variance / average, vortex_excess
 
-        return contrast
+        return contrast, vortex_excess
 
     excess_mass, vortex_excess = helper(density)
     if args.compare:
