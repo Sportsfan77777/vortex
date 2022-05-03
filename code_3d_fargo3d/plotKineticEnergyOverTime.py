@@ -212,27 +212,6 @@ def get_kinetic_energy(args_here):
         return density, vrad, vtheta, vz
 
     def helper(density, vrad, vtheta, vz):
-        diff_density = density # - background_density
-        #diff_density[diff_density < 0] = 0 # only include excess
-
-        # Extract Near Vortex
-        averagedDensity = np.average(density, axis = 1)
-        peak_rad, peak_density = find_peak(averagedDensity)
-
-        vortex_start = np.max([1.0, peak_rad - 5.0 * scale_height])
-        vortex_end = peak_rad + 5.0 * scale_height
-
-        vortex_start_i = np.searchsorted(rad, vortex_start)
-        vortex_end_i = np.searchsorted(rad, vortex_end)
-
-        vortex_rad = rad[vortex_start_i : vortex_end_i]
-        vortex_diff_density = diff_density[vortex_start_i : vortex_end_i]
-
-        vortex_excess = np.average(vortex_diff_density, axis = 0)
-
-        variance = np.std(vortex_excess)
-        average = np.average(vortex_excess)
-
         # Add up mass
         dr = rad[1] - rad[0] # assumes arithmetic grid
         dphi = theta[1] - theta[0]
