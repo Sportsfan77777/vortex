@@ -238,15 +238,10 @@ def get_kinetic_energy(args_here):
         density_compare, vrad_compare, vtheta_compare, vz_compare = get_data(directory_compare)
         kinetic_energy_compare = helper(density_compare, vrad_compare, vtheta_compare, vz_compare)
 
-    # Get Peak
-    peak_diff_density = np.max(vortex_excess)
-    if args.compare:
-        peak_diff_density_compare = np.max(vortex_excess_compare)
-
     # Print Update
-    print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
-    if args.compare:
-        print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
+    #print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
+    #if args.compare:
+    #    print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
 
     # Store Data
     kinetic_energy_over_time[i] = excess_mass
