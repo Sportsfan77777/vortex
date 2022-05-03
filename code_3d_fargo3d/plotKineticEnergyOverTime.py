@@ -218,7 +218,7 @@ def get_kinetic_energy(args_here):
         dz = z_angles[1] - z_angles[0]
 
         cell_size = np.power(rad, 2) * dr * dphi * dz
-        velocity_squared = np.power(vrad, 2) + np.power(vphi, 2) + np.power(vz, 2)
+        velocity_squared = np.power(vrad, 2) + np.power(vtheta, 2) + np.power(vz, 2)
         kinetic_energy = density * cell_size * velocity_squared
 
         v_keplerian = np.power(rad, -0.5)
