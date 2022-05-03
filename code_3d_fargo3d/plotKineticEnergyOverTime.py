@@ -217,18 +217,19 @@ def get_kinetic_energy(args_here):
         dphi = theta[1] - theta[0]
         dz = z_angles[1] - z_angles[0]
 
+        v_keplerian = np.power(rad, -0.5)
+
         cell_size = np.power(rad, 2) * dr * dphi * dz
-        velocity_squared = np.power(vrad, 2) + np.power(vtheta, 2) + np.power(vz, 2)
+        velocity_squared = np.power(vrad, 2) + np.power(vtheta - v_keplerian, 2) + np.power(vz, 2)
         kinetic_energy = density * cell_size * velocity_squared
 
-        v_keplerian = np.power(rad, -0.5)
         keplerian_velocity_squared = np.power(v_keplerian, 2)
         keplerian_kinetic_energy = density * cell_size * keplerian_velocity_squared
 
         #excess_mass = np.sum((dr * d_phi) * vortex_rad[:, None] * vortex_diff_density)
         #return excess_mass, vortex_excess
 
-        return kinetic_energy / keplerian_kinetic_energy
+        return np.sum(kinetic_energy) / np.sum(keplerian_kinetic_energy)
 
     density, vrad, vtheta, vz = get_data()
     kinetic_energy = helper(density, vrad, vtheta, vz)
@@ -245,7 +246,6 @@ def get_kinetic_energy(args_here):
 
     # Store Data
     kinetic_energy_over_time[i] = kinetic_energy
-    peak_over_time[i] = peak_diff_density
 
     if args.compare:
         kinetic_energy_over_time_compare[i] = kinetic_energy_compare
