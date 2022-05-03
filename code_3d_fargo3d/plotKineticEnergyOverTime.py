@@ -240,9 +240,9 @@ def get_kinetic_energy(args_here):
         kinetic_energy_compare = helper(density_compare, vrad_compare, vtheta_compare, vz_compare)
 
     # Print Update
-    #print "%d: %.4f, %.4f" % (frame, excess_mass, peak_diff_density)
+    print "%d: %.4f" % (frame, kinetic_energy)
     #if args.compare:
-    #    print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
+        print "%d: %.4f" % (frame, kinetic_energy_compare)
 
     # Store Data
     kinetic_energy_over_time[i] = kinetic_energy
