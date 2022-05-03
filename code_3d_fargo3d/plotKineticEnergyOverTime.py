@@ -198,7 +198,7 @@ def get_excess_mass(args_here):
     i, frame = args_here
 
     # Get Data
-    def get_data(directory = "./")
+    def get_data(directory = "./"):
         if mpi:
           density = Fields(directory, 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
           vrad = Fields(directory, 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
@@ -209,10 +209,7 @@ def get_excess_mass(args_here):
           vrad = (fromfile("%s/gasvy%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
           vtheta = (fromfile("%s/gasvx%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
           vz = (fromfile("%s/gasvz%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-        return density, vrad, vtheta
-
-    dz = z_angles[1] - z_angles[0]
-    density = np.sum(spatial_density[:, :, :], axis = 0) * dz
+        return density, vrad, vtheta, vz
 
     def helper(density, vrad, vtheta, vz):
         diff_density = density # - background_density
@@ -254,12 +251,12 @@ def get_excess_mass(args_here):
 
         return kinetic_energy / keplerian_kinetic_energy
 
-    density, vrad, vtheta = get_data()
+    density, vrad, vtheta, vz = get_data()
     kinetic_energy = helper(density, vrad, vtheta, vz)
 
     if args.compare:
         directory_compare = args.compare
-        density_compare, vrad_compare, vtheta_compare = get_data(directory_compare)
+        density_compare, vrad_compare, vtheta_compare, vz_compare = get_data(directory_compare)
         kinetic_energy_compare = helper(density_compare, vrad_compare, vtheta_compare, vz_compare)
 
     # Get Peak
