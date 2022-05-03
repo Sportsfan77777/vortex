@@ -193,7 +193,7 @@ def find_peak(averagedDensity):
 
 ### Data ###
 
-def get_excess_mass(args_here):
+def get_kinetic_energy(args_here):
     # Unwrap Args
     i, frame = args_here
 
@@ -297,20 +297,20 @@ kinetic_energy_over_time_compare = mp_array("d", len(frame_range))
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
 p = Pool(num_cores)
-p.map(get_excess_mass, pool_args)
+p.map(get_kinetic_energy, pool_args)
 p.terminate()
 
-max_mass = np.max(mass_over_time)
-max_peak = np.max(peak_over_time)
+#max_mass = np.max(kinetic_energy)
+#max_peak = np.max(peak_over_time)
 
-if args.compare:
-    max_mass_compare = np.max(mass_over_time_compare)
-    max_peak_compare = np.max(peak_over_time_compare)
+#if args.compare:
+#    max_mass_compare = np.max(mass_over_time_compare)
+#    max_peak_compare = np.max(peak_over_time_compare)
 
 ## Pickle to combine later ##
 
-pickle.dump(np.array(frame_range), open("dust_variance_frames.p", "wb"))
-pickle.dump(np.array(mass_over_time), open("dust_variance_values.p", "wb"))
+pickle.dump(np.array(frame_range), open("kinetic_energy_frames.p", "wb"))
+pickle.dump(np.array(kinetic_energy_over_time), open("kinetic_energy_values.p", "wb"))
 
 ##### PLOTTING #####
 
@@ -319,28 +319,28 @@ def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
 
     # Curves
-    plot.plot(frame_range, mass_over_time, linewidth = linewidth)
+    plot.plot(frame_range, kinetic_energy_over_time, linewidth = linewidth)
     #plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
     if args.compare:
-        plot.plot(frame_range, mass_over_time_compare, linewidth = linewidth, label = "compare")
+        plot.plot(frame_range, kinetic_energy_over_time_compare, linewidth = linewidth, label = "compare")
 
     if args.data:
-        frame_range_data = pickle.load(open("%s/dust_variance_frames.p" % args.data, "rb"))
-        mass_over_time_data = pickle.load(open("%s/dust_variance_frames.p" % args.data, "rb"))
-        plot.plot(frame_range_data, mass_over_time_data, linewidth = linewidth, label = "data")
+        frame_range_data = pickle.load(open("%s/kinetic_energy_frames.p" % args.data, "rb"))
+        kinetic_energy_over_time_data = pickle.load(open("%s/kinetic_energy_frames.p" % args.data, "rb"))
+        plot.plot(frame_range_data, kinetic_energy_over_time_data, linewidth = linewidth, label = "data")
 
     # Reference Lines
-    plot.plot([0, frame_range[-1]], 0.10 * np.ones(2), linewidth = 2, color = "black")
+    #plot.plot([0, frame_range[-1]], 0.10 * np.ones(2), linewidth = 2, color = "black")
     #plot.plot([0, frame_range[-1]], 0.10 * max_mass * np.ones(2), linewidth = 2, color = "black")
     #plot.plot([0, frame_range[-1]], 0.10 * max_peak * np.ones(2), linewidth = 1, color = "black")
-    if args.compare:
-        plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
+    #if args.compare:
+    #    plot.plot([0, frame_range[-1]], 0.10 * max_mass_compare * np.ones(2), linewidth = 2, color = "black")
 
     # Annotate
     #this_title = readTitle()
     title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     plot.xlabel("Number of Planet Orbits", fontsize = fontsize)
-    plot.ylabel("Dust Variation", fontsize = fontsize)
+    plot.ylabel("Kinetic Energy", fontsize = fontsize)
 
     title1 = os.getcwd().split("/")[-1]
     plot.title(title1, fontsize = fontsize)
@@ -349,7 +349,7 @@ def make_plot(show = False):
 
     # Limits
     plot.xlim(frame_range[0], frame_range[-1])
-    #plot.ylim(0.0, 1.0)
+    plot.ylim(10**(-8), 1.0)
 
     plot.yscale('log')
 
