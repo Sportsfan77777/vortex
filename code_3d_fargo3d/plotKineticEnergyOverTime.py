@@ -241,7 +241,7 @@ def get_kinetic_energy(args_here):
 
     # Print Update
     print "%d: %.4f" % (frame, kinetic_energy)
-    #if args.compare:
+    if args.compare:
         print "%d: %.4f" % (frame, kinetic_energy_compare)
 
     # Store Data
