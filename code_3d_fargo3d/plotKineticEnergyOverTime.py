@@ -265,14 +265,14 @@ kinetic_energy_over_time = mp_array("d", len(frame_range))
 
 kinetic_energy_over_time_compare = mp_array("d", len(frame_range))
 
-#for i, frame in enumerate(frame_range):
-#    get_excess_mass((i, frame))
+for i, frame in enumerate(frame_range):
+    get_kinetic_energy((i, frame))
 
-pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+#pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
-p = Pool(num_cores)
-p.map(get_kinetic_energy, pool_args)
-p.terminate()
+#p = Pool(num_cores)
+#p.map(get_kinetic_energy, pool_args)
+#p.terminate()
 
 #max_mass = np.max(kinetic_energy)
 #max_peak = np.max(peak_over_time)
