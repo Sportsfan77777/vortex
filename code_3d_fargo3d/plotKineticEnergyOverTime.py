@@ -244,7 +244,7 @@ def get_kinetic_energy(args_here):
     #    print "%d: %.4f, %.4f" % (frame, excess_mass_compare, peak_diff_density_compare)
 
     # Store Data
-    kinetic_energy_over_time[i] = excess_mass
+    kinetic_energy_over_time[i] = kinetic_energy
     peak_over_time[i] = peak_diff_density
 
     if args.compare:
