@@ -217,10 +217,11 @@ def get_kinetic_energy(args_here):
         dphi = theta[1] - theta[0]
         dz = z_angles[1] - z_angles[0]
 
+        v_frame = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
         v_keplerian = np.power(rad, -0.5)
 
         cell_size = np.power(rad, 2) * dr * dphi * dz
-        velocity_squared = np.power(vrad, 2) + np.power(vtheta - v_keplerian, 2) + np.power(vz, 2)
+        velocity_squared = np.power(vrad, 2) + np.power(vtheta - v_frame, 2) + np.power(vz, 2)
         kinetic_energy = density * cell_size * velocity_squared
 
         keplerian_velocity_squared = np.power(v_keplerian, 2)
