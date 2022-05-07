@@ -71,7 +71,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
+    parser.add_argument('--dir', dest = "save_directory", default = "midplaneVerticalVelocityMaps",
                          help = 'save directory (default: gasDensityMaps)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
@@ -125,7 +125,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "magma",
                          help = 'color map (default: magma)')
-    parser.add_argument('--cmax', dest = "c_lim", type = float, default = None,
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'min and max values in colorbar (default: [-0.1, 0.1])')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
