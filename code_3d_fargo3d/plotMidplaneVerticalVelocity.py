@@ -123,8 +123,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'bigger scale means smaller arrow (default: 1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "magma",
-                         help = 'color map (default: magma)')
+    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
+                         help = 'color map (default: seismic)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'min and max values in colorbar (default: [-0.1, 0.1])')
 
