@@ -391,7 +391,7 @@ def make_plot(show = False):
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
-    directory_name = os.getcwd()
+    directory_name = os.getcwd().split("/")[-1]
 
     if version is None:
         save_fn = "%s/%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
