@@ -385,9 +385,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/verticalVelocityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_verticalVelocityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
@@ -397,16 +397,4 @@ def make_plot(show = False):
 
 ##### Make Plots! #####
 
-# Iterate through frames
-
-if len(frame_range) == 1:
-    make_plot(frame_range[0], show = show)
-else:
-    if num_cores > 1:
-        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-        p.map(make_plot, frame_range)
-        p.terminate()
-    else:
-        for frame in frame_range:
-            make_plot(frame)
-
+make_plot(show = show)
