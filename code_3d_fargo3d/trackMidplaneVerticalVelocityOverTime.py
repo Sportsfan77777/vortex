@@ -300,11 +300,12 @@ def get_velocity(args_here):
 
     dz = z_angles[1] - z_angles[0]
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
+    averagedDensity = np.average(surface_density, axis = -1)
 
     average_midplane_vz = np.average(midplane_vz, axis = -1)
     composite_vz[i, :] = average_midplane_vz
 
-    peak = az.get_radial_peak(surface_density, fargo_par)
+    peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
     composite_peak[i, :] = peak
 
 
@@ -384,13 +385,13 @@ def make_plot(show = False):
 
     # Label colorbar
     if plot_vz:
-       cbar_name = r"$v_\mathrm{z}$"
+       cbar_name = r"<$v_\mathrm{z}>_{\phi}$"
     else:
-       cbar_name = r"$v_\mathrm{\theta}$"
+       cbar_name = r"<$v_\mathrm{\theta}>_{\phi}$"
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
-    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+    directory_name = os.getcwd()
 
     if version is None:
         save_fn = "%s/%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
