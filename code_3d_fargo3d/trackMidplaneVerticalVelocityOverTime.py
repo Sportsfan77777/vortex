@@ -304,8 +304,12 @@ def get_velocity(args_here):
     average_midplane_vz = np.average(midplane_vz, axis = -1)
     composite_vz[i, :] = average_midplane_vz
 
+    peak = az.get_radial_peak(surface_density, fargo_par)
+    composite_peak[i, :] = peak
+
 
 composite_vz = np.zeros((len(frame_range), num_rad))
+composite_peak = np.zeros((len(frame_range), num_rad))
 for i, frame in enumerate(frame_range):
     get_velocity((i, frame))
 
@@ -329,7 +333,9 @@ def make_plot(show = False):
     ### Plot ###
     x = frame_range
     y = rad
+    y2 = composite_peak
     result = ax.pcolormesh(x, y, np.transpose(composite_vz), cmap = cmap)
+    ref = plot.plot(x, y2, linewidth = 1, c = 'k')
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -384,10 +390,12 @@ def make_plot(show = False):
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+
     if version is None:
-        save_fn = "%s/verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/v%04d_%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
