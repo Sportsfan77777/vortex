@@ -252,8 +252,8 @@ else:
 fontsize = args.fontsize
 dpi = args.dpi
 
-rc['xtick.labelsize'] = labelsize
-rc['ytick.labelsize'] = labelsize
+rc['xtick.labelsize'] = args.labelsize
+rc['ytick.labelsize'] = args.labelsize
 
 # Planet File
 # Data
