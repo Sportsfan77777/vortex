@@ -341,7 +341,6 @@ def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
-    ax2 = ax.twiny()
 
     # Data
     start_ref = np.searchsorted(composite_peak, 1.12)
@@ -426,6 +425,7 @@ def make_plot(show = False):
 
     tick_locations, tick_labels = tick_function(mass_ticks)
 
+    ax2 = ax.twiny()
     ax2.set_xlim(ax.get_xlim())
     ax2.set_xticks(tick_locations)
     ax2.set_xticklabels(tick_labels)
