@@ -430,6 +430,8 @@ def make_plot(show = False):
     ax2.set_xticks(tick_locations)
     ax2.set_xticklabels(tick_labels)
 
+    ax2.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
+
     if args.minor_delta_mass is not None:
         minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
         minor_tick_locations, _ = tick_function(minor_mass_ticks)
