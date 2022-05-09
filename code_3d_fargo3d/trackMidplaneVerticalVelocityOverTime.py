@@ -137,8 +137,10 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
                          help = 'min and max values in colorbar (default: [-0.025, 0.025])')
 
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
-                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
+                         help = 'fontsize of plot annotations (default: 17)')
+    parser.add_argument('--labelsize', dest = "labelsize", type = int, default = 15,
+                         help = 'fontsize of plot annotations (default: 15)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -249,6 +251,9 @@ else:
 
 fontsize = args.fontsize
 dpi = args.dpi
+
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 # Planet File
 # Data
@@ -401,7 +406,7 @@ def make_plot(show = False):
 
     min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     if max_mass is None:
-       max_mass = total_mass[frames[-1] - 1]
+       max_mass = total_mass[frame_range[-1] - 1]
 
     mass_ticks = np.arange(min_mass, max_mass, delta_mass)
 
