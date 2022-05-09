@@ -258,7 +258,7 @@ rc['ytick.labelsize'] = args.labelsize
 # Planet File
 # Data
 data = np.loadtxt("planet0.dat")
-times = data[:, 0]; base_mass = data[:, 7]
+times = data[:, 0]; base_mass = data[:, 7] / jupiter_mass
 accreted_mass = data[:, 8] / jupiter_mass
 
 total_mass = base_mass + accreted_mass
