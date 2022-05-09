@@ -399,7 +399,7 @@ def make_plot(show = False):
 
     # Add mass axis
 
-    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
+    min_mass = args.min_mass; max_mass = args.max_mass + 1e-7; delta_mass = args.delta_mass
     mass_ticks = np.arange(min_mass, max_mass, delta_mass)
 
     def tick_function(masses):
