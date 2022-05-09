@@ -98,8 +98,8 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--min', dest = "min_mass", type = float, default = 0.1,
                          help = 'minimum mass on plot (default: 0.1 Jupiter mass)')
-    parser.add_argument('--max', dest = "max_mass", type = float, default = 1.0,
-                         help = 'maximum mass on plot (default: 1.0 Jupiter mass)')
+    parser.add_argument('--max', dest = "max_mass", type = float, default = None,
+                         help = 'maximum mass on plot (default: mass at last frame)')
     parser.add_argument('--delta', dest = "delta_mass", type = float, default = 0.1,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
     parser.add_argument('--minor_delta', dest = "minor_delta_mass", type = float, default = None,
@@ -135,7 +135,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: seismic)')
     parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
-                         help = 'min and max values in colorbar (default: [-0.05, 0.05])')
+                         help = 'min and max values in colorbar (default: [-0.025, 0.025])')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -243,7 +243,7 @@ if end_quiver is None:
 # Plot Parameters (constant)
 cmap = args.cmap
 if args.cmax is None:
-    clim = [-0.05, 0.05]
+    clim = [-0.025, 0.025]
 else:
     clim = [-args.cmax, args.cmax]
 
@@ -399,7 +399,10 @@ def make_plot(show = False):
 
     # Add mass axis
 
-    min_mass = args.min_mass; max_mass = args.max_mass + 1e-7; delta_mass = args.delta_mass
+    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
+    if max_mass is None:
+       max_mass = total_mass[frames[-1] - 1]
+
     mass_ticks = np.arange(min_mass, max_mass, delta_mass)
 
     def tick_function(masses):
@@ -430,7 +433,7 @@ def make_plot(show = False):
     ax2.set_xticks(tick_locations)
     ax2.set_xticklabels(tick_labels)
 
-    ax2.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize)
+    ax2.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
 
     if args.minor_delta_mass is not None:
         minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
