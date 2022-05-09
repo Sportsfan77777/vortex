@@ -360,41 +360,6 @@ def make_plot(show = False):
     plot.xlim(frame_range[0], frame_range[-1])
     plot.ylim(x_min, x_max)
 
-    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
-    mass_ticks = np.arange(min_mass, max_mass, delta_mass)
-
-    def tick_function(masses):
-        # For the secondary x-axis showing the planet mass over time
-        tick_locations = np.zeros(len(masses))
-        tick_labels = []
-
-        for i, mass in enumerate(masses):
-            #total_mass_jupiter = total_mass # in Jupiter masses
-            times_i = az.my_searchsorted(total_mass, mass)
-
-            #tick_times = times[times_i]
-
-            print mass, times_i, len(times)
-
-            tick_locations[i] = times[times_i]
-            if delta_mass < 0.1:
-                tick_labels.append("%.2f" % mass)
-            else:
-                tick_labels.append("%.1f" % mass)
-
-        return tick_locations, tick_labels
-
-    tick_locations, tick_labels = tick_function(mass_ticks)
-
-    ax2.set_xlim(ax.get_xlim())
-    ax2.set_xticks(tick_locations)
-    ax2.set_xticklabels(tick_labels)
-
-    if args.minor_delta_mass is not None:
-        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
-        minor_tick_locations, _ = tick_function(minor_mass_ticks)
-        ax2.set_xticks(minor_tick_locations, minor = True)
-
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
     orbit = (time / (2 * np.pi)) * frame
@@ -432,6 +397,43 @@ def make_plot(show = False):
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+
+    # Add mass axis
+
+    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
+    mass_ticks = np.arange(min_mass, max_mass, delta_mass)
+
+    def tick_function(masses):
+        # For the secondary x-axis showing the planet mass over time
+        tick_locations = np.zeros(len(masses))
+        tick_labels = []
+
+        for i, mass in enumerate(masses):
+            #total_mass_jupiter = total_mass # in Jupiter masses
+            times_i = az.my_searchsorted(total_mass, mass)
+
+            #tick_times = times[times_i]
+
+            print mass, times_i, len(times)
+
+            tick_locations[i] = times[times_i]
+            if delta_mass < 0.1:
+                tick_labels.append("%.2f" % mass)
+            else:
+                tick_labels.append("%.1f" % mass)
+
+        return tick_locations, tick_labels
+
+    tick_locations, tick_labels = tick_function(mass_ticks)
+
+    ax2.set_xlim(ax.get_xlim())
+    ax2.set_xticks(tick_locations)
+    ax2.set_xticklabels(tick_labels)
+
+    if args.minor_delta_mass is not None:
+        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
+        minor_tick_locations, _ = tick_function(minor_mass_ticks)
+        ax2.set_xticks(minor_tick_locations, minor = True)
 
     # Label colorbar
     if plot_vz:
