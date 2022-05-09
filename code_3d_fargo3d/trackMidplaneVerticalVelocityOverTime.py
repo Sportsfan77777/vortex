@@ -256,6 +256,8 @@ data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
+total_mass = base_mass + accreted_mass
+
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
@@ -367,8 +369,10 @@ def make_plot(show = False):
         tick_labels = []
 
         for i, mass in enumerate(masses):
-            total_mass_jupiter = total_mass / jupiter_mass # in Jupiter masses
-            times_i = az.my_searchsorted(total_mass_jupiter, mass)
+            #total_mass_jupiter = total_mass # in Jupiter masses
+            times_i = az.my_searchsorted(total_mass, mass)
+
+            #tick_times = times[times_i]
 
             print mass, times_i, len(times)
 
@@ -382,7 +386,7 @@ def make_plot(show = False):
 
     tick_locations, tick_labels = tick_function(mass_ticks)
 
-    ax2.set_xlim(host.get_xlim())
+    ax2.set_xlim(ax.get_xlim())
     ax2.set_xticks(tick_locations)
     ax2.set_xticklabels(tick_labels)
 
