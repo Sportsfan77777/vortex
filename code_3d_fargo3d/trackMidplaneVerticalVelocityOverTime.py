@@ -96,6 +96,15 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
 
+    parser.add_argument('--min', dest = "min_mass", type = float, default = 0.1,
+                         help = 'minimum mass on plot (default: 0.1 Jupiter mass)')
+    parser.add_argument('--max', dest = "max_mass", type = float, default = 1.0,
+                         help = 'maximum mass on plot (default: 1.0 Jupiter mass)')
+    parser.add_argument('--delta', dest = "delta_mass", type = float, default = 0.1,
+                         help = 'delta mass on plot (default: 0.1 Jupiter mass)')
+    parser.add_argument('--minor_delta', dest = "minor_delta_mass", type = float, default = None,
+                         help = 'delta mass on plot (default: 0.1 Jupiter mass)')
+
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
                          help = 'use contours or not (default: do not use contours)')
@@ -330,13 +339,17 @@ def make_plot(show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
+    ax2 = ax.twiny()
+
+    # Data
+    start_ref = np.searchsorted(composite_peak, 1.12)
 
     ### Plot ###
     x = frame_range
     y = rad
     y2 = composite_peak
     result = ax.pcolormesh(x, y, np.transpose(composite_vz), cmap = cmap)
-    ref = plot.plot(x, y2, linewidth = 1, c = 'k')
+    ref = plot.plot(x[start_ref:], y2[start_ref:], linewidth = 1, c = 'k')
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
@@ -344,6 +357,39 @@ def make_plot(show = False):
     # Axes
     plot.xlim(frame_range[0], frame_range[-1])
     plot.ylim(x_min, x_max)
+
+    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
+    mass_ticks = np.arange(min_mass, max_mass, delta_mass)
+
+    def tick_function(masses):
+        # For the secondary x-axis showing the planet mass over time
+        tick_locations = np.zeros(len(masses))
+        tick_labels = []
+
+        for i, mass in enumerate(masses):
+            total_mass_jupiter = total_mass / jupiter_mass # in Jupiter masses
+            times_i = az.my_searchsorted(total_mass_jupiter, mass)
+
+            print mass, times_i, len(times)
+
+            tick_locations[i] = times[times_i]
+            if delta_mass < 0.1:
+                tick_labels.append("%.2f" % mass)
+            else:
+                tick_labels.append("%.1f" % mass)
+
+        return tick_locations, tick_labels
+
+    tick_locations, tick_labels = tick_function(mass_ticks)
+
+    ax2.set_xlim(host.get_xlim())
+    ax2.set_xticks(tick_locations)
+    ax2.set_xticklabels(tick_labels)
+
+    if args.minor_delta_mass is not None:
+        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
+        minor_tick_locations, _ = tick_function(minor_mass_ticks)
+        ax2.set_xticks(minor_tick_locations, minor = True)
 
     # Annotate Axes
     time = fargo_par["Ninterm"] * fargo_par["DT"]
