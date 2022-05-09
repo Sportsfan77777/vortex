@@ -315,11 +315,11 @@ def get_velocity(args_here):
     composite_vz[i, :] = average_midplane_vz
 
     peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
-    composite_peak[i, :] = peak
+    composite_peak[i] = peak
 
 
 composite_vz = np.zeros((len(frame_range), num_rad))
-composite_peak = np.zeros((len(frame_range), num_rad))
+composite_peak = np.zeros((len(frame_range)))
 for i, frame in enumerate(frame_range):
     get_velocity((i, frame))
 
@@ -417,8 +417,8 @@ def make_plot(show = False):
     y_text = 1.14
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
-    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    #plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
