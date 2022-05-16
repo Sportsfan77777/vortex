@@ -19,6 +19,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -41,21 +42,8 @@ for key in cmaps:
 master_directories = {}
 master_directories[67] = ["h06_nu7_a40_s0347-K60", "h06_nu7_a40_s0578-K60", "h06_nu7_a40_s0694-K60", "h06_nu7_a40_s0926-K60", "h06_nu7_a40_s1157-K60", "h06_nu7_a40_s1736-K60", "h06_nu7_a40_s2315-K60", "h06_nu7_a40_s3472-K60", "h06_nu7_a40_s5787-K60"]
 
-master_directories[87] = ["h08_nu7_a167-offset", "h08_nu7_a05-offset", "h08_nu7_a02-offset", "h08_nu7_a01-offset"]
-master_directories[67] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_a05-offset", "h06_nu7_a02-offset"]
-master_directories[47] = ["h04_nu7_a100-offset", "h04_nu7_a50-offset", "h04_nu7_a167-offset", "h04_nu7_a05-offset"]
-master_directories[86] = ["h08_nu6_a167-offset", "h08_nu6_a05-offset", "h08_nu6_a02-offset"]
-master_directories[66] = ["h06_nu6_a50-offset", "h06_nu6_a167-offset", "h06_nu6_a05-offset"]
-
 master_disc_masses = {}
 master_disc_masses[67] = [0.3, 0.5, 0.6, 0.8, 1.0, 1.5, 2.0, 3.0, 5.0]
-
-master_accretion_rates = {}
-master_accretion_rates[87] = [0.17, 0.05, 0.02, 0.01]
-master_accretion_rates[67] = [0.50, 0.17, 0.05, 0.02]
-master_accretion_rates[47] = [1.00, 0.50, 0.17, 0.05]
-master_accretion_rates[86] = [0.17, 0.05, 0.02]
-master_accretion_rates[66] = [0.50, 0.17, 0.05]
 
 master_start_times = {}
 master_start_times[67] = [-1, 980, 750, 530, 430, 270, 310, 10]
