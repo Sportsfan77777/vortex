@@ -221,7 +221,7 @@ def make_plot(show = False):
         # Basic
         x = times
         y = total_mass / jupiter_mass
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth - 1, zorder = 99, label = label)
 
         # Vortex Lifetime
         if start_time > 0:
@@ -232,12 +232,12 @@ def make_plot(show = False):
             else:
                end_time_i = -1
 
-            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
+            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i % len(colors)], linewidth = linewidth + 3, zorder = 99)
 
-            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
+            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i % len(colors)], s = 150, marker = "o", zorder = 120)
 
             if end_time > 0:
-               plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
+               plot.scatter(x[end_time_i], y[end_time_i], c = colors[i % len(colors)], s = 175, marker = "H", zorder = 120)
 
     plot.legend(loc = "upper right", fontsize = fontsize - 4)
 
