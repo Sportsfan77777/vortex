@@ -243,7 +243,7 @@ def make_plot(show = False):
             if end_time > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i % len(colors)], s = 175, marker = "H", zorder = 120)
 
-    legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, title = legend_text, facecolor = 'white', frame_alpha = 0.9)
+    legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, title = legend_text, facecolor = 'white', framealpha = 0.9)
     legend.set_zorder(150)
     ax.get_legend().get_title().set_fontsize(fontsize - 4)
 
