@@ -40,16 +40,16 @@ for key in cmaps:
 ###############################################################################
 
 master_directories = {}
-master_directories[67] = ["h06_nu7_a40_s0347-K60", "h06_nu7_a40_s0578-K60", "h06_nu7_a40_s0694-K60", "h06_nu7_a40_s0926-K60", "h06_nu7_a40_s1157-K60", "h06_nu7_a40_s1736-K60", "h06_nu7_a40_s2315-K60", "h06_nu7_a40_s3472-K60", "h06_nu7_a40_s5787-K60"]
+master_directories[67] = ["h06_nu7_a40_s5787-K60", "h06_nu7_a40_s3472-K60", "h06_nu7_a40_s2315-K60", "h06_nu7_a40_s1736-K60", "h06_nu7_a40_s1157-K60", "h06_nu7_a40_s0926-K60", "h06_nu7_a40_s0694-K60", "h06_nu7_a40_s0578-K60", "h06_nu7_a40_s0347-K60"]
 
 master_disc_masses = {}
-master_disc_masses[67] = [0.3, 0.5, 0.6, 0.8, 1.0, 1.5, 2.0, 3.0, 5.0]
+master_disc_masses[67] = [5.0, 3.0, 2.0, 1.5, 1.0, 0.8, 0.6, 0.5, 0.3]
 
 master_start_times = {}
-master_start_times[67] = [-1, 980, 750, 530, 430, 270, 310, 10]
+master_start_times[67] = [10, 10, 310, 270, 430, 530, 750, 980, -1]
 
 master_end_times = {}
-master_end_times[67] = [-1, 1880, 1920, 1700, 3350, -1, -1, -1, -1]
+master_end_times[67] = [-1, -1, -1, -1, 3350, 1700, 1920, 1880, -1]
 
 ###############################################################################
 
@@ -159,7 +159,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = 0; x_max = 1000
+    x_min = 0; x_max = 5000
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
