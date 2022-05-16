@@ -179,7 +179,7 @@ dpi = args.dpi
 
 ##### PLOTTING #####
 
-colors = ['k', 'cornflowerblue', 'darkorange', 'r', 'green']
+colors = ['k', 'cornflowerblue', 'darkorange', 'r']
 labelsize = 19
 size = 100
 
@@ -243,9 +243,9 @@ def make_plot(show = False):
             if end_time > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i % len(colors)], s = 175, marker = "H", zorder = 120)
 
-    legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, title = legend_text, title_fontsize = fontsize - 4)
+    legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, title = legend_text, facecolor = 'white', frame_alpha = 0.9)
     legend.set_zorder(150)
-
+    ax.get_legend().get_title().set_fontsize(fontsize - 4)
 
     # Axes
     if args.max_y is None:
