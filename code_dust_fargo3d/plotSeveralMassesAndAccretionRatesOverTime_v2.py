@@ -159,7 +159,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = 0; x_max = 1000
+    x_min = 0; x_max = 5000
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
@@ -243,7 +243,9 @@ def make_plot(show = False):
             if end_time > 0:
                 plot.scatter(x[end_time_i], y[end_time_i], c = colors[i % len(colors)], s = 175, marker = "H", zorder = 120)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 4, title = legend_text)
+    legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, title = legend_text, title_fontsize = fontsize - 4)
+    legend.set_zorder(150)
+
 
     # Axes
     if args.max_y is None:
