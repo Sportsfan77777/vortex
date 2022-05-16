@@ -203,7 +203,7 @@ def make_plot(show = False):
 
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         #label = r"$A = %.02f$" % (accretion_rate)
-        label = disc_mass
+        label = r"$%f$ $\Sigma_\mathrm{base}$" %  disc_mass
 
         # Data
         data = np.loadtxt("../%s/planet0.dat" % directory)
