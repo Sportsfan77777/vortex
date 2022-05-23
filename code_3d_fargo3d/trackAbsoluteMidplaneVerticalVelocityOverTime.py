@@ -245,9 +245,9 @@ if end_quiver is None:
 # Plot Parameters (constant)
 cmap = args.cmap
 if args.cmax is None:
-    clim = [0.0, 0.025]
+    clim = [-0.025, 0.025]
 else:
-    clim = [0.0, args.cmax]
+    clim = [-args.cmax, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
