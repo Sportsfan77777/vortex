@@ -119,8 +119,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.01,
-                         help = 'maximum density in colorbar (default: 0.01)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.02,
+                         help = 'maximum density in colorbar (default: 0.02)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -379,7 +379,7 @@ def make_plot(z_level, show = False):
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-    cbar.set_label(r"Vertical Shear", fontsize = fontsize, rotation = 270, labelpad = 25)
+    cbar.set_label(r"Vertical Shear (z = %d)" % z_level, fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
