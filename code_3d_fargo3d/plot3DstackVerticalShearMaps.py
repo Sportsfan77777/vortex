@@ -294,8 +294,8 @@ def make_plot(z_level, show = False):
     vrad_z = vrad[num_z / 2 + z_level, :, :]
     vtheta_z = vtheta[num_z / 2 + z_level, :, :]
 
-    omega_z = vtheta[num_z / 2 + z_level, :, :] / rad
-    next_omega_z = vtheta[num_z / 2 + z_level - 1, :, :] / rad
+    omega_z = vtheta[num_z / 2 + z_level, :, :] / rad[:, None]
+    next_omega_z = vtheta[num_z / 2 + z_level - 1, :, :] / rad[:, None]
 
     dz = z_angles[1] - z_angles[0]
     domega_dz_z = (omega_z - next_omega_z) / dz
