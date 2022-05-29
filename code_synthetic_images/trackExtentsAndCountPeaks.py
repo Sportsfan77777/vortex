@@ -206,7 +206,7 @@ colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Gr
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (8, 6), dpi = dpi)
-    gs = gridspec.GridSpec(nrows = 2, ncols = 1, height_ratios = [7, 1], hspace = 0, figure = fig)
+    gs = gridspec.GridSpec(nrows = 2, ncols = 1, height_ratios = [7, 1.5], hspace = 0, figure = fig)
     ax = fig.add_subplot(gs[0, :])
 
     # Plot
@@ -250,6 +250,10 @@ def make_plot(show = False):
     counts = [0, 1, 2, 3]
     plot.yticks(counts)
     plot.ylim(0, counts[-1])
+    plot.label("# Peaks")
+
+    ax2.yaxis.set_label_position("right")
+    ax2.yaxis.tick_right()
 
     # Save, Show, and Close
     current_directory = os.getcwd().split("/")[-3]
