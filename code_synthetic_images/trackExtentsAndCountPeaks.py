@@ -228,7 +228,6 @@ def make_plot(show = False):
     plot.ylim(0, 360)
 
     # Annotate Axes
-    plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
     plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
@@ -245,12 +244,16 @@ def make_plot(show = False):
     y2 = np.array(peak_counts)
     plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = x[1] - x[0])
 
+    # Axes
     plot.xlim(x[0], x[-1])
 
     counts = [0, 1, 2, 3]
     plot.yticks(counts)
     plot.ylim(0, counts[-1])
-    plot.label("# Peaks")
+
+    # Labels
+    plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
+    plot.ylabel("# Peaks")
 
     ax2.yaxis.set_label_position("right")
     ax2.yaxis.tick_right()
