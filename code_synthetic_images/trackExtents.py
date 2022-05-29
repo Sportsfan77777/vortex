@@ -162,7 +162,7 @@ fargo_par["theta"] = theta
 
 def get_extent(args):
     # Extract args
-    grain_i, i, directory, frame = args
+    i, frame = args
 
     # Get data and measure extent
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
@@ -179,7 +179,7 @@ def get_extent(args):
 # Data
 extents.append(mp_array("f", len(frame_range)))
 
-pool_args = [(grain_i, i, directory, frame) for i, frame in enumerate(frame_range)]    
+pool_args = [(i, frame) for i, frame in enumerate(frame_range)]    
 
 p = Pool(num_cores)
 p.map(get_extent, pool_args)
