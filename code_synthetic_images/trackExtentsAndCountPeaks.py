@@ -235,12 +235,13 @@ def make_plot(show = False):
     #plot.legend(loc = "upper left") # outside of plot
 
     #### Peaks ####
+    ax2 = fig.add_subplot(gs[1, :])
+    
     y2 = np.array(peak_counts)
-    plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = 1.0)
+    plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = x[1] - x[0])
 
     plot.xlim(x[0], x[-1])
 
-    ax2 = fig.add_subplot(gs[1, :])
     counts = [0, 1, 2, 3]
     plot.yticks(counts)
     plot.ylim(0, counts[-1])
