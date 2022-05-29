@@ -69,8 +69,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('-s', dest = "sliver_width", type = float, default = 1.0,
                          help = 'number of scale heights in sliver (default: 1.0)')
-    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
-                         help = 'number of profiles (default: 5)')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 1,
+                         help = 'number of profiles (default: 1)')
 
     parser.add_argument('-t', dest = "threshold", type = float, default = 0.2,
                          help = 'threshold for measuring extent (default: 0.2)')
@@ -171,10 +171,9 @@ def get_extent(args):
 
     # Get data and measure extent
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
-    extent = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
+    extent, azimuthal_profile = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
     # Count peaks
-    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity, fargo_par, args, shift = None)
     peaks = signal.find_peaks(azimuthal_profiles, height = threshold)
     peak_count = len(peaks)
 
@@ -251,7 +250,7 @@ def make_plot(show = False):
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
-    title = 
+    title = "Hi"
     plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     # Save, Show, and Close

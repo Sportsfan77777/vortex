@@ -167,7 +167,7 @@ def get_extent(args):
 
     # Get data and measure extent
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
-    extent = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
+    extent, azimuthal_profile = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
     # Convert to degrees
     extent *= (180.0 / np.pi)

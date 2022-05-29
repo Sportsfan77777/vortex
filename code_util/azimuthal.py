@@ -467,7 +467,7 @@ def get_extent(data, fargo_par, normalize = False, threshold = 0.5, sliver_width
     right_theta = theta[right_theta_i]
 
     extent = right_theta - left_theta
-    return extent
+    return extent, azimuthal_profile
 
 def get_azimuthal_bounds(data, fargo_par, radial_center = None, normalize = False, threshold = 0.5, sliver_width = 0.5, start = outer_start, end = outer_end):
     """ Get azimuthal edges at peak across a given threshold """
