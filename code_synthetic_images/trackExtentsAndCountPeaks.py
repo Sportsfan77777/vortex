@@ -255,7 +255,7 @@ def make_plot(show = False):
 
     # Labels
     plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
-    plot.ylabel("# Peaks", fontsize = fontsize + 2, rotation = 270, labelpad = 30)
+    plot.ylabel("# Peaks", fontsize = fontsize + 2, rotation = 270, labelpad = 25)
 
     ax2.yaxis.set_label_position("right")
     ax2.yaxis.tick_right()
