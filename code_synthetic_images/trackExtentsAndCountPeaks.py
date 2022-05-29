@@ -221,7 +221,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
-    plot.xticklabels([])
+    ax.set_xticklabels([])
 
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
@@ -236,14 +236,14 @@ def make_plot(show = False):
 
     #### Peaks ####
     y2 = np.array(peak_counts)
-    plot.bar(x, y2, c = colors[2], edgecolor = colors[2], width = 1.0)
+    plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = 1.0)
 
     plot.xlim(x[0], x[-1])
 
-    ax2 = fig.add_subplot(gs[0, :])
+    ax2 = fig.add_subplot(gs[1, :])
     counts = [0, 1, 2, 3]
     plot.yticks(counts)
-    plot.yticks(0, counts[-1])
+    plot.ylim(0, counts[-1])
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
@@ -254,9 +254,9 @@ def make_plot(show = False):
     current_directory = os.getcwd().split("/")[-3]
     current_beam = os.getcwd().split("/")[-1]
     if version is None:
-        save_fn = "%s/extents-%s-%s.png" % (save_directory, current_directory, current_beam)
+        save_fn = "%s/extentsAndPeakCounts-%s-%s.png" % (save_directory, current_directory, current_beam)
     else:
-        save_fn = "%s/v%04d_extents-%s-%s.png" % (save_directory, version, current_directory, current_beam)
+        save_fn = "%s/v%04d_extentsAndPeakCounts-%s-%s.png" % (save_directory, version, current_directory, current_beam)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
