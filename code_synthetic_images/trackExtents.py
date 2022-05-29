@@ -17,7 +17,7 @@ import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -53,8 +53,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "extentsByGrainSize",
-                         help = 'save directory (default: extentsByGrainSize)')
+    parser.add_argument('--dir', dest = "save_directory", default = "extentsOverTime",
+                         help = 'save directory (default: extentsOverTime)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -95,7 +95,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 args = new_argument_parser().parse_args()
 
 ### Get Fargo Parameters ###
-fargo_par = util.get_pickled_parameters(directory = "../cm-size")
+fn = "id%04d_par.p" % (args.id_number)
+fargo_par = pickle.load(open(fn, "rb"))
 
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -109,9 +110,9 @@ dust_surface_density_zero = surface_density_zero / 100
 disk_mass = 2 * np.pi * dust_surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
 
 scale_height = fargo_par["AspectRatio"]
-viscosity = fargo_par["Viscosity"]
+viscosity = fargo_par["Nu"]
 
-size = fargo_par["PSIZE"]
+#size = fargo_par["PSIZE"]
 
 ### Get Input Parameters ###
 
@@ -177,8 +178,7 @@ def get_extent(args):
 ###############################################################################
 
 # Data
-extents.append(mp_array("f", len(frame_range)))
-
+extents = mp_array("f", len(frame_range))
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]    
 
 p = Pool(num_cores)
@@ -202,12 +202,12 @@ def make_plot(show = False):
 
     # Plot
     x = frame_range
-    y = np.array(extents[i])
+    y = np.array(extents)
 
     #kernel = 5
     #smooth_y = util.smooth(y, kernel)
 
-    plot.plot(x, y, c = colors[0], linewidth = linewidth)
+    plot.plot(x, y, c = colors[2], linewidth = linewidth)
     #plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth)
 
     # Axes
@@ -219,17 +219,17 @@ def make_plot(show = False):
 
     # Annotate Axes
     plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
-    plot.ylabel(r"$\Delta \phi$ $\mathrm{(degrees)}$", fontsize = fontsize + 2)
+    plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
-    plot.legend(loc = "upper left") # outside of plot
+    #plot.legend(loc = "upper left") # outside of plot
 
     # Title
     title = r"$\mathrm{Azimuthal\ Extents}$"
     plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     # Save, Show, and Close
-    current_directory = os.getcwd().split("/")[-1]
+    current_directory = os.getcwd().split("/")[-3]
     if version is None:
         save_fn = "%s/extents-%s.png" % (save_directory, current_directory)
     else:
