@@ -172,7 +172,7 @@ def get_extent(args):
     extent, azimuthal_profile = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
     # Count peaks
-    peaks = find_peaks(azimuthal_profile, height = threshold)
+    peaks, _ = find_peaks(azimuthal_profile, height = threshold)
     peak_count = len(peaks)
 
     # Convert to degrees
@@ -234,6 +234,11 @@ def make_plot(show = False):
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
 
+    # Title
+    #title = r"$\mathrm{Azimuthal\ Extents}$"
+    title = "Hi"
+    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
+
     #### Peaks ####
     ax2 = fig.add_subplot(gs[1, :])
     
@@ -245,11 +250,6 @@ def make_plot(show = False):
     counts = [0, 1, 2, 3]
     plot.yticks(counts)
     plot.ylim(0, counts[-1])
-
-    # Title
-    #title = r"$\mathrm{Azimuthal\ Extents}$"
-    title = "Hi"
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     # Save, Show, and Close
     current_directory = os.getcwd().split("/")[-3]
