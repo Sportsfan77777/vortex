@@ -69,8 +69,6 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('-s', dest = "sliver_width", type = float, default = 1.0,
                          help = 'number of scale heights in sliver (default: 1.0)')
-    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 1,
-                         help = 'number of profiles (default: 1)')
 
     parser.add_argument('-t', dest = "threshold", type = float, default = 0.2,
                          help = 'threshold for measuring extent (default: 0.2)')
@@ -142,7 +140,6 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
-num_profiles = args.num_profiles
 threshold = args.threshold
 
 compare = args.compare
