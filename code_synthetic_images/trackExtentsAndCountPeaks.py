@@ -178,6 +178,8 @@ def get_extent(args):
     # Convert to degrees
     extent *= (180.0 / np.pi)
 
+    print i, frame, extent, peak_count
+
     # Store
     extents[i] = extent
     peak_counts[i] = peak_count
@@ -253,7 +255,7 @@ def make_plot(show = False):
 
     # Labels
     plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
-    plot.ylabel("# Peaks")
+    plot.ylabel("# Peaks", fontsize = fontsize + 2, rotation = 270, labelpad = 30)
 
     ax2.yaxis.set_label_position("right")
     ax2.yaxis.tick_right()
