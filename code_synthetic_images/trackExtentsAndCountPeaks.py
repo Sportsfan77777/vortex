@@ -171,7 +171,7 @@ def get_extent(args):
     extent, azimuthal_profile = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
     # Count peaks
-    peaks = signal.find_peaks(azimuthal_profiles, height = threshold)
+    peaks = find_peaks(azimuthal_profile, height = threshold)
     peak_count = len(peaks)
 
     # Convert to degrees
