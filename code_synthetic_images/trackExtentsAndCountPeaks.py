@@ -21,6 +21,7 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
+import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from matplotlib import gridspec
@@ -205,8 +206,7 @@ colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Gr
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (8, 6), dpi = dpi)
-    gs = fig.add_gridspec(nrows = 2, ncols = 1, height_ratios = [7, 1], hspace = 0)
-
+    gs = gridspec.GridSpec(nrows = 2, ncols = 1, height_ratios = [7, 1], hspace = 0, figure = fig)
     ax = fig.add_subplot(gs[0, :])
 
     # Plot
