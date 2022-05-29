@@ -204,11 +204,11 @@ def make_plot(show = False):
     x = frame_range
     y = np.array(extents)
 
-    #kernel = 5
-    #smooth_y = util.smooth(y, kernel)
+    kernel = 5
+    smooth_y = util.smooth(y, kernel)
 
-    plot.plot(x, y, c = colors[2], linewidth = linewidth)
-    #plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth)
+    plot.plot(x, y, c = colors[1], linewidth = linewidth, alpha = alpha)
+    plot.plot(x, smooth_y, c = colors[i], linewidth = linewidth)
 
     # Axes
     plot.xlim(x[0], x[-1])
