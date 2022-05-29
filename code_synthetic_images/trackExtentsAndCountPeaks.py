@@ -15,6 +15,7 @@ import argparse
 
 import math
 import numpy as np
+from scipy.signal import find_peaks
 
 import matplotlib
 matplotlib.use('Agg')
@@ -53,7 +54,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "extentsOverTime",
+    parser.add_argument('--dir', dest = "save_directory", default = "extentsAndPeakCountsOverTime",
                          help = 'save directory (default: extentsOverTime)')
 
     # Plot Parameters (variable)
@@ -68,6 +69,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'max_y for each frame, or same for all (default: None)')
     parser.add_argument('-s', dest = "sliver_width", type = float, default = 1.0,
                          help = 'number of scale heights in sliver (default: 1.0)')
+    parser.add_argument('--profiles', dest = "num_profiles", type = int, default = 5,
+                         help = 'number of profiles (default: 5)')
 
     parser.add_argument('-t', dest = "threshold", type = float, default = 0.2,
                          help = 'threshold for measuring extent (default: 0.2)')
@@ -139,6 +142,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 id_number = args.id_number
 version = args.version
 
+num_profiles = args.num_profiles
 threshold = args.threshold
 
 compare = args.compare
@@ -169,16 +173,23 @@ def get_extent(args):
     intensity = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
     extent = az.get_extent(intensity, fargo_par, normalize = True, threshold = threshold, sliver_width = sliver_width)
 
+    # Count peaks
+    azimuthal_radii, azimuthal_profiles = az.get_profiles(intensity, fargo_par, args, shift = None)
+    peaks = signal.find_peaks(azimuthal_profiles, height = threshold)
+    peak_count = len(peaks)
+
     # Convert to degrees
     extent *= (180.0 / np.pi)
 
     # Store
     extents[i] = extent
+    peak_counts[i] = peak_count
 
 ###############################################################################
 
 # Data
 extents = mp_array("f", len(frame_range))
+peak_counts = mp_array("f", len(frame_range))
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]    
 
 p = Pool(num_cores)
@@ -197,8 +208,10 @@ colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slat
 colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
 
 def make_plot(show = False):
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
-    ax = fig.add_subplot(111)
+    fig = plot.figure(figsize = (8, 6), dpi = dpi)
+    gs = fig.add_gridspec(nrows = 2, ncols = 1, height_ratios = [7, 1], hspace = 0)
+
+    ax = fig.add_subplot(gs[0, :])
 
     # Plot
     x = frame_range
@@ -212,6 +225,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
+    plot.xticklabels([])
 
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
@@ -223,6 +237,17 @@ def make_plot(show = False):
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
+
+    #### Peaks ####
+    y2 = np.array(peak_counts)
+    plot.bar(x, y2, c = colors[2], edgecolor = colors[2], width = 1.0)
+
+    plot.xlim(x[0], x[-1])
+
+    ax2 = fig.add_subplot(gs[0, :])
+    counts = [0, 1, 2, 3]
+    plot.yticks(counts)
+    plot.yticks(0, counts[-1])
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
