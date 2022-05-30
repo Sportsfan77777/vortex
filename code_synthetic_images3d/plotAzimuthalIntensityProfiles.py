@@ -43,8 +43,8 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "cartesianIntensityMaps",
-                         help = 'save directory (default: cartesianIntensityMaps)')
+    parser.add_argument('--dir', dest = "save_directory", default = "azimuthalIntensityProfiles",
+                         help = 'save directory (default: azimuthalIntensityProfiles)')
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'directories to compare to (default: None)')
 
