@@ -238,7 +238,7 @@ def make_plot(show = False):
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
     beam_diameter = 2.0 * fargo_par["Beam"] * fargo_par["Radius"] / fargo_par["Distance"]
-    title = r'$h = %.2f$   $\Sigma = %.3f$   (2-D)    [%.3f^{\prime\prime}] ' % (scale_height, surface_density_zero, beam_diameter)
+    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, beam_diameter)
     plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     #### Peaks ####
