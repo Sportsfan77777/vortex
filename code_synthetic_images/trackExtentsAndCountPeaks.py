@@ -237,7 +237,8 @@ def make_plot(show = False):
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
-    title = "Hi"
+    beam_diameter = 2.0 * fargo_par["Beam"] * fargo_par["Radius"] / fargo_par["Distance"]
+    title = r'$h = %.2f$   $\Sigma = %.3f$   (2-D)    [%.3f^{\prime\prime}] ' % (scale_height, surface_density_zero, beam_diameter)
     plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
 
     #### Peaks ####
@@ -249,7 +250,7 @@ def make_plot(show = False):
     # Axes
     plot.xlim(x[0], x[-1])
 
-    counts = [0, 1, 2, 3]
+    counts = [0, 2, 4]
     plot.yticks(counts)
     plot.ylim(0, counts[-1])
 
