@@ -76,7 +76,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'maximum mass on plot (default: mass at last frame)')
     parser.add_argument('--delta', dest = "delta_mass", type = float, default = 0.1,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
-    parser.add_argument('--minor_delta', dest = "minor_delta_mass", type = float, default = None,
+    parser.add_argument('--minor', dest = "minor_delta_mass", type = float, default = None,
                          help = 'delta mass on plot (default: 0.1 Jupiter mass)')
     
     # Plot Parameters (rarely need to change)
@@ -171,6 +171,14 @@ dpi = args.dpi
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+# Planet File
+# Data
+data = np.loadtxt("../../planet0.dat")
+times = data[:, 0]; base_mass = data[:, 7] / jupiter_mass
+accreted_mass = data[:, 8] / jupiter_mass
+
+total_mass = base_mass + accreted_mass
+
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
@@ -248,13 +256,16 @@ def make_plot(show = False):
     # Annotate Axes
     plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
+    threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
+    plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
     title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam_diameter)
-    plot.title("%s" % (title), y = 1.01, fontsize = fontsize + 3)
+    plot.title("%s" % (title), y = 1.23, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Peaks ####
     ax2 = fig.add_subplot(gs[1, :])
