@@ -69,6 +69,15 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('--compare', dest = "compare", action = 'store_true', default = False,
                          help = 'compare the elongated vortex extents to the concentrated ones at the same threshold (default: do not compare)')
+
+    parser.add_argument('--min', dest = "min_mass", type = float, default = 0.1,
+                         help = 'minimum mass on plot (default: 0.1 Jupiter mass)')
+    parser.add_argument('--max', dest = "max_mass", type = float, default = None,
+                         help = 'maximum mass on plot (default: mass at last frame)')
+    parser.add_argument('--delta', dest = "delta_mass", type = float, default = 0.1,
+                         help = 'delta mass on plot (default: 0.1 Jupiter mass)')
+    parser.add_argument('--minor_delta', dest = "minor_delta_mass", type = float, default = None,
+                         help = 'delta mass on plot (default: 0.1 Jupiter mass)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 19,
@@ -266,6 +275,49 @@ def make_plot(show = False):
 
     ax2.yaxis.set_label_position("right")
     ax2.yaxis.tick_right()
+
+    # Add mass axis
+
+    min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
+    if max_mass is None:
+       max_mass = total_mass[frame_range[-1] - 1]
+
+    mass_ticks = np.arange(min_mass, max_mass, delta_mass)
+
+    def tick_function(masses):
+        # For the secondary x-axis showing the planet mass over time
+        tick_locations = np.zeros(len(masses))
+        tick_labels = []
+
+        for i, mass in enumerate(masses):
+            #total_mass_jupiter = total_mass # in Jupiter masses
+            times_i = az.my_searchsorted(total_mass, mass)
+
+            #tick_times = times[times_i]
+
+            print mass, times_i, len(times)
+
+            tick_locations[i] = times[times_i]
+            if delta_mass < 0.1:
+                tick_labels.append("%.2f" % mass)
+            else:
+                tick_labels.append("%.1f" % mass)
+
+        return tick_locations, tick_labels
+
+    tick_locations, tick_labels = tick_function(mass_ticks)
+
+    ax3 = ax.twiny()
+    ax3.set_xlim(ax.get_xlim())
+    ax3.set_xticks(tick_locations)
+    ax3.set_xticklabels(tick_labels)
+
+    ax3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
+
+    if args.minor_delta_mass is not None:
+        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
+        minor_tick_locations, _ = tick_function(minor_mass_ticks)
+        ax3.set_xticks(minor_tick_locations, minor = True)
 
     # Save, Show, and Close
     current_directory = os.getcwd().split("/")[-3]
