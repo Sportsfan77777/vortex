@@ -330,6 +330,14 @@ def make_plot(show = False):
         minor_tick_locations, _ = tick_function(minor_mass_ticks)
         ax3.set_xticks(minor_tick_locations, minor = True)
 
+    # Print counts
+    print len(peak_counts)
+    print (y2 == 1).sum(), (y2 == 2).sum(), (y2 == 3).sum(), (y2 >= 4).sum()
+
+    num_one = 1.0 * (y2 == 1).sum() / len(peak_counts); num_two = 1.0 * (y2 == 2).sum() / len(peak_counts)
+    num_three = 1.0 * (y2 == 3).sum() / len(peak_counts); num_four = 1.0 * (y2 >= 4).sum() / len(peak_counts)
+    print "%.2f %.2f %.2f %.2f" % (num_one, num_two, num_three, num_four)
+
     # Save, Show, and Close
     current_directory = os.getcwd().split("/")[-3]
     current_beam = os.getcwd().split("/")[-1]
