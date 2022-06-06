@@ -13,7 +13,7 @@ import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -286,7 +286,10 @@ def make_plot(frames, show = False):
         alpha_coefficent = "1.5"
     elif scale_height == 0.04:
         alpha_coefficent = "6"
-    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+
+    #beam_diameter = fargo_par["Beam"] * fargo_par["Radius"] / fargo_par["Distance"]
+    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
     plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
