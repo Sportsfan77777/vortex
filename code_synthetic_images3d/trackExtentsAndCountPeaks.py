@@ -232,7 +232,7 @@ colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Gr
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (8, 6), dpi = dpi)
-    gs = gridspec.GridSpec(nrows = 2, ncols = 1, height_ratios = [7, 1.5], hspace = 0, figure = fig)
+    gs = gridspec.GridSpec(nrows = 2, ncols = 2, height_ratios = [7, 1.5], width_ratios = [7, 1.5], wspace = 0, figure = fig)
     ax = fig.add_subplot(gs[0, :])
 
     # Plot
@@ -287,7 +287,16 @@ def make_plot(show = False):
     ax2.yaxis.set_label_position("right")
     ax2.yaxis.tick_right()
 
-    # Add mass axis
+    #### Histograms ####
+    ax3 = fig.add_subplot(gs[0, 1])
+    plot.hist(y, cumulative = True, orientation = 'horizontal')
+
+    ax4 = fig.add_subplot(gs[1, 1])
+    y2_adjusted = y2[:]
+    y2_adjusted[y2 > 4] = 4
+    plot.hist(y2_adjusted, orientation = 'horizontal')
+
+    #### Add mass axis ####
 
     min_mass = args.min_mass; max_mass = args.max_mass; delta_mass = args.delta_mass
     if max_mass is None:
@@ -318,12 +327,12 @@ def make_plot(show = False):
 
     tick_locations, tick_labels = tick_function(mass_ticks)
 
-    ax3 = ax.twiny()
-    ax3.set_xlim(ax.get_xlim())
-    ax3.set_xticks(tick_locations)
-    ax3.set_xticklabels(tick_labels)
+    ax_twin = ax.twiny()
+    ax_twin.set_xlim(ax.get_xlim())
+    ax_twin.set_xticks(tick_locations)
+    ax_twin.set_xticklabels(tick_labels)
 
-    ax3.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
+    ax_twin.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
 
     if args.minor_delta_mass is not None:
         minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
