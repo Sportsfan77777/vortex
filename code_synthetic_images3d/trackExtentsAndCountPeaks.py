@@ -233,7 +233,7 @@ colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Gr
 def make_plot(show = False):
     fig = plot.figure(figsize = (8, 6), dpi = dpi)
     gs = gridspec.GridSpec(nrows = 2, ncols = 2, height_ratios = [7, 1.5], width_ratios = [7, 1.5], wspace = 0, figure = fig)
-    ax = fig.add_subplot(gs[0, :])
+    ax = fig.add_subplot(gs[0, 0])
 
     # Plot
     x = frame_range
@@ -247,7 +247,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
-    ax.set_xticklabels([])
+    #ax.set_xticklabels([])
 
     angles = np.linspace(0, 360, 7)
     plot.yticks(angles)
@@ -268,7 +268,7 @@ def make_plot(show = False):
     plot.title("%s" % (title), y = 1.23, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Peaks ####
-    ax2 = fig.add_subplot(gs[1, :])
+    ax2 = fig.add_subplot(gs[1, 0])
     
     y2 = np.array(peak_counts)
     plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = x[1] - x[0])
@@ -282,19 +282,22 @@ def make_plot(show = False):
 
     # Labels
     plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
-    plot.ylabel("# Peaks", fontsize = fontsize + 2, rotation = 270, labelpad = 25)
+    plot.ylabel("# Peaks", fontsize = fontsize + 2)
+    #plot.ylabel("# Peaks", fontsize = fontsize + 2, rotation = 270, labelpad = 25)
 
-    ax2.yaxis.set_label_position("right")
-    ax2.yaxis.tick_right()
+    #ax2.yaxis.set_label_position("right")
+    #ax2.yaxis.tick_right()
 
     #### Histograms ####
     ax3 = fig.add_subplot(gs[0, 1])
-    plot.hist(y, cumulative = True, orientation = 'horizontal')
+    plot.hist(y, cumulative = True, color = 'sandybrown', orientation = 'horizontal', histtype = 'stepfilled')
+    ax3.set_yticklabels([])
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
     y2_adjusted[y2 > 4] = 4
-    plot.hist(y2_adjusted, orientation = 'horizontal')
+    plot.hist(y2_adjusted, color = 'darkviolet', orientation = 'horizontal', histtype = 'stepfilled')
+    ax4.set_yticklabels([])
 
     #### Add mass axis ####
 
