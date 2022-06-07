@@ -303,7 +303,7 @@ def make_plot(show = False):
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
     y2_adjusted[y2 > 4] = 4
-    plot.hist(y2_adjusted, bins = np.linspace(0, 4, len(counts) + 1) + 1e-8, align = 'right', cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+    plot.hist(y2_adjusted, bins = np.linspace(0, 4, 5) + 1e-8, align = 'right', cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax4.set_xlim(0, 1)
     ax4.set_xticks(hist_ticks)
