@@ -290,7 +290,7 @@ def make_plot(show = False):
 
     #### Histograms ####
     ax3 = fig.add_subplot(gs[0, 1])
-    plot.hist(y, bins = np.linspace(0, 360, 37), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+    plot.hist(y, bins = np.linspace(0, 370, 38), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax3.set_xlim(0, 1)
     hist_ticks = np.linspace(0, 1, 11)
@@ -304,7 +304,7 @@ def make_plot(show = False):
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
     y2_adjusted[y2 > 4] = 4
-    plot.hist(y2_adjusted, bins = np.linspace(0, counts[-1], len(counts) + 1), align = 'right', cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+    plot.hist(y2_adjusted, bins = np.linspace(0, counts[-1], len(counts) + 1) + 1e-8, align = 'left', cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax4.set_xlim(0, 1)
     ax4.set_xticks(hist_ticks)
