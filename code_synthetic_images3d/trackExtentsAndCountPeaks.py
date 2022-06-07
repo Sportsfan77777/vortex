@@ -290,13 +290,13 @@ def make_plot(show = False):
 
     #### Histograms ####
     ax3 = fig.add_subplot(gs[0, 1])
-    plot.hist(y, cumulative = True, color = 'sandybrown', orientation = 'horizontal', histtype = 'stepfilled')
+    plot.hist(y, bins = np.linspace(0, 360, 37), cumulative = True, color = 'sienna', orientation = 'horizontal', histtype = 'stepfilled', density = True)
     ax3.set_yticklabels([])
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
     y2_adjusted[y2 > 4] = 4
-    plot.hist(y2_adjusted, color = 'darkviolet', orientation = 'horizontal', histtype = 'stepfilled')
+    plot.hist(y2_adjusted, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
     ax4.set_yticklabels([])
 
     #### Add mass axis ####
