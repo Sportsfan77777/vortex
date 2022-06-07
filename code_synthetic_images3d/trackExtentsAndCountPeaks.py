@@ -130,7 +130,6 @@ wavelength = fargo_par["Wavelength"]
 distance = fargo_par["Distance"]
 
 arc_beam = beam_size * planet_radius / distance
-arc_beam_diameter = 2.0 * arc_beam
 
 ### Get Input Parameters ###
 
@@ -264,7 +263,7 @@ def make_plot(show = False):
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
-    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam_diameter)
+    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
     plot.title("%s" % (title), y = 1.23, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Peaks ####
@@ -304,7 +303,7 @@ def make_plot(show = False):
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
     y2_adjusted[y2 > 4] = 4
-    plot.hist(y2_adjusted, bins = np.linspace(0, counts[-1], len(counts) + 1) + 1e-8, align = 'left', cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+    plot.hist(y2_adjusted, bins = np.linspace(0, 4, len(counts) + 1) + 1e-8, align = 'right', cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax4.set_xlim(0, 1)
     ax4.set_xticks(hist_ticks)
