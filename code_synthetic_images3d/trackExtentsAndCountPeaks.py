@@ -264,7 +264,7 @@ def make_plot(show = False):
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
     title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-    plot.title("%s" % (title), y = 1.23, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.title("%s" % (title), y = 1.25, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Peaks ####
     ax2 = fig.add_subplot(gs[1, 0])
@@ -371,7 +371,7 @@ def make_plot(show = False):
         save_fn = "%s/extentsAndPeakCounts-%s-%s.png" % (save_directory, current_directory, current_beam)
     else:
         save_fn = "%s/v%04d_extentsAndPeakCounts-%s-%s.png" % (save_directory, version, current_directory, current_beam)
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
         plot.show()
