@@ -15,6 +15,10 @@ surface_density_zero = 3.472e-4
 
 # Peak distributions (1, 2, 3, 4+) from t = 100 to 1600 (every 10)
 beam_sizes = np.array([5.0, 10.0, 15.0, 20.0, 25.0, 30.0])
+
+planet_radius = 20.0; distance = 140.0
+beam_sizes_arc = beam_sizes / distance
+
 labels = ["1", "2", "3", "4+"]
 
 peak_distributions = []
@@ -58,16 +62,19 @@ def make_plot():
         if i > 0:
             bottom += peak_distributions[:, i - 1] / num_frames
         plot.barh(beam_sizes, peak_distribution, color = colors[i], left = bottom, height = 3, label = labels[i])
+        #plot.barh(beam_sizes_arc, peak_distribution, color = colors[i], left = bottom, height = 0.02, label = labels[i])
 
     legend = plot.legend(loc = 'upper left', fontsize = fontsize - 4, facecolor = 'white', framealpha = 1.0)
     legend.set_zorder(150)
 
     # Axes
     plot.xlim(0, 1)
+    ymin, ymax = plot.ylim()
 
     # Annotate
     plot.xlabel(r"Peak Count Distribution", fontsize = fontsize)
-    plot.ylabel(r"Beam Diameters [$^{\prime\prime}$]", fontsize = fontsize)
+    plot.ylabel(r"Beam Diameters [AU] & [$^{\prime\prime}$]", fontsize = fontsize)
+    #plot.ylabel(r"Beam Diameters [$^{\prime\prime}$]", fontsize = fontsize)
 
     ### Add times used and legend
 
@@ -78,11 +85,19 @@ def make_plot():
     x_mid = 0.5; y_text = 1.18
     plot.text(x_mid, y_text * plot.ylim()[-1], title2, fontsize = fontsize + 3, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
+    plot.text(1.0 * plot.xlim()[-1], 1.14 * plot.ylim()[-1], r"$r_\mathrm{p} = %d$ AU" % (planet_radius) + "\n" + "$d = %d$ pc" % (distance) , fontsize = fontsize - 6)
+
+    ### Add Arcsecond Axis ###
+    ax2 = ax.twinx()
+    plot.ylim(ymin / distance, ymax / distance)
+    plot.yticks(np.round(beam_sizes_arc, 3))
+    #plot.ylabel(r"[$^{\prime\prime}$]", fontsize = fontsize)
+
     # Save + Show
     scale_height_name = 100 * scale_height
     surface_density_name = int(round(1e7 * surface_density_zero, 0))
-    plot.savefig("peak_counts_across_resolution-h%02d-s%04d.png" % (scale_height_name, surface_density_name), bbox_inches = "tight")
-    plot.savefig("peak_counts_across_resolution-h%02d-s%04d.pdf" % (scale_height_name, surface_density_name), bbox_inches = "tight", format = "pdf")
+    plot.savefig("peak_counts_across_resolution-h%02d-s%04d.png" % (scale_height_name, surface_density_name), bbox_inches = "tight", pad_inches = 0.2)
+    plot.savefig("peak_counts_across_resolution-h%02d-s%04d.pdf" % (scale_height_name, surface_density_name), bbox_inches = "tight", pad_inches = 0.2, format = "pdf")
     plot.show()
 
 
