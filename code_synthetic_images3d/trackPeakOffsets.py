@@ -274,15 +274,18 @@ def make_plot(show = False):
     plot.plot(x, y, c = colors[1], linewidth = linewidth, alpha = alpha)
     #plot.plot(x, smooth_y, c = colors[1], linewidth = linewidth)
 
+    plot.plot([last_frame, last_frame], [-120, 120], linestyle = "--", c = 'k')
+
     # Axes
     plot.xlim(x[0], x[-1])
     #ax.set_xticklabels([])
 
-    angles = np.linspace(-120, 120, 7)
+    angles = np.linspace(-120, 120, 9)
     plot.yticks(angles)
     plot.ylim(-120, 120)
 
     # Annotate Axes
+    plot.xlabel(r"$t \mathrm{\ (planet\ orbits)}$", fontsize = fontsize + 2)
     plot.ylabel(r"Peak Offsets $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
@@ -294,7 +297,7 @@ def make_plot(show = False):
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
     title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-    plot.title("%s" % (title), y = 1.25, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.title("%s" % (title), y = 1.16, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Histograms ####
     ax2 = fig.add_subplot(gs[1])
@@ -304,13 +307,17 @@ def make_plot(show = False):
     plot.hist(y_truncated, bins = np.linspace(-120 - 10, 120 + 10, 261), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax2.set_xlim(0, 1)
-    hist_ticks = np.linspace(0, 1, 11)
+    hist_ticks = np.linspace(0, 1, 6)
+    hist_ticks_minor = np.linspace(0, 1, 11)
     ax2.set_xticks(hist_ticks)
-    ax2.set_xticklabels([])
+    ax2.set_xticks(hist_ticks, minor = True)
 
     ax2.set_ylim(-120, 120)
     ax2.set_yticks(angles)
     #ax2.set_yticklabels([])
+
+    if last_frame < frame_range[-1]:
+        plot.title("ONLY to t = %d" % last_frame, fontsize = fontsize + 1)
 
     #### Add mass axis ####
 
