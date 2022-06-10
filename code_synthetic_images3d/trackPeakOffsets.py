@@ -48,7 +48,7 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "extentsAndPeakCountsOverTime",
+    parser.add_argument('--dir', dest = "save_directory", default = "peakOffsets",
                          help = 'save directory (default: extentsOverTime)')
 
     # Plot Parameters (variable)
@@ -347,9 +347,9 @@ def make_plot(show = False):
     current_directory = os.getcwd().split("/")[-3]
     current_beam = os.getcwd().split("/")[-1]
     if version is None:
-        save_fn = "%s/extentsAndPeakCounts-%s-%s.png" % (save_directory, current_directory, current_beam)
+        save_fn = "%s/peakOffsets-%s-%s.png" % (save_directory, current_directory, current_beam)
     else:
-        save_fn = "%s/v%04d_extentsAndPeakCounts-%s-%s.png" % (save_directory, version, current_directory, current_beam)
+        save_fn = "%s/v%04d_peakOffsets-%s-%s.png" % (save_directory, version, current_directory, current_beam)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
