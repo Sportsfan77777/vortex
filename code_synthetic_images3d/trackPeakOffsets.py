@@ -257,7 +257,7 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728',
 
 colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slate Blue, Dark Blue
 
-colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
+#colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (10, 6), dpi = dpi)
@@ -271,7 +271,8 @@ def make_plot(show = False):
     kernel = 5
     smooth_y = util.smooth(y, kernel)
 
-    plot.plot(x, y, c = colors[1], linewidth = linewidth, alpha = alpha)
+    plot.scatter(x, y, c = colors[1], s = 80 linewidth = linewidth, alpha = alpha)
+    plot.plot(x, y, c = colors[1], linewidth = linewidth)
     #plot.plot(x, smooth_y, c = colors[1], linewidth = linewidth)
 
     plot.plot([last_frame, last_frame], [-120, 120], linestyle = "--", c = 'k')
@@ -289,7 +290,7 @@ def make_plot(show = False):
     plot.ylabel(r"Peak Offsets $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
-    plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+    plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
@@ -297,27 +298,36 @@ def make_plot(show = False):
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
     title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-    plot.title("%s" % (title), y = 1.16, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.title("%s" % (title), y = 1.20, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Histograms ####
     ax2 = fig.add_subplot(gs[1])
 
     truncate = az.my_searchsorted(frame_range, last_frame) - 1
     y_truncated = y[:truncate]
-    plot.hist(y_truncated, bins = np.linspace(-120 - 10, 120 + 10, 261), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+    plot.hist(y_truncated, bins = np.linspace(-120 - 10, 120 + 10, 261), cumulative = True, color = 'darkgreen', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+    
+    ref_lines = np.linspace(0, 30, 4)
+    for i, ref_i in ref_lines:
+        if ref_i == 0 or ref_i == ref_lines[-1]:
+            linestyle = "-"; ref_linewidth = 2
+        else:
+            linestyle = "--"; ref_linewidth = 1
+    plot.plot([0, 1], [ref_i, ref_i], c = 'k', linestyle = linestyle, linewidth = ref_linewidth)
+    plot.plot([0, 1], [-ref_i, -ref_i], c = 'k', linestyle = linestyle, linewidth = ref_linewidth)
 
     ax2.set_xlim(0, 1)
     hist_ticks = np.linspace(0, 1, 6)
     hist_ticks_minor = np.linspace(0, 1, 11)
     ax2.set_xticks(hist_ticks)
-    ax2.set_xticks(hist_ticks, minor = True)
+    ax2.set_xticks(hist_ticks_minor, minor = True)
 
     ax2.set_ylim(-120, 120)
     ax2.set_yticks(angles)
     #ax2.set_yticklabels([])
 
     if last_frame < frame_range[-1]:
-        plot.title("ONLY to t = %d" % last_frame, fontsize = fontsize + 1)
+        plot.title(r"ONLY to $t$ = $%d$" % last_frame, fontsize = fontsize - 1)
 
     #### Add mass axis ####
 
