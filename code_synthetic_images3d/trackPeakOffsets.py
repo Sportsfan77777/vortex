@@ -206,6 +206,10 @@ def measure_peak_offset(args):
     i, frame = args
 
     intensity_polar = util.read_data(frame, 'polar_intensity', fargo_par, id_number = id_number)
+
+    # Shift and get peak
+    shift_c = az.shift_away_from_minimum(intensity_polar, fargo_par)
+    intensity_polar = np.roll(intensity_polar, shift_c, axis = -1)
     peak_r_i, peak_phi_i = az.get_peak(intensity_polar, fargo_par)
 
     # Return peak relative to the center, where the edges are set by a threshold
@@ -223,7 +227,7 @@ def measure_peak_offset(args):
     peak_theta = theta[peak_phi_i] * (180.0 / np.pi)
     peak_offset = peak_theta - center_theta
 
-    print i, frame, center_theta, peak_theta, peak_offset
+    print i, frame, peak_offset, center_theta, peak_theta
 
     # Store in mp_array
     peak_offsets[i] = peak_offset
@@ -251,7 +255,7 @@ colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slat
 colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
 
 def make_plot(show = False):
-    fig = plot.figure(figsize = (9, 6), dpi = dpi)
+    fig = plot.figure(figsize = (10, 6), dpi = dpi)
     gs = gridspec.GridSpec(nrows = 1, ncols = 2, width_ratios = [5, 2], figure = fig)
     ax = fig.add_subplot(gs[0])
 
