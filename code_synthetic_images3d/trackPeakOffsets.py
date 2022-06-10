@@ -311,7 +311,7 @@ def make_plot(show = False):
     plot.hist(y_truncated, bins = np.linspace(-120 - 10, 120 + 10, 261), cumulative = True, color = 'darkgreen', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
     
     ref_lines = np.linspace(0, 30, 4)
-    for i, ref_i in ref_lines:
+    for i, ref_i in enumerate(ref_lines):
         if ref_i == 0 or ref_i == ref_lines[-1]:
             linestyle = "-"; ref_linewidth = 2
         else:
