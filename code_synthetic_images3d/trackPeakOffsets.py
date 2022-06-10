@@ -278,9 +278,9 @@ def make_plot(show = False):
     plot.xlim(x[0], x[-1])
     #ax.set_xticklabels([])
 
-    angles = np.linspace(-180, 180, 7)
+    angles = np.linspace(-120, 120, 7)
     plot.yticks(angles)
-    plot.ylim(-180, 180)
+    plot.ylim(-120, 120)
 
     # Annotate Axes
     plot.ylabel(r"Peak Offsets $\mathrm{(degrees)}$", fontsize = fontsize + 2)
