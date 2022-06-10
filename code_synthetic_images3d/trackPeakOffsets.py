@@ -274,7 +274,7 @@ def make_plot(show = False):
     kernel = 5
     smooth_y = util.smooth(y, kernel)
 
-    plot.scatter(x, y, c = "mediumspinggreen", s = size, alpha = alpha)
+    plot.scatter(x, y, c = "mediumspringgreen", s = size, alpha = alpha)
     #plot.plot(x, y, c = colors[1], linewidth = linewidth)
     #plot.plot(x, smooth_y, c = colors[1], linewidth = linewidth)
 
