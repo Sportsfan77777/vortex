@@ -66,6 +66,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
 
     parser.add_argument('-t', dest = "threshold", type = float, default = 0.2,
                          help = 'threshold for measuring extent (default: 0.2)')
+    parser.add_argument('-l', dest = "last_frame", type = int, default = None,
+                         help = 'last frame for histogram (default: all)')
 
     parser.add_argument('--compare', dest = "compare", action = 'store_true', default = False,
                          help = 'compare the elongated vortex extents to the concentrated ones at the same threshold (default: do not compare)')
@@ -157,6 +159,9 @@ id_number = args.id_number
 version = args.version
 
 threshold = args.threshold
+last_frame = args.last_frame
+if last_frame is None:
+    last_frame = frames[-1]
 
 compare = args.compare
 
@@ -293,14 +298,17 @@ def make_plot(show = False):
 
     #### Histograms ####
     ax2 = fig.add_subplot(gs[1])
-    plot.hist(y, bins = np.linspace(-180 - 10, 180 + 10, 201), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
+
+    truncate = az.my_searchsorted(frames, last_frame) - 1
+    y_truncated = y[:truncate]
+    plot.hist(y_truncated, bins = np.linspace(-120 - 10, 120 + 10, 261), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax2.set_xlim(0, 1)
     hist_ticks = np.linspace(0, 1, 11)
     ax2.set_xticks(hist_ticks)
     ax2.set_xticklabels([])
 
-    ax2.set_ylim(-180, 180)
+    ax2.set_ylim(-120, 120)
     ax2.set_yticks(angles)
     #ax2.set_yticklabels([])
 
