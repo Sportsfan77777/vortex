@@ -299,7 +299,7 @@ def make_plot(show = False):
     #### Histograms ####
     ax2 = fig.add_subplot(gs[1])
 
-    truncate = az.my_searchsorted(frames, last_frame) - 1
+    truncate = az.my_searchsorted(frame_range, last_frame) - 1
     y_truncated = y[:truncate]
     plot.hist(y_truncated, bins = np.linspace(-120 - 10, 120 + 10, 261), cumulative = True, color = 'sienna', align = 'left', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
