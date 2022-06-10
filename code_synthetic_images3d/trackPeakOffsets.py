@@ -90,8 +90,8 @@ def new_argument_parser(description = "Plot azimuthal density profiles in two by
                          help = 'linewidths in plot (default: 3)')
     parser.add_argument('--size', dest = "size", type = int, default = 80,
                          help = 'linewidths in plot (default: 80)')
-    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.35,
-                         help = 'line transparency in plot (default: 0.35)')
+    parser.add_argument('--alpha', dest = "alpha", type = float, default = 0.6,
+                         help = 'line transparency in plot (default: 0.6)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -274,8 +274,8 @@ def make_plot(show = False):
     kernel = 5
     smooth_y = util.smooth(y, kernel)
 
-    plot.scatter(x, y, c = colors[1], s = size, alpha = alpha)
-    plot.plot(x, y, c = colors[1], linewidth = linewidth)
+    plot.scatter(x, y, c = "mediumspinggreen", s = size, alpha = alpha)
+    #plot.plot(x, y, c = colors[1], linewidth = linewidth)
     #plot.plot(x, smooth_y, c = colors[1], linewidth = linewidth)
 
     plot.plot([last_frame, last_frame], [-120, 120], linestyle = "--", c = 'k')
