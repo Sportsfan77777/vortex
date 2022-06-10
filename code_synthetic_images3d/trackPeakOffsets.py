@@ -316,8 +316,8 @@ def make_plot(show = False):
             linestyle = "-"; ref_linewidth = 2
         else:
             linestyle = "--"; ref_linewidth = 1
-    plot.plot([0, 1], [ref_i, ref_i], c = 'k', linestyle = linestyle, linewidth = ref_linewidth)
-    plot.plot([0, 1], [-ref_i, -ref_i], c = 'k', linestyle = linestyle, linewidth = ref_linewidth)
+        plot.plot([0, 1], [ref_i, ref_i], c = 'k', linestyle = linestyle, linewidth = ref_linewidth)
+        plot.plot([0, 1], [-ref_i, -ref_i], c = 'k', linestyle = linestyle, linewidth = ref_linewidth)
 
     ax2.set_xlim(0, 1)
     hist_ticks = np.linspace(0, 1, 6)
