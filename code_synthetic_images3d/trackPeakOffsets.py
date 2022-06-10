@@ -223,6 +223,8 @@ def measure_peak_offset(args):
     peak_theta = theta[peak_phi_i] * (180.0 / np.pi)
     peak_offset = peak_theta - center_theta
 
+    print i, frame, center_theta, peak_theta, peak_offset
+
     # Store in mp_array
     peak_offsets[i] = peak_offset
 
