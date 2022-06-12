@@ -19,6 +19,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -211,7 +212,7 @@ def make_plot(frame_range, show = False):
         ### Plot ###
         x = rad[1:]
         y = maximum_condition # Highlight middle two!
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (3 - 2 * abs(1.5 - i)), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
         # Reference line for pressure bump
         if scale_height == 0.08:
