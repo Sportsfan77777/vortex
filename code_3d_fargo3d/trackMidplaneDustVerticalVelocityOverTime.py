@@ -71,7 +71,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "midplaneVerticalVelocityMapsOverTime",
+    parser.add_argument('--dir', dest = "save_directory", default = "midplaneDustVerticalVelocityMapsOverTime",
                          help = 'save directory (default: midplaneVerticalVelocityMapsOverTime)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
@@ -456,9 +456,9 @@ def make_plot(show = False):
     directory_name = os.getcwd().split("/")[-1]
 
     if version is None:
-        save_fn = "%s/%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/%s_dustVerticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/v%04d_%s_dustVerticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
