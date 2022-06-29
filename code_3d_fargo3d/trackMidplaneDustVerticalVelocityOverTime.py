@@ -306,12 +306,12 @@ def get_velocity(args_here):
       vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
     else:
       density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
-      vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-      #vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-      #vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+      vz = (fromfile("dust1vz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+      #vrad = (fromfile("dust1vy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+      #vtheta = (fromfile("dust1vx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
     midplane_density = density[num_z / 2 + args.sliver, :, :]
-    midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
-    midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
+    #midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+    #midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
     midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
     dz = z_angles[1] - z_angles[0]
