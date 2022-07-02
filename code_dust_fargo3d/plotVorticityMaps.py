@@ -38,6 +38,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -247,6 +248,7 @@ dpi = args.dpi
 data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
+omegas = data[:, 10]
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
@@ -298,7 +300,7 @@ def make_plot(frame, show = False):
 
     vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_rad, num_theta)) # add a read_vrad to util.py!
-    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual)
+    vorticity = utilVorticity.velocity_curl(vrad, vtheta, rad, theta, rossby = rossby, residual = residual, omega = omegas[frame])
 
     # Shift
     if center:

@@ -7,10 +7,10 @@ not for direct calls
 import numpy as np
 
 # Curl function
-def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, residual = True):
+def velocity_curl(v_rad, v_theta, rad, theta, average = False, rossby = True, residual = True, omega = 1.0):
     """ z-component of the curl (because this is a 2-D simulation)"""
     # subtract rotating frame and add real Keplerian velocity
-    keplerian_velocity = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
+    keplerian_velocity = rad * (np.power(rad, -1.5) - omega) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
     v_theta -= keplerian_velocity[:, None]
 
     v_keplerian_real = np.power(rad, -0.5)
