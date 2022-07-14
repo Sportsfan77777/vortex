@@ -51,7 +51,7 @@ import azimuthal as az
 #from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+from reader_mpiio import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -140,11 +140,12 @@ args = new_argument_parser().parse_args()
 ### Get Fargo Parameters ###
 p = Parameters()
 
-num_rad = p.ny; num_theta = p.nx
+num_rad = p.ny; num_theta = p.nx; num_z = p.nz
 r_min = p.ymin; r_max = p.ymax
+z_min = p.zmin; z_max = p.zmax
 
 surface_density_zero = p.sigma0
-dust_surface_density_zero = p.sigma0 * p.epsilon
+dust_surface_density_zero = surface_density_zero * p.metal
 
 dt = p.ninterm * p.dt
 
@@ -155,7 +156,7 @@ accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
 scale_height = p.aspectratio
-viscosity = p.nu
+viscosity = 1e-7 #p.nu
 
 """
 
@@ -196,6 +197,7 @@ show = args.show
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
+z_angles = np.linspace(z_min, z_max, num_z)
 
 version = args.version
 if args.r_lim is None:
