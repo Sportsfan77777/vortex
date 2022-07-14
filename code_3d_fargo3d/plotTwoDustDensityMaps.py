@@ -424,7 +424,7 @@ def make_plot(frames, show = False):
             current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
         current_mass += accreted_mass[frame]
-        current_gap_depth = get_gap_depth(density)
+        #current_gap_depth = get_gap_depth(density)
 
         unit = "r_\mathrm{p}"
         plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
