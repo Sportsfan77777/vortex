@@ -48,7 +48,7 @@ from pylab import fromfile
 
 import util
 import azimuthal as az
-from readTitle import readTitle
+#from readTitle import readTitle
 
 from advanced import Parameters
 from reader import Fields
