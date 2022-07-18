@@ -53,6 +53,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "dustVariance",
                          help = 'save directory (default: gasDensityMaps)')
+    parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
+                         help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
 
@@ -143,6 +145,7 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
+dust_number = args.dust_number
 mpi = args.mpi
 
 # Plot Parameters (variable)
@@ -200,12 +203,12 @@ def get_excess_mass(args_here):
         density = Fields("./", 'gas', frame).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
         #background_density = Fields("./", 'gas', frame - 1).get_field(field).reshape(num_rad, num_theta) / surface_density_zero
     else:
-        density = fromfile("dust1dens%d.dat" % frame).reshape(num_rad, num_theta) / dust_surface_density_zero
+        density = fromfile("dust%ddens%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta) / dust_surface_density_zero
         #background_density = fromfile("dust1dens%d.dat" % (frame - 1)).reshape(num_rad, num_theta) / dust_surface_density_zero
 
     if args.compare:
         fargo_directory = args.compare
-        density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta)) / dust_surface_density_zero
+        density_compare = (fromfile("%s/dust%ddens%d.dat" % (fargo_directory, dust_number, frame)).reshape(num_rad, num_theta)) / dust_surface_density_zero
         #background_density_compare = (fromfile("%s/dust1dens%d.dat" % (fargo_directory, frame - 1)).reshape(num_rad, num_theta)) / dust_surface_density_zero
 
     def helper(density):
