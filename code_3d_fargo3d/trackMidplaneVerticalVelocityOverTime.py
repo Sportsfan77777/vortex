@@ -452,8 +452,15 @@ def make_plot(show = False):
        cbar_name = r"<$v_\mathrm{\theta}>_{\phi}$"
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
+    # Save data
+
+
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1]
+
+    pickle.dump(composite_vz, open("%s/%s_verticalVelocityMap-data.p" % (save_directory, directory_name), 'wb'))
+    pickle.dump(x, open("%s/%s_verticalVelocityMap-frames.p" % (save_directory, directory_name), 'wb'))
+    pickle.dump(y, open("%s/%s_verticalVelocityMap-radii.p" % (save_directory, directory_name), 'wb'))
 
     if version is None:
         save_fn = "%s/%s_verticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
