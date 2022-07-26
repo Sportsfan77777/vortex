@@ -315,13 +315,13 @@ def get_velocity(args_here):
     midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
     dz = z_angles[1] - z_angles[0]
-    surface_density = np.sum(density[:, :, :], axis = 0) * dz
-    averagedDensity = np.average(surface_density, axis = -1)
+    #surface_density = np.sum(density[:, :, :], axis = 0) * dz
+    #averagedDensity = np.average(surface_density, axis = -1)
 
     average_midplane_vz = np.average(midplane_vz, axis = -1)
     composite_vz[i, :] = average_midplane_vz
 
-    peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
+    #peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
     composite_peak[i] = peak
 
 
