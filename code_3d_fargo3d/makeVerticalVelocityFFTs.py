@@ -177,7 +177,7 @@ def make_plot(show = False):
     xticks = np.concatenate((np.logspace(np.log10(0.5), np.log10(1.0), 3), np.logspace(np.log10(1.0), np.log10(2.5), 5)[1:]))
     plot.xticks(xticks, ['%.2f' % xtick for xtick in xticks])
 
-    yticks = np.logspace(np.log10(1.0 / num_orbits), np.log10(0.5), 10)
+    yticks = np.logspace(np.log10(1.0 / len(frames)), np.log10(0.5), 10)
     plot.yticks(yticks, ['%.3f' % ytick for ytick in yticks])
 
     # Annotate Axes
