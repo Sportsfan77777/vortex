@@ -188,7 +188,7 @@ def make_plot(show = False):
     plot.minorticks_off() # Fixes known bug where xticks aren't removed if scale is log
     plot.xticks(xticks, ['%.2f' % xtick for xtick in xticks])
 
-    yticks = np.logspace(np.log10(1.0 * cadence / len(frames)), np.log10(0.5), 10)
+    yticks = np.logspace(np.log10(1.0 * cadence / len(frames)), np.log10(0.5 * cadence), 10)
     plot.yticks(yticks, ['%.3f' % ytick for ytick in yticks])
 
     # Annotate Axes
