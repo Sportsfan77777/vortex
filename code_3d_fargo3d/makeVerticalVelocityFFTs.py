@@ -140,7 +140,7 @@ def process_data(data, frames, radii):
 
         # FFT
         fft_sliver = np.fft.fft(sliver, axis = -1)
-        fft_data[:, i] = (fft_sliver.real)[:half]
+        fft_data[:, i] = (np.abs(fft_sliver))[:half]
     freq = np.fft.fftfreq(sliver.shape[-1])[:half]
 
     return fft_data, freq
