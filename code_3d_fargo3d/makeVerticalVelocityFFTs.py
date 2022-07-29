@@ -170,6 +170,8 @@ def make_plot(show = False):
     result = plot.pcolormesh(x, y, fft_data, cmap = cmap)
     result.set_clim(clim)
 
+    plot.colorbar()
+
     # Axes
     plot.xlim(radii[0], radii[-1])
     plot.ylim(min(freq[freq > 0]), max(freq))
@@ -177,6 +179,7 @@ def make_plot(show = False):
     plot.yscale("log")
 
     xticks = np.concatenate((np.logspace(np.log10(0.5), np.log10(1.0), 3), np.logspace(np.log10(1.0), np.log10(2.5), 5)[1:]))
+    plot.xticks()
     plot.xticks(xticks, ['%.2f' % xtick for xtick in xticks])
 
     yticks = np.logspace(np.log10(1.0 / len(frames)), np.log10(0.5), 10)
