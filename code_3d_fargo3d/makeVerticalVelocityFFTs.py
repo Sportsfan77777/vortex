@@ -167,7 +167,7 @@ def make_plot(show = False):
     ### Plot ###
     x = radii
     y = freq
-    result = plot.pcolormesh(x, y, fft_data, cmap = cmap)
+    result = plot.pcolormesh(x, y, np.abs(fft_data), cmap = cmap)
     result.set_clim(clim)
 
     plot.colorbar()
@@ -179,7 +179,7 @@ def make_plot(show = False):
     plot.yscale("log")
 
     xticks = np.concatenate((np.logspace(np.log10(0.5), np.log10(1.0), 3), np.logspace(np.log10(1.0), np.log10(2.5), 5)[1:]))
-    plot.xticks()
+    plot.minorticks_off() # Fixes known bug where xticks aren't removed if scale is log
     plot.xticks(xticks, ['%.2f' % xtick for xtick in xticks])
 
     yticks = np.logspace(np.log10(1.0 / len(frames)), np.log10(0.5), 10)
