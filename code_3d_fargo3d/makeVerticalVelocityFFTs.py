@@ -175,8 +175,12 @@ def make_plot(show = False):
     y = freq
     result = plot.pcolormesh(x, y, np.abs(fft_data), cmap = cmap)
     result.set_clim(clim)
-
     plot.colorbar()
+
+    # Reference Line
+    xref = radii
+    yref = np.power(radii, -1.5)
+    plot.plot(xref, yref, c = 'b', linewidth = 2)
 
     # Axes
     plot.xlim(radii[0], radii[-1])
