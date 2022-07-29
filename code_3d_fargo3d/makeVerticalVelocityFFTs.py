@@ -155,8 +155,8 @@ def process_data(data, frames, radii):
 directory_name = os.getcwd().split("/")[-1]
 name = directory_name
 
-data = np.array(pickle.load(open("%s/%s_verticalVelocityMap-data.p" % (load_directory, name), "rb")))
-frames = np.array(pickle.load(open("%s/%s_verticalVelocityMap-frames.p" % (load_directory, name), "rb")))
+data = np.array(pickle.load(open("%s/%s_verticalVelocityMap-data.p" % (load_directory, name), "rb")))[::rate, :]
+frames = np.array(pickle.load(open("%s/%s_verticalVelocityMap-frames.p" % (load_directory, name), "rb")))[::rate]
 radii = np.array(pickle.load(open("%s/%s_verticalVelocityMap-radii.p" % (load_directory, name), "rb")))
 
 # Process!
