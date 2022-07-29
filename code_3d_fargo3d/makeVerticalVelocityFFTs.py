@@ -38,6 +38,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Frame Selection
     parser.add_argument('--range', dest = "frames", type = int, nargs = '+', default = None,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('--rate', dest = "rate", type = int, default = 1,
+                         help = 'frame rate (default: 1)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
 
@@ -189,9 +191,9 @@ def make_plot(show = False):
     directory_name = os.getcwd().split("/")[-1]
 
     if version is None:
-        save_fn = "%s/%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, frames[0], frames[-1], args.rate)
     else:
-        save_fn = "%s/v%04d_%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/v%04d_%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, frames[0], frames[-1], args.rate)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
