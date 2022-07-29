@@ -32,7 +32,7 @@ ef new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = '+',
+    parser.add_argument('--range', dest = "frames", type = int, nargs = '+',
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
@@ -47,17 +47,11 @@ ef new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
 
-    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
-                         help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
-
-
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "hot",
                          help = 'color map (default: hot)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = None,
-                         help = 'min and max values in colorbar (default: [-0.025, 0.025])')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 0.1,
+                         help = 'min and max values in colorbar (default: 0.1)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 17,
                          help = 'fontsize of plot annotations (default: 17)')
@@ -68,9 +62,57 @@ ef new_argument_parser(description = "Plot gas density maps."):
 
     return parser
 
-if name is None:
-    directory_name = os.getcwd().split("/")[-1]
-    name = directory_name
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get Fargo Parameters ###
+p = Parameters()
+
+num_rad = p.ny; num_theta = p.nx; num_z = p.nz
+r_min = p.ymin; r_max = p.ymax
+z_min = p.zmin; z_max = p.zmax
+
+surface_density_zero = p.sigma0
+
+dt = p.ninterm * p.dt
+
+fargo_par = util.get_pickled_parameters()
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+taper_time = p.masstaper
+
+scale_height = p.aspectratio
+viscosity = 1e-7 #p.nu
+
+#######################################################
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = util.get_frame_range(args.frames)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+show = args.show
+version = args.version
+
+cmap = args.cmap
+if args.cmax is None:
+    clim = [0, 0.01]
+else:
+    clim = [0, args.cmax]
+
+fontsize = args.fontsize
+dpi = args.dpi
+
+rc['xtick.labelsize'] = args.labelsize
+rc['ytick.labelsize'] = args.labelsize
+
+### Helper Functions ###
 
 def process_data(data, frames, radii):
     # Set up output
@@ -89,12 +131,18 @@ def process_data(data, frames, radii):
     return fft_data, freq
 
 # Load Data
+if name is None:
+    directory_name = os.getcwd().split("/")[-1]
+    name = directory_name
+
 data = np.array(pickle.load(open("%s_verticalVelocityMap-data.p" % name, "rb")))
 frames = np.array(pickle.load(open("%s_verticalVelocityMap-frames.p" % name, "rb")))
 radii = np.array(pickle.load(open("%s_verticalVelocityMap-radii.p" % name, "rb")))
 
 # Process!
 fft_data, freq = process_data()
+
+##### PLOTTING #####
 
 def make_plot(show = False):
     # Set up figure
@@ -105,7 +153,7 @@ def make_plot(show = False):
     x = radii
     y = freq
     result = plot.pcolormesh(x, y, fft_data, cmap = cmap)
-    result.set_clim(0, 0.1)
+    result.set_clim(clim)
 
     # Axes
     plot.xlim(radii[0], radii[-1])
@@ -113,7 +161,7 @@ def make_plot(show = False):
     plot.xscale("log")
     plot.yscale("log")
 
-    xticks = np.concatenate((np.logspace(0.5, 1.0, 3), np.logspace(1.0, 2.5, 5)[1:]))
+    xticks = np.concatenate((np.logspace(np.log10(0.5), np.log10(1.0), 3), np.logspace(np.log10(1.0), np.log10(2.5), 5)[1:]))
     plot.xticks(xticks, ['%.2f' % xtick for xtick in xticks])
 
     yticks = np.logspace(np.log10(1.0 / num_orbits), np.log10(0.5), 10)
@@ -122,7 +170,7 @@ def make_plot(show = False):
     # Annotate Axes
     radius_unit = r'$r_\mathrm{p}$'
     plot.xlabel("Radius [%s]" % radius_unit, fontsize = fontsize)
-    plot.ylabel(r"$\omega$", fontsize = fontsize)
+    plot.ylabel(r"$\omega / \Omega_\mathrm{0}$", fontsize = fontsize)
     
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1]
@@ -137,7 +185,6 @@ def make_plot(show = False):
         plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
-
 
 
 ##### Make Plots! #####
