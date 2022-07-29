@@ -15,6 +15,7 @@ from scipy.interpolate import interp1d as interpolate
 from scipy.ndimage import map_coordinates
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -152,7 +153,7 @@ frames = np.array(pickle.load(open("%s/%s_verticalVelocityMap-frames.p" % (load_
 radii = np.array(pickle.load(open("%s/%s_verticalVelocityMap-radii.p" % (load_directory, name), "rb")))
 
 # Process!
-fft_data, freq = process_data()
+fft_data, freq = process_data(data, frames, radii)
 
 ##### PLOTTING #####
 
