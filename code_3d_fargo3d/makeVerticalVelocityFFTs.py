@@ -38,6 +38,8 @@ ef new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
+    parser.add_argument('--load', dest = "load_directory", default = "midplaneVerticalVelocityMapsOverTime",
+                         help = 'load directory (default: midplaneVerticalVelocityMapsOverTime)')
     parser.add_argument('--dir', dest = "save_directory", default = "verticalVelocityFFTs",
                          help = 'save directory (default: verticalVelocityFFTs)')
 
@@ -97,6 +99,12 @@ frame_range = util.get_frame_range(args.frames)
 # Number of Cores 
 num_cores = args.num_cores
 
+# Files
+load_directory = args.load_directory
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
 show = args.show
 version = args.version
 
@@ -135,9 +143,9 @@ if name is None:
     directory_name = os.getcwd().split("/")[-1]
     name = directory_name
 
-data = np.array(pickle.load(open("%s_verticalVelocityMap-data.p" % name, "rb")))
-frames = np.array(pickle.load(open("%s_verticalVelocityMap-frames.p" % name, "rb")))
-radii = np.array(pickle.load(open("%s_verticalVelocityMap-radii.p" % name, "rb")))
+data = np.array(pickle.load(open("%s/%s_verticalVelocityMap-data.p" % (load_directory, name), "rb")))
+frames = np.array(pickle.load(open("%s/%s_verticalVelocityMap-frames.p" % (load_directory, name), "rb")))
+radii = np.array(pickle.load(open("%s/%s_verticalVelocityMap-radii.p" % (load_directory, name), "rb")))
 
 # Process!
 fft_data, freq = process_data()
