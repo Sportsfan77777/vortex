@@ -25,7 +25,7 @@ import util
 import square as sq
 
 from advanced import Parameters
-from reader import Fields
+#from reader import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -143,9 +143,9 @@ def process_data(data, frames, radii):
     return fft_data, freq
 
 # Load Data
-if name is None:
-    directory_name = os.getcwd().split("/")[-1]
-    name = directory_name
+#if args.name is None:
+directory_name = os.getcwd().split("/")[-1]
+name = directory_name
 
 data = np.array(pickle.load(open("%s/%s_verticalVelocityMap-data.p" % (load_directory, name), "rb")))
 frames = np.array(pickle.load(open("%s/%s_verticalVelocityMap-frames.p" % (load_directory, name), "rb")))
