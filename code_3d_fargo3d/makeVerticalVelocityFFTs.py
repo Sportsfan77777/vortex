@@ -40,6 +40,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('--rate', dest = "rate", type = int, default = 1,
                          help = 'frame rate (default: 1)')
+    parser.add_argument('--cadence', dest = "cadence", type = int, default = 1,
+                         help = 'frame rate (default: 1)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
 
@@ -103,6 +105,9 @@ viscosity = 1e-7 #p.nu
 if args.frames is not None:
     frame_range = util.get_frame_range(args.frames)
 
+rate = args.rate
+cadence = args.cadence
+
 # Number of Cores 
 num_cores = args.num_cores
 
@@ -156,6 +161,7 @@ radii = np.array(pickle.load(open("%s/%s_verticalVelocityMap-radii.p" % (load_di
 
 # Process!
 fft_data, freq = process_data(data, frames, radii)
+freq *= cadence
 
 ##### PLOTTING #####
 
@@ -182,7 +188,7 @@ def make_plot(show = False):
     plot.minorticks_off() # Fixes known bug where xticks aren't removed if scale is log
     plot.xticks(xticks, ['%.2f' % xtick for xtick in xticks])
 
-    yticks = np.logspace(np.log10(1.0 / len(frames)), np.log10(0.5), 10)
+    yticks = np.logspace(np.log10(1.0 * cadence / len(frames)), np.log10(0.5), 10)
     plot.yticks(yticks, ['%.3f' % ytick for ytick in yticks])
 
     # Annotate Axes
