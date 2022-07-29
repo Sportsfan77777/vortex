@@ -24,15 +24,18 @@ from pylab import fromfile
 import util
 import square as sq
 
+from advanced import Parameters
+from reader import Fields
+
 from colormaps import cmaps
 for key in cmaps:
     plot.register_cmap(name = key, cmap = cmaps[key])
 
-ef new_argument_parser(description = "Plot gas density maps."):
+def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('--range', dest = "frames", type = int, nargs = '+',
+    parser.add_argument('--range', dest = "frames", type = int, nargs = '+', default = None,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
@@ -94,7 +97,8 @@ viscosity = 1e-7 #p.nu
 ### Get Input Parameters ###
 
 # Frames
-frame_range = util.get_frame_range(args.frames)
+if args.frames is not None:
+    frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
 num_cores = args.num_cores
