@@ -179,8 +179,10 @@ def make_plot(show = False):
 
     # Reference Line
     xref = radii
-    yref = np.power(radii, -1.5)
-    plot.plot(xref, yref, c = 'b', linewidth = 2)
+    yref1 = np.power(radii, -1.5) * (np.sqrt(5) - 2.0)
+    yref2 = np.power(radii, -1.5)
+    plot.plot(xref, yref1, c = 'b', linewidth = 2)
+    plot.plot(xref, yref2, c = 'b', linewidth = 2)
 
     # Axes
     plot.xlim(radii[0], radii[-1])
