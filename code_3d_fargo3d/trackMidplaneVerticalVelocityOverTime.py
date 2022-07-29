@@ -322,7 +322,7 @@ def get_velocity(args_here):
     composite_vz[i, :] = average_midplane_vz
 
     #peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
-    composite_peak[i] = peak
+    #composite_peak[i] = peak
 
 
 composite_vz = np.zeros((len(frame_range), num_rad))
