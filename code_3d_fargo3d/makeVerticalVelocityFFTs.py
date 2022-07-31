@@ -36,7 +36,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('--range', dest = "frames", type = int, nargs = '2', default = None,
+    parser.add_argument('--range', dest = "frames", type = int, nargs = 2, default = None,
                          help = 'select start and end frames for range(start, end, rate)')
     parser.add_argument('--rate', dest = "rate", type = int, default = 1,
                          help = 'frame rate (default: 1)')
@@ -166,9 +166,6 @@ if args.frames is not None:
 
     data = data[start:end, :]
     frames = data[start:end]
-else:
-    start = frames[0]
-    end = frames[-1]
 
 data = data[::rate, :]
 frames = frames[::rate]
@@ -221,9 +218,9 @@ def make_plot(show = False):
     directory_name = os.getcwd().split("/")[-1]
 
     if version is None:
-        save_fn = "%s/%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, start, end, args.rate)
+        save_fn = "%s/%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, directory_name, frames[0], frames[-1], args.rate)
     else:
-        save_fn = "%s/v%04d_%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, start, end, args.rate)
+        save_fn = "%s/v%04d_%s_FFTverticalVelocityMap_%04d_%04d_%04d.png" % (save_directory, version, directory_name, frames[0], frames[-1], args.rate)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
