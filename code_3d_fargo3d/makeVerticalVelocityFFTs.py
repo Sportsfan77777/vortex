@@ -165,7 +165,7 @@ if args.frames is not None:
     end = np.searchsorted(frames, args.frames[1]) + 1
 
     data = data[start:end, :]
-    frames = data[start:end]
+    frames = frames[start:end]
 
 data = data[::rate, :]
 frames = frames[::rate]
