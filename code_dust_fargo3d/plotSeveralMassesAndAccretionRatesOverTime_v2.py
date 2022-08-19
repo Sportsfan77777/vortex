@@ -183,7 +183,7 @@ dpi = args.dpi
 
 ##### PLOTTING #####
 
-colors = ['k', 'violet', 'cornflowerblue', 'sandybrown', 'darkorange', 'r', 'silver']
+colors = ['k', 'darkviolet', 'cornflowerblue', 'sandybrown', 'darkorange', 'r', 'grey']
 labelsize = 19
 size = 100
 
