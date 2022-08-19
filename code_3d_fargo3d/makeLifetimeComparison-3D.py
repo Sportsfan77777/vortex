@@ -16,14 +16,19 @@ final_masses = []
 #lifetimes.append([3573, 3875, 7249, 9625])
 #final_masses.append([1.22, 0.59, 0.33, 0.18])
 
-master_directories.append(["h06_nu7_s0694", "h06_nu7_s0809", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472"])
-lifetimes.append([0, 1300, 1830, 2710, 3140, 2990, 3290])
-final_masses.append([0.15, 0.17, 0.20, 0.26, 0.40, 0.51, 0.80])
-
 #### Note: Re-do ALL of these!!! ####
-master_directories.append(["h06_nu7_s0347", "h06_nu7_s0578", "h06_nu7_s0694", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315"])
-lifetimes.append([1490, 1880, 1920, 1700, 3175, 8000, 13000])
-final_masses.append([0.10, 0.15, 0.17, 0.21, 0.29, 0.45, 0.54])
+master_directories.append(["h06_nu7_s0347", "h06_nu7_s0578", "h06_nu7_s0694", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472"])
+lifetimes.append([0, 900, 1170, 1170, 2920, 7500, 7500, 7500, 7500])
+final_masses.append([0.10, 0.15, 0.17, 0.21, 0.29, 0.42, 0.51, 0.65, 0.91])
+
+master_directories.append(["h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472"])
+lifetimes.append([1760, 2620, 4120, 4875])
+final_masses.append([0.29, 0.42, 0.51, 0.65])
+
+master_directories.append(["h06_nu7_s0694", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315"])
+lifetimes.append([0, 1300, 1830, 2710, 3140, 2990, 3290, 5000])
+final_masses.append([0.15, 0.17, 0.20, 0.26, 0.40, 0.51, 0.80, 0.91])
+
 
 #master_directories.append(["h04_nu7_a100", "h04_nu7_a50", "h04_nu7_a167", "h04_nu7_a05"])
 #lifetimes.append([2038, 1155, 1794, 2695])
@@ -60,11 +65,14 @@ markersize = 14
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
-linestyles = ["-", "-", "-", "--", "--"]
+linestyles = ["-", "--", "-", "--", "--"]
+linewidths = [linewidth, linewidth, linewidth - 2]
 #colors = ["darkblue", "gold", "deepskyblue", "orange", "k"]
-colors = ["b", "#17becf", "gold", "orange", "r"]
+#colors = ["b", "#17becf", "gold", "orange", "r"]
+colors = ["b", "b", "gold"]
 #markers = ["s", "*", "p", "^", "h"]
 markers = ["s", "p", "*", "^", "h"]
+labels = ["2-D", "2-D w/ dust cutoff", "3-D"]
 
 def make_plot():
     # Data
@@ -78,32 +86,34 @@ def make_plot():
         elif scale_height == 0.04:
             alpha_coefficent = "6"
         #label = r"$h =$ $%.02f$, $\alpha = %s \times 10^{-%d}$" % (scale_height, alpha_coefficent, log_viscosity)
-        label = r"$h =$ $%.02f$" % (scale_height)
+        #label = r"$h =$ $%.02f$" % (scale_height)
+        label = labels[i]
 
         xs = final_masses_i
         ys = lifetimes_i
 
-        plot.plot(xs, ys, c = colors[i], marker = markers[i], markersize = markersize, linewidth = linewidth, linestyle = linestyles[i], label = label, zorder = 99 - i)
+        plot.plot(xs, ys, c = colors[i], marker = markers[i], markersize = markersize, linewidth = linewidths[i], linestyle = linestyles[i], label = label, zorder = 99 - i)
 
-        # Indicate vortices that aren't dead yet --- not needed anymore (completed every run)
-        #if directories == master_directories[0]:
-            #dx = 0; dy = 600; head_width = 0.05; head_length = 200
+        # Indicate vortices that aren't dead yet
+        dx = 0; dy = 600; head_width = 0.05; head_length = 200
 
-            #for (xi, yi) in zip(xs, ys):
-            #    plot.arrow(xi, yi, dx, dy, linewidth = linewidth - 1, head_width = head_width, head_length = head_length, fc = colors[i],  ec = colors[i])
+        for (xi, yi) in zip(xs, ys):
+            if yi >= 5000:
+                plot.arrow(xi, yi, dx, dy, linewidth = linewidths[i] - 1, head_width = head_width, head_length = head_length, fc = colors[i],  ec = colors[i])
 
-            #offset_x = 0.025; offset_y = 200
-            #plot.text(xs[0] + offset_x, ys[0] + offset_y, "S", color = colors[i], fontsize = fontsize - 3)
-            #plot.text(xs[1] + offset_x, ys[1] + offset_y, "S", color = colors[i], fontsize = fontsize - 3)
+        offset_x = 0.025; offset_y = 200
+        #plot.text(xs[0] + offset_x, ys[0] + offset_y, "S", color = colors[i], fontsize = fontsize - 3)
+        #plot.text(xs[1] + offset_x, ys[1] + offset_y, "S", color = colors[i], fontsize = fontsize - 3)
 
         # Create break in legend
         #if directories == master_directories[2]:
         #    plot.plot([1, 1], [1, 1], c = "white", label = " ")
 
-    plot.legend(loc = 'upper right', fontsize = fontsize - 3)
+    plot.legend(loc = 'lower right', fontsize = fontsize - 3)
 
     # Axes
-    plot.ylim(0, 20000)
+    plot.xlim(0, 1)
+    plot.ylim(0, 9000)
 
     # Annotate
     plot.xlabel(r"Planet Mass [Jupiter masses]", fontsize = fontsize)
