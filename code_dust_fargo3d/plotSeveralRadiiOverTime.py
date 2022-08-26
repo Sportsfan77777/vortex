@@ -39,7 +39,7 @@ for key in cmaps:
 ###############################################################################
 
 master_directories = {}
-master_directories[67] = ["h06_nu7_a40_s5787-K60", "h06_nu7_a40_s3472-K60", "h06_nu7_a40_s2315-K60", "h06_nu7_a40_s1736-K60", "h06_nu7_a40_s1157-K60", "h06_nu7_a40_s0694-K60", "h06_nu7_a40_s0347-K60"]
+master_directories[67] = ["h06_nu7_a40_s3472-K60-r125-migrating-f", "h06_nu7_a40_s2315-K60-r125-migrating-f", "h06_nu7_a40_s1157-K60-r125-migrating-f", "h06_nu7_a40_s0694-K60-r125-migrating-f"]
 
 #master_directories[87] = ["h08_nu7_a167-offset", "h08_nu7_a05-offset", "h08_nu7_a02-offset", "h08_nu7_a01-offset"]
 #master_directories[67] = ["h06_nu7_a50-offset", "h06_nu7_a167-offset", "h06_nu7_a05-offset", "h06_nu7_a02-offset"]
