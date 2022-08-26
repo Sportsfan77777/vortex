@@ -47,6 +47,10 @@ master_directories[67] = ["h06_nu7_a40_s3472-K60-r125-migrating-f", "h06_nu7_a40
 #master_directories[86] = ["h08_nu6_a167-offset", "h08_nu6_a05-offset", "h08_nu6_a02-offset"]
 #master_directories[66] = ["h06_nu6_a50-offset", "h06_nu6_a167-offset", "h06_nu6_a05-offset"]
 
+master_disc_masses = {}
+#master_disc_masses[67] = [5.0, 3.0, 2.0, 1.5, 1.0, 0.8, 0.6, 0.5, 0.3]
+master_disc_masses[67] = [3.0, 2.0, 1.0, 0.6]
+
 #master_accretion_rates = {}
 #master_accretion_rates[87] = [0.17, 0.05, 0.02, 0.01]
 #master_accretion_rates[67] = [0.50, 0.17, 0.05, 0.02]
@@ -118,6 +122,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 args = new_argument_parser().parse_args()
 
 directories = master_directories[args.choice]
+disc_masses = master_disc_masses[args.choice]
 #accretion_rates = master_accretion_rates[args.choice]
 #start_times = master_start_times[args.choice]
 #end_times = master_end_times[args.choice]
@@ -213,13 +218,15 @@ def make_plot(show = False):
         # Label
         scale_height = float(directories[0].split("_")[0][1:]) / 100.0
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
-        accretion_rate = accretion_rates[i]
+        disc_mass = disc_masses[i]
 
         start_time = start_times[i]
         end_time = end_times[i]
 
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
-        label = r"$A = %.02f$" % (accretion_rate)
+        #label = r"$A = %.02f$" % (accretion_rate)
+
+        label = disc_mass
 
         # Data
         data = np.loadtxt("../%s/planet0.dat" % directory)
@@ -255,7 +262,7 @@ def make_plot(show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    plot.ylim(0.7, max_y)
 
     #title = readTitle()
 
