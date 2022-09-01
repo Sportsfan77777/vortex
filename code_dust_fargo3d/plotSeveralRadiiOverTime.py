@@ -59,19 +59,21 @@ master_disc_masses[67] = [3.0, 2.0, 1.0, 0.6]
 #master_accretion_rates[86] = [0.17, 0.05, 0.02]
 #master_accretion_rates[66] = [0.50, 0.17, 0.05]
 
-#master_start_times = {}
+master_start_times = {}
 #master_start_times[87] = [349, 913, 1751, 2875]
 #master_start_times[67] = [108, 217, 451, 788]
 #master_start_times[47] = [59, 70, 104, 223]
 #master_start_times[86] = [376, 1816, 0]
 #master_start_times[66] = [116, 247, 677]
+master_start_times[67] = [160, 200, 400, 800]
 
-#master_end_times = {}
+master_end_times = {}
 #master_end_times[87] = [4000, 4745, 6790, 10700]
 #master_end_times[67] = [2512, 2502, 6918, 7500]
 #master_end_times[47] = [2097, 1225, 1898, 2918]
 #master_end_times[86] = [1816, 2590, 0]
 #master_end_times[66] = [675, 1336, 1607]
+master_end_times[67] = [-1, -1, -1, 2580]
 
 ###############################################################################
 
@@ -244,14 +246,14 @@ def make_plot(show = False):
         result = plot.plot(x, y, c = colors[i], linewidth = linewidth - 1, zorder = 99, label = label)
 
         # Vortex Lifetime
-        #if start_time > 0:
-        #    start_time_i = az.my_searchsorted(x, start_time)
-        #    end_time_i = az.my_searchsorted(x, end_time)
+        if start_time > 0:
+            start_time_i = az.my_searchsorted(x, start_time)
+            end_time_i = az.my_searchsorted(x, end_time)
 
-        #    result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
+            result = plot.plot(x[start_time_i:end_time_i], y[start_time_i:end_time_i], c = colors[i], linewidth = linewidth + 3, zorder = 99)
 
-        #    plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
-        #    plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
+            plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
+            plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
 	legend_text = r"$\Sigma_\mathrm{0}$ $/$ $\Sigma_\mathrm{base}$"
     plot.legend(loc = "upper right", title = legend_text, fontsize = fontsize - 4)
