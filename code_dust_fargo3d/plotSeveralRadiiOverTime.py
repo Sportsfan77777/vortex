@@ -182,7 +182,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = 0; x_max = 1000
+    x_min = 0; x_max = 5000
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
