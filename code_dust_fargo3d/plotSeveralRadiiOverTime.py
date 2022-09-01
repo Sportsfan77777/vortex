@@ -127,8 +127,8 @@ args = new_argument_parser().parse_args()
 directories = master_directories[args.choice]
 disc_masses = master_disc_masses[args.choice]
 #accretion_rates = master_accretion_rates[args.choice]
-#start_times = master_start_times[args.choice]
-#end_times = master_end_times[args.choice]
+start_times = master_start_times[args.choice]
+end_times = master_end_times[args.choice]
 
 ### Get Fargo Parameters ###
 p = Parameters(directory = "../" + directories[0])
