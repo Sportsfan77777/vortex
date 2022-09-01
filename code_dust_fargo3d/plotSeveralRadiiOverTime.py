@@ -221,8 +221,8 @@ def make_plot(show = False):
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
         disc_mass = disc_masses[i]
 
-        start_time = start_times[i]
-        end_time = end_times[i]
+        #start_time = start_times[i]
+        #end_time = end_times[i]
 
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         #label = r"$A = %.02f$" % (accretion_rate)
@@ -252,7 +252,8 @@ def make_plot(show = False):
         #    plot.scatter(x[start_time_i], y[start_time_i], c = colors[i], s = 150, marker = "o", zorder = 120)
         #    plot.scatter(x[end_time_i], y[end_time_i], c = colors[i], s = 175, marker = "H", zorder = 120)
 
-    plot.legend(loc = "upper right", fontsize = fontsize - 4)
+	legend_text = r"$\Sigma_\mathrm{0}$ $/$ $\Sigma_\mathrm{base}$"
+    plot.legend(loc = "upper right", title = legend_text, fontsize = fontsize - 4)
 
     # Axes
     if args.max_y is None:
@@ -269,7 +270,7 @@ def make_plot(show = False):
 
     unit = "orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$r_p$ [$r_p$]", fontsize = fontsize)
+    plot.ylabel(r"Planet semi-major axis [$r_p$]", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
