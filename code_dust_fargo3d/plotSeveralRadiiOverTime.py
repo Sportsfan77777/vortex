@@ -224,8 +224,8 @@ def make_plot(show = False):
         log_viscosity = float(directories[0].split("_")[1][2:]) - 2.0
         disc_mass = disc_masses[i]
 
-        #start_time = start_times[i]
-        #end_time = end_times[i]
+        start_time = start_times[i]
+        end_time = end_times[i]
 
         #label = r"$h =$ $%.02f$, $\alpha_\mathrm{visc} = 3 \times 10^{-%d}$, A = %.02f" % (scale_height, log_viscosity, accretion_rate)
         #label = r"$A = %.02f$" % (accretion_rate)
