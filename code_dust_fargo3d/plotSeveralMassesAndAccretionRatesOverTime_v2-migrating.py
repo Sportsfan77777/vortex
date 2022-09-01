@@ -361,9 +361,9 @@ def make_plot(show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/severalMassAndAccretionRates_choice%d.png" % (save_directory, args.choice)
+        save_fn = "%s/severalMassAndAccretionRates-migrating_choice%d.png" % (save_directory, args.choice)
     else:
-        save_fn = "%s/v%04d_severalMassAndAccretionRates_choice%d.png" % (save_directory, version, arg.choice)
+        save_fn = "%s/v%04d_severalMassAndAccretionRates-migrating_choice%d.png" % (save_directory, version, arg.choice)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
