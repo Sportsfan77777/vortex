@@ -257,6 +257,7 @@ def make_plot(show = False):
 
 	legend_text = r"$\Sigma_\mathrm{0}$ $/$ $\Sigma_\mathrm{base}$"
     plot.legend(loc = "upper right", title = legend_text, fontsize = fontsize - 4)
+    ax.get_legend().get_title().set_fontsize(fontsize - 4)
 
     # Axes
     if args.max_y is None:
