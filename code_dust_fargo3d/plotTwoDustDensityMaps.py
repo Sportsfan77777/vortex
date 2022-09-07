@@ -421,6 +421,7 @@ def make_plot(frames, show = False):
            plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+        x_shift = 0.2
         y_text = 1.20
 
         alpha_coefficent = "3"
@@ -431,10 +432,10 @@ def make_plot(frames, show = False):
 
         if i == 0:
             text1 = r"$h = %.2f$" % (scale_height)
-            plot.text(x_min, y_text * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+            plot.text(x_min - x_shift * x_range, y_text * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
         if i == 1:
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_max, y_text * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize + 1)
+            plot.text(x_max + x_shift * x_range, y_text * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
