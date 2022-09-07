@@ -390,7 +390,7 @@ def make_plot(frames, show = False):
            plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-        y_text = 1.14
+        y_text = 1.24
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -430,7 +430,8 @@ def make_plot(frames, show = False):
     final_planet_mass = planet_mass + accreted_mass[final_frame]
     #title = r"$h = %.2f$     $\Sigma_0 = %.3e$   (2-D)" % (scale_height, surface_density_zero)
     #title = r"$h = %.2f$     $\Sigma_0 = %.3e$" % (scale_height, surface_density_zero)
-    title = r"$\Sigma_0 = %.3e$     $\Sigma_\mathrm{base} / \Sigma_0 = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero, surface_density_zero / surface_density_base, final_planet_mass)
+    #title = r"$\Sigma_0 = %.3e$     $\Sigma_0 / \Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero, surface_density_zero / surface_density_base, final_planet_mass)
+    title = r"$\Sigma_0 / \Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero / surface_density_base, final_planet_mass)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
