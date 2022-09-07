@@ -425,7 +425,7 @@ def make_plot(frames, show = False):
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         x_shift = 0.35
-        y_text = 1.20
+        y_text = 1.16; y_shift = 0.08
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -435,9 +435,9 @@ def make_plot(frames, show = False):
 
         if i == 0:
             text1 = r"$h = %.2f$" % (scale_height)
-            plot.text(x_min - x_shift * x_range, y_text * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_max - x_shift * x_range, y_text * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+            plot.text(x_max - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
         if i == 1:
             text3 = args.optional_title
             if text3 is not None:
