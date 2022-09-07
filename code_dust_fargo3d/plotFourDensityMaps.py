@@ -392,6 +392,19 @@ def make_plot(frames, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
+        alpha_coefficent = "3"
+        if scale_height == 0.08:
+            alpha_coefficent = "1.5"
+        elif scale_height == 0.04:
+            alpha_coefficent = "6"
+
+        if i == 0:
+            text1 = r"$h = %.2f$" % (scale_height)
+            plot.text(x_min, y_text, text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+        if i == 3:
+            text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+            plot.text(x_max, y_text, text2, horizontalalignment = 'right', fontsize = fontsize + 1)
+
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
 
@@ -410,14 +423,14 @@ def make_plot(frames, show = False):
         add_to_plot(i)
 
     # Title
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
+    surface_density_base = 1.157e-4
+    final_frame = 5000
+    if final_frame > len(accreted_mass):
+        final_frame = len(accreted_mass) - 1
+    final_planet_mass = planet_mass + accreted_mass[final_frame]
     #title = r"$h = %.2f$     $\Sigma_0 = %.3e$   (2-D)" % (scale_height, surface_density_zero)
     #title = r"$h = %.2f$     $\Sigma_0 = %.3e$" % (scale_height, surface_density_zero)
-    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $\Sigma_0 = %.3e$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, surface_density_zero)
+    title = r"$\Sigma_0 = %.3e$     $\Sigma_\mathrm{base} / \Sigma_0 = %.1f$    $M_\mathrm{p} = %.2f$" % (surface_density_zero, surface_density_zero / surface_density_base, final_planet_mass)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
