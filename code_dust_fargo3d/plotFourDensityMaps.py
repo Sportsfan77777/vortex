@@ -390,7 +390,7 @@ def make_plot(frames, show = False):
            plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-        y_text = 1.24
+        y_text = 1.20
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
