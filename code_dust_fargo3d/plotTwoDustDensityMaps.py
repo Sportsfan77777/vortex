@@ -48,7 +48,7 @@ from pylab import fromfile
 
 import util
 import azimuthal as az
-from readTitle import readTitle
+#from readTitle import readTitle
 
 from advanced import Parameters
 from reader import Fields
@@ -423,6 +423,19 @@ def make_plot(frames, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
+        alpha_coefficent = "3"
+        if scale_height == 0.08:
+            alpha_coefficent = "1.5"
+        elif scale_height == 0.04:
+            alpha_coefficent = "6"
+
+        if i == 0:
+            text1 = r"$h = %.2f$" % (scale_height)
+            plot.text(x_min, y_text * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+        if i == 1:
+            text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+            plot.text(x_max, y_text * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize + 1)
+
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
@@ -442,12 +455,13 @@ def make_plot(frames, show = False):
         add_to_plot(i)
 
     # Title
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
-    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    surface_density_base = 1.157e-4
+    final_frame = 5000
+    if final_frame > len(accreted_mass):
+        final_frame = len(accreted_mass) - 1
+    final_planet_mass = planet_mass + accreted_mass[final_frame]
+    #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero / surface_density_base, final_planet_mass)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
     plot.suptitle("%s" % (title), y = 1.10, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
