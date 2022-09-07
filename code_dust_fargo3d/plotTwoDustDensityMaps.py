@@ -437,11 +437,11 @@ def make_plot(frames, show = False):
             text1 = r"$h = %.2f$" % (scale_height)
             plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_max - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
         if i == 1:
             text3 = args.optional_title
             if text3 is not None:
-              plot.text(x_max + x_shift * x_range, y_text * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
+              plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
