@@ -419,7 +419,7 @@ def make_plot(frames, show = False):
     #title = r"$h = %.2f$     $\Sigma_0 = %.3e$" % (scale_height, surface_density_zero)
     title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $\Sigma_0 = %.3e$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, surface_density_zero)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.10, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     if version is None:
