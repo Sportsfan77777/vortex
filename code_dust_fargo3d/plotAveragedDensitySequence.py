@@ -198,7 +198,7 @@ def make_plot(frame_range, show = False):
         ### Plot ###
         x = rad
         y = normalized_density
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (i % 2), linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (i != 0) * 1, linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
         this_x = planet_x[frame]
         this_y = planet_y[frame]
