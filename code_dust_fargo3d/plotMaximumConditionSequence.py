@@ -176,6 +176,9 @@ data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
+planet_x = data[:, 1]
+planet_y = data[:, 2]
+
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
@@ -215,11 +218,17 @@ def make_plot(frame_range, show = False):
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
         # Reference line for pressure bump
-        if scale_height == 0.08:
-            bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 3.0)
-        else:
-            bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
-        plot.plot([bump, bump], y_range, c = colors[i % len(colors)], linewidth = linewidth, linestyle = "--", zorder = 20)
+        #if scale_height == 0.08:
+        #    bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 3.0)
+        #else:
+        #    bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 1.6)
+        #plot.plot([bump, bump], y_range, c = colors[i % len(colors)], linewidth = linewidth, linestyle = "--", zorder = 20)
+
+        this_x = planet_x[frame]
+        this_y = planet_y[frame]
+        planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
+
+        plot.scatter([planet_location], [1.05 * 10**(-3)], c = colors[i % len(colors)], s = 75, alpha = 0.8, clip_on = False)
 
     legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, framealpha = 1.0, fancybox = False)
     legend.set_zorder(150)
