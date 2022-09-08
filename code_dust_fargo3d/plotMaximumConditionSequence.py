@@ -275,9 +275,9 @@ def make_plot(frame_range, show = False):
         alpha_coefficent = "6"
 
     text1 = r"$h = %.2f$" % (scale_height)
-    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes)
+    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, bc = "white", zorder = 1000)
     text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes)
+    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, bc = "white", zorder = 1000)
 
     surface_density_base = 1.157e-4
     final_frame = 5000
