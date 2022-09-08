@@ -165,6 +165,9 @@ data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 
+planet_x = data[:, 1]
+planet_y = data[:, 2]
+
 ### Add new parameters to dictionary ###
 #fargo_par["rad"] = rad
 #fargo_par["theta"] = theta
@@ -196,6 +199,10 @@ def make_plot(frame_range, show = False):
         x = rad
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (i % 2), linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+
+        this_x = planet_x[frame]
+        this_y = planet_y[frame]
+        planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
 
         plot.scatter([planet_location], [0], c = colors[i % len(colors)], s = 50)
 
