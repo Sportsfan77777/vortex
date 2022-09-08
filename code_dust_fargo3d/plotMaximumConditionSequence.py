@@ -190,7 +190,7 @@ fargo_par["theta"] = theta
 linestyles = ["-", "-"]
 #colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
 colors = ['k', 'b', '#17becf', 'darkviolet']
-colors = ['k', 'gold', '#8c564b', 'firebrick']
+colors = ['k', 'darkorange', 'firebrick', '#8c564b']
 
 labelsize = 18
 rc['xtick.labelsize'] = labelsize
