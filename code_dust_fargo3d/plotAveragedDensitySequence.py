@@ -204,7 +204,7 @@ def make_plot(frame_range, show = False):
         this_y = planet_y[frame]
         planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
 
-        plot.scatter([planet_location], [0], c = colors[i % len(colors)], s = 50)
+        plot.scatter([planet_location], [1.05 * 10**(-3)], c = colors[i % len(colors)], s = 75, alpha = 0.8, clip_on = False)
 
     plot.legend(loc = "lower right", fontsize = fontsize - 5)
 
