@@ -247,7 +247,7 @@ def make_plot(frame_range, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$L_\mathrm{iso}$ $\equiv$ $c_s^2$ $\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$", fontsize = fontsize)
+    plot.ylabel(r"$L_\mathrm{iso}$ $\equiv$ $<$ $c_s^2$ $\Sigma$ $/$ ($\nabla \times v$)$_\mathrm{z}$ $>$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
@@ -255,7 +255,9 @@ def make_plot(frame_range, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
+    x_shift = 0.35; y_shift = 0.08
+    x_text = 0.68; y_text = 0.84; 
+    x_text_header = 0.5; y_text_header = 1.12
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -263,12 +265,27 @@ def make_plot(frame_range, show = False):
     elif scale_height == 0.04:
         alpha_coefficent = "6"
 
+    text1 = r"$h = %.2f$" % (scale_height)
+    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes)
+    text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes)
+
+    surface_density_base = 1.157e-4
+    final_frame = 5000
+    if final_frame > len(accreted_mass):
+        final_frame = len(accreted_mass) - 1
+    final_planet_mass = planet_mass + accreted_mass[final_frame]
+
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero / surface_density_base, final_planet_mass)
     #title1 = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    title1 = title = r"$h = %.2f$     $\Sigma_0 = %.3e$   (2-D)" % (scale_height, surface_density_zero)
-    plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
+    #title1 = title = r"$h = %.2f$     $\Sigma_0 = %.3e$   (2-D)" % (scale_height, surface_density_zero)
+    plot.title("%s" % (title), y = 1.015, fontsize = fontsize + 1)
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    header = "Migrating"
+    plot.text(x_text_header, y_text_header, header, horizontalalignment = 'center', fontsize = fontsize + 2, transform = ax.transAxes)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
