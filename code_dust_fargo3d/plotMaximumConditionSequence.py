@@ -228,7 +228,7 @@ def make_plot(frame_range, show = False):
         this_y = planet_y[frame]
         planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
 
-        plot.scatter([planet_location], [1.05 * 10**(-3)], c = colors[i % len(colors)], s = 75, alpha = 0.8, clip_on = False)
+        plot.scatter([planet_location], [0.0001], c = colors[i % len(colors)], s = 75, alpha = 0.8, clip_on = False)
 
     legend = plot.legend(loc = "upper right", fontsize = fontsize - 4, framealpha = 1.0, fancybox = False)
     legend.set_zorder(150)
@@ -265,8 +265,8 @@ def make_plot(frame_range, show = False):
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     x_shift = 0.35; y_shift = 0.08
-    x_text = 0.68; y_text = 0.84; 
-    x_text_header = 0.5; y_text_header = 1.12
+    x_text = 0.1; y_text = 0.84; 
+    x_text_header = 0.5; y_text_header = 1.14
 
     alpha_coefficent = "3"
     if scale_height == 0.08:

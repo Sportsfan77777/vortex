@@ -178,7 +178,8 @@ planet_y = data[:, 2]
 
 linestyles = ["-", "-"]
 #colors = ['k', 'b', 'cornflowerblue', '#17becf', '#8c564b', 'darkorange', 'r', 'gold']
-colors = ['k', 'b', '#17becf', '#8c564b', 'darkorange', 'darkviolet']
+#colors = ['k', 'b', '#17becf', '#8c564b', 'darkorange', 'darkviolet']
+colors = ['k', 'b', '#17becf', '#8c564b', 'darkviolet']
 
 labelsize = 18
 rc['xtick.labelsize'] = labelsize
