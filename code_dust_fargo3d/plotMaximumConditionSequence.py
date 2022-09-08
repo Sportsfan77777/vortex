@@ -221,7 +221,6 @@ def make_plot(frame_range, show = False):
         #result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0) + (i == 2), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame, alpha = alpha)
 
-
         # Reference line for pressure bump
         #if scale_height == 0.08:
         #    bump, _ = az.get_radial_peak(averaged_density, fargo_par, end = 3.0)
@@ -280,9 +279,9 @@ def make_plot(frame_range, show = False):
         alpha_coefficent = "6"
 
     text1 = r"$h = %.2f$" % (scale_height)
-    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000, alpha = alpha)
+    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000, alpha = alpha, framealpha = 0.8)
     text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000, alpha = alpha)
+    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000, alpha = alpha, framealpha = 0.8)
 
     surface_density_base = 1.157e-4
     final_frame = 5000
