@@ -196,6 +196,8 @@ def make_plot(frame_range, show = False):
         y = normalized_density
         result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + (i % 2), linestyle = linestyles[i % 2], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
+        plot.scatter([planet_location], [0], c = colors[i % len(colors)], s = 50)
+
     plot.legend(loc = "lower right", fontsize = fontsize - 5)
 
     # Axes
