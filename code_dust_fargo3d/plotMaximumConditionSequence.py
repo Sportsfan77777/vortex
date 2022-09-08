@@ -264,8 +264,8 @@ def make_plot(frame_range, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    x_shift = 0.35; y_shift = 0.12
-    x_text = 0.025; y_text = 0.76
+    x_shift = 0.35; y_shift = 0.08
+    x_text = 0.025; y_text = 0.80
     x_text_header = 0.5; y_text_header = 1.14
 
     alpha_coefficent = "3"
