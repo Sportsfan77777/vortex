@@ -280,10 +280,10 @@ def make_plot(frame_range, show = False):
 
     text1 = r"$h = %.2f$" % (scale_height)
     textbox1 = plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, zorder = 1000, alpha = alpha)
-    textbox1.set_bbox(dict(color = 'white', alpha = alpha))
+    textbox1.set_bbox(dict(facecolor = 'white', alpha = alpha))
     text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
     textbox2 = plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, zorder = 1000, alpha = alpha)
-    textbox2.set_bbox(dict(color = 'white', alpha = alpha))
+    textbox2.set_bbox(dict(facecolor = 'white', alpha = alpha))
 
     surface_density_base = 1.157e-4
     final_frame = 5000
