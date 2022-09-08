@@ -245,7 +245,7 @@ def make_plot(frame_range, show = False):
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     x_shift = 0.35; y_shift = 0.10
-    y_text = 1.14
+    x_text = 0.72; y_text = 0.8; y_text_header = 1.14
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -254,9 +254,9 @@ def make_plot(frame_range, show = False):
         alpha_coefficent = "6"
 
     text1 = r"$h = %.2f$" % (scale_height)
-    plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+    plot.text(x_max - x_shift, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize + 1, transform = ax.transAxes)
     text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-    plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+    plot.text(x_max - x_shift, y_text, text2, horizontalalignment = 'left', fontsize = fontsize + 1, transform = ax.transAxes)
 
     surface_density_base = 1.157e-4
     final_frame = 5000
@@ -272,7 +272,7 @@ def make_plot(frame_range, show = False):
     #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     header = "Migrating"
-    plot.text(x_mid, y_text * plot.ylim()[-1], header, horizontalalignment = 'center', fontsize = fontsize + 2)
+    plot.text(x_mid, y_text_header, header, horizontalalignment = 'center', fontsize = fontsize + 2, transform = ax.transAxes)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
