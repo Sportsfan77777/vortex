@@ -265,7 +265,7 @@ def make_plot(frame_range, show = False):
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     x_shift = 0.35; y_shift = 0.08
-    x_text = 0.1; y_text = 0.84; 
+    x_text = 0.025; y_text = 0.84
     x_text_header = 0.5; y_text_header = 1.14
 
     alpha_coefficent = "3"
