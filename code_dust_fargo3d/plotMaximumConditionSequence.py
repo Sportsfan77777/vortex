@@ -196,6 +196,8 @@ labelsize = 18
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
+alpha = 0.8
+
 def make_plot(frame_range, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 5), dpi = dpi)
@@ -217,7 +219,7 @@ def make_plot(frame_range, show = False):
         x = rad[1:]
         y = maximum_condition # Highlight middle two!
         #result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
-        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0) + (i == 2), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame, alpha = 0.8)
+        result = plot.plot(x, y, c = colors[i % len(colors)], linewidth = linewidth + np.ceil(i/10.0) + (i == 2), linestyle = linestyles[i % 2], zorder = 99 - abs(1.5 - i), label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame, alpha = alpha)
 
 
         # Reference line for pressure bump
@@ -278,9 +280,9 @@ def make_plot(frame_range, show = False):
         alpha_coefficent = "6"
 
     text1 = r"$h = %.2f$" % (scale_height)
-    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000)
+    plot.text(x_text, y_text + y_shift, text1, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000, alpha = alpha)
     text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000)
+    plot.text(x_text, y_text, text2, horizontalalignment = 'left', fontsize = fontsize - 1, transform = ax.transAxes, backgroundcolor = "white", zorder = 1000, alpha = alpha)
 
     surface_density_base = 1.157e-4
     final_frame = 5000
