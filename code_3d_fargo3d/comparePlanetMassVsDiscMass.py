@@ -16,22 +16,25 @@ final_masses = []
 #lifetimes.append([3573, 3875, 7249, 9625])
 #final_masses.append([1.22, 0.59, 0.33, 0.18])
 
-#### Note: Re-do ALL of these!!! ####
+### 2-D ###
 master_directories.append(["h06_nu7_s0347", "h06_nu7_s0578", "h06_nu7_s0694", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472"])
 disc_masses.append([0.3, 0.5, 0.6, 0.8, 1.0, 1.5, 2.0, 3.0, 5.0])
 final_masses.append([0.10, 0.15, 0.17, 0.21, 0.29, 0.42, 0.51, 0.65, 0.91])
 
-#master_directories.append(["h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472", "h06_nu7_s5787"])
-#disc_masses.append([1760, 2620, 4120, 4875, 7500])
-#final_masses.append([0.29, 0.42, 0.51, 0.65, 0.91])
+### 2-D migrating ###
+master_directories.append(["h06_nu7_s0694", "h06_nu7_s1157", "h06_nu7_s2315", "h06_nu7_s3472"])
+disc_masses.append([0.6, 1.0, 2.0, 3.0])
+final_masses.append([0.24, 0.40, 0.64, 0.84])
 
+### 2-D low-res ###
 master_directories.append(["h06_nu7_s0578", "h06_nu7_s0694", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472", "h06_nu7_s4629", "h06_nu7_s5787"])
 disc_masses.append([0.5, 0.6, 0.8, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0])
 final_masses.append([0.15, 0.17, 0.23, 0.28, 0.39, 0.50, 0.71, 0.94, 1.19]) # 1.19
 
-master_directories.append(["h06_nu7_s0694", "h06_nu7_s0809", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472", "h06_nu7_s4629"])
-disc_masses.append([0.6, 0.8, 0.9, 1.0, 1.5, 2.0, 3.0, 5.0])
-final_masses.append([0.15, 0.17, 0.20, 0.26, 0.40, 0.51, 0.80, 1.4]) # 1.40
+### 3-D low-res ###
+master_directories.append(["h06_nu7_s0694", "h06_nu7_s0809", "h06_nu7_s0926", "h06_nu7_s1157", "h06_nu7_s1736", "h06_nu7_s2315", "h06_nu7_s3472", "h06_nu7_s4629", "h06_nu7_s4629"])
+disc_masses.append([0.6, 0.8, 0.9, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0])
+final_masses.append([0.15, 0.17, 0.20, 0.26, 0.40, 0.51, 0.80, 1.13, 1.47]) # 1.40
 
 
 #master_directories.append(["h04_nu7_a100", "h04_nu7_a50", "h04_nu7_a167", "h04_nu7_a05"])
@@ -71,14 +74,14 @@ alpha = 0.8
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
 
-linestyles = ["-", "-", "-", "-", "--"]
+linestyles = ["-", "-.", "-", "-", "-.", "-"]
 linewidths = [linewidth, linewidth, linewidth, linewidth]
 #colors = ["darkblue", "gold", "deepskyblue", "orange", "k"]
 #colors = ["b", "#17becf", "gold", "orange", "r"]
-colors = ["b", "orange", "gold"]
+colors = ["b", "b", "orange", "gold"]
 #markers = ["s", "*", "p", "^", "h"]
-markers = ["s", "p", "^", "*", "h"]
-labels = ["2-D", "2-D low res", "3-D low-res"]
+markers = ["s", "h", "p", "^", "*"]
+labels = ["2-D", "2-D migrating", "2-D low-res", "3-D low-res"]
 
 def make_plot():
     # Set up figure
@@ -122,23 +125,30 @@ def make_plot():
     plot.legend(loc = 'lower right', fontsize = fontsize - 3)
 
     # Axes
-    plot.xlim(0.2, 6)
-    plot.ylim(0.08, 1.5)
-    plot.xscale('log')
-    plot.yscale('log')
+    plot.xlim(0, 5.5)
+    plot.ylim(0, 1.5)
+
+    #plot.xlim(0.2, 6)
+    #plot.ylim(0.08, 1.5)
+    #plot.xscale('log')
+    #plot.yscale('log')
 
     # Annotate
     plot.xlabel(r"Disc Mass [$\Sigma_0$ / $\Sigma_\mathrm{base}$]", fontsize = fontsize)
     plot.ylabel(r"Planet Mass [Jupiter masses]", fontsize = fontsize)
-    #plot.title("Total Lifetimes of Dust Asymmetry", y = 1.02, fontsize = fontsize + 1)
+
+    title = r"$h = 0.06$          $\alpha = 3 \times 10^{-5}$"
+    plot.title(title, y = 1.02, fontsize = fontsize + 2)
 
     xtext = 0.025 * (plot.xlim()[1] - plot.xlim()[0]) + plot.xlim()[0]
     ytext = 0.90 * (plot.ylim()[1] - plot.ylim()[0]) + plot.ylim()[0]
     enter = 0.08 * (plot.ylim()[1] - plot.ylim()[0]) + plot.ylim()[0]
 
-    text1 = r"$h = 0.06$"; text2 = r"$\alpha = 3 \times 10^{-5}$"
-    plot.text(xtext, ytext, text1, fontsize = fontsize)
-    plot.text(xtext, ytext - enter, text2, fontsize = fontsize)
+    #text1 = r"$h = 0.06$"; text2 = r"$\alpha = 3 \times 10^{-5}$"; 
+    text = r"$\Sigma_\mathrm{base} = 1.157 \times 10^{-4}$"
+    plot.text(xtext, ytext, text, fontsize = fontsize)
+    #plot.text(xtext, ytext - 1.0 * enter, text2, fontsize = fontsize)
+    #plot.text(xtext, ytext - 2.0 * enter, text3, fontsize = fontsize)
 
     # Save + Show
     plot.savefig("planet_mass_disc_mass_comparison-3D.png", bbox_inches = "tight")

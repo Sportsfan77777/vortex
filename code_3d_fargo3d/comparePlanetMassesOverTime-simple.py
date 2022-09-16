@@ -28,10 +28,7 @@ from pylab import fromfile
 
 ###############################################################################
 
-file_prefixes = ["h06_nu7_a40_s5787-K60-low_res-l1", "h06_nu7_a40_s5787-K60-l1H-3D", \
-                 "h06_nu7_a40_s5787-K60-low_res-l3", "h06_nu7_a40_s5787-K60-l3H-3D", \
-                 "h06_nu7_a40_s5787-K60-low_res-l6", "h06_nu7_a40_s5787-K60-l6H-3D"]
-
+file_prefixes = ["h06_nu7_a40_s1157-K60-2D", "h06_nu7_a40_s1157-K60-3D"]
 
 ###############################################################################
 
@@ -68,8 +65,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 20,
                          help = 'fontsize of plot annotations (default: 16)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
-                         help = 'fontsize of plot annotations (default: 3)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 5,
+                         help = 'fontsize of plot annotations (default: 5)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -93,7 +90,7 @@ show = args.show
 
 version = args.version
 if args.r_lim is None:
-    x_min = 0; x_max = 1000
+    x_min = 0; x_max = 3000
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
@@ -118,12 +115,9 @@ labelsize = 17
 alpha = 0.8
 
 #colors = ["b", "gold", "#17becf", "orange"]
-colors = ["gold", "gold", "#8c564b", "#8c564b", "b", "b"]
+colors = ["b", "gold"]
 #labels = [r"2-D $256 \times 256$", r"3-D $256 \times 256$", r"2-D $512 \times 512$", r"3-D $512 \times 512$"]
-labels = [r"2-D  $R_\mathrm{s} = 0.1$ $H$", r"3-D  $R_\mathrm{s} = 0.1$ $R_\mathrm{H}$", \
-          r"2-D  $R_\mathrm{s} = 0.3$ $H$", r"3-D  $R_\mathrm{s} = 0.3$ $R_\mathrm{H}$", \
-          r"2-D  $R_\mathrm{s} = 0.6$ $H$", r"3-D  $R_\mathrm{s} = 0.6$ $R_\mathrm{H}$"]
-linestyles = ['-', "--"]
+labels = [r"2-D  $256 \times 256$", r"3-D  $256 \times 256$"]
 
 rc['xtick.labelsize'] = labelsize
 rc['ytick.labelsize'] = labelsize
@@ -161,7 +155,7 @@ def make_plot(show = False):
 
         x = times
         y = total_mass / jupiter_mass
-        result = plot.plot(x, y, c = colors[i], linewidth = linewidth + 5 * (i == 1 or i == 4), linestyle = linestyles[i % 2], zorder = 99, label = labels[i], alpha = alpha)
+        result = plot.plot(x, y, c = colors[i], linewidth = linewidth, zorder = 99, label = labels[i], alpha = alpha)
 
         # Axis
         x_min_i = np.searchsorted(x, x_min)
@@ -170,8 +164,7 @@ def make_plot(show = False):
         if max_y_temp > max_y:
             max_y = max_y_temp
 
-    legend = plot.legend(loc = "lower right", fontsize = fontsize - 4, facecolor = 'white', framealpha = 0.9, handlelength = 3.5)
-    legend.set_zorder(150)
+    plot.legend(loc = "lower right", fontsize = fontsize - 4)
 
     # Axes
     if args.max_y is not None:
@@ -199,9 +192,9 @@ def make_plot(show = False):
     y_text = 1.03; y_shift = 0.08
 
     text1 = r"$h = %.2f$" % (scale_height)
-    plot.text(x_min - x_shift * x_range, y_text * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 1)
+    plot.text(x_min - x_shift * x_range, y_text * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize)
     text2 = r"$\alpha \approx %s \times 10^{-%d}$" % (alpha_coefficent, viscosity)
-    plot.text(x_max + (x_shift + 0.04) * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize - 1)
+    plot.text(x_max + x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize)
 
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
 
@@ -230,7 +223,7 @@ def make_plot(show = False):
         save_fn = "%s/massOverTime-%s.png" % (save_directory, file_prefixes[-1])
     else:
         save_fn = "%s/v%04d_massComparisonOverTime-%s.png" % (save_directory, version, file_prefixes[-1])
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
         plot.show()
