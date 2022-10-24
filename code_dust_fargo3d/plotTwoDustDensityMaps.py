@@ -440,7 +440,7 @@ def make_plot(frames, show = False):
             plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
         if i == 1:
             text3 = args.optional_title
-            text4 = "Low-res 2-D"
+            text4 = r"%d \times %d (2-D)" % (num_rad, num_theta)
 
             if text3 is not None:
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
