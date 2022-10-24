@@ -424,7 +424,7 @@ def make_plot(frames, show = False):
            plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-        x_shift = 0.35; extra = 0.15
+        x_shift = 0.35; extra = 0.17
         y_text = 1.16; y_shift = 0.10
 
         alpha_coefficent = "3"
@@ -444,8 +444,8 @@ def make_plot(frames, show = False):
 
             if text3 is not None:
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
-              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
-              plot.text(x_max + (x_shift + extra) * x_range, (y_text) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
