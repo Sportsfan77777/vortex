@@ -91,6 +91,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
 
+    parser.add_argument('--title', dest = "optional_title", default = None,
+                         help = 'optional title (default: None)')
+
     # Plot Parameters (contours)
     parser.add_argument('--contour', dest = "use_contours", action = 'store_true', default = False,
                          help = 'use contours or not (default: do not use contours)')
