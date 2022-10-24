@@ -432,7 +432,28 @@ def make_plot(frames, show = False):
            plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-        y_text = 1.14
+        x_shift = 0.35; extra = 0.17
+        y_text = 1.16; y_shift = 0.10
+
+        alpha_coefficent = "3"
+        if scale_height == 0.08:
+            alpha_coefficent = "1.5"
+        elif scale_height == 0.04:
+            alpha_coefficent = "6"
+
+        if i == 0:
+            text1 = r"$h = %.2f$" % (scale_height)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+            text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+        if i == 1:
+            text3 = args.optional_title
+            text4 = r"%d$^2\times$%d (3-D)" % (num_rad, num_z)
+
+            if text3 is not None:
+              #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
@@ -453,12 +474,13 @@ def make_plot(frames, show = False):
         add_to_plot(i)
 
     # Title
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
-    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    surface_density_base = 1.157e-4
+    final_frame = 5000
+    if final_frame > len(accreted_mass):
+        final_frame = len(accreted_mass) - 1
+    final_planet_mass = planet_mass + accreted_mass[final_frame]
+    #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero / surface_density_base, final_planet_mass)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
     plot.suptitle("%s" % (title), y = 1.10, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
