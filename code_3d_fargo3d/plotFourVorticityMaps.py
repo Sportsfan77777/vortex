@@ -52,7 +52,7 @@ import azimuthal as az
 from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+#from reader import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -193,6 +193,7 @@ show = args.show
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
+z_angles = np.linspace(z_min, z_max, num_z)
 
 version = args.version
 if args.r_lim is None:
