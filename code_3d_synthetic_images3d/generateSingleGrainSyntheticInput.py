@@ -113,7 +113,7 @@ args = new_argument_parser().parse_args()
 p = Parameters()
 fargo_par = util.get_pickled_parameters()
 
-num_rad = p.ny; num_theta = p.nx
+num_rad = p.ny; num_theta = p.nx; num_z = p.nz
 r_min = p.ymin; r_max = p.ymax
 z_min = p.zmin; z_max = p.zmax
 
@@ -211,7 +211,8 @@ def retrieve_density(frame, size_names):
     starting_size = size
 
     directory = "."
-    density = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = args.n)
+    #density = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = args.n)
+    density = fromfile("dust1dens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
 
     dz = z_angles[1] - z_angles[0]
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
