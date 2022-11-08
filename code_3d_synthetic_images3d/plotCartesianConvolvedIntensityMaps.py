@@ -188,7 +188,7 @@ def make_plot(frame, show = False):
 
     # Get Shift
     #gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../../")
-    gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+    gas_density = fromfile("../../gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
     
     dz = z_angles[1] - z_angles[0]
     gas_surface_density = np.sum(gas_density[:, :, :], axis = 0) * dz
