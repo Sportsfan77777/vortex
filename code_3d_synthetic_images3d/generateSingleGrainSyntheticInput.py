@@ -446,6 +446,8 @@ def full_procedure(frame):
     """ Every Step """
     #gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
     gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+    
+    dz = z_angles[1] - z_angles[0]
     gas_surface_density = np.sum(gas_density[:, :, :], axis = 0) * dz
 
     density, sizes = retrieve_density(frame, size_name)
