@@ -94,7 +94,7 @@ num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
-dust_surface_density_zero = p.sigma0 * p.epsilon
+dust_surface_density_zero = p.sigma0 * p.metal
 
 jupiter_mass = 1e-3
 planet_mass = fargo_par["PlanetMass"] / jupiter_mass
