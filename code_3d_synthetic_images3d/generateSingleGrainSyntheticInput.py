@@ -36,7 +36,7 @@ import azimuthal as az
 from labelOpacities import label_opacities
 
 from advanced import Parameters
-from reader import Fields
+#from reader import Fields
 
 size_name = "hcm" # , "hmm", hum", "um"]
 size = 0.3 #, 0.03, 0.01, 0.0001])
@@ -115,9 +115,10 @@ fargo_par = util.get_pickled_parameters()
 
 num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
+z_min = p.zmin; z_max = p.zmax
 
 surface_density_zero = p.sigma0
-dust_surface_density_zero = p.sigma0 * p.epsilon
+dust_surface_density_zero = p.sigma0 * p.metal
 
 planet_mass = 1.0
 taper_time = p.masstaper
@@ -129,6 +130,7 @@ dt = p.ninterm * p.dt
 
 rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
+z_angles = np.linspace(z_min, z_max, num_z)
 
 ### Get Input Parameters ###
 
@@ -211,7 +213,10 @@ def retrieve_density(frame, size_names):
     directory = "."
     density = util.read_dust_data(frame, fargo_par, normalize = False, directory = directory, n = args.n)
 
-    return density, starting_size
+    dz = z_angles[1] - z_angles[0]
+    surface_density = np.sum(density[:, :, :], axis = 0) * dz
+
+    return surface_density, starting_size
 
 def polish(density, frame, shift_i, size, cavity_cutoff = 0.92, scale_density = 1, scale_sizes = 1):
     """ Step 1: get rid of inner cavity, scale dust densities to different grain size, and only keep dust with negative vorticity """
