@@ -92,6 +92,7 @@ p = fargo_par["p"]
 
 num_rad = p.ny; num_theta = p.nx; num_z = p.nz
 r_min = p.ymin; r_max = p.ymax
+z_min = p.zmin; z_max = p.zmax
 
 surface_density_zero = p.sigma0
 dust_surface_density_zero = p.sigma0 * p.metal
