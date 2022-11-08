@@ -446,11 +446,13 @@ def full_procedure(frame):
     """ Every Step """
     #gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
     gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+    gas_surface_density = np.sum(gas_density[:, :, :], axis = 0) * dz
+
     density, sizes = retrieve_density(frame, size_name)
 
     shift_i = 0
     if center != "off":
-        density, shift_i = center_vortex(density, frame, reference_density = gas_density)
+        density, shift_i = center_vortex(density, frame, reference_density = gas_surface_density)
 
     density, sizes = polish(density, frame, shift_i, sizes, cavity_cutoff = cavity, scale_density = scale_density, scale_sizes = scale_sizes)
     new_rad, new_theta, density = resample(density, new_num_rad = new_num_rad, new_num_theta = new_num_theta)    
