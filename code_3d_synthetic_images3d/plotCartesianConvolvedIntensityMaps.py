@@ -187,10 +187,14 @@ def make_plot(frame, show = False):
     xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
     # Get Shift
-    gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../../")
+    #gas_density = util.read_data(frame, 'gas', fargo_par, directory = "../../")
+    gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+    
+    dz = z_angles[1] - z_angles[0]
+    gas_surface_density = np.sum(gas_density[:, :, :], axis = 0) * dz
 
     # Shift gas density with center of dust density
-    shift = az.shift_away_from_minimum(gas_density, fargo_par)
+    shift = az.shift_away_from_minimum(gas_surface_density, fargo_par)
 
     # Normalize
     if normalize:
