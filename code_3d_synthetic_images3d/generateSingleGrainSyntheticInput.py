@@ -444,7 +444,8 @@ def save_id_parameters():
 
 def full_procedure(frame):
     """ Every Step """
-    gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
+    #gas_density = util.read_gas_data(frame, fargo_par, normalize = False)
+    gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
     density, sizes = retrieve_density(frame, size_name)
 
     shift_i = 0
