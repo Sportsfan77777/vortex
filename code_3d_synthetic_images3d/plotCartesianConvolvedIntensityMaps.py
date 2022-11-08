@@ -90,7 +90,7 @@ fargo_par = pickle.load(open(fn, "rb"))
 
 p = fargo_par["p"]
 
-num_rad = p.ny; num_theta = p.nx, num_z = p.nz
+num_rad = p.ny; num_theta = p.nx; num_z = p.nz
 r_min = p.ymin; r_max = p.ymax
 
 surface_density_zero = p.sigma0
