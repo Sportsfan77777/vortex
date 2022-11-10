@@ -232,6 +232,9 @@ def make_plot(frame, show = False):
     y = normalized_density
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
 
+    y_ref = np.power(x, -1.0)
+    plot.plot(x, y_ref, linewidth = linewidth - 1, c = "k", zorder = 99, linestyle = "--")
+
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
         averagedDensity_zero = np.average(density_zero, axis = 1)
