@@ -226,13 +226,13 @@ def make_plot(frame, show = False):
     averagedDensity = np.average(surface_density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
-    y_ref = np.power(x, -1.0)
-    plot.plot(x, y_ref, linewidth = linewidth - 1, c = "k", zorder = 99, linestyle = "--")
-
     ### Plot ###
     x = rad
     y = normalized_density
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+
+    y_ref = np.power(x, -1.0)
+    plot.plot(x, y_ref, linewidth = linewidth - 1, c = "k", zorder = 99, linestyle = "--")
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
