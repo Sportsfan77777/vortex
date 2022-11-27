@@ -329,7 +329,7 @@ def make_plot(frames, show = False):
         #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
         title = r"$%.3f^{\prime\prime}$" % (arc_beam)
         #plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
-        plot.suptitle("%s" % (title), y = 1.26, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0, horizontalalignment = 'left'))
+        plot.suptitle("%s" % (title), y = 1.26, fontsize = fontsize + 2, horizontalalignment = 'left', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
