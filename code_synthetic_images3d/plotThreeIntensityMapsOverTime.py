@@ -298,9 +298,9 @@ def make_plot(frames, show = False):
             final_planet_mass = planet_mass + accreted_mass[final_frame]
 
             text4 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
-            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'right', fontsize = fontsize + 1)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
             text5 = r"$M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (final_planet_mass)
-            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize + 1)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
