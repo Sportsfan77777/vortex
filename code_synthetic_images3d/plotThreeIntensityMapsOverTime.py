@@ -269,7 +269,7 @@ def make_plot(frames, show = False):
         x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         x_shift = 0.35; extra = 0.17
-        y_text = 1.40; y_shift = 0.22
+        y_text = 1.40; y_shift = 0.24
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -329,7 +329,7 @@ def make_plot(frames, show = False):
         #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
         title = r"$%.3f^{\prime\prime}$" % (arc_beam)
         #plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
-        plot.suptitle("%s" % (title), y = 1.24, fontsize = fontsize + 2, horizontalalignment = 'left', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+        plot.suptitle("%s" % (title), y = 1.22, fontsize = fontsize + 2, horizontalalignment = 'left', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
