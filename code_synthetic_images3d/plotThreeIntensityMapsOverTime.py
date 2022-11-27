@@ -269,7 +269,7 @@ def make_plot(frames, show = False):
         x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         x_shift = 0.35; extra = 0.17
-        y_text = 1.40; y_shift = 0.20
+        y_text = 1.40; y_shift = 0.22
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
