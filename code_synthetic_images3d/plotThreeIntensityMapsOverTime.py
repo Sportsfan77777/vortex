@@ -63,6 +63,10 @@ def new_argument_parser(description = "Plot convolved intensity maps."):
 
     parser.add_argument('--cbar', dest = "colorbar", action = 'store_true', default = False,
                          help = 'include colorbar (default: no colorbar)')
+    parser.add_argument('--sup', dest = "supertitle", action = 'store_true', default = False,
+                         help = 'include super title (default: do not)')
+    parser.add_argument('--title', dest = "optional_title", default = None,
+                         help = 'optional title (default: None)')
 
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "inferno",
@@ -262,6 +266,30 @@ def make_plot(frames, show = False):
             ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
         # Title
+        x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+        x_shift = 0.35; extra = 0.17
+        y_text = 1.16; y_shift = 0.10
+
+        alpha_coefficent = "3"
+        if scale_height == 0.08:
+            alpha_coefficent = "1.5"
+        elif scale_height == 0.04:
+            alpha_coefficent = "6"
+
+        if i == 0:
+            text1 = r"$h = %.2f$" % (scale_height)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+            text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+        if i == 2:
+            text3 = args.optional_title
+            #text4 = r"%d$\times$%d (2-D)" % (num_rad, num_theta)
+
+            if text3 is not None:
+              #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
+              #plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
+
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
 
@@ -289,8 +317,11 @@ def make_plot(frames, show = False):
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
 
     #beam_diameter = fargo_par["Beam"] * fargo_par["Radius"] / fargo_par["Distance"]
-    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-    plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    if args.supertitle:
+        #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
+        title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$    $%.3f^{\prime\prime}$" % (surface_density_zero / surface_density_base, final_planet_mass, arc_beam)
+        #plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+        plot.suptitle("%s" % (title), y = 1.32, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
