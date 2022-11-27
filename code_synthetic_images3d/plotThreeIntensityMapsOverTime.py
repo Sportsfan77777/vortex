@@ -288,8 +288,19 @@ def make_plot(frames, show = False):
 
             if text3 is not None:
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
-              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'center', fontsize = fontsize + 1)
+              plot.text(x_mid, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'center', fontsize = fontsize + 1)
               #plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
+        if i == 2:
+            surface_density_base = 1.157e-4
+            final_frame = 5000
+            if final_frame > len(accreted_mass):
+                final_frame = len(accreted_mass) - 1
+            final_planet_mass = planet_mass + accreted_mass[final_frame]
+
+            text4 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'right', fontsize = fontsize + 1)
+            text5 = r"$M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (final_planet_mass)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
@@ -310,23 +321,13 @@ def make_plot(frames, show = False):
         add_to_plot(i)
 
     # Title
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
 
     #beam_diameter = fargo_par["Beam"] * fargo_par["Radius"] / fargo_par["Distance"]
-    surface_density_base = 1.157e-4
-    final_frame = 5000
-    if final_frame > len(accreted_mass):
-        final_frame = len(accreted_mass) - 1
-    final_planet_mass = planet_mass + accreted_mass[final_frame]
 
     if args.supertitle:
         #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-        title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$    $%.3f^{\prime\prime}$" % (surface_density_zero / surface_density_base, final_planet_mass, arc_beam)
+        title = r"$%.3f^{\prime\prime}$" % (arc_beam)
         #plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
         plot.suptitle("%s" % (title), y = 1.32, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
