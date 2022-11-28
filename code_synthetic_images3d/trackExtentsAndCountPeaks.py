@@ -350,12 +350,13 @@ def make_plot(show = False):
 
     tick_locations, tick_labels = tick_function(mass_ticks)
 
+    ax_twin = ax.twiny()
+
     if args.minor_delta_mass is not None:
         minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
         minor_tick_locations, _ = tick_function(minor_mass_ticks)
         ax_twin.set_xticks(minor_tick_locations, minor = True)
 
-    ax_twin = ax.twiny()
     ax_twin.set_xlim(ax.get_xlim())
     ax_twin.set_xticks(tick_locations)
     ax_twin.set_xticklabels(tick_labels)
