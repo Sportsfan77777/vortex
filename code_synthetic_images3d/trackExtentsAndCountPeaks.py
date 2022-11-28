@@ -256,10 +256,12 @@ def make_plot(show = False):
     plot.ylim(0, 360)
 
     # Annotate Axes
-    plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", labelpad = 5, fontsize = fontsize + 2)
+    plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", labelpad = 12, fontsize = fontsize + 2)
 
     threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
     plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+
+    # Add text saying "More Elongated (up arrow)" and "More Compact (down arrow)"
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
@@ -267,8 +269,8 @@ def make_plot(show = False):
     # Title
     x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    x_shift = 0.18; extra = 0.17
-    y_text = 1.14; y_shift = 0.08
+    x_shift = 0.20; extra = 0.17
+    y_text = 1.16; y_shift = 0.08
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
