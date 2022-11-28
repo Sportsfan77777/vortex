@@ -263,8 +263,8 @@ def make_plot(show = False):
     plot.text(0.02 * (x[-1] - x[0]) + x[0], 0.05 * plot.ylim()[-1], threshold_text, horizontalalignment = 'left', fontsize = fontsize - 4)
 
     # Add text saying "More Elongated (up arrow)" and "More Compact (down arrow)"
-    elongated_text = r"More Elongated $\uparrow$"
-    compact_text = r"More Compact $\downarrow$"
+    elongated_text = r"$\uparrow$More Elongated$\uparrow$"
+    compact_text = r"$\downarrow$More Compact$\downarrow$"
     plot.text(0.65 * (x[-1] - x[0]) + x[0], 0.90 * plot.ylim()[-1], elongated_text, horizontalalignment = 'center', fontsize = fontsize - 3)
     plot.text(0.65 * (x[-1] - x[0]) + x[0], 0.05 * plot.ylim()[-1], compact_text, horizontalalignment = 'center', fontsize = fontsize - 3)
 
