@@ -265,9 +265,27 @@ def make_plot(show = False):
     #plot.legend(loc = "upper left") # outside of plot
 
     # Title
+    x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
+    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    x_shift = 0.35; extra = 0.17
+    y_text = 1.40; y_shift = 0.26
+
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+
+    text1 = r"$h = %.2f$" % (scale_height)
+    plot.text(x_min, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+    text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+    plot.text(x_min, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+
     #title = r"$\mathrm{Azimuthal\ Extents}$"
-    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-    plot.title("%s" % (title), y = 1.25, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
+    title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
+    title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (surface_density_zero / surface_density_base, final_planet_mass)
+    plot.title("%s\n%s" % (title1, title2), y = 1.25, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Peaks ####
     ax2 = fig.add_subplot(gs[1, 0])
@@ -351,7 +369,6 @@ def make_plot(show = False):
     tick_locations, tick_labels = tick_function(mass_ticks)
 
     ax_twin = ax.twiny()
-
     ax_twin.set_xlim(ax.get_xlim())
     ax_twin.set_xticks(tick_locations)
     ax_twin.set_xticklabels(tick_labels)
@@ -361,7 +378,7 @@ def make_plot(show = False):
     if args.minor_delta_mass is not None:
         min_mass_minor = 0.1
         start_mass = total_mass[frame_range[0]]
-        
+
         while min_mass_minor < start_mass:
             min_mass_minor += 0.05
 
