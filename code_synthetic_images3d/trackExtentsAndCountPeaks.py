@@ -229,6 +229,8 @@ colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slat
 
 colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
 
+size = 70
+
 def make_plot(show = False):
     fig = plot.figure(figsize = (9, 6), dpi = dpi)
     gs = gridspec.GridSpec(nrows = 2, ncols = 2, height_ratios = [7, 1.5], width_ratios = [7, 1], wspace = 0, figure = fig)
@@ -270,7 +272,8 @@ def make_plot(show = False):
     ax2 = fig.add_subplot(gs[1, 0])
     
     y2 = np.array(peak_counts)
-    plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = x[1] - x[0])
+    #plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = x[1] - x[0])
+    plot.scatter(x, y2, color = colors[2], s = size)
 
     # Axes
     plot.xlim(x[0], x[-1])
@@ -299,6 +302,8 @@ def make_plot(show = False):
     ax3.set_ylim(0, 360)
     ax3.set_yticks(angles)
     ax3.set_yticklabels([])
+
+    ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 2)
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
@@ -368,9 +373,9 @@ def make_plot(show = False):
     current_directory = os.getcwd().split("/")[-3]
     current_beam = os.getcwd().split("/")[-1]
     if version is None:
-        save_fn = "%s/extentsAndPeakCounts-%s-%s.png" % (save_directory, current_directory, current_beam)
+        save_fn = "%s/extentsAndPeakCounts-%s-%s-%04d-%04d-%04d.png" % (save_directory, current_directory, current_beam, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_extentsAndPeakCounts-%s-%s.png" % (save_directory, version, current_directory, current_beam)
+        save_fn = "%s/v%04d_extentsAndPeakCounts-%s-%s-%04d-%04d-%04d.png" % (save_directory, version, current_directory, current_beam, args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
