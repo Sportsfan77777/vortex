@@ -259,9 +259,14 @@ def make_plot(show = False):
     plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", labelpad = 12, fontsize = fontsize + 2)
 
     threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
-    plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+    #plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+    plot.text(0.02 * (x[-1] - x[0]) + x[0], 0.1 * plot.ylim()[-1], threshold_text, horizontalalignment = 'left', fontsize = fontsize - 4)
 
     # Add text saying "More Elongated (up arrow)" and "More Compact (down arrow)"
+    elongated_text = r"More Elongated $\uparrow$"
+    compact_text = r"More Compact $\downarrow$"
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], elongated_text, horizontalalignment = 'center', fontsize = fontsize - 3)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], 0.1 * plot.ylim()[-1], compact_text, horizontalalignment = 'center', fontsize = fontsize - 3)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
