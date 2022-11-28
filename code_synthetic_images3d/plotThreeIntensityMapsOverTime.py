@@ -290,17 +290,21 @@ def make_plot(frames, show = False):
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
               plot.text(x_mid, (y_text + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'center', fontsize = fontsize + 1)
               #plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
-        if i == 2:
+
+            if args.supertitle:
+                text4 = r"$%.3f^{\prime\prime}$" % (arc_beam)
+                plot.text(x_mid, (y_text + 1.2 * y_shift + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'center', fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+        if i == 2 and args.supertitle:
             surface_density_base = 1.157e-4
             final_frame = 5000
             if final_frame > len(accreted_mass):
                 final_frame = len(accreted_mass) - 1
             final_planet_mass = planet_mass + accreted_mass[final_frame]
 
-            text4 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
-            plot.text(x_max + x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
-            text5 = r"$M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (final_planet_mass)
-            plot.text(x_max + x_shift * x_range, (y_text) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize + 1)
+            text5 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
+            plot.text(x_max + x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize + 1)
+            text6 = r"$M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (final_planet_mass)
+            plot.text(x_max + x_shift * x_range, (y_text) * plot.ylim()[-1], text6, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
@@ -329,7 +333,7 @@ def make_plot(frames, show = False):
         #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
         title = r"$%.3f^{\prime\prime}$" % (arc_beam)
         #plot.suptitle("%s" % (title), y = 1.15, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
-        plot.suptitle("%s" % (title), y = 1.22, fontsize = fontsize + 2, horizontalalignment = 'left', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+        #plot.suptitle("%s" % (title), y = 1.22, fontsize = fontsize + 2, horizontalalignment = 'left', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
