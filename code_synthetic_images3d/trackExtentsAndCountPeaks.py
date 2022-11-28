@@ -229,7 +229,8 @@ colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slat
 
 colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
 
-size = 70
+size = 50
+alpha = 0.7
 
 def make_plot(show = False):
     fig = plot.figure(figsize = (9, 6), dpi = dpi)
@@ -273,7 +274,7 @@ def make_plot(show = False):
     
     y2 = np.array(peak_counts)
     #plot.bar(x, y2, color = colors[2], edgecolor = colors[2], width = x[1] - x[0])
-    plot.scatter(x, y2, color = colors[2], s = size)
+    plot.scatter(x, y2 - 0.15, color = colors[2], s = size, alpha = alpha)
 
     # Axes
     plot.xlim(x[0], x[-1])
@@ -303,7 +304,7 @@ def make_plot(show = False):
     ax3.set_yticks(angles)
     ax3.set_yticklabels([])
 
-    ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 2)
+    ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
@@ -349,17 +350,17 @@ def make_plot(show = False):
 
     tick_locations, tick_labels = tick_function(mass_ticks)
 
+    if args.minor_delta_mass is not None:
+        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
+        minor_tick_locations, _ = tick_function(minor_mass_ticks)
+        ax_twin.set_xticks(minor_tick_locations, minor = True)
+
     ax_twin = ax.twiny()
     ax_twin.set_xlim(ax.get_xlim())
     ax_twin.set_xticks(tick_locations)
     ax_twin.set_xticklabels(tick_labels)
 
     ax_twin.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
-
-    if args.minor_delta_mass is not None:
-        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
-        minor_tick_locations, _ = tick_function(minor_mass_ticks)
-        ax_twin.set_xticks(minor_tick_locations, minor = True)
 
     # Print counts
     print len(peak_counts)
