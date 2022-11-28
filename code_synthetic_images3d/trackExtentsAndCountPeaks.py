@@ -267,7 +267,7 @@ def make_plot(show = False):
     # Title
     x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    x_shift = 0.35; extra = 0.17
+    x_shift = 0.15; extra = 0.17
     y_text = 1.14; y_shift = 0.08
 
     alpha_coefficent = "3"
