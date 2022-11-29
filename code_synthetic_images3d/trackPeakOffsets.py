@@ -309,7 +309,7 @@ def make_plot(show = False):
     x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     x_shift = 0.20; extra = 0.17
-    y_text = 1.16; y_shift = 0.08
+    y_text = 1.18; y_shift = 0.10
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -339,7 +339,7 @@ def make_plot(show = False):
 
     title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
     title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
-    plot.title("[%s]\n%s" % (title1, title2), y = 1.30, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.title("[%s]\n%s" % (title1, title2), y = 1.20, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
 
     #### Histograms ####
@@ -371,7 +371,7 @@ def make_plot(show = False):
 
     second_title = "Cumulative Distribution"
     x_text_hist = 0.5; y_text_hist = 1.2
-    plot.text(x_text_hist, 3.5 * y_text_hist * (240) - plot.ylim()[0], off_center_top_text, horizontalalignment = 'center', fontsize = fontsize - 5)
+    plot.text(x_text_hist, y_text_hist * (240) - plot.ylim()[0], second_title, horizontalalignment = 'center', fontsize = fontsize - 5)
 
     if last_frame < frame_range[-1]:
         plot.title(r"ONLY to $t$ = $%d$" % last_frame, fontsize = fontsize - 1)
