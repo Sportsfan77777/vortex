@@ -293,7 +293,17 @@ def make_plot(show = False):
     plot.ylabel(r"Peak Offsets $\mathrm{(degrees)}$", fontsize = fontsize + 2)
 
     threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
-    plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+    #plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
+
+    # Add text saying "More Centered (arrows)" and "More Off-Center (down arrow)"
+    off_center_top_text = r"$\uparrow$More Off-Center$\uparrow$"
+    centered_top_text = r"$\downarrow$More Centered$\downarrow$"
+    centered_bottom_text = r"$\uparrow$More Centered$\uparrow$"
+    off_center_bottom_text = r"$\downarrow$More Off-Center$\downarrow$"
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], 3.0 * y_text, off_center_top_text, horizontalalignment = 'center', fontsize = fontsize - 3)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], 1.0 * y_text, centered_top_text, horizontalalignment = 'center', fontsize = fontsize - 3)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], -1.0 * y_text, centered_bottom_text, horizontalalignment = 'center', fontsize = fontsize - 3)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], -3.0 * y_text, off_center_bottom_text, horizontalalignment = 'center', fontsize = fontsize - 3)
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
@@ -324,13 +334,14 @@ def make_plot(show = False):
     hist_ticks_minor = np.linspace(0, 1, 11)
     ax2.set_xticks(hist_ticks)
     ax2.set_xticks(hist_ticks_minor, minor = True)
+    plot.xlabel("Cumulative Fraction", fontsize = fontsize - 1)
 
     ax2.set_ylim(-120, 120)
     ax2.set_yticks(angles)
     #ax2.set_yticklabels([])
 
     if last_frame < frame_range[-1]:
-        plot.title(r"ONLY to $t$ = $%d$" % last_frame, fontsize = fontsize - 1)
+        plot.title(r"Cumulative Distribution\nONLY to $t$ = $%d$" % last_frame, fontsize = fontsize - 1)
 
     #### Add mass axis ####
 
@@ -368,7 +379,7 @@ def make_plot(show = False):
     ax_twin.set_xticks(tick_locations)
     ax_twin.set_xticklabels(tick_labels)
 
-    ax_twin.set_xlabel(r"$M_\mathrm{p}$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
+    ax_twin.set_xlabel(r"$m_\mathrm{p}(t)$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
 
     if args.minor_delta_mass is not None:
         minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
