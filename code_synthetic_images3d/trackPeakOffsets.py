@@ -296,6 +296,7 @@ def make_plot(show = False):
     #plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
 
     # Add text saying "More Centered (arrows)" and "More Off-Center (down arrow)"
+    y_text = 30.0
     off_center_top_text = r"$\uparrow$More Off-Center$\uparrow$"
     centered_top_text = r"$\downarrow$More Centered$\downarrow$"
     centered_bottom_text = r"$\uparrow$More Centered$\uparrow$"
@@ -390,9 +391,9 @@ def make_plot(show = False):
     current_directory = os.getcwd().split("/")[-3]
     current_beam = os.getcwd().split("/")[-1]
     if version is None:
-        save_fn = "%s/peakOffsets-%s-%s.png" % (save_directory, current_directory, current_beam)
+        save_fn = "%s/peakOffsets-%s-%s-%04d-%04d-%04d.png" % (save_directory, current_directory, current_beam, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_peakOffsets-%s-%s.png" % (save_directory, version, current_directory, current_beam)
+        save_fn = "%s/v%04d_peakOffsets-%s-%s-%04d-%04d-%04d.png" % (save_directory, version, current_directory, current_beam, args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
