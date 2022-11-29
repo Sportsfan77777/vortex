@@ -370,7 +370,7 @@ def make_plot(show = False):
     #ax2.set_yticklabels([])
 
     second_title = "Cumulative Distribution"
-    x_text_hist = 0.5; y_text_hist = 1.16
+    x_text_hist = 0.5; y_text_hist = 1.18
     plot.text(x_text_hist, y_text_hist * plot.ylim()[-1], second_title, horizontalalignment = 'center', fontsize = fontsize - 1)
 
     if last_frame < frame_range[-1]:
