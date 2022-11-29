@@ -301,18 +301,46 @@ def make_plot(show = False):
     centered_top_text = r"$\downarrow$More Centered$\downarrow$"
     centered_bottom_text = r"$\uparrow$More Centered$\uparrow$"
     off_center_bottom_text = r"$\downarrow$More Off-Center$\downarrow$"
-    plot.text(0.65 * (x[-1] - x[0]) + x[0], 3.0 * y_text, off_center_top_text, horizontalalignment = 'center', fontsize = fontsize - 3)
-    plot.text(0.65 * (x[-1] - x[0]) + x[0], 1.0 * y_text, centered_top_text, horizontalalignment = 'center', fontsize = fontsize - 3)
-    plot.text(0.65 * (x[-1] - x[0]) + x[0], -1.0 * y_text, centered_bottom_text, horizontalalignment = 'center', fontsize = fontsize - 3)
-    plot.text(0.65 * (x[-1] - x[0]) + x[0], -3.0 * y_text, off_center_bottom_text, horizontalalignment = 'center', fontsize = fontsize - 3)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], 3.5 * y_text, off_center_top_text, horizontalalignment = 'center', verticalalignment = 'center', fontsize = fontsize - 5)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], 1.0 * y_text, centered_top_text, horizontalalignment = 'center', verticalalignment = 'center', fontsize = fontsize - 5)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], -1.0 * y_text, centered_bottom_text, horizontalalignment = 'center', verticalalignment = 'center', fontsize = fontsize - 5)
+    plot.text(0.65 * (x[-1] - x[0]) + x[0], -3.5 * y_text, off_center_bottom_text, horizontalalignment = 'center', verticalalignment = 'center', fontsize = fontsize - 5)
+
+    x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
+    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    x_shift = 0.20; extra = 0.17
+    y_text = 1.16; y_shift = 0.08
+
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
+
+    text1 = r"$h = %.2f$" % (scale_height)
+    plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
+    text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+    plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 2)
+
 
     #plot.legend(loc = "upper right", bbox_to_anchor = (1.28, 1.0)) # outside of plot
     #plot.legend(loc = "upper left") # outside of plot
 
     # Title
     #title = r"$\mathrm{Azimuthal\ Extents}$"
-    title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
-    plot.title("%s" % (title), y = 1.20, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    #title = r'$h = %.2f$   $\Sigma = %.3e$  (2-D)  [$%.3f^{\prime\prime}$]' % (scale_height, fargo_par["p"].sigma0, arc_beam)
+    #plot.title("%s" % (title), y = 1.20, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+
+    surface_density_base = 1.157e-4
+    final_frame = 5000
+    if final_frame > len(accreted_mass):
+        final_frame = len(accreted_mass) - 1
+    final_planet_mass = planet_mass + accreted_mass[final_frame]
+
+    title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
+    title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
+    plot.title("[%s]\n%s" % (title1, title2), y = 1.30, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+
 
     #### Histograms ####
     ax2 = fig.add_subplot(gs[1])
@@ -341,8 +369,12 @@ def make_plot(show = False):
     ax2.set_yticks(angles)
     #ax2.set_yticklabels([])
 
+    second_title = "Cumulative Distribution"
+    x_text_hist = 0.5; y_text_hist = 1.2
+    plot.text(x_text_hist, 3.5 * y_text_hist * (240) - plot.ylim()[0], off_center_top_text, horizontalalignment = 'center', fontsize = fontsize - 5)
+
     if last_frame < frame_range[-1]:
-        plot.title(r"Cumulative Distribution\nONLY to $t$ = $%d$" % last_frame, fontsize = fontsize - 1)
+        plot.title(r"ONLY to $t$ = $%d$" % last_frame, fontsize = fontsize - 1)
 
     #### Add mass axis ####
 
@@ -383,7 +415,13 @@ def make_plot(show = False):
     ax_twin.set_xlabel(r"$m_\mathrm{p}(t)$ [$M_\mathrm{J}$]", fontsize = fontsize, labelpad = 10)
 
     if args.minor_delta_mass is not None:
-        minor_mass_ticks = np.arange(0.1, max_mass, args.minor_delta_mass)
+        min_mass_minor = 0.1
+        start_mass = total_mass[frame_range[0]]
+
+        while min_mass_minor < start_mass:
+            min_mass_minor += 0.05
+
+        minor_mass_ticks = np.arange(min_mass_minor, max_mass, args.minor_delta_mass)
         minor_tick_locations, _ = tick_function(minor_mass_ticks)
         ax_twin.set_xticks(minor_tick_locations, minor = True)
 
