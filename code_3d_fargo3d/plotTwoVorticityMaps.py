@@ -318,7 +318,7 @@ def make_plot(frames, show = False):
     def add_to_plot(i):
         # Identify Subplot
         frame = frames[i]; number = i + 1
-        ax = plot.subplot(1, 4, number)
+        ax = plot.subplot(1, 2, number)
 
         # Data
         if mpi:
