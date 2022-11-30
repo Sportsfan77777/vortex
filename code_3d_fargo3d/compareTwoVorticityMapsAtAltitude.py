@@ -312,7 +312,7 @@ def generate_colors(n):
 
 ##### PLOTTING #####
 
-def make_plot(frame, show = False):
+def make_plot(frame, two_zs, show = False):
     # Set up figure
     fig = plot.figure(figsize = (8, 4), dpi = dpi)
 
@@ -427,5 +427,5 @@ def make_plot(frame, show = False):
     plot.close(fig) # Close Figure (to avoid too many figures)
 
 ##### Make Plots! #####
-make_plot(two_zs, show = show)
+make_plot(frame, two_zs, show = show)
 
