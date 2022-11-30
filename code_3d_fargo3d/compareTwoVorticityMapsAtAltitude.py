@@ -396,7 +396,7 @@ def make_plot(frame, two_zs, show = False):
            cbar_name = r"$\mathrm{Vorticity}$"
         cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
 
-        if number != len(frames):
+        if number != len(two_zs):
             fig.delaxes(cax) # to balance out frames that don't have colorbar with the one that does
 
     # Make each sub-plot
