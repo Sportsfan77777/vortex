@@ -380,8 +380,15 @@ def make_plot(frame, two_zs, show = False):
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_text = 1.14
 
-        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-        plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
+        
+        if i == 0:
+          title = r"$\theta = \pi/2    t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+          plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "left")
+        else:
+          this_z_angle = z_angles[num_z / 2 + z_level]
+          this_z_angle = (this_z_angle - (np.pi / 2.0)) / scale_height
+          title = r"$   \theta = \pi/2 + %.2f H$"
+          plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "right")
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
         divider = make_axes_locatable(ax)
@@ -409,8 +416,9 @@ def make_plot(frame, two_zs, show = False):
         alpha_coefficent = "1.5"
     elif scale_height == 0.04:
         alpha_coefficent = "6"
-    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    #plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
+    plot.suptitle("%s" % (title), y = 1.04, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1]
