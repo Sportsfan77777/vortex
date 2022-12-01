@@ -382,7 +382,7 @@ def make_plot(frame, two_zs, show = False):
 
         
         if i == 0:
-          title = r"            $\theta = \frac{\pi}{2}$                   $t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+          title = r"          $\theta = \frac{\pi}{2}$                     $t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
           plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
         else:
           this_z_angle = z_angles[num_z / 2 + chosen_z]
