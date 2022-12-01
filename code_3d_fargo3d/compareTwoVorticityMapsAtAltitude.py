@@ -387,7 +387,7 @@ def make_plot(frame, two_zs, show = False):
         else:
           this_z_angle = z_angles[num_z / 2 + chosen_z]
           this_z_angle = (this_z_angle - (np.pi / 2.0)) / scale_height
-          title = r"$   \theta = \pi/2 + %.2f H$" % 
+          title = r"$   \theta = \pi/2 + %.2f H$" % this_z_angle
           plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "right")
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
