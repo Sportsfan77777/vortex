@@ -382,12 +382,12 @@ def make_plot(frame, two_zs, show = False):
 
         
         if i == 0:
-          title = r"       $\theta = \frac{\pi}{2}$     $t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+          title = r"    $\theta = \frac{\pi}{2}$                $t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
           plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
         else:
           this_z_angle = z_angles[num_z / 2 + chosen_z]
           this_z_angle = (this_z_angle - z_angles[num_z / 2]) / scale_height
-          title = r"                             $\theta = \frac{\pi}{2} + %.2f H$" % this_z_angle
+          title = r"                      $\theta = \frac{\pi}{2} + %.2f H$" % this_z_angle
           plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "left")
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
@@ -425,7 +425,7 @@ def make_plot(frame, two_zs, show = False):
 
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
-    plot.suptitle("%s" % (title), y = 1.14, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1]
