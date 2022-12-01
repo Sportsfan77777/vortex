@@ -452,7 +452,7 @@ def make_plot(frame, two_zs, show = False):
 
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
-    plot.suptitle("%s" % (title), y = 1.13, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1]
@@ -461,7 +461,7 @@ def make_plot(frame, two_zs, show = False):
         save_fn = "%s/%s_vorticityMap_%04d-z%03d-z%03d.png" % (save_directory, directory_name, frame, two_zs[0], two_zs[1])
     else:
         save_fn = "%s/v%04d_%s_vorticityMap_%04d-z%03d-z%03d.png" % (save_directory, directory_name, version, frame, two_zs[0], two_zs[1])
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.15)
 
     if show:
         plot.show()
