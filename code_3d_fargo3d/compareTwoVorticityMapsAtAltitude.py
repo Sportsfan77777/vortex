@@ -382,13 +382,13 @@ def make_plot(frame, two_zs, show = False):
 
         
         if i == 0:
-          title = r"$\theta = \pi/2$      $t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
-          plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "left")
+          title = r"       $\theta = \frac{\pi}{2}$     $t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+          plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
         else:
           this_z_angle = z_angles[num_z / 2 + chosen_z]
           this_z_angle = (this_z_angle - z_angles[num_z / 2]) / scale_height
-          title = r"$   \theta = \pi/2 + %.2f H$" % this_z_angle
-          plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "right")
+          title = r"                             $\theta = \frac{\pi}{2} + %.2f H$" % this_z_angle
+          plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1, loc = "left")
 
         # Add Colorbar (Source: http://stackoverflow.com/questions/23270445/adding-a-colorbar-to-two-subplots-with-equal-aspect-ratios)
         divider = make_axes_locatable(ax)
