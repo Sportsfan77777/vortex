@@ -100,7 +100,7 @@ bit_rate = args.bit_rate
 speed_up = args.speed_up
 
 # Command
-ffmepg = "ffmpeg"
+ffmpeg = "ffmpeg"
 if args.tw2:
    ffmpeg = "/home/mhammer44444/ffmpeg/bin/ffmpeg"
 
