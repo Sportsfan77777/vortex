@@ -96,6 +96,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
                          help = 'center frame on vortex peak or middle (default: do not center)')
 
+    parser.add_argument('--title', dest = "optional_title", default = None,
+                         help = 'optional title (default: None)')
+
     parser.add_argument('-z', dest = "sliver", type = int, default = 0,
                          help = 'sliver above midplane to plot (default: 0)')
 
