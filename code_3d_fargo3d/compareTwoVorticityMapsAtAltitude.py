@@ -395,17 +395,17 @@ def make_plot(frame, two_zs, show = False):
 
         if i == 0:
             text1 = r"$h = %.2f$" % (scale_height)
-            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 1)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 1)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 2)
         if i == 1:
             text3 = args.optional_title
             text4 = r"%d$\times$%d $\times$ %d" % (num_rad, num_theta, num_z)
 
             if text3 is not None:
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
-              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize - 1)
-              plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize - 1)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize - 2)
+              plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize - 2)
 
         
         if i == 0:
