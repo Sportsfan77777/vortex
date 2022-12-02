@@ -331,7 +331,7 @@ def make_plot(show = False):
     ax3.set_xlim(0, 1)
     hist_ticks = np.linspace(0, 1, 11)
     hist_major_ticks = [0, 0.5, 1]
-    ax4.set_xticks(hist_major_ticks)
+    ax3.set_xticks(hist_major_ticks)
     ax3.set_xticks(hist_ticks, minor = True)
     #ax3.set_xticklabels([])
 
