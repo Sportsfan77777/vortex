@@ -161,9 +161,9 @@ id_number = args.id_number
 version = args.version
 
 threshold = args.threshold
-#last_frame = args.last_frame
-#if last_frame is None:
-#    last_frame = frames[-1]
+last_frame = args.last_frame
+if last_frame is None:
+    last_frame = frame_range[-1]
 
 compare = args.compare
 
