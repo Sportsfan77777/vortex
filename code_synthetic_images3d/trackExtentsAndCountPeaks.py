@@ -335,7 +335,7 @@ def make_plot(show = False):
 
     ax3.set_ylim(0, 360)
     ax3.set_yticks(angles)
-    ax3.set_yticklabels([])
+    #ax3.set_yticklabels([])
 
     ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
 
