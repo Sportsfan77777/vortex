@@ -340,7 +340,7 @@ def make_plot(show = False):
     #ax3.set_yticklabels([])
 
     #ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
-    ax3.set_title(r"Probability\n$\le \Delta \phi$", fontsize = fontsize - 4)
+    ax3.set_title(r"Probability\n$\leq \Delta \phi$", fontsize = fontsize - 4)
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
