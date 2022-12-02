@@ -303,7 +303,7 @@ def make_plot(frames, show = False):
 
             text5 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
             plot.text(x_max, (y_text + y_shift) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize - 2)
-            text6 = r"$M_\mathrm{p} = %.2f$ ($M_\mathrm{Jup}$)" % (final_planet_mass)
+            text6 = r"($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (final_planet_mass)
             plot.text(x_max, (y_text) * plot.ylim()[-1], text6, horizontalalignment = 'right', fontsize = fontsize - 2)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
