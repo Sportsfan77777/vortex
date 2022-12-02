@@ -351,7 +351,7 @@ def make_plot(show = False):
     ax4.set_xticks(hist_major_ticks)
     ax4.set_xticks(hist_ticks, minor = True)
     #ax4.set_xticklabels([])
-    plot.xlabel("Cumulative Fraction", fontsize = fontsize - 4)
+    plot.xlabel("Cumulative\nFraction", fontsize = fontsize - 4)
 
     ax4.set_ylim(counts[0], counts[-1])
     ax4.set_yticks(counts)
