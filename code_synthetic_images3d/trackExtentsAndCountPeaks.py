@@ -257,7 +257,7 @@ def make_plot(show = False):
     plot.ylim(0, 360)
 
     # Annotate Axes
-    plot.ylabel(r"Azimuthal Extents $\mathrm{(degrees)}$", labelpad = 16, fontsize = fontsize + 2)
+    plot.ylabel(r"Azimuthal Extent $\Delta \phi$ $\mathrm{(degrees)}$", labelpad = 16, fontsize = fontsize + 2)
 
     threshold_text = r"$\frac{I_\mathrm{cut}}{I_\mathrm{max}}=%.2f$" % threshold
     #plot.text(0.98 * (x[-1] - x[0]) + x[0], 0.9 * plot.ylim()[-1], threshold_text, horizontalalignment = 'right', fontsize = fontsize - 4)
@@ -340,7 +340,7 @@ def make_plot(show = False):
     #ax3.set_yticklabels([])
 
     #ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
-    ax3.set_title("Probability", fontsize = fontsize - 4)
+    ax3.set_title(r"Probability\n$\le \Delta \phi$", fontsize = fontsize - 4)
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
