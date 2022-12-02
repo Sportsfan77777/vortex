@@ -263,7 +263,7 @@ colors = ['#d8db20', '#197229', '#519ba3', '#240f77'] # Ugly Yellow, Green, Slat
 #colors = ['#1f77b4', '#ff7f0e', '#be52e5', '#2ca02c'] # Blue, Orange, Purple, Green
 
 def make_plot(show = False):
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    fig = plot.figure(figsize = (8, 6), dpi = dpi)
     #gs = gridspec.GridSpec(nrows = 1, ncols = 2, width_ratios = [5, 2], figure = fig)
     #ax = fig.add_subplot(gs[0])
     ax = fig.add_subplot(111)
@@ -340,7 +340,7 @@ def make_plot(show = False):
 
     title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
     title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
-    plot.title("[%s]\n%s" % (title1, title2), y = 1.24, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.title("[%s]\n%s" % (title1, title2), y = 1.16, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     #### Add mass axis ####
 
