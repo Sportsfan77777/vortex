@@ -339,7 +339,8 @@ def make_plot(show = False):
     ax3.set_yticks(angles)
     #ax3.set_yticklabels([])
 
-    ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
+    #ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
+    ax3.set_title("Probability", fontsize = fontsize - 4)
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
@@ -350,7 +351,7 @@ def make_plot(show = False):
     ax4.set_xticks(hist_major_ticks)
     ax4.set_xticks(hist_ticks, minor = True)
     #ax4.set_xticklabels([])
-    plot.xlabel("Cumulative Fraction", fontsize = fontsize - 2)
+    plot.xlabel("Cumulative Fraction", fontsize = fontsize - 4)
 
     ax4.set_ylim(counts[0], counts[-1])
     ax4.set_yticks(counts)
