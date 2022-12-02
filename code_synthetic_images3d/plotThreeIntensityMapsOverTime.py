@@ -269,7 +269,7 @@ def make_plot(frames, show = False):
         x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         x_shift = 0.35; extra = 0.17
-        y_text = 1.40; y_shift = 0.26
+        y_text = 1.42; y_shift = 0.22
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -279,9 +279,9 @@ def make_plot(frames, show = False):
 
         if i == 0 and args.supertitle:
             text1 = r"$h = %.2f$" % (scale_height)
-            plot.text(x_min, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize + 1)
+            plot.text(x_min, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_min, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize + 1)
+            plot.text(x_min, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
         if i == 1:
             text3 = args.optional_title
             #text4 = r"%d$\times$%d (2-D)" % (num_rad, num_theta)
@@ -303,7 +303,7 @@ def make_plot(frames, show = False):
 
             text5 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
             plot.text(x_max, (y_text + y_shift) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize + 1)
-            text6 = r"$M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$" % (final_planet_mass)
+            text6 = r"$M_\mathrm{p} = %.2f$ ($M_\mathrm{Jup}$)" % (final_planet_mass)
             plot.text(x_max, (y_text) * plot.ylim()[-1], text6, horizontalalignment = 'right', fontsize = fontsize + 1)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
