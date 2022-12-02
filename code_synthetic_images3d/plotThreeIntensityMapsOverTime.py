@@ -288,12 +288,12 @@ def make_plot(frames, show = False):
 
             if text3 is not None:
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
-              plot.text(x_mid, (y_text + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'center', fontsize = fontsize + 1)
+              plot.text(x_mid, (y_text - 0.05) * plot.ylim()[-1], text3, horizontalalignment = 'center', fontsize = fontsize + 1)
               #plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize + 1)
 
             if args.supertitle:
                 text4 = r"$%.3f^{\prime\prime}$" % (arc_beam)
-                plot.text(x_mid, (y_text + 1.4 * y_shift + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'center', fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+                plot.text(x_mid, (y_text + 1.5 * y_shift + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'center', fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
         if i == 2 and args.supertitle:
             surface_density_base = 1.157e-4
             final_frame = 5000
