@@ -276,7 +276,7 @@ def make_plot(show = False):
     x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     x_shift = 0.20; extra = 0.17
-    y_text = 1.16; y_shift = 0.08
+    y_text = 1.22; y_shift = 0.08
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -340,7 +340,7 @@ def make_plot(show = False):
     #ax3.set_yticklabels([])
 
     #ax3.set_title("Cumulative\nDistribution", fontsize = fontsize - 4)
-    ax3.set_title(r"Probability\n$\leq \Delta \phi$", fontsize = fontsize - 4)
+    ax3.set_title("Probability\n" + r"$\leq \Delta \phi$", fontsize = fontsize - 4)
 
     ax4 = fig.add_subplot(gs[1, 1])
     y2_adjusted = y2[:]
