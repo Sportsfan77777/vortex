@@ -235,7 +235,7 @@ alpha_dots = 0.7
 def make_plot(show = False):
     fig = plot.figure(figsize = (9, 6), dpi = dpi)
     #gs = gridspec.GridSpec(nrows = 2, ncols = 2, height_ratios = [7, 1.5], width_ratios = [7, 1], wspace = 0, figure = fig)
-    gs = gridspec.GridSpec(nrows = 2, ncols = 2, height_ratios = [7, 1.5], width_ratios = [7, 1.5], figure = fig)
+    gs = gridspec.GridSpec(nrows = 2, ncols = 2, height_ratios = [7, 1.5], width_ratios = [7, 1], figure = fig)
     ax = fig.add_subplot(gs[0, 0])
 
     # Plot
@@ -330,6 +330,8 @@ def make_plot(show = False):
 
     ax3.set_xlim(0, 1)
     hist_ticks = np.linspace(0, 1, 11)
+    hist_major_ticks = [0, 0.5, 1]
+    ax4.set_xticks(hist_major_ticks)
     ax3.set_xticks(hist_ticks, minor = True)
     #ax3.set_xticklabels([])
 
@@ -345,6 +347,7 @@ def make_plot(show = False):
     plot.hist(y2_adjusted, bins = np.linspace(0, 4, 5) + 1e-8, cumulative = True, color = 'navy', orientation = 'horizontal', histtype = 'stepfilled', density = True)
 
     ax4.set_xlim(0, 1)
+    ax4.set_xticks(hist_major_ticks)
     ax4.set_xticks(hist_ticks, minor = True)
     #ax4.set_xticklabels([])
     plot.xlabel("Cumulative Fraction", fontsize = fontsize - 2)
