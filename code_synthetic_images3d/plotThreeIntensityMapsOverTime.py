@@ -269,7 +269,7 @@ def make_plot(frames, show = False):
         x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         x_shift = 0.35; extra = 0.17
-        y_text = 1.42; y_shift = 0.22
+        y_text = 1.46; y_shift = 0.20
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -302,9 +302,9 @@ def make_plot(frames, show = False):
             final_planet_mass = planet_mass + accreted_mass[final_frame]
 
             text5 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
-            plot.text(x_max, (y_text + y_shift) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize + 1)
+            plot.text(x_max, (y_text + y_shift) * plot.ylim()[-1], text5, horizontalalignment = 'right', fontsize = fontsize - 2)
             text6 = r"$M_\mathrm{p} = %.2f$ ($M_\mathrm{Jup}$)" % (final_planet_mass)
-            plot.text(x_max, (y_text) * plot.ylim()[-1], text6, horizontalalignment = 'right', fontsize = fontsize + 1)
+            plot.text(x_max, (y_text) * plot.ylim()[-1], text6, horizontalalignment = 'right', fontsize = fontsize - 2)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
