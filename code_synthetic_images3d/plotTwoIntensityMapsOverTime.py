@@ -13,7 +13,7 @@ import math
 import numpy as np
 
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 from mpl_toolkits.axes_grid1 import make_axes_locatable
