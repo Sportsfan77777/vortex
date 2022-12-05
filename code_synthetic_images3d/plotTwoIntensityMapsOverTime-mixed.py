@@ -165,7 +165,7 @@ rc['ytick.labelsize'] = labelsize
 # Data
 data = np.loadtxt("../../planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
-accreted_mass = data[:, 8] / jupiter_mass
+accreted_mass = data[:, 8] / jupiter_mass - 0.003 #### HARD CODE tweak ####
 
 ##### PLOTTING #####
 
@@ -184,7 +184,7 @@ def make_plot(frames, show = False):
             intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
         else:
             new_fargo_par = fargo_par.copy()
-            new_fargo_par["Nsec"] = new_fargo_par["Nrad"]
+            #new_fargo_par["Nsec"] = new_fargo_par["Nrad"]
             intensity_cart = util.read_data(frame, 'cartesian_intensity', new_fargo_par, id_number = id_number)
         xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
@@ -267,6 +267,23 @@ def make_plot(frames, show = False):
             ax.set_ylabel(r"$y$ [$%s$]" % unit, fontsize = fontsize)
 
         # Title
+        x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
+        x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+        x_shift = 0.35; extra = 0.17
+        y_text = 1.46; y_shift = 0.20
+
+        alpha_coefficent = "3"
+        if scale_height == 0.08:
+            alpha_coefficent = "1.5"
+        elif scale_height == 0.04:
+            alpha_coefficent = "6"
+
+        if i == 0:
+            text1 = r"$h = %.2f$" % (scale_height)
+            plot.text(x_min, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
+            text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
+            plot.text(x_min, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
+
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
 
@@ -291,8 +308,11 @@ def make_plot(frames, show = False):
         alpha_coefficent = "1.5"
     elif scale_height == 0.04:
         alpha_coefficent = "6"
-    title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    plot.suptitle("%s" % (title), y = 1.13, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
+    title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
+    title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base, final_planet_mass)
+    plot.suptitle("[%s]\n%s" % (title1, title2), y = 1.24, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    #plot.suptitle("%s" % (title), y = 1.13, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
     plot.tight_layout()
@@ -302,7 +322,7 @@ def make_plot(frames, show = False):
         save_fn = "%s/id%04d_intensityCartGrid_%04d-%04d.png" % (save_directory, id_number, frames[0], frames[1])
     else:
         save_fn = "%s/v%04d_id%04d_intensityCartGrid_%04d-%04d.png" % (save_directory, version, id_number, frames[0], frames[1])
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.1)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.15)
 
     if show:
         plot.show()
