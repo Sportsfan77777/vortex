@@ -184,7 +184,7 @@ def make_plot(frames, show = False):
             intensity_cart = util.read_data(frame, 'cartesian_intensity', fargo_par, id_number = id_number)
         else:
             new_fargo_par = fargo_par.copy()
-            new_fargo_par[""] = 
+            new_fargo_par["Nsec"] = new_fargo_par["Nrad"]
             intensity_cart = util.read_data(frame, 'cartesian_intensity', new_fargo_par, id_number = id_number)
         xs, ys, xs_grid, ys_grid = sq.get_cartesian_grid(rad)
 
