@@ -291,10 +291,10 @@ def make_plot(frames, show = False):
             plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
 
             text3 = "VSI (3-D)"
-            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text3, color = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
+            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text3, color = "white", horizontalalignment = 'left', fontsize = fontsize)
         if i == 1:
             text4 = "No VSI (2-D)"
-            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text4, color = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
+            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text4, color = "white", horizontalalignment = 'left', fontsize = fontsize)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
