@@ -268,9 +268,15 @@ def make_plot(frames, show = False):
 
         # Title
         x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
+        y_min = ylot.xlim()[0]; y_max = plot.xlim()[-1]
+
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-        x_shift = 0.35; extra = 0.17
+        y_range = y_max - y_min; y_mid = y_min + y_range / 2.0
+
+        x_shift = 0.20; extra = 0.05
         y_text = 1.46; y_shift = 0.20
+
+        x_inside = 0.05; y_inside = 0.92
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -280,9 +286,18 @@ def make_plot(frames, show = False):
 
         if i == 0:
             text1 = r"$h = %.2f$" % (scale_height)
-            plot.text(x_min - x_shift, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
+            plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_min - x_shift, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
+
+            text3 = "VSI (3-D)"
+            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text3, c = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
+        if i == 1:
+            text4 = "No VSI (2-D)"
+            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text4, c = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
+
+
+
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
