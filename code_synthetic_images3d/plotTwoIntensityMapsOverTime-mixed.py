@@ -276,7 +276,7 @@ def make_plot(frames, show = False):
         x_shift = 0.20; extra = 0.05
         y_text = 1.46; y_shift = 0.20
 
-        x_inside = 0.05; y_inside = 0.92
+        x_inside = 0.05; y_inside = 0.88
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
@@ -295,9 +295,6 @@ def make_plot(frames, show = False):
         if i == 1:
             text4 = "No VSI (2-D)"
             plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text4, color = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
-
-
-
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
@@ -322,7 +319,7 @@ def make_plot(frames, show = False):
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
     title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
-    plot.suptitle("[%s]\n%s" % (title1, title2), y = 1.24, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("[%s]\n%s" % (title1, title2), x = 0.6, y = 1.24, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
     #plot.suptitle("%s" % (title), y = 1.13, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
