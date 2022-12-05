@@ -291,10 +291,10 @@ def make_plot(frames, show = False):
             plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
 
             text3 = "VSI (3-D)"
-            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text3, c = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
+            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text3, color = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
         if i == 1:
             text4 = "No VSI (2-D)"
-            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text4, c = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
+            plot.text(x_min + x_inside * x_range, y_min + (y_inside) * y_range, text4, color = "white", horizontalalignment = 'left', fontsize = fontsize  - 2)
 
 
 
