@@ -276,7 +276,7 @@ def make_plot(frames, show = False):
         x_shift = 0.20; extra = 0.05
         y_text = 1.46; y_shift = 0.20
 
-        x_inside = 0.06; y_inside = 0.90
+        x_inside = 0.06; y_inside = 0.88
 
         alpha_coefficent = "3"
         if scale_height == 0.08:
