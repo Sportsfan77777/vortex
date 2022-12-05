@@ -319,7 +319,7 @@ def make_plot(frames, show = False):
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
     title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base)
-    plot.suptitle("[%s]\n%s" % (title1, title2), x = 0.6, y = 1.24, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
+    plot.suptitle("[%s]\n%s" % (title1, title2), x = 0.55, y = 1.24, fontsize = fontsize + 3, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
     #plot.suptitle("%s" % (title), y = 1.13, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Tighten!
