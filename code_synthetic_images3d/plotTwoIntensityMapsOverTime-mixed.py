@@ -280,9 +280,9 @@ def make_plot(frames, show = False):
 
         if i == 0:
             text1 = r"$h = %.2f$" % (scale_height)
-            plot.text(x_min, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
+            plot.text(x_min - x_shift, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
             text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_min, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
+            plot.text(x_min - x_shift, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize  - 2)
 
         title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize)
