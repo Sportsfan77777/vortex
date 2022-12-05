@@ -303,11 +303,7 @@ def make_plot(frames, show = False):
         add_to_plot(i)
 
     # Title
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
+    surface_density_base = 1.157e-4
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title1 = r'$%.3f^{\prime\prime}$' % (arc_beam)
     title2 = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$" % (surface_density_zero / surface_density_base, final_planet_mass)
