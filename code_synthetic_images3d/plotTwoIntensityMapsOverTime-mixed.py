@@ -268,7 +268,7 @@ def make_plot(frames, show = False):
 
         # Title
         x_min = plot.xlim()[0]; x_max = plot.xlim()[-1]
-        y_min = ylot.xlim()[0]; y_max = plot.xlim()[-1]
+        y_min = plot.ylim()[0]; y_max = plot.ylim()[-1]
 
         x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
         y_range = y_max - y_min; y_mid = y_min + y_range / 2.0
