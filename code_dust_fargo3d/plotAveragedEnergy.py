@@ -76,7 +76,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'compare to another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 21,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 4,
                          help = 'fontsize of plot annotations (default: 3)')
