@@ -176,6 +176,10 @@ accreted_mass = data[:, 8] / jupiter_mass
 
 ##### PLOTTING #####
 
+labelsize = 18
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
