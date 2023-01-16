@@ -101,6 +101,7 @@ surface_density_zero = p.sigma0
 planet_mass = 1.0
 taper_time = p.masstaper
 
+scale_height = p.aspectratio
 viscosity = p.nu
 
 dt = p.ninterm * p.dt
@@ -257,7 +258,13 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.15
+    y_text = 1.16
+
+    alpha_coefficent = "3"
+    if scale_height == 0.08:
+        alpha_coefficent = "1.5"
+    elif scale_height == 0.04:
+        alpha_coefficent = "6"
 
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
