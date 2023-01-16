@@ -293,7 +293,7 @@ def make_plot(frame, show = False):
     #title = readTitle()
 
     ax.set_xlabel(r"$\theta$ [degrees]", fontsize = fontsize)
-    ax.set_ylabel(r"$\rho$ $/$ $\rho$", fontsize = fontsize)
+    ax.set_ylabel(r"$\rho$ $/$ $\rho_0$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)

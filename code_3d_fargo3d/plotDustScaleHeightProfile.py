@@ -201,7 +201,7 @@ fargo_par["theta"] = theta
 ##### Fitting Function #####
 
 def gaussian(x, A, mean, sigma):
-    return A * np.exp(-np.power(x - mean / 2.0, 2) / (2 * np.power(sigma, 2)))
+    return A * np.exp(-np.power( (x - mean) / 2.0, 2) / (2 * np.power(sigma, 2)))
 
 ###############################################################################
 

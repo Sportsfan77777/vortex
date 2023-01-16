@@ -324,7 +324,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = z_angles # * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(voriticity), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(vorticity), cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])

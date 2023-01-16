@@ -19,6 +19,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -77,7 +78,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 4,
                          help = 'fontsize of plot annotations (default: 3)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -195,7 +196,7 @@ def make_plot(frame, show = False):
     ### Plot ###
     x = rad
     y = normalized_energy
-    result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+    result = plot.plot(x, y, c = "r", linewidth = linewidth, zorder = 99)
 
     if args.zero:
         energy_zero = fromfile("gasenergy0.dat").reshape(num_rad, num_theta)
@@ -228,7 +229,7 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    #plot.ylim(0, max_y)
+    plot.ylim(0, max_y)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
