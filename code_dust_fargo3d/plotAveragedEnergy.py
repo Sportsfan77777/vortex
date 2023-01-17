@@ -72,7 +72,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
-    parser.add_argument('--compare', dest = "compare", default = None,
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'compare to another directory (default: do not do it!)')
     
     # Plot Parameters (rarely need to change)
@@ -213,15 +213,16 @@ def make_plot(frame, show = False):
         result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
 
     if args.compare is not None:
-        directory = args.compare
-        density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
-        averagedDensity_compare = np.average(density_compare, axis = 1)
-        normalized_density_compare = averagedDensity_compare / surface_density_zero
+        directories = args.compare
+        for i, directory in enumerate(directories):
+            energy_compare = (fromfile("%s/gasenergy%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
+            averagedEnergy_compare = np.average(energy_compare, axis = 1)
+            normalized_energy_compare = averagedEnergy_compare
 
-        ### Plot ###
-        x = rad
-        y_compare = normalized_density_compare
-        result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "compare")
+            ### Plot ###
+            x = rad
+            y_compare = normalized_energy_compare
+            result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
         plot.legend()
 
