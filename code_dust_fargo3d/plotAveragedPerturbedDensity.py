@@ -278,13 +278,12 @@ def make_plot(frame, show = False):
             max_y = lowest_y
 
         max_y = 1.1 * max(y[x_min_i : x_max_i])
-
-        min_y = 
+        min_y = -1.0 * max_y
     else:
         max_y = args.max_y
 
     ax.set_xlim(x_min, x_max)
-    ax.set_ylim(-max_y, max_y)
+    ax.set_ylim(min_y, max_y)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
