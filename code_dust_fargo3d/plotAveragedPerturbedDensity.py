@@ -281,6 +281,7 @@ def make_plot(frame, show = False):
         min_y = -1.0 * max_y
     else:
         max_y = args.max_y
+        min_y = -1.0 * max_y
 
     ax.set_xlim(x_min, x_max)
     ax.set_ylim(min_y, max_y)
