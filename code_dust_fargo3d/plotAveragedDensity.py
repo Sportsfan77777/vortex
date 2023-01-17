@@ -238,7 +238,7 @@ def make_plot(frame, show = False):
             ### Plot ###
             x = rad
             y_compare = normalized_density_compare
-            result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "Comp %d" % i)
+            result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
         plot.legend()
 
