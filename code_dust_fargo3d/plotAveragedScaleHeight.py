@@ -202,12 +202,15 @@ def make_plot(frame, show = False):
     soundspeed = np.sqrt(energy / density * (gamma - 1.0))
     averagedSoundSpeed = np.average(soundspeed, axis = 1)
 
-    averagedScaleHeight = averagedSoundSpeed / rad
+    omega = np.power(rad, -1.5)
+
+    averagedScaleHeight = averagedSoundSpeed / omega
+    averagedAspectRatio = averagedScaleHeight / rad
 
     ### Plot ###
     x = rad
     y = averagedScaleHeight
-    result = plot.plot(x, y, c = "r", linewidth = linewidth, zorder = 99)
+    result = plot.plot(x, y, c = "peru", linewidth = linewidth, zorder = 99)
 
     if args.zero:
         energy_zero = fromfile("gasenergy0.dat").reshape(num_rad, num_theta)
@@ -227,11 +230,12 @@ def make_plot(frame, show = False):
             soundspeed_compare = np.sqrt(energy_compare / density_compare * (gamma - 1.0))
             averagedSoundSpeed_compare = np.average(soundspeed, axis = 1)
 
-            averagedScaleHeight_compare = averagedSoundSpeed / rad
+            averagedScaleHeight_compare = averagedSoundSpeed / omega
+            averagedAspectRatio_compare = averagedScaleHeight_compare / rad
 
             ### Plot ###
             x = rad
-            y_compare = averagedScaleHeight_compare
+            y_compare = averagedAspectRatio_compare
             result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
         plot.legend()
@@ -271,7 +275,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
+    plot.ylabel(r"$H / R$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
@@ -292,7 +296,7 @@ def make_plot(frame, show = False):
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    plot.text(x_mid, y_text * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
