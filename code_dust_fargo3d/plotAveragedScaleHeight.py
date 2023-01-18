@@ -209,7 +209,7 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     x = rad
-    y = averagedScaleHeight
+    y = averagedAspectRatio
     result = plot.plot(x, y, c = "peru", linewidth = linewidth, zorder = 99)
 
     if args.zero:
