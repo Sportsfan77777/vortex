@@ -219,7 +219,7 @@ def make_plot(frame, show = False):
     normalized_density = averagedDensity / surface_density_zero
     normalized_density_zero = averagedDensity_zero / surface_density_zero
 
-    perturbed_density = normalized_density - normalized_density_zero
+    perturbed_density = (normalized_density - normalized_density_zero) / normalized_density_zero
 
     ### Plot ###
     x = rad
