@@ -238,9 +238,13 @@ def make_plot(frame, show = False):
     if args.compare is not None:
         directories = args.compare
         for i, directory in enumerate(directories):
-            density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)) - (fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta))
+            density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
+            density_zero_compare = (fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta))
+
             averagedDensity_compare = np.average(density_compare, axis = 1)
-            normalized_density_compare = averagedDensity_compare / surface_density_zero
+            averagedDensity_zero_compare = np.average(density_zero_compare, axis = 1)
+
+            normalized_density_compare = (averagedDensity_compare - averagedDensity_zero_compare) / averagedDensity_zero_compare  
 
             ### Plot ###
             x = rad
