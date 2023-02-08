@@ -81,7 +81,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
-    parser.add_argument('--compare', dest = "compare", default = None,
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'compare to another directory (default: do not do it!)')
 
     # Quantity to plot for maximum condition
@@ -244,17 +244,16 @@ def make_plot(frame, show = False):
         result = plot.plot(x, y_zero, linewidth = linewidth, zorder = 0)
 
     if args.compare is not None:
-        directory = args.compare
-        density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta))
-        surface_density_compare = np.sum(density_compare[:, :, :], axis = 0) * dz
+        directories = args.compare
+        for i, directory in enumerate(directories):
+            density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
+            averagedDensity_compare = np.average(density_compare, axis = 1)
+            normalized_density_compare = averagedDensity_compare / surface_density_zero
 
-        averagedDensity_compare = np.average(surface_density_compare, axis = 1)
-        normalized_density_compare = averagedDensity_compare / surface_density_zero
-
-        ### Plot ###
-        x = rad
-        y_compare = normalized_density_compare
-        result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = "compare")
+            ### Plot ###
+            x = rad
+            y_compare = normalized_density_compare
+            result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
         plot.legend()
 
