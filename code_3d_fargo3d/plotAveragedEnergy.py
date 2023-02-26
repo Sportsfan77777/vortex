@@ -207,7 +207,7 @@ def make_plot(frame, show = False):
     result = plot.plot(x, y, c = "r", linewidth = linewidth, zorder = 99)
 
     if args.zero:
-        energy_zero = fromfile("gasenergy0.dat").reshape(num_rad, num_theta)
+        energy_zero = fromfile("gasenergy0.dat").reshape(num_z, num_rad, num_theta)
         surface_energy_zero = np.sum(energy_zero[:, :, :], axis = 0) * dz
 
         averagedEnergy_zero = np.average(surface_energy_zero, axis = 1)
@@ -220,7 +220,7 @@ def make_plot(frame, show = False):
     if args.compare is not None:
         directories = args.compare
         for i, directory in enumerate(directories):
-            energy_compare = (fromfile("%s/gasenergy%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
+            energy_compare = (fromfile("%s/gasenergy%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta))
             surface_energy_compare = np.sum(energy_compare[:, :, :], axis = 0) * dz
 
             averagedEnergy_compare = np.average(energy_compare, axis = 1)
