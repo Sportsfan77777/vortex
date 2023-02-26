@@ -31,7 +31,7 @@ import azimuthal as az
 #from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+#from reader import Fields
 
 from colormaps import cmaps
 for key in cmaps:
