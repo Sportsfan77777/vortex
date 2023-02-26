@@ -112,6 +112,9 @@ planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
+gamma = p.gamma
+surface_energy_zero = surface_density_zero * np.power(scale_height, 2.0) / (gamma - 1.0)
+
 """
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -196,7 +199,7 @@ def make_plot(frame, show = False):
     else:
         energy = fromfile("gasenergy%d.dat" % frame).reshape(num_rad, num_theta)
     averagedEnergy = np.average(energy, axis = 1)
-    normalized_energy = averagedEnergy
+    normalized_energy = averagedEnergy / surface_energy_zero
 
     ### Plot ###
     x = rad
@@ -217,7 +220,7 @@ def make_plot(frame, show = False):
         for i, directory in enumerate(directories):
             energy_compare = (fromfile("%s/gasenergy%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
             averagedEnergy_compare = np.average(energy_compare, axis = 1)
-            normalized_energy_compare = averagedEnergy_compare
+            normalized_energy_compare = averagedEnergy_compare / surface_energy_zero
 
             ### Plot ###
             x = rad
@@ -251,7 +254,7 @@ def make_plot(frame, show = False):
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\Sigma / \Sigma_0$", fontsize = fontsize)
+    plot.ylabel(r"$E / E_0$", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)

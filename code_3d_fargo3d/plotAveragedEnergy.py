@@ -113,6 +113,9 @@ planet_mass = fargo_par["PlanetMass"] / jupiter_mass
 accretion = fargo_par["Accretion"]
 taper_time = p.masstaper
 
+gamma = p.gamma
+surface_energy_zero = surface_density_zero * np.power(scale_height, 2.0) / (gamma - 1.0)
+
 """
 num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
 r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
@@ -199,7 +202,7 @@ def make_plot(frame, show = False):
     surface_energy = np.sum(energy[:, :, :], axis = 0) * dz
 
     averagedEnergy = np.average(surface_energy, axis = 1)
-    normalized_energy = averagedEnergy
+    normalized_energy = averagedEnergy / surface_energy_zero
 
     ### Plot ###
     x = rad
@@ -208,10 +211,10 @@ def make_plot(frame, show = False):
 
     if args.zero:
         energy_zero = fromfile("gasenergy0.dat").reshape(num_z, num_rad, num_theta)
-        surface_energy_zero = np.sum(energy_zero[:, :, :], axis = 0) * dz
+        energy2D_zero = np.sum(energy_zero[:, :, :], axis = 0) * dz
 
-        averagedEnergy_zero = np.average(surface_energy_zero, axis = 1)
-        normalized_energy_zero = averagedEnergy_zero
+        averagedEnergy_zero = np.average(energy2D_zero, axis = 1)
+        normalized_energy_zero = averagedEnergy_zero / surface_energy_zero
 
         x = rad
         y_zero = normalized_energy_zero
