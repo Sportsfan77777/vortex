@@ -128,20 +128,20 @@ fargo_par["theta"] = theta
 ##### DATA #####
 
 def time_average():
-    total_density = np.zeros((num_z, num_rad, num_theta))
+    total_velocity = np.zeros((num_z, num_rad, num_theta))
 
     # Data
     for frame in frame_range:
         print frame
-        density = fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)
-        total_density += density
+        velocity = fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+        total_velocity += velocity
 
     # Average
-    total_density /= len(frame_range)
+    total_velocity /= len(frame_range)
 
     save_fn = "%s/time_averaged_vz_%04d-%04d-%04d.npy" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
     with open(save_fn, 'wb') as f:
-        np.save(f, total_density)
+        np.save(f, total_velocity)
 
 ##### Save Data #####
 
