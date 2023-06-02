@@ -72,8 +72,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "averagedMidplaneAlpha",
-                         help = 'save directory (default: averagedMidplaneAlpha)')
+    parser.add_argument('--dir', dest = "save_directory", default = "timeAveragedAlpha",
+                         help = 'save directory (default: timeAveragedAlpha)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -259,7 +259,7 @@ def make_plot(show = False):
 
     # Rolling Average
     dr = rad[1] - rad[0]
-    window_size = 11 # scale_height / dr
+    window_size = 31 # scale_height / dr
     poly_order = 1
 
     smoothed_reynolds_stress = scipy.signal.savgol_filter(total_averaged_reynolds_stress_rad_theta, window_size, poly_order)
