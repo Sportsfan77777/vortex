@@ -266,7 +266,7 @@ def make_plot(show = False):
 
     # Add up columns
     dz = z_angles[1] - z_angles[0]
-    surface_smoothed_reynolds_stress = np.sum(density[:, :, :], axis = 0) * dz
+    surface_smoothed_reynolds_stress = np.sum(smoothed_reynolds_stress[:, :], axis = 0) * dz
 
     # Calculate alpha
     omega = np.power(rad, -1.5)
