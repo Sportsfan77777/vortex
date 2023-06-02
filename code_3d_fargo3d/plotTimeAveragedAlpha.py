@@ -36,6 +36,7 @@ import argparse
 
 import math
 import numpy as np
+import scipy
 
 import matplotlib
 matplotlib.use('Agg')
@@ -244,8 +245,8 @@ def make_plot(show = False):
         vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
         # Reynolds Stress
-        vrad_component = vrad - (np.average(time_vrad, axis = -1))[:, None]
-        vtheta_component = vtheta - (np.average(time_vtheta, axis = -1))[:, None]
+        vrad_component = vrad - (np.average(time_vrad, axis = -1))[:, :, None]
+        vtheta_component = vtheta - (np.average(time_vtheta, axis = -1))[:, :, None]
 
         reynolds_stress_rad_theta = density * vrad_component * vtheta_component
         averaged_reynolds_stress_rad_theta = np.average(reynolds_stress_rad_theta, axis = -1)
