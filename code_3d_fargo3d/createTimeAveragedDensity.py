@@ -108,12 +108,12 @@ rad = np.linspace(r_min, r_max, num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 z_angles = np.linspace(z_min, z_max, num_z)
 
-version = args.version
-if args.r_lim is None:
-    x_min = r_min; x_max = r_max
-else:
-    x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
+#version = args.version
+#if args.r_lim is None:
+#    x_min = r_min; x_max = r_max
+#else:
+#    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+#center = args.center
 
 # Planet File
 # Data
