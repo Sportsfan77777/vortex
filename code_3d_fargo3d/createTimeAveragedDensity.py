@@ -52,9 +52,9 @@ import azimuthal as az
 from advanced import Parameters
 from reader_mpiio import Fields
 
-from colormaps import cmaps
-for key in cmaps:
-    plot.register_cmap(name = key, cmap = cmaps[key])
+#from colormaps import cmaps
+#for key in cmaps:
+#    plot.register_cmap(name = key, cmap = cmaps[key])
 
 ###############################################################################
 
@@ -132,6 +132,7 @@ def time_average():
 
     # Data
     for frame in frame_range:
+        print frame
         density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
         total_density += density
 
