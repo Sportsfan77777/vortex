@@ -119,7 +119,7 @@ z_angles = np.linspace(z_min, z_max, num_z)
 # Data
 data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
-accreted_mass = data[:, 8] / jupiter_mass
+#accreted_mass = data[:, 8] / jupiter_mass
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
