@@ -139,7 +139,7 @@ def time_average():
     # Average
     total_density /= len(frame_range)
 
-    save_fn = "%s/time_averaged_density_%04d-%04d-%04d.png" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
+    save_fn = "%s/time_averaged_density_%04d-%04d-%04d.npy" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
     with open(save_fn, 'wb') as f:
         np.save(f, total_density)
 
