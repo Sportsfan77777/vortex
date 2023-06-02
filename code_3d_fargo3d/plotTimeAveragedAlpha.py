@@ -237,9 +237,9 @@ def make_plot(show = False):
 
         time_directory = "timeAverages"
         time_density = np.load("%s/time_averaged_density_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-        time_vz = np.load("%s/time_averaged_vz_%04d-%04d-%04d.npy" % (time_directory, args,frames[0], args.frames[1], args.frames[2]))
-        time_vrad = np.load("%s/time_averaged_vy_%04d-%04d-%04d.npy" % (time_directory, args,frames[0], args.frames[1], args.frames[2]))
-        time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args,frames[0], args.frames[1], args.frames[2]))
+        time_vz = np.load("%s/time_averaged_vz_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+        time_vrad = np.load("%s/time_averaged_vy_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+        time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
 
         # Reynolds Stress
         vrad_component = vrad - np.average(time_vrad, axis = -1)
