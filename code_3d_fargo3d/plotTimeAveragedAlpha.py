@@ -259,7 +259,7 @@ def make_plot(show = False):
 
     # Rolling Average
     dr = rad[1] - rad[0]
-    window_size = 10 # scale_height / dr
+    window_size = 11 # scale_height / dr
     poly_order = 1
 
     smoothed_reynolds_stress = scipy.signal.savgol_filter(total_averaged_reynolds_stress_rad_theta, window_size, poly_order)
