@@ -281,7 +281,7 @@ def make_plot(show = False):
 
     ### Plot ###
     x = rad
-    y = average_alpha
+    y = measured_alpha
 
     result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
 
