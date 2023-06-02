@@ -226,6 +226,14 @@ def make_plot(show = False):
     total_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
     rolling_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
 
+    # Time-averaged Data
+
+    time_directory = "timeAverages"
+    time_density = np.load("%s/time_averaged_density_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vz = np.load("%s/time_averaged_vz_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vrad = np.load("%s/time_averaged_vy_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+
     for frame in frame_range:
         print frame
 
@@ -235,15 +243,9 @@ def make_plot(show = False):
         vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
         vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
-        time_directory = "timeAverages"
-        time_density = np.load("%s/time_averaged_density_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-        time_vz = np.load("%s/time_averaged_vz_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-        time_vrad = np.load("%s/time_averaged_vy_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-        time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-
         # Reynolds Stress
-        vrad_component = vrad - np.average(time_vrad, axis = -1)
-        vtheta_component = vtheta - np.average(time_vtheta, axis = -1)
+        vrad_component = vrad - (np.average(time_vrad, axis = -1))[:, None]
+        vtheta_component = vtheta - (np.average(time_vtheta, axis = -1))[:, None]
 
         reynolds_stress_rad_theta = density * vrad_component * vtheta_component
         averaged_reynolds_stress_rad_theta = np.average(reynolds_stress_rad_theta, axis = -1)
