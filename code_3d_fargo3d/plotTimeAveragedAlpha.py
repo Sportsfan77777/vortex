@@ -84,6 +84,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'for single plot, do not display plot (default: display plot)')
     parser.add_argument('-v', dest = "version", type = int, default = None,
                          help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+    parser.add_argument('-w', dest = "window", type = int, default = 31,
+                         help = 'window size for smoothing (default: 31)')
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
@@ -259,7 +261,7 @@ def make_plot(show = False):
 
     # Rolling Average
     dr = rad[1] - rad[0]
-    window_size = 31 # scale_height / dr
+    window_size = args.window # scale_height / dr
     poly_order = 1
 
     smoothed_reynolds_stress = scipy.signal.savgol_filter(total_averaged_reynolds_stress_rad_theta, window_size, poly_order)
