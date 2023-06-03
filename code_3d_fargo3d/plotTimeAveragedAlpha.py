@@ -340,10 +340,12 @@ def make_plot(show = False):
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
 
     # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+
     if version is None:
-        save_fn = "%s/timeAveragedAlpha_%04d-%04d-%04d.png" % (save_directory, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/%s_timeAveragedAlpha_%04d-%04d-%04d.png" % (save_directory, directory_name, args.frames[0], args.frames[1], args.frames[2])
     else:
-        save_fn = "%s/v%04d_timeAveragedAlpha_%04d-%04d-%04d.png" % (save_directory, version, args.frames[0], args.frames[1], args.frames[2])
+        save_fn = "%s/v%04d_%s_timeAveragedAlpha_%04d-%04d-%04d.png" % (save_directory, version, directory_name, args.frames[0], args.frames[1], args.frames[2])
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
