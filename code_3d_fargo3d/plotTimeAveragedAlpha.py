@@ -286,6 +286,7 @@ def make_plot(show = False):
     y = measured_alpha
 
     result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
+    result2, = plot.plot(x, -y, linewidth = linewidth, c = "r", label = "min", zorder = 10, alpha = 0.7)
 
     # Axes
     plot.xlim(x_min, x_max)
