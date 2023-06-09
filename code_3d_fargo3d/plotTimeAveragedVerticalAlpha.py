@@ -226,8 +226,8 @@ def make_plot(show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
-    total_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
-    rolling_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
+    total_averaged_reynolds_stress_z_theta = np.zeros((num_z, num_rad))
+    rolling_averaged_reynolds_stress_z_theta = np.zeros((num_z, num_rad))
 
     # Time-averaged Data
 
