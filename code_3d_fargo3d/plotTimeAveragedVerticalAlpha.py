@@ -258,7 +258,6 @@ def make_plot(show = False):
 
     # Time Average
     total_averaged_reynolds_stress_z_theta /= len(frame_range)
-    total_pressure /= len(frame_range)
 
     # Rolling Average
     dr = rad[1] - rad[0]
