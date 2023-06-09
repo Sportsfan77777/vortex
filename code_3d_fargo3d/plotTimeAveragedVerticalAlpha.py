@@ -267,7 +267,7 @@ def make_plot(show = False):
     smoothed_reynolds_stress = scipy.signal.savgol_filter(total_averaged_reynolds_stress_z_theta, window_size, poly_order)
 
     # Add up columns
-    #dz = z_angles[1] - z_angles[0]
+    dz = z_angles[1] - z_angles[0]
     #surface_smoothed_reynolds_stress = np.sum(smoothed_reynolds_stress[:, :], axis = 0) * dz
 
     # Calculate alpha
