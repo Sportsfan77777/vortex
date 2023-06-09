@@ -297,7 +297,7 @@ def make_plot(show = False):
     result2, = plot.plot(x, -y, linewidth = linewidth, c = "r", label = "min", zorder = 10, alpha = 0.7)
 
     # Axes
-    plot.xlim(x_min, x_max)
+    plot.xlim(x[0], x[-1])
     plot.ylim(10**(-8), 3 * 10**(-1))
     plot.yscale('log')
     #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
