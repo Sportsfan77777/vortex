@@ -290,7 +290,7 @@ def make_plot(show = False):
     r_i = np.searchsorted(rad, r_choice)
 
     ### Plot ###
-    x = zs / (r_choice * scale_height)
+    x = zs / scale_height
     y = measured_alpha[:, r_i]
 
     result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
@@ -298,7 +298,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
-    plot.ylim(10**(-8), 3 * 10**(-1))
+    plot.ylim(10**(-2), 10**(0))
     plot.yscale('log')
     #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
