@@ -284,7 +284,7 @@ def make_plot(show = False):
     coefficient = 0.5 * zs[:, None] * q * scale_height / scale_height_function
     pressure = time_density * np.power(sound_speed_function, 2.0)
 
-    measured_alpha = surface_smoothed_reynolds_stress / pressure[:, None] / coefficient
+    measured_alpha = smoothed_reynolds_stress / pressure[:, None] / coefficient
 
     r_choice = 1.4
     r_i = np.searchsorted(rad, r_choice)
