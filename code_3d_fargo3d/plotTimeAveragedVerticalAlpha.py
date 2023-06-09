@@ -235,7 +235,7 @@ def make_plot(show = False):
     time_density = np.load("%s/time_averaged_density_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
     time_vz = np.load("%s/time_averaged_vz_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
     time_vrad = np.load("%s/time_averaged_vy_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-    time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2])) 
 
     for frame in frame_range:
         print frame
@@ -258,6 +258,7 @@ def make_plot(show = False):
 
     # Time Average
     total_averaged_reynolds_stress_z_theta /= len(frame_range)
+    total_pressure /= len(frame_range)
 
     # Rolling Average
     dr = rad[1] - rad[0]
@@ -282,9 +283,9 @@ def make_plot(show = False):
     surface_density = np.average(np.sum(density[:, :, :], axis = 0) * dz, axis = -1)
 
     coefficient = 0.5 * zs[:, None] * q * scale_height / scale_height_function
-    pressure = time_density * np.power(sound_speed_function, 2.0)
+    averaged_pressure = np.average(time_density, axis = -1) * np.power(sound_speed_function, 2.0)
 
-    measured_alpha = smoothed_reynolds_stress / pressure[:, None] / coefficient
+    measured_alpha = smoothed_reynolds_stress / averaged_pressure / coefficient
 
     r_choice = 1.4
     r_i = np.searchsorted(rad, r_choice)
