@@ -308,7 +308,7 @@ def make_plot(frame, show = False):
     midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
     midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
-    averaged_vz = np.average(midplane_vz, axis = -1)
+    averaged_vz = np.average(vz, axis = -1)
 
     dz = z_angles[1] - z_angles[0]
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
@@ -322,8 +322,8 @@ def make_plot(frame, show = False):
 
     ### Plot ###
     x = rad
-    y = z_angles / scale_height
-    result = ax.pcolormesh(x, y, np.transpose(averaged_vz), cmap = cmap)
+    y = (z_angles - np.pi / 2.0) / scale_height
+    result = ax.pcolormesh(x, y, averaged_vz, cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
