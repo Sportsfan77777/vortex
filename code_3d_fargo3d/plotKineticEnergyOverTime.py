@@ -71,8 +71,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
-    parser.add_argument('--compare', dest = "compare", default = None,
-                         help = 'compare to fargo (default: do not do it!)')
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
+                         help = 'compare to another directory (default: do not do it!)')
     parser.add_argument('--data', dest = "data", default = None,
                          help = 'compare to data from another directory (default: do not do it!)')
     
