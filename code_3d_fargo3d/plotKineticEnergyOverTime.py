@@ -195,7 +195,7 @@ def find_peak(averagedDensity):
 
 def get_kinetic_energy(args_here):
     # Unwrap Args
-    i, frame = args_here
+    i, directory, frame = args_here
 
     # Get Data
     def get_data(directory = "./"):
@@ -235,7 +235,7 @@ def get_kinetic_energy(args_here):
 
         return np.sum(kinetic_energy) / np.sum(keplerian_kinetic_energy)
 
-    density, vrad, vtheta, vz = get_data()
+    density, vrad, vtheta, vz = get_data(directory)
     kinetic_energy = helper(density, vrad, vtheta, vz)
 
     if args.compare:
@@ -266,11 +266,11 @@ max_frame = 100 #util.find_max_frame()
 #peak_over_time = np.zeros(len(frame_range))
 
 kinetic_energy_over_time = mp_array("d", len(frame_range))
-
 kinetic_energy_over_time_compare = mp_array("d", len(frame_range))
 
+cwd = "./"
 for i, frame in enumerate(frame_range):
-    get_kinetic_energy((i, frame))
+    get_kinetic_energy((i, cwd, frame))
 
 #pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
@@ -299,13 +299,26 @@ def make_plot(show = False):
     # Curves
     plot.plot(frame_range, kinetic_energy_over_time, linewidth = linewidth)
     #plot.plot(frame_range, peak_over_time, linewidth = linewidth - 1, label = "Peak")
-    if args.compare:
-        plot.plot(frame_range, kinetic_energy_over_time_compare, linewidth = linewidth, label = "compare")
 
     if args.data:
         frame_range_data = pickle.load(open("%s/kinetic_energy_frames.p" % args.data, "rb"))
         kinetic_energy_over_time_data = pickle.load(open("%s/kinetic_energy_frames.p" % args.data, "rb"))
         plot.plot(frame_range_data, kinetic_energy_over_time_data, linewidth = linewidth, label = "data")
+
+    if args.compare is not None:
+        directories = args.compare
+        for d, directory in enumerate(directories):
+
+            for i, frame in enumerate(frame_range):
+                get_kinetic_energy((i, directory, frame))
+
+            #pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+
+            #p = Pool(num_cores)
+            #p.map(get_kinetic_energy, pool_args)
+            #p.terminate()
+
+            plot.plot(frame_range, kinetic_energy_over_time_compare, linewidth = linewidth, label = "%s" % directory)
 
     # Reference Lines
     #plot.plot([0, frame_range[-1]], 0.10 * np.ones(2), linewidth = 2, color = "black")
@@ -323,7 +336,7 @@ def make_plot(show = False):
     title1 = os.getcwd().split("/")[-1]
     plot.title(title1, fontsize = fontsize)
 
-    #plot.legend(loc = "upper left")
+    plot.legend(loc = "upper left")
 
     # Limits
     plot.xlim(frame_range[0], frame_range[-1])
@@ -332,7 +345,8 @@ def make_plot(show = False):
     plot.yscale('log')
 
     # Save + Close
-    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+    #directory_name = os.getcwd().split("/")[-1].split("-")[0]
+    directory_name = os.getcwd().split("/")[-1]
 
     if version is None:
         save_fn = "%s/%s_kineticEnergy.png" % (save_directory, directory_name)
