@@ -235,7 +235,7 @@ def get_kinetic_energy(args_here):
 
         return np.sum(kinetic_energy) / np.sum(keplerian_kinetic_energy)
 
-    density, vrad, vtheta, vz = get_data(directory)
+    density, vrad, vtheta, vz = get_data(this_directory)
     kinetic_energy = helper(density, vrad, vtheta, vz)
 
     if args.compare:
