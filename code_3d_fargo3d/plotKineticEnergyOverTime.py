@@ -321,7 +321,7 @@ def make_plot(show = False):
             #p.map(get_kinetic_energy, pool_args)
             #p.terminate()
 
-            plot.plot(frame_range, kinetic_energy_over_time, linewidth = linewidth, label = "%s" % directory)
+            plot.plot(frame_range, kinetic_energy_over_time, linewidth = linewidth, label = "%s" % compare_directory)
 
     # Reference Lines
     #plot.plot([0, frame_range[-1]], 0.10 * np.ones(2), linewidth = 2, color = "black")
