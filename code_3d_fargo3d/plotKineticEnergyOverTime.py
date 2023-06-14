@@ -254,8 +254,8 @@ def get_kinetic_energy(args_here):
     # Store Data
     kinetic_energy_over_time[i] = kinetic_energy
 
-    if args.compare:
-        kinetic_energy_over_time_compare[i] = kinetic_energy_compare
+    #if args.compare:
+    #    kinetic_energy_over_time_compare[i] = kinetic_energy_compare
 
 ###############################################################################
 
