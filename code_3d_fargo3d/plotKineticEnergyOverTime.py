@@ -195,7 +195,7 @@ def find_peak(averagedDensity):
 
 def get_kinetic_energy(args_here):
     # Unwrap Args
-    i, directory, frame = args_here
+    i, this_directory, frame = args_here
 
     # Get Data
     def get_data(directory = "./"):
@@ -307,10 +307,10 @@ def make_plot(show = False):
 
     if args.compare is not None:
         directories = args.compare
-        for d, directory in enumerate(directories):
+        for d, compare_directory in enumerate(directories):
 
             for i, frame in enumerate(frame_range):
-                get_kinetic_energy((i, directory, frame))
+                get_kinetic_energy((i, compare_directory, frame))
 
             #pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
