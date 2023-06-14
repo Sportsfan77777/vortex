@@ -214,7 +214,10 @@ def get_kinetic_energy(args_here):
     def helper(density, vrad, vtheta, vz):
         # Add up mass
         dr = rad[1] - rad[0] # assumes arithmetic grid
-        dphi = theta[1] - theta[0]
+        if len(theta) > 1:
+            dphi = theta[1] - theta[0]
+        else:
+            dphi = 2.0 * np.pi
         dz = z_angles[1] - z_angles[0]
 
         v_frame = rad * (np.power(rad, -1.5) - 1) # in rotating frame, v_k = r * (r^-1.5 - r_p^-1.5)
@@ -238,15 +241,15 @@ def get_kinetic_energy(args_here):
     density, vrad, vtheta, vz = get_data(this_directory)
     kinetic_energy = helper(density, vrad, vtheta, vz)
 
-    if args.compare:
-        directory_compare = args.compare
-        density_compare, vrad_compare, vtheta_compare, vz_compare = get_data(directory_compare)
-        kinetic_energy_compare = helper(density_compare, vrad_compare, vtheta_compare, vz_compare)
+    #if args.compare:
+    #    directory_compare = args.compare
+    #    density_compare, vrad_compare, vtheta_compare, vz_compare = get_data(directory_compare)
+    #    kinetic_energy_compare = helper(density_compare, vrad_compare, vtheta_compare, vz_compare)
 
     # Print Update
     print "%d: %.4f" % (frame, kinetic_energy)
-    if args.compare:
-        print "%d: %.4f" % (frame, kinetic_energy_compare)
+    #if args.compare:
+    #    print "%d: %.4f" % (frame, kinetic_energy_compare)
 
     # Store Data
     kinetic_energy_over_time[i] = kinetic_energy
@@ -307,7 +310,7 @@ def make_plot(show = False):
 
     if args.compare is not None:
         directories = args.compare
-        for d, compare_directory in enumerate(directories):
+        for compare_directory in directories:
 
             for i, frame in enumerate(frame_range):
                 get_kinetic_energy((i, compare_directory, frame))
@@ -318,7 +321,7 @@ def make_plot(show = False):
             #p.map(get_kinetic_energy, pool_args)
             #p.terminate()
 
-            plot.plot(frame_range, kinetic_energy_over_time_compare, linewidth = linewidth, label = "%s" % directory)
+            plot.plot(frame_range, kinetic_energy_over_time, linewidth = linewidth, label = "%s" % directory)
 
     # Reference Lines
     #plot.plot([0, frame_range[-1]], 0.10 * np.ones(2), linewidth = 2, color = "black")
