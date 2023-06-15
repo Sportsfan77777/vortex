@@ -302,7 +302,7 @@ def make_plot(show = False):
     if args.compare is not None:
         directories = args.compare
         for i, directory in enumerate(directories):
-            num_z = int(round(directory.split("z")[-1].split("-")[0], 0))
+            num_z = int(round(float(directory.split("z")[-1].split("-")[0]), 0))
             measured_alpha_compare = get_data(directory = directory, num_z = num_z)
 
             ### Plot ###
