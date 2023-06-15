@@ -343,7 +343,7 @@ def make_plot(show = False):
 
     # Limits
     plot.xlim(frame_range[0], frame_range[-1])
-    plot.ylim(10**(-8), 1.0)
+    plot.ylim(10**(-7), 10**(-3))
 
     plot.yscale('log')
 
