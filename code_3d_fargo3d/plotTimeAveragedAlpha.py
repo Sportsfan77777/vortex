@@ -319,6 +319,7 @@ def make_plot(show = False):
     #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
     # Annotate Axes
+    frame = frame_range[1]
     orbit = (dt / (2 * np.pi)) * frame
 
     if orbit >= taper_time:
