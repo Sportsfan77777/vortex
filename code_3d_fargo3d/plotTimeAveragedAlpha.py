@@ -92,7 +92,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.25, 0],
                          help = 'range in y-axis (default: [-0.5, 0.0])')
 
-    parser.add_argument('--compare', dest = "compare", default = None,
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'compare to another directory (default: do not do it!)')
 
     # Quantity to plot for maximum condition
@@ -212,39 +212,29 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
-def generate_colors(n):
-    c = ['yellow', 'b', 'firebrick', 'w', 'green']
-    colors = []
-    for i in range(n):
-        colors.append(c[i % len(c)])
-    return colors
+#### Helper Function ####
 
-##### PLOTTING #####
-
-def make_plot(show = False):
-    # Set up figure
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
-    ax = fig.add_subplot(111)
-
-    total_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
-    rolling_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
+def get_data(directory = "./", num_z = num_z):
 
     # Time-averaged Data
-
     time_directory = "timeAverages"
-    time_density = np.load("%s/time_averaged_density_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-    time_vz = np.load("%s/time_averaged_vz_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-    time_vrad = np.load("%s/time_averaged_vy_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
-    time_vtheta = np.load("%s/time_averaged_vx_%04d-%04d-%04d.npy" % (time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_density = np.load("%s/%s/time_averaged_density_%04d-%04d-%04d.npy" % (directory, time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vz = np.load("%s/%s/time_averaged_vz_%04d-%04d-%04d.npy" % (directory, time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vrad = np.load("%s/%s/time_averaged_vy_%04d-%04d-%04d.npy" % (directory, time_directory, args.frames[0], args.frames[1], args.frames[2]))
+    time_vtheta = np.load("%s/%s/time_averaged_vx_%04d-%04d-%04d.npy" % (directory, time_directory, args.frames[0], args.frames[1], args.frames[2]))
+
+    # Storage
+    total_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
+    rolling_averaged_reynolds_stress_rad_theta = np.zeros((num_z, num_rad))
 
     for frame in frame_range:
         print frame
 
         # Data
-        density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
-        vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-        vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-        vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+        density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)
+        vz = (fromfile("%s/gasvz%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+        vrad = (fromfile("%s/gasvy%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+        vtheta = (fromfile("%s/gasvx%d.dat" % (directory, frame)).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
         # Reynolds Stress
         vrad_component = vrad - (np.average(time_vrad, axis = -1))[:, :, None]
@@ -281,12 +271,46 @@ def make_plot(show = False):
     coefficient = -1.0 * rad * omega_gradient * surface_density * sound_speed_function * scale_height_function
     measured_alpha = surface_smoothed_reynolds_stress / coefficient
 
+    return measured_alpha
+
+###############################################################################
+
+def generate_colors(n):
+    c = ['yellow', 'b', 'firebrick', 'w', 'green']
+    colors = []
+    for i in range(n):
+        colors.append(c[i % len(c)])
+    return colors
+
+##### PLOTTING #####
+
+def make_plot(show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
+
+    # Time-averaged Data
+    measured_alpha = get_data()
+
     ### Plot ###
     x = rad
-    y = measured_alpha
+    y = np.abs(measured_alpha)
 
     result, = plot.plot(x, y, linewidth = linewidth, c = "b", label = "min", zorder = 90)
-    result2, = plot.plot(x, -y, linewidth = linewidth, c = "r", label = "min", zorder = 10, alpha = 0.7)
+    #result2, = plot.plot(x, -y, linewidth = linewidth, c = "r", label = "min", zorder = 10, alpha = 0.7)
+
+    if args.compare is not None:
+        directories = args.compare
+        for i, directory in enumerate(directories):
+            num_z = int(round(directory.split("z")[-1].split("-"), 0))
+            measured_alpha_compare = get_data(directory = directory, num_z = num_z)
+
+            ### Plot ###
+            x = rad
+            y_compare = measured_alpha_compare
+            result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
+
+        plot.legend()
 
     # Axes
     plot.xlim(x_min, x_max)
