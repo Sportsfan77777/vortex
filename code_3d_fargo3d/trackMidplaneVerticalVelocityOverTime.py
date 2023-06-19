@@ -158,6 +158,8 @@ num_rad = p.ny; num_theta = p.nx; num_z = p.nz
 r_min = p.ymin; r_max = p.ymax
 z_min = p.zmin; z_max = p.zmax
 
+spacing = p.spacing
+
 surface_density_zero = p.sigma0
 
 dt = p.ninterm * p.dt
@@ -210,7 +212,10 @@ plot_vz = args.vz
 # Plot Parameters (variable)
 show = args.show
 
-rad = np.linspace(r_min, r_max, num_rad)
+if spacing is "Arithmetic":
+    rad = np.linspace(r_min, r_max, num_rad)
+else:
+    rad = np.logspace(np.log10(r_min), np.log10(r_max), num_rad)
 theta = np.linspace(0, 2 * np.pi, num_theta)
 z_angles = np.linspace(z_min, z_max, num_z)
 
