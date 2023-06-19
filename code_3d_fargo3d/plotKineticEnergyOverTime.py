@@ -281,11 +281,11 @@ cwd = "./"
 for i, frame in enumerate(frame_range):
     get_kinetic_energy((i, cwd, frame))
 
-#pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+pool_args = [(i, cwd, frame) for i, frame in enumerate(frame_range)]
 
-#p = Pool(num_cores)
-#p.map(get_kinetic_energy, pool_args)
-#p.terminate()
+p = Pool(num_cores)
+p.map(get_kinetic_energy, pool_args)
+p.terminate()
 
 #max_mass = np.max(kinetic_energy)
 #max_peak = np.max(peak_over_time)
@@ -321,11 +321,11 @@ def make_plot(show = False):
             for i, frame in enumerate(frame_range):
                 get_kinetic_energy((i, compare_directory, frame))
 
-            #pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+            pool_args = [(i, compare_directory, frame) for i, frame in enumerate(frame_range)]
 
-            #p = Pool(num_cores)
-            #p.map(get_kinetic_energy, pool_args)
-            #p.terminate()
+            p = Pool(num_cores)
+            p.map(get_kinetic_energy, pool_args)
+            p.terminate()
 
             plot.plot(frame_range, kinetic_energy_over_time, linewidth = linewidth, label = "%s" % compare_directory)
 
