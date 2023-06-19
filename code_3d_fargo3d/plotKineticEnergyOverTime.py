@@ -204,7 +204,7 @@ def get_kinetic_energy(args_here):
     i, this_directory, frame = args_here
 
     # Get Data
-    def get_data(directory = "./"):
+    def get_data(directory = "./", num_z = num_z):
         if mpi:
           density = Fields(directory, 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
           vrad = Fields(directory, 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
@@ -244,7 +244,9 @@ def get_kinetic_energy(args_here):
 
         return np.sum(kinetic_energy) / np.sum(keplerian_kinetic_energy)
 
-    density, vrad, vtheta, vz = get_data(this_directory)
+    num_z = int(round(float(this_directory.split("z")[-1].split("-")[0]), 0))
+    density, vrad, vtheta, vz = get_data(this_directory, num_z = num_z)
+
     kinetic_energy = helper(density, vrad, vtheta, vz)
 
     #if args.compare:
