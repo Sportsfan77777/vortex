@@ -300,6 +300,7 @@ def make_plot(z_level, show = False):
     dust_density_z = density[num_z / 2 + z_level, :, :]
     dust_vrad_z = vrad[num_z / 2 + z_level, :, :]
     dust_vtheta_z = vtheta[num_z / 2 + z_level, :, :]
+    dust_vz_z = vz[num_z / 2 + z_level, :, :]
 
     dz = z_angles[1] - z_angles[0]
 
@@ -307,12 +308,12 @@ def make_plot(z_level, show = False):
     normalized_density = midplane_density / (surface_density_zero / np.sqrt(2.0 * np.pi) / scale_height_function[:, None])
 
     if center:
-        dust_vtheta_z, shift_c = shift_density(dust_vtheta_z, fargo_par, reference_density = normalized_density)
+        dust_vz_z, shift_c = shift_density(dust_vz_z, fargo_par, reference_density = normalized_density)
 
     ### Plot ###
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(dust_vtheta_z), cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(dust_vz_z), cmap = cmap)
 
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
