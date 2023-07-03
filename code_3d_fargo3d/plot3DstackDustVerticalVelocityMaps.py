@@ -297,10 +297,10 @@ def make_plot(z_level, show = False):
       dust_vtheta = (fromfile("dust1vx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
     midplane_density = density[num_z / 2, :, :]
-    dust_density_z = density[num_z / 2 + z_level, :, :]
-    dust_vrad_z = vrad[num_z / 2 + z_level, :, :]
-    dust_vtheta_z = vtheta[num_z / 2 + z_level, :, :]
-    dust_vz_z = vz[num_z / 2 + z_level, :, :]
+    dust_density_z = dust_density[num_z / 2 + z_level, :, :]
+    dust_vrad_z = dust_vrad[num_z / 2 + z_level, :, :]
+    dust_vtheta_z = dust_vtheta[num_z / 2 + z_level, :, :]
+    dust_vz_z = dust_vz[num_z / 2 + z_level, :, :]
 
     dz = z_angles[1] - z_angles[0]
 
