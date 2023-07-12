@@ -332,7 +332,7 @@ def get_velocity(args_here):
       composite_vz[i, :] = average_midplane_vz
 
       directory_name = os.getcwd().split("/")[-1]
-      pickle.dump(a, open("%s/%s_verticalVelocityMap%04d.p" % (save_directory, directory_name, frame), 'wb'))
+      pickle.dump(average_midplane_vz, open("%s/%s_verticalVelocityMap%04d.p" % (save_directory, directory_name, frame), 'wb'))
 
       #peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
       #composite_peak[i] = peak
