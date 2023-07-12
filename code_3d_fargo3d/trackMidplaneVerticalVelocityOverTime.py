@@ -75,6 +75,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'save directory (default: midplaneVerticalVelocityMapsOverTime)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
+    parser.add_argument('-p', dest = "pickle", action = 'store_true', default = False,
+                         help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
