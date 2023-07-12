@@ -309,9 +309,12 @@ def get_velocity(args_here):
     if args.pickle:
       #density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
       #vz = Fields("./", 'gas', frame).get_field("vz").reshape(num_z, num_rad, num_theta)
-      vz = pickle.load(open("%s/%s_verticalVelocityMap%04d.p" % (save_directory, directory_name, frame), 'wb'))
+      average_midplane_vz = pickle.load(open("%s/%s_verticalVelocityMap%04d.p" % (save_directory, directory_name, frame), 'wb'))
       #vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
       #vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
+      
+      composite_vz[i, :] = average_midplane_vz
+
     else:
       #density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
