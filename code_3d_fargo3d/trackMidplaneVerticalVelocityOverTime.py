@@ -304,30 +304,36 @@ def get_velocity(args_here):
     i, frame = args_here
 
     # Data
-    if mpi:
-      density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
-      vz = Fields("./", 'gas', frame).get_field("vz").reshape(num_z, num_rad, num_theta)
-      vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
-      vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
+    if args.pickle:
+      #density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
+      #vz = Fields("./", 'gas', frame).get_field("vz").reshape(num_z, num_rad, num_theta)
+      vz = pickle.load(open("%s/%s_verticalVelocityMap%04d.p" % (save_directory, directory_name, frame), 'wb'))
+      #vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
+      #vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
     else:
       #density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
       #vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
       #vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-    #midplane_density = density[num_z / 2 + args.sliver, :, :]
-    #midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
-    #midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
-    midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
-    dz = z_angles[1] - z_angles[0]
-    #surface_density = np.sum(density[:, :, :], axis = 0) * dz
-    #averagedDensity = np.average(surface_density, axis = -1)
+      #midplane_density = density[num_z / 2 + args.sliver, :, :]
+      #midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+      #midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
+      midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
-    average_midplane_vz = np.average(midplane_vz, axis = -1)
-    composite_vz[i, :] = average_midplane_vz
+      dz = z_angles[1] - z_angles[0]
+      #surface_density = np.sum(density[:, :, :], axis = 0) * dz
+      #averagedDensity = np.average(surface_density, axis = -1)
 
-    #peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
-    #composite_peak[i] = peak
+      # Store and save
+      average_midplane_vz = np.average(midplane_vz, axis = -1)
+      composite_vz[i, :] = average_midplane_vz
+
+      directory_name = os.getcwd().split("/")[-1]
+      pickle.dump(a, open("%s/%s_verticalVelocityMap%04d.p" % (save_directory, directory_name, frame), 'wb'))
+
+      #peak, _ = az.get_radial_peak(averagedDensity, fargo_par)
+      #composite_peak[i] = peak
 
 
 composite_vz = np.zeros((len(frame_range), num_rad))
