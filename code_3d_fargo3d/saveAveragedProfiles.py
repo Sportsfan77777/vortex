@@ -91,6 +91,8 @@ z_angles = np.linspace(z_min, z_max, num_z)
 
 ###############################################################################
 
+###### GAS ######
+
 def save_density(frame):
     # Read data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
@@ -108,6 +110,7 @@ def save_density(frame):
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
     averagedSurfaceDensity = np.average(surface_density, axis = 1)
 
+    pickle.dump(surface_density, open("%s/surfaceDensity%04d.p" % (save_directory, frame), 'wb'))
     pickle.dump(averagedSurfaceDensity, open("%s/averagedSurfaceDensity%04d.p" % (save_directory, frame), 'wb'))
 
 def save_velocity(frame):
@@ -129,19 +132,66 @@ def save_velocity(frame):
     midplane_vz = vz[num_z / 2, :, :]
     midplane_vrad = vrad[num_z / 2, :, :]
     midplane_vtheta = vtheta[num_z / 2, :, :]
-    
 
     pickle.dump(midplane_vz, open("%s/midplane-vz%04d.p" % (save_directory, frame), 'wb'))
     pickle.dump(midplane_vrad, open("%s/midplane-vy%04d.p" % (save_directory, frame), 'wb'))
     pickle.dump(midplane_vtheta, open("%s/midplane-vx%04d.p" % (save_directory, frame), 'wb'))
 
+def save_energy(frame):
+    # Read data
+    energy = fromfile("gasenergy%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+
+    # Density
+    averagedEnergy = np.average(density, axis = 2)
+    pickle.dump(averagedEnergy, open("%s/averagedEnergy%04d.p" % (save_directory, frame), 'wb'))
+
+    # Midplane density
+    midplane_energy = energy[num_z / 2, :, :]
+    pickle.dump(midplane_energy, open("%s/midplaneEnergy%04d.p" % (save_directory, frame), 'wb'))
+
+    # Surface density
+    dz = z_angles[1] - z_angles[0]
+    surface_energy = np.sum(energy[:, :, :], axis = 0) * dz
+    averagedSurfaceEnergy = np.average(energy, axis = 1)
+
+    pickle.dump(surface_energy, open("%s/surfaceEnergy%04d.p" % (save_directory, frame), 'wb'))
+    pickle.dump(averagedSurfaceEnergy, open("%s/averagedSurfaceEnergy%04d.p" % (save_directory, frame), 'wb'))
+
+
+###############################################################################
+
+###### DUST ######
+
+def save_dust_density(frame):
+    # Read data
+    density = fromfile("dust1dens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+
+    # Density
+    averagedDensity = np.average(density, axis = 2)
+    pickle.dump(averagedDensity, open("%s/averagedDust1Density%04d.p" % (save_directory, frame), 'wb'))
+
+    # Midplane density
+    midplane_density = density[num_z / 2 + args.sliver, :, :]
+    pickle.dump(midplane_density, open("%s/midplanDust1Density%04d.p" % (save_directory, frame), 'wb'))
+
+    # Surface density
+    dz = z_angles[1] - z_angles[0]
+    surface_density = np.sum(density[:, :, :], axis = 0) * dz
+    averagedSurfaceDensity = np.average(surface_density, axis = 1)
+
+    pickle.dump(surface_density, open("%s/surfaceDust1Density%04d.p" % (save_directory, frame), 'wb'))
+    pickle.dump(averagedSurfaceDensity, open("%s/averagedDust1SurfaceDensity%04d.p" % (save_directory, frame), 'wb'))
 
 ###############################################################################
 
 def save_files(frame):
+    # Gas
     save_density(frame)
     save_velocity(frame)
     save_energy(frame)
+
+    # Dust
+    save_dust_density(frame)
 
 # Iterate through frames
 
