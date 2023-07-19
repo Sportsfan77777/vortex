@@ -43,10 +43,10 @@ def new_argument_parser(description = "Plot gas density maps."):
     # File Selection
     parser.add_argument('--gas', dest = "gas", action = 'store_true', default = False,
                          help = 'save gas-related (default: do not)')
-    parser.add_argument('--dust', dest = "gas", action = 'store_true', default = False,
-                         help = 'save gas-related (default: do not)')
-    parser.add_argument('--vz', dest = "gas", action = 'store_true', default = False,
-                         help = 'save gas-related (default: do not)')
+    parser.add_argument('--dust', dest = "dust", action = 'store_true', default = False,
+                         help = 'save dust-related (default: do not)')
+    parser.add_argument('--vz', dest = "vz", action = 'store_true', default = False,
+                         help = 'save vz-related only (default: do not)')
 
     # Plot Parameters (contours)
 
