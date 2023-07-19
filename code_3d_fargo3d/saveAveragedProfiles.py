@@ -206,7 +206,7 @@ def save_dust_density(frame):
 
 def save_files(frame):
     print frame
-    
+
     # Gas
     if args.gas:
         save_density(frame)
@@ -223,7 +223,7 @@ def save_files(frame):
 # Iterate through frames
 
 if len(frame_range) == 1:
-    save_files(frame_range[0], show = show)
+    save_files(frame_range[0])
 else:
     if num_cores > 1:
         p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
