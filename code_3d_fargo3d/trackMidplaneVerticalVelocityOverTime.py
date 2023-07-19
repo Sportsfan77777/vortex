@@ -322,7 +322,7 @@ def get_velocity(args_here):
 
       if args.midplane:
           profile_directory = "averagedProfiles"
-          midplane_vz = pickle.load(open("%s/midplane-vz%04d.p" % (profile_directory, directory_name, frame), 'rb'))
+          midplane_vz = pickle.load(open("%s/midplane-vz%04d.p" % (profile_directory, frame), 'rb'))
       else:
           #density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
           vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
