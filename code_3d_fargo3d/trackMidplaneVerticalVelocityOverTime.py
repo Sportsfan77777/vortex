@@ -73,8 +73,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "midplaneVerticalVelocityMapsOverTime",
                          help = 'save directory (default: midplaneVerticalVelocityMapsOverTime)')
-    parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
-                         help = 'use .mpio output files (default: use dat)')
+    parser.add_argument('-m', dest = "midplane", action = 'store_true', default = False,
+                         help = 'use midplane output files (default: use dat)')
     parser.add_argument('-p', dest = "pickle", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
@@ -205,8 +205,10 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
-merge = args.merge
-mpi = args.mpi
+#merge = args.merge
+#mpi = args.mpi
+
+midplane = args.midplane
 
 # Quantity to Plot
 plot_vz = args.vz
@@ -317,15 +319,20 @@ def get_velocity(args_here):
       composite_vz[i, :] = average_midplane_vz
 
     else:
-      #density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
-      vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-      #vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-      #vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
-      #midplane_density = density[num_z / 2 + args.sliver, :, :]
-      #midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
-      #midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
-      midplane_vz = vz[num_z / 2 + args.sliver, :, :]
+      if args.midplane:
+          profile_directory = "averagedProfiles"
+          midplane_vz = pickle.load(open("%s/midplane-vz%04d.p" % (profile_directory, directory_name, frame), 'rb'))
+      else:
+          #density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
+          vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+          #vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+          #vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+
+          #midplane_density = density[num_z / 2 + args.sliver, :, :]
+          #midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+          #midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
+          midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
       dz = z_angles[1] - z_angles[0]
       #surface_density = np.sum(density[:, :, :], axis = 0) * dz
@@ -333,6 +340,7 @@ def get_velocity(args_here):
 
       # Store and save
       average_midplane_vz = np.average(midplane_vz, axis = -1)
+
       composite_vz[i, :] = average_midplane_vz
 
       directory_name = os.getcwd().split("/")[-1]
@@ -468,9 +476,6 @@ def make_plot(show = False):
     else:
        cbar_name = r"<$v_\mathrm{\theta}>_{\phi}$"
     cbar.set_label(cbar_name, fontsize = fontsize, rotation = 270, labelpad = 25)
-
-    # Save data
-
 
     # Save, Show, and Close
     directory_name = os.getcwd().split("/")[-1]
