@@ -110,7 +110,7 @@ def save_density(frame):
     pickle.dump(averagedDensity, open("%s/averagedDensity%04d.p" % (save_directory, frame), 'wb'))
 
     # Midplane density
-    midplane_density = density[num_z / 2 + args.sliver, :, :]
+    midplane_density = density[num_z / 2, :, :]
     pickle.dump(midplane_density, open("%s/midplaneDensity%04d.p" % (save_directory, frame), 'wb'))
 
     # Surface density
