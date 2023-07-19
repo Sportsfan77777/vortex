@@ -162,7 +162,7 @@ def save_energy(frame):
     energy = fromfile("gasenergy%d.dat" % frame).reshape(num_z, num_rad, num_theta)
 
     # Density
-    averagedEnergy = np.average(density, axis = 2)
+    averagedEnergy = np.average(energy, axis = 2)
     pickle.dump(averagedEnergy, open("%s/averagedEnergy%04d.p" % (save_directory, frame), 'wb'))
 
     # Midplane density
