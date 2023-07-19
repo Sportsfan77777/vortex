@@ -205,6 +205,8 @@ def save_dust_density(frame):
 ###############################################################################
 
 def save_files(frame):
+    print frame
+    
     # Gas
     if args.gas:
         save_density(frame)
