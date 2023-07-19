@@ -40,6 +40,14 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--dir', dest = "save_directory", default = "averagedProfiles",
                          help = 'save directory (default: averagedProfiles)')
 
+    # File Selection
+    parser.add_argument('--gas', dest = "gas", action = 'store_true', default = False,
+                         help = 'save gas-related (default: do not)')
+    parser.add_argument('--dust', dest = "gas", action = 'store_true', default = False,
+                         help = 'save gas-related (default: do not)')
+    parser.add_argument('--vz', dest = "gas", action = 'store_true', default = False,
+                         help = 'save gas-related (default: do not)')
+
     # Plot Parameters (contours)
 
     return parser
@@ -137,6 +145,18 @@ def save_velocity(frame):
     pickle.dump(midplane_vrad, open("%s/midplane-vy%04d.p" % (save_directory, frame), 'wb'))
     pickle.dump(midplane_vtheta, open("%s/midplane-vx%04d.p" % (save_directory, frame), 'wb'))
 
+def save_vz(frame):
+    # Read data
+    vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta))
+
+    # Average
+    averaged_vz = np.average(vz, axis = 2)
+    pickle.dump(averaged_vz, open("%s/averaged-vz%04d.p" % (save_directory, frame), 'wb'))
+
+    # Midplane
+    midplane_vz = vz[num_z / 2, :, :]
+    pickle.dump(midplane_vz, open("%s/midplane-vz%04d.p" % (save_directory, frame), 'wb'))
+
 def save_energy(frame):
     # Read data
     energy = fromfile("gasenergy%d.dat" % frame).reshape(num_z, num_rad, num_theta)
@@ -172,7 +192,7 @@ def save_dust_density(frame):
 
     # Midplane density
     midplane_density = density[num_z / 2 + args.sliver, :, :]
-    pickle.dump(midplane_density, open("%s/midplanDust1Density%04d.p" % (save_directory, frame), 'wb'))
+    pickle.dump(midplane_density, open("%s/midplaneDust1Density%04d.p" % (save_directory, frame), 'wb'))
 
     # Surface density
     dz = z_angles[1] - z_angles[0]
@@ -186,12 +206,17 @@ def save_dust_density(frame):
 
 def save_files(frame):
     # Gas
-    save_density(frame)
-    save_velocity(frame)
-    save_energy(frame)
+    if args.gas:
+        save_density(frame)
+        save_velocity(frame)
+        save_energy(frame)
+
+    if args.vz:
+        save_vz(frame)
 
     # Dust
-    save_dust_density(frame)
+    if args.dust:
+        save_dust_density(frame)
 
 # Iterate through frames
 
