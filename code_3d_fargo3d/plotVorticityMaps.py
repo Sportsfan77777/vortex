@@ -73,8 +73,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "vorticityMaps",
                          help = 'save directory (default: gasDensityMaps)')
-    parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
-                         help = 'use .mpio output files (default: use dat)')
+    parser.add_argument('-p', dest = "pickle", action = 'store_true', default = False,
+                         help = 'use pickle output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
@@ -296,17 +296,21 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    if mpi:
-      density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
-      vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
-      vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
+    if args.pickle:
+      pickle_directory = "averagedProfiles"
+      #density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
+      #vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
+      #vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
+      midplane_density = pickle.load(open("%s/midplane-density%04d.p" % (pickle_directory, frame), 'rb'))
+      midplane_vrad = pickle.load(open("%s/midplane-vy%04d.p" % (pickle_directory, frame), 'rb'))
+      midplane_vtheta = pickle.load(open("%s/midplane-vx%04d.p" % (pickle_directory, frame), 'rb'))
     else:
       density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
       vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-    midplane_density = density[num_z / 2 + args.sliver, :, :]
-    midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
-    midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
+      midplane_density = density[num_z / 2 + args.sliver, :, :]
+      midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+      midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
 
     dz = z_angles[1] - z_angles[0]
     surface_density = np.sum(density[:, :, :], axis = 0) * dz
