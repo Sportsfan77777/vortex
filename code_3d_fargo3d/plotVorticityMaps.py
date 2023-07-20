@@ -301,7 +301,7 @@ def make_plot(frame, show = False):
       #density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
       #vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
       #vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
-      midplane_density = pickle.load(open("%s/midplane-density%04d.p" % (pickle_directory, frame), 'rb'))
+      midplane_density = pickle.load(open("%s/midplaneDensity%04d.p" % (pickle_directory, frame), 'rb'))
       midplane_vrad = pickle.load(open("%s/midplane-vy%04d.p" % (pickle_directory, frame), 'rb'))
       midplane_vtheta = pickle.load(open("%s/midplane-vx%04d.p" % (pickle_directory, frame), 'rb'))
     else:
