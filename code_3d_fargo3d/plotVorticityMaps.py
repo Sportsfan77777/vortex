@@ -304,6 +304,9 @@ def make_plot(frame, show = False):
       midplane_density = pickle.load(open("%s/midplaneDensity%04d.p" % (pickle_directory, frame), 'rb'))
       midplane_vrad = pickle.load(open("%s/midplane-vy%04d.p" % (pickle_directory, frame), 'rb'))
       midplane_vtheta = pickle.load(open("%s/midplane-vx%04d.p" % (pickle_directory, frame), 'rb'))
+
+      normalized_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+
     else:
       density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
@@ -312,11 +315,10 @@ def make_plot(frame, show = False):
       midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
       midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
 
-    dz = z_angles[1] - z_angles[0]
-    surface_density = np.sum(density[:, :, :], axis = 0) * dz
-
-    normalized_midplane_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
-    normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+      dz = z_angles[1] - z_angles[0]
+      surface_density = np.sum(density[:, :, :], axis = 0) * dz
+ 
+      normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
 
