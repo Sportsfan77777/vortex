@@ -50,6 +50,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'load directory (default: midplaneVerticalVelocityMapsOverTime)')
     parser.add_argument('--dir', dest = "save_directory", default = "verticalVelocityFFTs",
                          help = 'save directory (default: verticalVelocityFFTs)')
+    parser.add_argument('-m', dest = "midplane", action = 'store_true', default = False,
+                         help = 'use midplane output files (default: use dat)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -190,8 +192,9 @@ def make_plot(show = False):
 
     # Reference Line
     xref = radii
-    #yref1 = np.power(radii, -1.5) * (np.sqrt(5) - 2.0)
-    yref1 = np.power(radii, -1.5) * (np.sqrt(109) - 10.0) / 3.0
+    #yref1 = np.power(radii, -1.5) * (np.sqrt(5) - 2.0) # for +/- 5.0 H
+    #yref1 = np.power(radii, -1.5) * (np.sqrt(109) - 10.0) / 3.0 # for +/- 2.5 H
+    yref1 = np.power(radii, -1.5) * (np.sqrt(769) - 25.0) / 12.0 # for +/- 4.0 H
     yref2 = np.power(radii, -1.5)
     ref_color = "deepskyblue"
     plot.plot(xref, yref1, c = ref_color, linewidth = 2, linestyle = "--")
