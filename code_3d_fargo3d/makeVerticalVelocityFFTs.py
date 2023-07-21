@@ -192,9 +192,9 @@ def make_plot(show = False):
 
     # Reference Line
     xref = radii
-    #yref1 = np.power(radii, -1.5) * (np.sqrt(5) - 2.0) # for +/- 5.0 H
-    #yref1 = np.power(radii, -1.5) * (np.sqrt(109) - 10.0) / 3.0 # for +/- 2.5 H
-    yref1 = np.power(radii, -1.5) * (np.sqrt(769) - 25.0) / 12.0 # for +/- 4.0 H
+    #yref1 = np.power(radii, -1.5) * (np.sqrt(5) - 2.0) # for +/- 5.0 H and h = 0.05
+    #yref1 = np.power(radii, -1.5) * (np.sqrt(109) - 10.0) / 3.0 # for +/- 2.5 H and h = 0.06
+    yref1 = np.power(radii, -1.5) * (np.sqrt(769) - 25.0) / 12.0 # for +/- 4.0 H and h = 0.06
     yref2 = np.power(radii, -1.5)
     ref_color = "deepskyblue"
     plot.plot(xref, yref1, c = ref_color, linewidth = 2, linestyle = "--")
