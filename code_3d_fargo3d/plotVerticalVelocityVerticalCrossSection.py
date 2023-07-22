@@ -293,32 +293,30 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    if mpi:
-      density = Fields("./", 'gas', frame).get_field("dens").reshape(num_z, num_rad, num_theta)
-      vz = Fields("./", 'gas', frame).get_field("vz").reshape(num_z, num_rad, num_theta)
-      vrad = Fields("./", 'gas', frame).get_field("vy").reshape(num_z, num_rad, num_theta)
-      vtheta = Fields("./", 'gas', frame).get_field("vx").reshape(num_z, num_rad, num_theta)
+    if args.average:
+      profile_directory = "averagedProfiles"
+      averaged_vz = pickle.load(open("%s/averaged-vz%04d.p" % (profile_directory, frame), 'rb'))
     else:
       density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       vz = (fromfile("gasvz%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-      vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-      vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
-    midplane_density = density[num_z / 2 + args.sliver, :, :]
-    midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
-    midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
-    midplane_vz = vz[num_z / 2 + args.sliver, :, :]
+      #vrad = (fromfile("gasvy%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+      #vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
+      #midplane_density = density[num_z / 2 + args.sliver, :, :]
+      #midplane_vrad = vrad[num_z / 2 + args.sliver, :, :]
+      #midplane_vtheta = vtheta[num_z / 2 + args.sliver, :, :]
+      midplane_vz = vz[num_z / 2 + args.sliver, :, :]
 
-    averaged_vz = np.average(vz, axis = -1)
+      averaged_vz = np.average(vz, axis = -1)
 
-    dz = z_angles[1] - z_angles[0]
-    surface_density = np.sum(density[:, :, :], axis = 0) * dz
+    #dz = z_angles[1] - z_angles[0]
+    #surface_density = np.sum(density[:, :, :], axis = 0) * dz
 
-    normalized_midplane_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
-    normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    #normalized_midplane_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
+    #normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     # Shift
-    if center:
-       normalized_density, averaged_vz, shift_c = shift_density(normalized_density, averaged_vz, fargo_par, reference_density = normalized_density)
+    #if center:
+    #   normalized_density, averaged_vz, shift_c = shift_density(normalized_density, averaged_vz, fargo_par, reference_density = normalized_density)
 
     ### Plot ###
     x = rad
