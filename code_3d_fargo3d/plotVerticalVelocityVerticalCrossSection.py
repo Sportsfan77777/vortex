@@ -73,6 +73,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "verticalVelocityVerticalCrossSectionMaps",
                          help = 'save directory (default: verticalVelocityVerticalCrossSectionMaps)')
+    parser.add_argument('-a', dest = "average", action = 'store_true', default = False,
+                         help = 'use .p output files (default: do not)')
     parser.add_argument('-m', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpio output files (default: use dat)')
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
