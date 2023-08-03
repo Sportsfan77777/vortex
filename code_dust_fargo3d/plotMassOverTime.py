@@ -19,6 +19,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -27,10 +28,10 @@ from pylab import fromfile
 
 import util
 import azimuthal as az
-from readTitle import readTitle
+#from readTitle import readTitle
 
 from advanced import Parameters
-from reader import Fields
+#from reader import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -242,10 +243,11 @@ def make_plot(show = False):
 
 
     # Save, Show, and Close
+    current_directory = os.getcwd().split("/")[-1]
     if version is None:
-        save_fn = "%s/massOverTime.png" % (save_directory)
+        save_fn = "%s/massOverTime-%s.png" % (save_directory, current_directory)
     else:
-        save_fn = "%s/v%04d_massOverTime.png" % (save_directory, version)
+        save_fn = "%s/v%04d_massOverTime-%s.png" % (save_directory, version, current_directory)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
