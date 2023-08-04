@@ -186,8 +186,8 @@ def make_plot(show = False):
             data_comp = np.loadtxt("%s/planet0.dat" % directory)
             times = data_comp[:, 0]
 
-            planet_x = data[:, 1]
-            planet_y = data[:, 2]
+            planet_x = data_comp[:, 1]
+            planet_y = data_comp[:, 2]
             planet_radii = np.sqrt(np.power(planet_x, 2) + np.power(planet_y, 2))
 
             x_comp = times
