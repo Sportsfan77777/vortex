@@ -185,13 +185,13 @@ def make_plot(show = False):
         for i, directory in enumerate(args.compare):
             data_comp = np.loadtxt("%s/planet0.dat" % directory)
             times = data_comp[:, 0]
-            base_mass = data_comp[:, 7]
-            accreted_mass = data_comp[:, 8]
 
-            total_mass = base_mass + accreted_mass
+            planet_x = data[:, 1]
+            planet_y = data[:, 2]
+            planet_radii = np.sqrt(np.power(planet_x, 2) + np.power(planet_y, 2))
 
             x_comp = times
-            y_comp = total_mass / jupiter_mass
+            y_comp = planet_radii
             result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%d" % i)
 
         plot.legend(loc = "upper left")
