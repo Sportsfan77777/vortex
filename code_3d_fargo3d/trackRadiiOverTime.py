@@ -243,7 +243,7 @@ def make_plot(show = False):
     if version is None:
         save_fn = "%s/%s_radiiOverTime.png" % (save_directory, directory_name)
     else:
-        save_fn = "%s/v%04d_%s_radiiOverTime.png" % (save_directory, directory_name, version)
+        save_fn = "%s/v%04d_%s_radiiOverTime.png" % (save_directory, version, directory_name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
