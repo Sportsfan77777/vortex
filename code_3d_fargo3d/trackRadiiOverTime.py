@@ -66,6 +66,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
 
+    parser.add_argument('--offset', dest = "offset", type = float, default = 0.0,
+                         help = 'time offset for compare (default: 0.0)')
+
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
     
@@ -184,7 +187,7 @@ def make_plot(show = False):
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
             data_comp = np.loadtxt("%s/planet0.dat" % directory)
-            times = data_comp[:, 0]
+            times = data_comp[:, 0] + args.offset
 
             planet_x = data_comp[:, 1]
             planet_y = data_comp[:, 2]
