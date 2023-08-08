@@ -68,6 +68,9 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
                          help = 'add negative mass (default: do not)')
+
+    parser.add_argument('--offset', dest = "offset", type = float, default = 0.0,
+                         help = 'time offset for compare (default: 0.0)')
     
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
@@ -189,7 +192,7 @@ def make_plot(show = False):
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
             data_comp = np.loadtxt("%s/planet0.dat" % directory)
-            times = data_comp[:, 0]
+            times = data_comp[:, 0] + args.offset
             base_mass = data_comp[:, 7]
             accreted_mass = data_comp[:, 8]
 
