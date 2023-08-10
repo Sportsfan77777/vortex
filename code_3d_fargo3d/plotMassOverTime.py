@@ -200,7 +200,7 @@ def make_plot(show = False):
 
             x_comp = times
             y_comp = total_mass / jupiter_mass
-            result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%d" % i)
+            result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%s" % directory)
 
         plot.legend(loc = "upper left")
 
