@@ -197,7 +197,7 @@ def make_plot(show = False):
             y_comp = planet_radii
             result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%s" % directory)
 
-        plot.legend(loc = "bottom left")
+        plot.legend(loc = "lower left")
 
     # Axes
     if args.max_y is None:
