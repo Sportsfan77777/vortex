@@ -174,10 +174,12 @@ def make_plot(show = False):
     planet_y = data[:, 2]
     planet_radii = np.sqrt(np.power(planet_x, 2) + np.power(planet_y, 2))
 
+    cwd = os.getcwd().split("/")[-1]
+
     ### Plot ###
     x = times
     y = planet_radii
-    result = plot.plot(x, y, linewidth = linewidth, zorder = 99)
+    result = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%s" % cwd)
 
     if args.ref > 0:
         x = times
