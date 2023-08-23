@@ -365,6 +365,8 @@ def make_plot(frame, show = False):
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"$\phi$", fontsize = fontsize)
 
+    cbar.set_label(r"Dust Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+
     # Save, Show, and Close
     if version is None:
         save_fn = "%s/dustDensityMap_%04d.png" % (save_directory, frame)
