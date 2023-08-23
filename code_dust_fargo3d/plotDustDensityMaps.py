@@ -305,7 +305,7 @@ def make_plot(frame, show = False):
     y = theta * (180.0 / np.pi)
     result = ax.pcolormesh(x, y, np.transpose(normalized_density), cmap = cmap)
 
-    fig.colorbar(result)
+    cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
     if use_contours:
