@@ -291,7 +291,7 @@ def make_plot(show = False):
     cwd = os.getcwd().split("/")[-1]
 
     ### Plot ###
-    x = frames
+    x = frame_range
     y1 = inner_torque
     y2 = outer_torque
     result1 = plot.plot(x, y1, linewidth = linewidth, zorder = 99, label = "%s (Inner)" % cwd)
