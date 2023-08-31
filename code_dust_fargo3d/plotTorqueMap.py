@@ -50,7 +50,7 @@ import azimuthal as az
 #from readTitle import readTitle
 
 from advanced import Parameters
-from reader_mpiio import Fields
+#from reader_mpiio import Fields
 
 from colormaps import cmaps
 for key in cmaps:
@@ -289,8 +289,8 @@ def make_plot(frame, show = False):
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
 
-    r_element = np.array([np.outer(radius, np.cos(theta)), np.outer(radius, np.sin(theta))]) # star to fluid element 
-    r_diff = np.array([np.outer(radius, np.cos(theta)) - px, np.outer(radius, np.sin(theta)) - py]) # planet to fluid element
+    r_element = np.array([np.outer(rad, np.cos(theta)), np.outer(rad, np.sin(theta))]) # star to fluid element 
+    r_diff = np.array([np.outer(rad, np.cos(theta)) - px, np.outer(rad, np.sin(theta)) - py]) # planet to fluid element
     dist_sq = np.einsum("ijk,ijk->jk", r_diff, r_diff)
 
     coeff = BigG * planet_mass * density / dist_sq
@@ -298,7 +298,7 @@ def make_plot(frame, show = False):
 
     torque_density_per_area = coeff * direction
     d_rad = rad[1] - rad[0]; d_theta = theta[1] - theta[0]
-    area = radius[:, None] * np.outer(d_rad, d_theta)
+    area = rad[:, None] * np.outer(d_rad, d_theta)
 
     torque_density = torque_density_per_area * area
     normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
