@@ -193,8 +193,8 @@ def get_torque(args_here):
 
     def helper(density):
         frame_i = np.searchsorted(times, frame)
-        px = planet_xs[frame_i]
-        py = planet_ys[frame_i]
+        px = planet_x[frame_i]
+        py = planet_y[frame_i]
         planet_r = planet_radii[frame_i]
 
         # Torque
