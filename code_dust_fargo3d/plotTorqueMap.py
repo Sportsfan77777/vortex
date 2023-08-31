@@ -117,8 +117,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1.0e-3,
-                         help = 'maximum density in colorbar (default: 1.0e-3)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1.0e-5,
+                         help = 'maximum density in colorbar (default: 1.0e-5)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -314,6 +314,11 @@ def make_plot(frame, show = False):
     cbar = fig.colorbar(result)
     result.set_clim(clim[0], clim[1])
 
+    # Mark planet
+    planet_r = np.sqrt(np.power(px, 2.0) + np.power(py, 2.0))
+    off_plot_theta = -5
+    plot.scatter(planet_r, off_plot_theta, marker = "^", size = 20, clip_on = False)
+
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
         colors = generate_colors(num_levels)
@@ -379,7 +384,7 @@ def make_plot(frame, show = False):
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
-    cbar.set_label(r"Gas Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
+    cbar.set_label(r"Specific Torque", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
     if version is None:
