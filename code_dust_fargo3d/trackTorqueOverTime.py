@@ -174,6 +174,8 @@ planet_x = data[:, 1]
 planet_y = data[:, 2]
 planet_radii = np.sqrt(np.power(planet_x, 2) + np.power(planet_y, 2))
 
+BigG = 1.0
+
 ### Add new parameters to dictionary ###
 #fargo_par["rad"] = rad
 #fargo_par["theta"] = theta
