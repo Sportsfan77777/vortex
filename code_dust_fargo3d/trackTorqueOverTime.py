@@ -292,8 +292,8 @@ def make_plot(show = False):
 
     ### Plot ###
     x = frame_range
-    y1 = inner_torque
-    y2 = outer_torque
+    y1 = inner_torque_over_time
+    y2 = outer_torque_over_time
     result1 = plot.plot(x, y1, linewidth = linewidth, zorder = 99, label = "%s (Inner)" % cwd)
     result2 = plot.plot(x, y2, linewidth = linewidth, zorder = 99, label = "%s (Outer)" % cwd)
 
