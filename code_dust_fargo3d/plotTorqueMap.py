@@ -314,8 +314,7 @@ def make_plot(frame, show = False):
     result = ax.pcolormesh(x, y, np.transpose(normalized_torque_density) / renormalization, cmap = cmap)
 
     cbar = fig.colorbar(result)
-    clim /= renormalization
-    result.set_clim(clim[0], clim[1])
+    result.set_clim(clim[0] / renormalization, clim[1] / renormalization)
 
     # Mark planet
     planet_r = np.sqrt(np.power(px, 2.0) + np.power(py, 2.0))
