@@ -229,9 +229,9 @@ def get_torque(args_here):
         inner_torque_compare, outer_torque_compare = helper(density_compare)
 
     # Print Update
-    print "%d: %.4f, %.4f" % (frame, inner_torque, outer_torque)
+    print "%d: %.10f, %.10f" % (frame, inner_torque, outer_torque)
     if args.compare:
-        print "%d: %.4f, %.4f" % (frame, inner_torque_compare, outer_torque_compare)
+        print "%d: %.10f, %.10f" % (frame, inner_torque_compare, outer_torque_compare)
 
     # Store Data
     inner_torque_over_time[i] = inner_torque
@@ -274,7 +274,8 @@ if args.compare:
 ## Pickle to combine later ##
 
 pickle.dump(np.array(frame_range), open("torque_frames.p", "wb"))
-pickle.dump(np.array(mass_over_time), open("torque_values.p", "wb"))
+pickle.dump(np.array(inner_torque_over_time), open("inner_torque_values.p", "wb"))
+pickle.dump(np.array(outer_torque_over_time), open("outer_torque_values.p", "wb"))
 
 ###############################################################################
 
