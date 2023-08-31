@@ -307,11 +307,14 @@ def make_plot(frame, show = False):
         normalized_density, shift_c = shift_density(normalized_torque_density, fargo_par, reference_density = normalized_density)
 
     ### Plot ###
+    renormalization = 1.0e-5
+
     x = rad
     y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_torque_density) / 1.0e-5, cmap = cmap)
+    result = ax.pcolormesh(x, y, np.transpose(normalized_torque_density) / renormalization, cmap = cmap)
 
     cbar = fig.colorbar(result)
+    clim /= renormalization
     result.set_clim(clim[0], clim[1])
 
     # Mark planet
