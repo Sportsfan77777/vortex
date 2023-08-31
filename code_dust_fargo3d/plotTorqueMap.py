@@ -317,7 +317,7 @@ def make_plot(frame, show = False):
     # Mark planet
     planet_r = np.sqrt(np.power(px, 2.0) + np.power(py, 2.0))
     off_plot_theta = -5
-    plot.scatter(planet_r, off_plot_theta, marker = "^", size = 20, clip_on = False)
+    plot.scatter(planet_r, off_plot_theta, c = "k", marker = "^", s = 20, clip_on = False)
 
     if use_contours:
         levels = np.linspace(low_contour, high_contour, num_levels)
