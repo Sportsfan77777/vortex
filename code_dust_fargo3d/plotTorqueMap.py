@@ -115,10 +115,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'bigger scale means smaller arrow (default: 1)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "viridis",
+    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
                          help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 2,
-                         help = 'maximum density in colorbar (default: 2)')
+    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1.0e-3,
+                         help = 'maximum density in colorbar (default: 1.0e-3)')
 
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
@@ -222,7 +222,7 @@ if end_quiver is None:
 
 # Plot Parameters (constant)
 cmap = args.cmap
-clim = [0, args.cmax]
+clim = [-args.cmax, args.cmax]
 
 fontsize = args.fontsize
 dpi = args.dpi
