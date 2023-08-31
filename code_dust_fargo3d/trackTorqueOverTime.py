@@ -13,6 +13,7 @@ python plotAveragedDensity.py <== plot all frames and make a movie
 import sys, os, subprocess
 import pickle, glob
 from multiprocessing import Pool
+from multiprocessing import Array as mp_array
 import argparse
 
 import math
