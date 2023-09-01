@@ -298,7 +298,7 @@ def make_plot(show = False):
     result2 = plot.plot(x, y2, linewidth = linewidth, zorder = 99, label = "%s (Outer)" % cwd)
 
     # Raw Data
-    data = np.loadtxt("tqwk0.dat")
+    torque_data = np.loadtxt("tqwk0.dat")
     y1_raw = torque_data[:, 1]
     y2_raw = torque_data[:, 2]
 
