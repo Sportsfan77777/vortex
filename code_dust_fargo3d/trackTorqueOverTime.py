@@ -303,8 +303,8 @@ def make_plot(show = False):
     x = frame_range
     y1 = smooth(inner_torque_over_time, kernel_size)
     y2 = smooth(outer_torque_over_time, kernel_size)
-    result1 = plot.plot(x, y1, c = 'b', linewidth = linewidth, zorder = 99, label = "%s (Inner)" % cwd)
-    result2 = plot.plot(x, y2, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s (Outer)" % cwd)
+    result1 = plot.plot(x, y1, c = 'b', linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
+    result2 = plot.plot(x, y2, c = 'orange', linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Outer)" % cwd)
 
     # Raw Data
     torque_data = np.loadtxt("tqwk0.dat")
@@ -315,8 +315,8 @@ def make_plot(show = False):
     y1_smooth = smooth(y1_raw, ks)
     y2_smooth = smooth(y2_raw, ks)
 
-    raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth - 1, zorder = 99, label = "%s (Inner) - tqwk0.dat" % cwd)
-    raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth - 1, zorder = 99, label = "%s (Outer) - tqwk0.dat" % cwd)
+    raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s (Inner) - tqwk0.dat" % cwd)
+    raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s (Outer) - tqwk0.dat" % cwd)
 
     if args.ref > 0:
         x = times
