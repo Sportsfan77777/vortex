@@ -186,7 +186,7 @@ BigG = 1.0
 
 # Smoothing Function
 smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
-ks = 50.0 # Kernel Size
+ks = 20.0 # Kernel Size
 ks_small = ks / 5.0 # Smaller kernel to check the normal kernel
 
 def get_torque(args_here):
