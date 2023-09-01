@@ -18,6 +18,8 @@ import argparse
 
 import math
 import numpy as np
+from scipy import signal as sig
+from scipy.ndimage import filters as ff
 
 import matplotlib
 matplotlib.use('Agg')
@@ -182,6 +184,11 @@ BigG = 1.0
 
 ### Helper Functions ###
 
+# Smoothing Function
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+ks = 50.0 # Kernel Size
+ks_small = ks / 5.0 # Smaller kernel to check the normal kernel
+
 def get_torque(args_here):
     # Unwrap Args
     i, frame = args_here
@@ -303,8 +310,11 @@ def make_plot(show = False):
     y1_raw = torque_data[:, 1]
     y2_raw = torque_data[:, 2]
 
-    raw1 = plot.plot(x_raw, y1_raw, linewidth = linewidth, zorder = 99, label = "%s (Inner Raw)" % cwd)
-    raw2 = plot.plot(x_raw, y2_raw, linewidth = linewidth, zorder = 99, label = "%s (Outer Raw)" % cwd)
+    y1_smooth = smooth(y1_raw, ks)
+    y2_smooth = smooth(y2_raw, ks)
+
+    raw1 = plot.plot(x_raw, y1_smooth, linewidth = linewidth, zorder = 99, label = "%s (Inner Raw)" % cwd)
+    raw2 = plot.plot(x_raw, y2_smooth, linewidth = linewidth, zorder = 99, label = "%s (Outer Raw)" % cwd)
 
     if args.ref > 0:
         x = times
@@ -328,8 +338,8 @@ def make_plot(show = False):
 
     # Axes
     if args.max_y is None:
-        max_y1 = 1.1 * max(y1)
-        max_y2 = 1.1 * max(y2)
+        max_y1 = 1.1 * max(y1_smooth)
+        max_y2 = 1.1 * max(y2_smooth)
         max_y = max([max_y1, max_y2])
     else:
         max_y = args.max_y
