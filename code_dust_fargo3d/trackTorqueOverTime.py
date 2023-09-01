@@ -298,9 +298,11 @@ def make_plot(show = False):
     cwd = os.getcwd().split("/")[-1]
 
     ### Plot ###
+    kernel_size = 5
+
     x = frame_range
-    y1 = inner_torque_over_time
-    y2 = outer_torque_over_time
+    y1 = smooth(inner_torque_over_time, kernel_size)
+    y2 = smooth(outer_torque_over_time, kernel_size)
     result1 = plot.plot(x, y1, linewidth = linewidth, zorder = 99, label = "%s (Inner)" % cwd)
     result2 = plot.plot(x, y2, linewidth = linewidth, zorder = 99, label = "%s (Outer)" % cwd)
 
