@@ -340,8 +340,8 @@ def make_plot(show = False):
 
     # Axes
     if args.max_y is None:
-        min_y1 = -1.1 * max(y1_smooth)
-        min_y2 = -1.1 * max(y2_smooth)
+        min_y1 = -1.1 * min(y1_smooth)
+        min_y2 = -1.1 * min(y2_smooth)
 
         max_y1 = 1.1 * max(y1_smooth)
         max_y2 = 1.1 * max(y2_smooth)
