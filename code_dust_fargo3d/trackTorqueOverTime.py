@@ -297,6 +297,14 @@ def make_plot(show = False):
     result1 = plot.plot(x, y1, linewidth = linewidth, zorder = 99, label = "%s (Inner)" % cwd)
     result2 = plot.plot(x, y2, linewidth = linewidth, zorder = 99, label = "%s (Outer)" % cwd)
 
+    # Raw Data
+    data = np.loadtxt("tqwk0.dat")
+    y1_raw = torque_data[:, 1]
+    y2_raw = torque_data[:, 2]
+
+    raw1 = plot.plot(x, y1_raw, linewidth = linewidth, zorder = 99, label = "%s (Inner Raw)" % cwd)
+    raw2 = plot.plot(x, y2_raw, linewidth = linewidth, zorder = 99, label = "%s (Outer Raw)" % cwd)
+
     if args.ref > 0:
         x = times
         y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * 1.0
@@ -315,7 +323,7 @@ def make_plot(show = False):
             y_comp = planet_radii
             result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%s" % directory)
 
-        plot.legend(loc = "lower left")
+    plot.legend(loc = "lower left")
 
     # Axes
     if args.max_y is None:
@@ -326,7 +334,7 @@ def make_plot(show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0, max_y)
+    plot.ylim(-max_y, max_y)
 
     #title = readTitle()
 
