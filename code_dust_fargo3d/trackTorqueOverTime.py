@@ -299,11 +299,12 @@ def make_plot(show = False):
 
     # Raw Data
     torque_data = np.loadtxt("tqwk0.dat")
+    x_raw = torque_data[:, 0]
     y1_raw = torque_data[:, 1]
     y2_raw = torque_data[:, 2]
 
-    raw1 = plot.plot(x, y1_raw, linewidth = linewidth, zorder = 99, label = "%s (Inner Raw)" % cwd)
-    raw2 = plot.plot(x, y2_raw, linewidth = linewidth, zorder = 99, label = "%s (Outer Raw)" % cwd)
+    raw1 = plot.plot(x_raw, y1_raw, linewidth = linewidth, zorder = 99, label = "%s (Inner Raw)" % cwd)
+    raw2 = plot.plot(x_raw, y2_raw, linewidth = linewidth, zorder = 99, label = "%s (Outer Raw)" % cwd)
 
     if args.ref > 0:
         x = times
