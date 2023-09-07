@@ -265,7 +265,7 @@ def make_plot(frame, show = False):
 
     x = rad
     y = radial_torque
-    result = plot.plot(x, y, linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
+    result = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%s" % cwd)
 
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
