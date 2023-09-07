@@ -323,12 +323,12 @@ def make_plot(show = False):
 
     # Raw Data
     torque_data = np.loadtxt("tqwk0.dat")
-    x_raw = torque_data[:, 9] / (2.0 * np.pi)
-    y1_raw = torque_data[:, 1]
-    y2_raw = torque_data[:, 2]
+    x_raw = torque_data[::20, 9] / (2.0 * np.pi)
+    y1_raw = torque_data[::20, 1]
+    y2_raw = torque_data[::20, 2]
 
-    y1_smooth = smooth(y1_raw, ks)
-    y2_smooth = smooth(y2_raw, ks)
+    y1_smooth = smooth(y1_raw, 5) # ks
+    y2_smooth = smooth(y2_raw, 5) # ks
 
     raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s (Inner) - tqwk0.dat" % cwd)
     raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s (Outer) - tqwk0.dat" % cwd)
