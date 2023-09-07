@@ -323,7 +323,7 @@ def make_plot(show = False):
 
     # Raw Data
     torque_data = np.loadtxt("tqwk0.dat")
-    x_raw = torque_data[:, 8] / (2.0 * np.pi)
+    x_raw = torque_data[:, 9] / (2.0 * np.pi)
     y1_raw = torque_data[:, 1]
     y2_raw = torque_data[:, 2]
 
