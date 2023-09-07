@@ -259,7 +259,7 @@ def make_plot(frame, show = False):
 
     x = rad
     y = radial_torque
-    result = plot.plot(x, y1, linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
+    result = plot.plot(x, y, linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
 
     if args.ref > 0:
         x = times
