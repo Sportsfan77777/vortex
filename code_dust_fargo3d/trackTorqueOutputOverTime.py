@@ -106,6 +106,7 @@ surface_density_zero = p.sigma0
 
 taper_time = p.masstaper
 
+scale_height = p.aspectratio
 viscosity = p.nu
 
 dt = p.ninterm * p.dt
@@ -235,7 +236,7 @@ def get_torque(args_here):
 
         # Torque
         torque = px * force_y - py * force_x
-        
+
         radial_torque_density_profile = np.sum(torque, axis = -1)
 
         # Split the disc
