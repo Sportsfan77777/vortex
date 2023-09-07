@@ -85,15 +85,10 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--shift', dest = "center", action = 'store_true', default = False,
-                         help = 'center frame on vortex peak or middle (default: do not center)')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+                         help = 'maximum density (default: 1.1 times the max)')
     
     # Plot Parameters (rarely need to change)
-    parser.add_argument('--cmap', dest = "cmap", default = "seismic",
-                         help = 'color map (default: viridis)')
-    parser.add_argument('--cmax', dest = "cmax", type = float, default = 1.0e-5,
-                         help = 'maximum density in colorbar (default: 1.0e-5)')
-
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 16,
                          help = 'fontsize of plot annotations (default: 16)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
@@ -173,9 +168,7 @@ else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 center = args.center
 
-# Plot Parameters (constant)
-cmap = args.cmap
-clim = [-args.cmax, args.cmax]
+max_y = args.max_y
 
 fontsize = args.fontsize
 dpi = args.dpi
@@ -226,94 +219,6 @@ def generate_colors(n):
     for i in range(n):
         colors.append(c[i % len(c)])
     return colors
-
-##### PLOTTING #####
-
-def make_plot(frame, show = False):
-    # Set up figure
-    fig = plot.figure(figsize = (7, 6), dpi = dpi)
-    ax = fig.add_subplot(111)
-
-    # Find planet
-    frame_i = np.searchsorted(times, frame)
-    px = planet_xs[frame_i]
-    py = planet_ys[frame_i]
-
-    # Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-
-    r_element = np.array([np.outer(rad, np.cos(theta)), np.outer(rad, np.sin(theta))]) # star to fluid element 
-    r_diff = np.array([np.outer(rad, np.cos(theta)) - px, np.outer(rad, np.sin(theta)) - py]) # planet to fluid element
-    dist_sq = np.einsum("ijk,ijk->jk", r_diff, r_diff)
-
-    coeff = BigG * planet_mass * density / dist_sq
-    direction = np.cross(r_element, r_diff, axis = 0)
-
-    torque_density_per_area = coeff * direction
-    d_rad = rad[1] - rad[0]; d_theta = theta[1] - theta[0]
-    area = rad[:, None] * np.outer(d_rad, d_theta)
-
-    torque_density = torque_density_per_area * area
-    normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
-
-    if center:
-        normalized_density, shift_c = shift_density(normalized_torque_density, fargo_par, reference_density = normalized_density)
-
-    ### Plot ###
-    renormalization = 1.0e-5
-
-    x = rad
-    y = theta * (180.0 / np.pi)
-    result = ax.pcolormesh(x, y, np.transpose(normalized_torque_density) / renormalization, cmap = cmap)
-
-    cbar = fig.colorbar(result)
-    result.set_clim(clim[0] / renormalization, clim[1] / renormalization)
-
-    # Mark planet
-    planet_r = np.sqrt(np.power(px, 2.0) + np.power(py, 2.0))
-    off_plot_theta = -1.0 / 120.0
-    #plot.scatter(planet_r, off_plot_theta, c = "k", marker = "^", s = 20, clip_on = False)
-
-    # Axes
-    plot.xlim(x_min, x_max)
-    plot.ylim(0, 360)
-
-    angles = np.linspace(0, 360, 7)
-    plot.yticks(angles)
-
-    # Annotate Axes
-    orbit = (dt / (2 * np.pi)) * frame
-
-    if orbit >= taper_time:
-        current_mass = planet_mass
-    else:
-        current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
-
-    current_mass += accreted_mass[frame]
-
-    #title = readTitle()
-
-    unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    plot.ylabel(r"$\phi$ [degrees]", fontsize = fontsize)
-
-    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
-
-    alpha_coefficent = "3"
-    if scale_height == 0.08:
-        alpha_coefficent = "1.5"
-    elif scale_height == 0.04:
-        alpha_coefficent = "6"
-
-    title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
-    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
-
-    cbar.set_label(r"Specific Torque / 1.0e-5", fontsize = fontsize, rotation = 270, labelpad = 25)
-
 
 ##### PLOTTING #####
 
