@@ -210,7 +210,6 @@ def get_torque(args_here):
         # Disk
         d_rad = rad[1] - rad[0]; d_theta = theta[1] - theta[0]
         cell_area = rad[:, None] * np.outer(d_rad, d_theta)
-
         cell_mass = density * cell_area
 
         # Planet
@@ -225,8 +224,8 @@ def get_torque(args_here):
             smoothing_radius = p.rochesmoothing * hill_radius
 
         # Force
-        dx = rad * np.cos(theta) - px
-        dy = rad * np.sin(theta) - py
+        dx = np.outer(rad, np.cos(theta) - px)
+        dy = np.outer(rad, np.sin(theta) - py)
 
         distance_sq = np.power(dx, 2.0) + np.power(dy, 2.0) + np.power(smoothing_radius, 2.0)
         distance = np.sqrt(distance_sq)
@@ -314,7 +313,7 @@ def make_plot(show = False):
     cwd = os.getcwd().split("/")[-1]
 
     ### Plot ###
-    kernel_size = 5
+    kernel_size = 1
 
     x = frame_range
     y1 = smooth(inner_torque_over_time, kernel_size)
