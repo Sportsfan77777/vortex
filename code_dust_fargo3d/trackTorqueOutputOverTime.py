@@ -224,8 +224,8 @@ def get_torque(args_here):
             smoothing_radius = p.rochesmoothing * hill_radius
 
         # Force
-        dx = np.outer(rad, np.cos(theta) - px)
-        dy = np.outer(rad, np.sin(theta) - py)
+        dx = np.outer(rad, np.cos(theta)) - px
+        dy = np.outer(rad, np.sin(theta)) - py
 
         distance_sq = np.power(dx, 2.0) + np.power(dy, 2.0) + np.power(smoothing_radius, 2.0)
         distance = np.sqrt(distance_sq)
