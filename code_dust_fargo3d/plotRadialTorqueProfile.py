@@ -307,7 +307,7 @@ def make_plot(frame, show = False):
     current_mass += accreted_mass[frame]
 
     unit = "r_\mathrm{p}"
-    plot.xlabel(r"Radius [%s]" % unit, fontsize = fontsize)
+    plot.xlabel(r"Radius [%s$]" % unit, fontsize = fontsize)
     plot.ylabel(r"Torque", fontsize = fontsize)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
