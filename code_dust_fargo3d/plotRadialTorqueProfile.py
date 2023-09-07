@@ -166,7 +166,6 @@ if args.r_lim is None:
     x_min = r_min; x_max = r_max
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-center = args.center
 
 max_y = args.max_y
 
@@ -250,9 +249,6 @@ def make_plot(show = False):
     normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
     radial_torque = np.average(normalized_density, axis = -1)
-
-    if center:
-        normalized_density, shift_c = shift_density(normalized_torque_density, fargo_par, reference_density = normalized_density)
 
     ### Data ###
     # Planet
