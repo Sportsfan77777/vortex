@@ -248,7 +248,7 @@ def make_plot(frame, show = False):
     torque_density = torque_density_per_area * area
     normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
-    radial_torque = np.average(normalized_density, axis = -1)
+    radial_torque = np.average(normalized_torque_density, axis = -1)
 
     ### Data ###
     # Planet
