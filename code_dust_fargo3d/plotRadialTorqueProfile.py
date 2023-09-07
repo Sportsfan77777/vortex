@@ -269,7 +269,7 @@ def make_plot(frame, show = False):
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
             data_comp = np.loadtxt("%s/planet0.dat" % directory)
-            times = data_comp[:, 0] + args.offset
+            #times = data_comp[:, 0] + args.offset
 
             planet_x = data_comp[:, 1]
             planet_y = data_comp[:, 2]
