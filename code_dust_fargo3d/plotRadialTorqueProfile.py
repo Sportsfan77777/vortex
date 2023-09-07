@@ -264,11 +264,6 @@ def make_plot(frame, show = False):
     y = radial_torque
     result = plot.plot(x, y, linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
 
-    if args.ref > 0:
-        x = times
-        y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * 1.0
-        plot.plot(x, y_ref, linewidth = linewidth, alpha = 0.5)
-
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
             data_comp = np.loadtxt("%s/planet0.dat" % directory)
