@@ -77,6 +77,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--merge', dest = "merge", type = int, default = 0,
                          help = 'number of cores needed to merge data outputs (default: 0)')
 
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
+                         help = 'select directories to compare planet growth rates')
+
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
                          help = 'for single plot, do not display plot (default: display plot)')
