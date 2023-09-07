@@ -323,7 +323,7 @@ def make_plot(show = False):
 
     # Raw Data
     torque_data = np.loadtxt("tqwk0.dat")
-    x_raw = torque_data[:, 0]
+    x_raw = torque_data[:, 8] / (2.0 * np.pi)
     y1_raw = torque_data[:, 1]
     y2_raw = torque_data[:, 2]
 
@@ -332,6 +332,9 @@ def make_plot(show = False):
 
     raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s (Inner) - tqwk0.dat" % cwd)
     raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s (Outer) - tqwk0.dat" % cwd)
+
+    raw1 = plot.plot(x_raw, y1_raw, c = 'b', linewidth = linewidth, zorder = 95, alpha = 0.2)
+    raw2 = plot.plot(x_raw, y2_raw, c = 'orange', linewidth = linewidth, zorder = 95, alpha = 0.2)
 
     if args.ref > 0:
         x = times
