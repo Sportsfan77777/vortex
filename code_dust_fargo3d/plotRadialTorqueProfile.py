@@ -236,6 +236,10 @@ def make_plot(frame, show = False):
     frame_i = np.searchsorted(times, frame)
     px = planet_xs[frame_i]
     py = planet_ys[frame_i]
+    planet_radius = np.sqrt(np.power(px, 2.0) + np.power(py, 2.0))
+
+    mass = base_mass[frame_i] + accreted_mass[frame_i]
+    hill_radius = planet_radius * np.power(mass, 1.0 / 3.0)
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
