@@ -254,6 +254,12 @@ def make_plot(frame, show = False):
     torque_density = torque_density_per_area * area
     normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
+    # Hill Cut
+    hill_cut = np.ones(density.shape)
+    hill_cut[dist_sq < hill_radius] = 0.0
+    normalized_torque_density *= hill_cut
+
+    # Average
     radial_torque = np.average(normalized_torque_density, axis = -1)
 
     ### Data ###
