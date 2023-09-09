@@ -182,7 +182,7 @@ dpi = args.dpi
 # Data
 data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
-accreted_mass = data[:, 8] / jupiter_mass
+accreted_mass = data[:, 8] # / jupiter_mass
 
 planet_xs = data[:, 1]; planet_ys = data[:, 2] #; planet_zs = data[:, 3]
 
@@ -314,7 +314,7 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    current_mass += accreted_mass[frame]
+    current_mass += accreted_mass[frame] / jupiter_mass
 
     unit = "r_\mathrm{p}"
     plot.xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
