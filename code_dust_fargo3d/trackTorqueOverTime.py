@@ -211,8 +211,7 @@ def get_torque(args_here):
         planet_r = planet_radii[frame_i]
 
         mass = base_mass[frame_i] + accreted_mass[frame_i]
-        hill_radius = planet_radius * np.power(mass, 1.0 / 3.0)
-
+        hill_radius = planet_r * np.power(mass, 1.0 / 3.0)
 
         # Torque
         r_element = np.array([np.outer(rad, np.cos(theta)), np.outer(rad, np.sin(theta))]) # star to fluid element 
