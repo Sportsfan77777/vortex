@@ -202,9 +202,15 @@ def get_torque(args_here):
 
     def helper(density):
         frame_i = np.searchsorted(times, frame)
+
+        # Planet
         px = planet_x[frame_i]
         py = planet_y[frame_i]
         planet_r = planet_radii[frame_i]
+
+        mass = base_mass[frame_i] + accreted_mass[frame_i]
+        hill_radius = planet_radius * np.power(mass, 1.0 / 3.0)
+
 
         # Torque
         r_element = np.array([np.outer(rad, np.cos(theta)), np.outer(rad, np.sin(theta))]) # star to fluid element 
@@ -221,6 +227,12 @@ def get_torque(args_here):
         torque_density = torque_density_per_area * area
         normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
+        # Hill Cut
+        hill_cut = np.ones(density.shape)
+        hill_cut[dist_sq < hill_radius] = 0.0
+        normalized_torque_density *= hill_cut
+
+        # Total
         radial_torque_density_profile = np.sum(torque_density, axis = -1)
 
         # Split the disc
