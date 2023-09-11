@@ -319,7 +319,7 @@ def make_plot(show = False):
     y3 = y1 + y2
     result1 = plot.plot(x, y1, c = 'b', linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
     result2 = plot.plot(x, y2, c = 'orange', linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Outer)" % cwd)
-    result3 = plot.plot(x, y3, c = 'red', linewidth = linewidth, linestyle = "-", zorder = 99, label = "%s (Outer)" % cwd)
+    result3 = plot.plot(x, y3, c = 'red', linewidth = linewidth, linestyle = "-", zorder = 99, label = "%s (Total)" % cwd)
 
     # Raw Data
     torque_data = np.loadtxt("tqwk0.dat")
