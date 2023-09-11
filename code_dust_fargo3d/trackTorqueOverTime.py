@@ -231,7 +231,7 @@ def get_torque(args_here):
         # Hill Cut
         hill_cut = np.ones(density.shape)
         hill_cut[dist_sq < hill_radius] = 0.0
-        normalized_torque_density *= hill_cut
+        torque_density *= hill_cut
 
         # Total
         radial_torque_density_profile = np.sum(torque_density, axis = -1)
