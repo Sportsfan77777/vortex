@@ -252,6 +252,7 @@ dpi = args.dpi
 data = np.loadtxt("planet0.dat")
 times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
+omegas = data[:, 10]
 
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
@@ -317,7 +318,7 @@ def make_plot(z_level, show = False):
     normalized_midplane_density = midplane_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
     normalized_density = surface_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
 
-    vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual)
+    vorticity = utilVorticity.velocity_curl(midplane_vrad, midplane_vtheta, rad, theta, rossby = rossby, residual = residual, omega = omegas[frame])
 
     # Shift
     if center:
