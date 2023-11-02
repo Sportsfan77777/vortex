@@ -229,8 +229,8 @@ def make_plot(frame, show = False):
     r_end_i = np.searchsorted(rad, r_end)
 
     # Reynolds Stress
-    alpha = turbulence / np.power(sound_speed, 2.0)
-    average_alpha = np.average(turbulence[:, r_start_i:r_end_i], axis = 1)
+    alpha = np.average(turbulence, axis = -1) / np.power(sound_speed, 2.0)
+    average_alpha = np.average(alpha[:, r_start_i:r_end_i], axis = 1)
 
     ### Plot ###
     x = (z_angles - np.pi / 2.0) / scale_height
