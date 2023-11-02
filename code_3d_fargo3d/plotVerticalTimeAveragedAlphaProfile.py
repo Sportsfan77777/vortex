@@ -276,7 +276,7 @@ def get_data(directory = "./", num_z = num_z):
     #surface_density = np.average(np.sum(density[:, :, :], axis = 0) * dz, axis = -1)
     density = np.average(density[:, r_select_i, :], axis = -1)
 
-    coefficient = -1.0 * r_select * omega_gradient * density * sound_speed_function * scale_height_function
+    coefficient = -1.0 * r_select * omega_gradient * density * sound_speed_function # * scale_height_function
     measured_alpha = selected_smoothed_reynolds_stress / coefficient
 
     return measured_alpha
@@ -322,7 +322,7 @@ def make_plot(show = False):
         plot.legend()
 
     # Axes
-    plot.xlim(x_min, x_max)
+    plot.xlim(x[0], x[-1])
     plot.ylim(10**(-8), 3 * 10**(-1))
     plot.yscale('log')
     #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
