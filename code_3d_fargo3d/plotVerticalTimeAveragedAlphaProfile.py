@@ -276,7 +276,7 @@ def get_data(directory = "./", num_z = num_z):
     #surface_density = np.average(np.sum(density[:, :, :], axis = 0) * dz, axis = -1)
     density = np.average(density[:, r_select_i, :], axis = -1)
 
-    coefficient = -1.0 * rad * omega_gradient * density * sound_speed_function * scale_height_function
+    coefficient = -1.0 * r_select * omega_gradient * density * sound_speed_function * scale_height_function
     measured_alpha = surface_smoothed_reynolds_stress / coefficient
 
     return measured_alpha
