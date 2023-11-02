@@ -301,7 +301,7 @@ def make_plot(show = False):
     measured_alpha = get_data()
 
     ### Plot ###
-    x = rad
+    x = (z_angles - np.pi / 2.0) / scale_height
     y = np.abs(measured_alpha)
 
     cwd = os.getcwd().split("/")[-1]
@@ -315,7 +315,7 @@ def make_plot(show = False):
             measured_alpha_compare = get_data(directory = directory, num_z = num_z)
 
             ### Plot ###
-            x = rad
+            x = (z_angles - np.pi / 2.0) / scale_height
             y_compare = measured_alpha_compare
             result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
@@ -341,7 +341,8 @@ def make_plot(show = False):
     #title = readTitle()
 
     unit = "r_\mathrm{p}"
-    ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
+    #ax.set_xlabel(r"z / h [$%s$]" % unit, fontsize = fontsize)
+    ax.set_xlabel(r"z / h", fontsize = fontsize)
     ax.set_ylabel(r"$<\Delta v_r \Delta v_{\phi}> / c_s^2$", fontsize = fontsize)
 
     #if title is None:
