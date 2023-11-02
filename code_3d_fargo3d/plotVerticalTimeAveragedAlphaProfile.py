@@ -258,14 +258,14 @@ def get_data(directory = "./", num_z = num_z):
 
     # Add up radii
     #dz = z_angles[1] - z_angles[0]
-    r_start = 0.6; r_end = 2.0
-    r_start_i = np.searchsorted(rad, r_start); r_end_i = np.searchsorted(rad, r_end)
-    num_r = len(rad[r_start_i : r_end_i])
-    average_smoothed_reynolds_stress = np.sum(smoothed_reynolds_stress[:, r_start_i : r_end_i], axis = 1) * dr / num_r
+    #r_start = 0.6; r_end = 2.0
+    #r_start_i = np.searchsorted(rad, r_start); r_end_i = np.searchsorted(rad, r_end)
+    #num_r = len(rad[r_start_i : r_end_i])
+    #average_smoothed_reynolds_stress = np.sum(smoothed_reynolds_stress[:, r_start_i : r_end_i], axis = 1) * dr / num_r
 
     r_select = 1.0
     r_select_i = np.searchsorted(rad, r_select)
-    selected_smoothed_reynolds_stress = smoothed_reynolds_stress[:, r_select]
+    selected_smoothed_reynolds_stress = smoothed_reynolds_stress[:, r_select_i]
 
     # Calculate alpha
     omega = np.power(r_select, -1.5)
