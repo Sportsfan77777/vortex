@@ -191,7 +191,7 @@ fargo_par["theta"] = theta
 ###############################################################################
 
 # Reference values
-vrad_rad = (fromfile("gasvy0.dat").reshape(num_z, num_rad, num_theta)) 
+vrad_zero = (fromfile("gasvy0.dat").reshape(num_z, num_rad, num_theta)) 
 vtheta_zero = (fromfile("gasvx0.dat").reshape(num_z, num_rad, num_theta)) 
 
 ##### PLOTTING #####
