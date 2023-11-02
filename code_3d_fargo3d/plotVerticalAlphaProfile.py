@@ -190,6 +190,10 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+# Reference values
+vrad_rad = (fromfile("gasvy0.dat").reshape(num_z, num_rad, num_theta)) 
+vtheta_zero = (fromfile("gasvx0.dat").reshape(num_z, num_rad, num_theta)) 
+
 ##### PLOTTING #####
 
 alpha = 0.7
@@ -209,8 +213,8 @@ def make_plot(frame, show = False):
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
     # Velocity Perturbations
-    delta_vrad = vrad - np.average(vrad, axis = 0)
-    delta_vtheta = vtheta - np.average(vtheta, axis = 0)
+    delta_vrad = vrad - vrad_zero # - np.average(vrad, axis = 0)
+    delta_vtheta = vtheta - vtheta_zero #  - np.average(vtheta, axis = 0)
     turbulence = delta_vrad * delta_vtheta
 
     # Normalization and range
