@@ -232,6 +232,8 @@ def make_plot(frame, show = False):
     alpha = np.average(turbulence, axis = -1) / np.power(sound_speed, 2.0)
     average_alpha = np.average(alpha[:, r_start_i:r_end_i], axis = 1)
 
+    averaged_average_alpha = np.average(average_alpha) # overall average
+
     ### Plot ###
     x = (z_angles - np.pi / 2.0) / scale_height
     y = average_alpha
@@ -289,6 +291,10 @@ def make_plot(frame, show = False):
     #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
     #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
     #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+
+    text_x = 0; text_y = 0.1
+    text = r"$\alpha_{r \phi}$ $=$ $%.2e$" % (averaged_average_alpha)
+    plot.text(text_x, text_y, text, fontsize = fontsize - 2, color = 'black', horizontalalignment = 'center')
 
     # Save, Show, and Close
     if version is None:
