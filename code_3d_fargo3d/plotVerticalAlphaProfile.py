@@ -241,8 +241,7 @@ def make_plot(frame, show = False):
     r_end_i = np.searchsorted(rad, r_end)
 
     # Reynolds Stress
-    alpha = np.average(turbulence, axis = -1)
-    average_alpha = np.abs(np.average(alpha[:, r_start_i:r_end_i], axis = 1))
+    average_alpha = np.abs(np.average(turbulence[:, r_start_i:r_end_i], axis = -1))
 
     averaged_average_alpha = np.average(average_alpha) # overall average
 
