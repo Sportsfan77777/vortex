@@ -233,7 +233,7 @@ def make_plot(frame, show = False):
 
     # Reynolds Stress
     alpha = np.average(turbulence, axis = -1) / np.power(sound_speed, 2.0)
-    average_alpha = np.average(alpha[:, r_start_i:r_end_i], axis = 1)
+    average_alpha = np.abs(np.average(alpha[:, r_start_i:r_end_i], axis = 1))
 
     averaged_average_alpha = np.average(average_alpha) # overall average
 
