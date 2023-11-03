@@ -216,9 +216,13 @@ def make_plot(frame, show = False):
     #delta_vrad = np.abs(vrad - vrad_zero) # - np.average(vrad, axis = 0)
     #delta_vtheta = np.abs(vtheta - vtheta_zero) #  - np.average(vtheta, axis = 0)
 
-    delta_vrad = vrad - vrad_zero # - np.average(vrad, axis = 0)
-    delta_vtheta = vtheta - vtheta_zero #  - np.average(vtheta, axis = 0)
-    turbulence = delta_vrad * delta_vtheta
+    #delta_vrad = vrad - vrad_zero # - np.average(vrad, axis = 0)
+    #delta_vtheta = vtheta - vtheta_zero #  - np.average(vtheta, axis = 0)
+    #turbulence = delta_vrad * delta_vtheta
+
+    overall_average = np.average(density * vrad * vtheta, axis = -1) 
+    product_of_averages = np.average(density * vrad, axis = -1) * np.average(vtheta, axis = -1)
+    turbulence = overall_average - product_of_averages
 
     # Normalization and range
     scale_height_function = scale_height * np.power(rad, 1.0 + flaring_index)
