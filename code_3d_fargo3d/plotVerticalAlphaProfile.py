@@ -213,8 +213,11 @@ def make_plot(frame, show = False):
     vtheta = (fromfile("gasvx%d.dat" % frame).reshape(num_z, num_rad, num_theta)) # add a read_vrad to util.py!
 
     # Velocity Perturbations
-    delta_vrad = np.abs(vrad - vrad_zero) # - np.average(vrad, axis = 0)
-    delta_vtheta = np.abs(vtheta - vtheta_zero) #  - np.average(vtheta, axis = 0)
+    #delta_vrad = np.abs(vrad - vrad_zero) # - np.average(vrad, axis = 0)
+    #delta_vtheta = np.abs(vtheta - vtheta_zero) #  - np.average(vtheta, axis = 0)
+
+    delta_vrad = vrad - vrad_zero # - np.average(vrad, axis = 0)
+    delta_vtheta = vtheta - vtheta_zero #  - np.average(vtheta, axis = 0)
     turbulence = delta_vrad * delta_vtheta
 
     # Normalization and range
