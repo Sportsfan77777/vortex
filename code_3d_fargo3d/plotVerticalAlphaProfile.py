@@ -222,15 +222,18 @@ def make_plot(frame, show = False):
 
     overall_average = np.average(density * vrad * vtheta, axis = -1) 
     product_of_averages = np.average(density * vrad, axis = -1) * np.average(vtheta, axis = -1)
+    turbulence = (overall_average - product_of_averages)
+
     averaged_density = np.average(density, axis = -1)
 
-    turbulence = (overall_average - product_of_averages) / averaged_density
-
-    # Normalization and range
     scale_height_function = scale_height * np.power(rad, 1.0 + flaring_index)
     omega_function = np.power(rad, -1.5)
     sound_speed = scale_height_function * omega_function
 
+    pressure = averaged_density * np.power(sound_speed, 2.0)
+    turbulence = (overall_average - product_of_averages) / pressure
+
+    # Range
     r_start = 0.6
     r_end = 2.0
 
@@ -238,7 +241,7 @@ def make_plot(frame, show = False):
     r_end_i = np.searchsorted(rad, r_end)
 
     # Reynolds Stress
-    alpha = np.average(turbulence, axis = -1) / np.power(sound_speed, 2.0)
+    alpha = np.average(turbulence, axis = -1)
     average_alpha = np.abs(np.average(alpha[:, r_start_i:r_end_i], axis = 1))
 
     averaged_average_alpha = np.average(average_alpha) # overall average
