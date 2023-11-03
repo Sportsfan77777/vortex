@@ -222,7 +222,9 @@ def make_plot(frame, show = False):
 
     overall_average = np.average(density * vrad * vtheta, axis = -1) 
     product_of_averages = np.average(density * vrad, axis = -1) * np.average(vtheta, axis = -1)
-    turbulence = overall_average - product_of_averages
+    averaged_density = np.average(density, axis = -1)
+
+    turbulence = (overall_average - product_of_averages) / averaged_density
 
     # Normalization and range
     scale_height_function = scale_height * np.power(rad, 1.0 + flaring_index)
