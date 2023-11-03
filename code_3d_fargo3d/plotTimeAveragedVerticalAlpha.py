@@ -212,6 +212,14 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+#### Helper Function ####
+
+#def get_data(directory = "./"):
+
+
+
+###############################################################################
+
 def generate_colors(n):
     c = ['yellow', 'b', 'firebrick', 'w', 'green']
     colors = []
@@ -298,7 +306,7 @@ def make_plot(show = False):
 
     # Axes
     plot.xlim(x[0], x[-1])
-    plot.ylim(10**(-2), 10**(0))
+    plot.ylim(10**(-8), 10**(0))
     plot.yscale('log')
     #plot.yticks(np.arange(y_range[0], y_range[1] + 1e-9, 0.005))
 
