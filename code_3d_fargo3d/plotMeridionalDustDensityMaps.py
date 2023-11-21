@@ -292,8 +292,8 @@ def make_plot(frame, show = False):
       surface_density = np.sum(density[:, :, :], axis = 2) * dtheta
       gas_surface_density = np.sum(gas_density[:, :, :], axis = 2) * dtheta
     else:
-      surface_density = density[:, :, :]
-      gas_surface_density = gas_density[:, :, :]
+      surface_density = density[:, :, 0]
+      gas_surface_density = gas_density[:, :, 0]
 
     normalized_density = surface_density / dust_surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
     normalized_gas_density = gas_surface_density / surface_density_zero
