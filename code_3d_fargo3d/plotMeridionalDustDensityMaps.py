@@ -287,7 +287,7 @@ def make_plot(frame, show = False):
       density = fromfile("dust1dens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
       gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_z, num_rad, num_theta)
 
-    if theta > 1:
+    if len(theta) > 1:
       dtheta = theta[1] - theta[0]
       surface_density = np.sum(density[:, :, :], axis = 2) * dtheta
       gas_surface_density = np.sum(gas_density[:, :, :], axis = 2) * dtheta
