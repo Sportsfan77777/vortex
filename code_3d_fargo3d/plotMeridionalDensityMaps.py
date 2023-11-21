@@ -377,9 +377,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/gasDensityMap_%04d.png" % (save_directory, frame)
+        save_fn = "%s/meridionalGasDensityMap_%04d.png" % (save_directory, frame)
     else:
-        save_fn = "%s/v%04d_gasDensityMap_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_meridionalGasDensityMap_%04d.png" % (save_directory, version, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
