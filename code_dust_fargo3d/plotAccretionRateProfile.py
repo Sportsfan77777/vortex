@@ -215,7 +215,7 @@ def make_plot(frame, show = False):
     radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
 
     averagedDensity = np.average(density, axis = 1)
-    normalized_density = averagedDensity / averagedDensity_zero
+    normalized_density = averagedDensity / surface_density_zero
 
     averagedRadialVelocity = np.average(radial_velocity, axis = 1)
 
