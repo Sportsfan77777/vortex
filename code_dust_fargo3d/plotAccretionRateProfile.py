@@ -54,10 +54,12 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "accretionRateProfile",
                          help = 'save directory (default: accretionRateProfile)')
-    parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
-                         help = 'use .mpiio output files (default: do not use mpi)')
-    parser.add_argument('--merge', dest = "merge", type = int, default = 0,
-                         help = 'number of cores needed to merge data outputs (default: 0)')
+    parser.add_argument('-n', dest = "num_frames_t", type = int, default = 1,
+                         help = 'number of frames in time average (default: 12)')
+    parser.add_argument('-r', dest = "frame_rate_t", type = int, default = 1,
+                         help = 'frame rate in time average (default: 1)')
+    parser.add_argument('-w', dest = "scale_heights_r", type = float, default = 0.25,
+                         help = 'number of scale heights in radial average (default: 0.25)')
 
     # Plot Parameters (variable)
     parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
@@ -158,8 +160,10 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
-merge = args.merge
-mpi = args.mpi
+num_frames_t = args.num_frames_t
+frame_rate_t = args.frame_rate_t
+
+scale_heights_r = args.scale_heights_r
 
 # Plot Parameters (variable)
 show = args.show
@@ -197,6 +201,31 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+##### HELPER FUNCTION #####
+
+def get_time_averaged_profile(frame, num_frames = 12, frame_rate = 1):
+    # Frames
+    frames = frame + range(0, num_frames * frame_rate + 1, frame_rate)
+
+    # Composite Data (in time)
+    all_density = np.zeros((num_rad, num_theta, num_frames))
+    all_radial_velocity = np.zeros((num_rad, num_theta, num_frames))
+
+    for frame_i in frames:
+        density = fromfile("gasdens%d.dat" % frame_i).reshape(num_rad, num_theta) / surface_density_zero
+        radial_velocity = fromfile("gasvy%d.dat" % frame_i).reshape(num_rad, num_theta)
+
+        all_density[:, :, frame_i] = density
+        all_radial_velocity[:, :, frame_i] = radial_velocity
+
+    composite_density = np.average(all_density, axis = -1)
+    composite_radial_velocity = np.average(all_radial_velocity, axis = -1)
+
+    accretion_rates = -2.0 * np.pi * rad * composite_density * composite_radial_velocity
+    accretion_rate_profile = np.average(accretion_rates, axis = 1)
+
+    return accretion_rate_profile
+
 ##### PLOTTING #####
 
 alpha = 0.7
@@ -211,19 +240,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
-    radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
-
-    accretion_rates = -1.0 * rad * density * radial_velocity
-
-    #averagedDensity = np.average(density, axis = 1)
-    #normalized_density = averagedDensity / surface_density_zero
-
-    #averagedRadialVelocity = np.average(radial_velocity, axis = 1)
-
-    #accretion_rate_profile = 2.0 * np.pi * rad * averagedDensity * averagedRadialVelocity
-
-    accretion_rate_profile = np.average(accretion_rates, axis = 1)
+    accretion_rate_profile = get_time_averaged_profile(frame, num_frames = num_frames_t, frame_rate = frame_rate_t)
     negative_accretion_rate_profile = -1.0 * accretion_rate_profile
 
     ### Plot ###
