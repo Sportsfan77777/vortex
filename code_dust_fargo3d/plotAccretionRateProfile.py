@@ -367,7 +367,7 @@ def make_plot(frame, show = False):
         save_fn = "%s/accretionRateProfile_%04d.png" % (save_directory, frame)
     else:
         save_fn = "%s/v%04d_accretionRateProfile_%04d.png" % (save_directory, version, frame)
-    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, , pad_inches = 0.15)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.15)
 
     if show:
         plot.show()
