@@ -214,7 +214,7 @@ def make_plot(frame, show = False):
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
 
-    accretion_rates = rad * density * radial_velocity
+    accretion_rates = -1.0 * rad * density * radial_velocity
 
     #averagedDensity = np.average(density, axis = 1)
     #normalized_density = averagedDensity / surface_density_zero
@@ -308,7 +308,7 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 5.14
+    y_text = 2.54
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
