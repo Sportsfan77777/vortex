@@ -205,7 +205,7 @@ fargo_par["theta"] = theta
 
 def get_time_averaged_profile(frame, num_frames = 12, frame_rate = 1):
     # Frames
-    frames = range(frame, frame + num_frames * frame_rate + 1, frame_rate)
+    frames = range(frame, frame + num_frames * frame_rate, frame_rate)
 
     # Composite Data (in time)
     all_density = np.zeros((num_rad, num_theta, num_frames))
