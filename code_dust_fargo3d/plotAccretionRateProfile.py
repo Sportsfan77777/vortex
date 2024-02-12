@@ -54,7 +54,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "accretionRateProfile",
                          help = 'save directory (default: accretionRateProfile)')
-    parser.add_argument('-n', dest = "num_frames_t", type = int, default = 1,
+    parser.add_argument('-n', dest = "num_frames_t", type = int, default = 12,
                          help = 'number of frames in time average (default: 12)')
     parser.add_argument('-r', dest = "frame_rate_t", type = int, default = 1,
                          help = 'frame rate in time average (default: 1)')
@@ -205,7 +205,7 @@ fargo_par["theta"] = theta
 
 def get_time_averaged_profile(frame, num_frames = 12, frame_rate = 1):
     # Frames
-    frames = range(frame, frame + num_frames * frame_rate + 1, num_frames)
+    frames = range(frame, frame + num_frames * frame_rate + 1, frame_rate)
 
     # Composite Data (in time)
     all_density = np.zeros((num_rad, num_theta, num_frames))
