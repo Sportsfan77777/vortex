@@ -304,7 +304,7 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
+    y_text = 5.14
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
@@ -316,7 +316,7 @@ def make_plot(frame, show = False):
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 5.15, fontsize = fontsize + 1)
+    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
