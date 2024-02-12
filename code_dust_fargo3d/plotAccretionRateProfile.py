@@ -211,15 +211,19 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta) / surface_density_zero
     radial_velocity = fromfile("gasvy%d.dat" % frame).reshape(num_rad, num_theta)
 
-    averagedDensity = np.average(density, axis = 1)
-    normalized_density = averagedDensity / surface_density_zero
+    accretion_rates = rad * density * radial_velocity
 
-    averagedRadialVelocity = np.average(radial_velocity, axis = 1)
+    #averagedDensity = np.average(density, axis = 1)
+    #normalized_density = averagedDensity / surface_density_zero
 
-    accretion_rate_profile = 2.0 * np.pi * rad * normalized_density * averagedRadialVelocity
+    #averagedRadialVelocity = np.average(radial_velocity, axis = 1)
+
+    #accretion_rate_profile = 2.0 * np.pi * rad * averagedDensity * averagedRadialVelocity
+
+    accretion_rate_profile = np.average(accretion_rates, axis = 1)
     negative_accretion_rate_profile = -1.0 * accretion_rate_profile
 
     ### Plot ###
