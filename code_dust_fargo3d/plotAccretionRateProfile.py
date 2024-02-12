@@ -17,6 +17,7 @@ import argparse
 
 import math
 import numpy as np
+from scipy.ndimage import filters as ff
 
 import matplotlib
 matplotlib.use('Agg')
@@ -203,6 +204,9 @@ fargo_par["theta"] = theta
 
 ##### HELPER FUNCTION #####
 
+kernel_size = 5
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+
 def get_time_averaged_profile(frame, num_frames = 12, frame_rate = 1):
     # Frames
     frames = range(frame, frame + num_frames * frame_rate, frame_rate)
@@ -220,6 +224,9 @@ def get_time_averaged_profile(frame, num_frames = 12, frame_rate = 1):
 
     composite_density = np.average(all_density, axis = -1)
     composite_radial_velocity = np.average(all_radial_velocity, axis = -1)
+
+    composite_density = smooth(composite_density, kernel_size)
+    composite_radial_velocity = smooth(composite_radial_velocity, kernel_size)
 
     accretion_rates = -2.0 * np.pi * rad * composite_density * composite_radial_velocity
     accretion_rate_profile = np.average(accretion_rates, axis = 1)
