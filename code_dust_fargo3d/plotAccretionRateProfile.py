@@ -211,12 +211,12 @@ def get_time_averaged_profile(frame, num_frames = 12, frame_rate = 1):
     all_density = np.zeros((num_rad, num_theta, num_frames))
     all_radial_velocity = np.zeros((num_rad, num_theta, num_frames))
 
-    for frame_i in frames:
+    for i, frame_i in enumerate(frames):
         density = fromfile("gasdens%d.dat" % frame_i).reshape(num_rad, num_theta) / surface_density_zero
         radial_velocity = fromfile("gasvy%d.dat" % frame_i).reshape(num_rad, num_theta)
 
-        all_density[:, :, frame_i] = density
-        all_radial_velocity[:, :, frame_i] = radial_velocity
+        all_density[:, :, i] = density
+        all_radial_velocity[:, :, i] = radial_velocity
 
     composite_density = np.average(all_density, axis = -1)
     composite_radial_velocity = np.average(all_radial_velocity, axis = -1)
