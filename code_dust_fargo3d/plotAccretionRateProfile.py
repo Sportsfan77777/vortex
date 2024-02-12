@@ -220,11 +220,14 @@ def make_plot(frame, show = False):
     averagedRadialVelocity = np.average(radial_velocity, axis = 1)
 
     accretion_rate_profile = 2.0 * np.pi * rad * normalized_density * averagedRadialVelocity
+    negative_accretion_rate_profile = -1.0 * accretion_rate_profile
 
     ### Plot ###
     x = rad
     y = accretion_rate_profile
+    y2 = negative_accretion_rate_profile
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+    result2,  = plot.plot(x, y2, linewidth = linewidth, c = "r", zorder = 99)
 
     if args.zero:
         #density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -293,7 +296,7 @@ def make_plot(frame, show = False):
     unit = "r_\mathrm{p}"
     unit2 = "\Sigma_0 r_\mathrm{p}^2 \Omega_\mathrm{p}"
     ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
-    ax.set_ylabel(r"$\dot{M} $[$%s$]$" % unit2, fontsize = fontsize)
+    ax.set_ylabel(r"$\dot{M}$ [$%s$]" % unit2, fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
@@ -313,7 +316,7 @@ def make_plot(frame, show = False):
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
-    plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
+    plot.title("%s" % (title2), y = 5.15, fontsize = fontsize + 1)
     ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
