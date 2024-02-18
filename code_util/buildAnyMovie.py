@@ -90,9 +90,9 @@ if args.name_id is not None:
 
 if args.version is not None:
    name = "v%04d_%s" % (args.version, name)
-if movie_name == None:
+if args.movie_name == None:
    cwd = os.getcwd().split("/")[-1]
-   movie_name = "%s-movie" % cwd
+   args.movie_name = "%s-movie" % cwd
 movie_name = name + args.movie_name
 
 # Movie Parameters
