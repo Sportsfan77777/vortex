@@ -51,8 +51,8 @@ def new_argument_parser(description = "Manage movie input parameters."):
 
     parser.add_argument('--save_dir', dest = "save_directory", default = None,
                          help = 'location of files and output (default: file directory)')
-    parser.add_argument('--movie', dest = "movie_name", default = "movie",
-                         help = 'select movie suffix (default: movie)')
+    parser.add_argument('--movie', dest = "movie_name", default = None,
+                         help = 'select movie suffix (default: cwd-movie)')
 
     # Movie Parameters
     parser.add_argument('--fps', dest = "fps", type = int, default = 5,
@@ -90,6 +90,9 @@ if args.name_id is not None:
 
 if args.version is not None:
    name = "v%04d_%s" % (args.version, name)
+if movie_name == None:
+   cwd = os.getcwd().split("/")[-1]
+   movie_name = "%s-movie" % cwd
 movie_name = name + args.movie_name
 
 # Movie Parameters
