@@ -91,7 +91,7 @@ if args.name_id is not None:
 if args.version is not None:
    name = "v%04d_%s" % (args.version, name)
 if args.movie_name == None:
-   cwd = os.getcwd().split("/")[-1]
+   cwd = os.getcwd().split("/")[-2]
    args.movie_name = "%s-movie" % cwd
 movie_name = name + args.movie_name
 
