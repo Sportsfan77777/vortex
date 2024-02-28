@@ -190,6 +190,9 @@ times = data[:, 0]; base_mass = data[:, 7]
 accreted_mass = data[:, 8] / jupiter_mass
 omegas = data[:, 10]
 
+planet_x = data[:, 1]
+planet_y = data[:, 2]
+
 ### Add new parameters to dictionary ###
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
@@ -218,6 +221,12 @@ def make_plot(frame, show = False):
     x = rad
     y = normalized_density
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+
+    this_x = planet_x[frame]
+    this_y = planet_y[frame]
+    planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
+
+    plot.scatter([planet_location], [1.05 * 10**(-3)], c = 'k', s = 75, alpha = 0.8, clip_on = False)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
