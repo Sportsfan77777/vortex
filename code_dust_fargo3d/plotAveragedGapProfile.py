@@ -81,6 +81,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
                          help = 'plot density at t = 0 for reference (default: do not do it!)')
 
+    parser.add_argument('--log', dest = "log", action = 'store_true', default = False,
+                         help = 'plot log y-axis (default: do not do it!)')
+
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'compare to another directory (default: do not do it!)')
 
@@ -284,7 +287,12 @@ def make_plot(frame, show = False):
         max_y = args.max_y
 
     ax.set_xlim(x_min, x_max)
-    ax.set_ylim(0, max_y)
+
+    if args.log:
+        ax.set_yscale("log")
+        ax.set_ylim(1.0e-2, max_y)
+    else:
+        ax.set_ylim(0, max_y)
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
