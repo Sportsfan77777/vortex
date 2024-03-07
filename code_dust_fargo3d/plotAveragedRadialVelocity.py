@@ -19,6 +19,7 @@ import math
 import numpy as np
 
 import matplotlib
+matplotlib.use('Agg')
 from matplotlib import rcParams as rc
 from matplotlib import pyplot as plot
 
@@ -68,7 +69,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.05, 0.05],
+    parser.add_argument('--y_range', dest = "y_range", type = float, nargs = 2, default = [-0.0005, 0.0],
                          help = 'range in y-axis (default: [-1, 0])')
 
     parser.add_argument('--zero', dest = "zero", action = 'store_true', default = False,
