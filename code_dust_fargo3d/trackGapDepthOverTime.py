@@ -282,6 +282,22 @@ def make_plot(show = False):
     y = gap_depth_array
     result1 = plot.plot(x, y, c = 'b', linewidth = linewidth, zorder = 99)
 
+    # Reference
+    num_jupiters = int(round(planet_mass, 0))
+    colors = ['k', 'grey']
+    times = [20, 30, 50, 100, 140]
+    for i, time_i in enumerate(times):
+       ref_density = []
+       with open("Mt%dAm3-t%d.csv" % (num_jupiters, time_i), "r") as f:
+          reader = csv.reader(f)
+          for row in reader:
+             ref_density.append(row)
+       ref_density = np.array(ref_density).astype(np.float)
+
+       ref_density_min = 1.0 / min(ref_density)
+       plot.scatter(time_i, ref_density_min, s = 50, c = 'k')
+
+    # Compare
     if args.compare is not None:
         directories = args.compare
         max_yc = 0
