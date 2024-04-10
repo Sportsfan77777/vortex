@@ -61,7 +61,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--ref', dest = "ref", type = int, default = 0,
                          help = 'reference taper time for prescribed growth curve (default: no reference)')
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
-                         help = 'select directories to compare planet growth rates')
+                         help = 'compare to another directory (default: do not do it!)')
 
 
     # Plot Parameters (variable)
@@ -157,7 +157,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = 0; x_max = 1000
+    x_min = frames[0]; x_max = frames[-1]
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
@@ -218,30 +218,17 @@ def get_min(frame):
 
 def get_gap_depth(args_here):
     # Unwrap Args
-    i, frame = args_here
+    i, frame, directory = args_here
 
     # Get Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-
-    if args.compare:
-        fargo_directory = args.compare
-        density_compare = (fromfile("%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta))
-
+    density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
     gap_depth = get_min(frame)
 
-    if args.compare:
-        gap_depth_compare = get_min(density_compare)
-
     # Print Update
-    print "%d: %.10f" % (frame, gap_depth)
-    if args.compare:
-        print "%d: %.10f" % (frame, gap_depth_compare)
+    print "%s %d: %.10f" % (directory, frame, gap_depth)
 
     # Store Data
     gap_depth_over_time[i] = gap_depth
-
-    if args.compare:
-        gap_depth_over_time_compare[i] = gap_depth_compare
 
 ###############################################################################
 
@@ -256,20 +243,16 @@ max_frame = 100 #util.find_max_frame()
 
 gap_depth_over_time = mp_array("d", len(frame_range))
 
-if args.compare:
-    gap_depth_over_time_compare = mp_array("d", len(frame_range))
-
 #for i, frame in enumerate(frame_range):
 #    get_excess_mass((i, frame))
 
-pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
+pool_args = [(i, frame, ".") for i, frame in enumerate(frame_range)]
 
 p = Pool(num_cores)
 p.map(get_gap_depth, pool_args)
 p.terminate()
 
-if args.compare:
-    gap_depth_compare = np.max(gap_depth_over_time_compare)
+gap_depth_array = np.array(gap_depth_over_time)
 
 ## Pickle to combine later ##
 
@@ -279,6 +262,10 @@ pickle.dump(np.array(gap_depth_over_time), open("gap_depth_values.p", "wb"))
 ###############################################################################
 
 ##### PLOTTING #####
+
+labelsize = 18
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 def make_plot(show = False):
     # Set up figure
@@ -293,21 +280,24 @@ def make_plot(show = False):
     kernel_size = 5
 
     x = frame_range
-    y = smooth(gap_depth_over_time, kernel_size)
-    result1 = plot.plot(x, y, c = 'b', linewidth = linewidth, linestyle = "-.", zorder = 99)
+    y = gap_depth_array
+    result1 = plot.plot(x, y, c = 'b', linewidth = linewidth, zorder = 99)
 
     if args.compare is not None:
-        for i, directory in enumerate(args.compare):
-            data_comp = np.loadtxt("%s/planet0.dat" % directory)
-            times = data_comp[:, 0] + args.offset
+        directories = args.compare
+        for i, directory in enumerate(directories):
+            pool_args = [(i, frame, directory) for i, frame in enumerate(frame_range)]
 
-            planet_x = data_comp[:, 1]
-            planet_y = data_comp[:, 2]
-            planet_radii = np.sqrt(np.power(planet_x, 2) + np.power(planet_y, 2))
+            p = Pool(num_cores)
+            p.map(get_gap_depth, pool_args)
+            p.terminate()
 
-            x_comp = times
-            y_comp = planet_radii
-            result = plot.plot(x_comp, y_comp, linewidth = linewidth, zorder = 1, label = "%s" % directory)
+            ### Plot ###
+            x = frame_range
+            y_compare = gap_depth_over_time
+            result_compare = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
+
+        plot.legend()
 
     plot.legend(loc = "lower left")
 
