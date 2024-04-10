@@ -191,7 +191,32 @@ smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # sm
 ks = 40.0 # Kernel Size
 ks_small = ks / 5.0 # Smaller kernel to check the normal kernel
 
-def get_torque(args_here):
+def find_min(averagedDensity):
+    outer_disk_start = np.searchsorted(rad, 0.9) # look for max radial density beyond r = 1.1
+    outer_disk_end = np.searchsorted(rad, 1.25) # look for max radial density before r = 2.3
+    min_rad_outer_index = np.argmin(averagedDensity[outer_disk_start : outer_disk_end])
+
+    min_index = outer_disk_start + min_rad_outer_index
+    min_rad = rad[min_index]
+    min_density = averagedDensity[min_index]
+
+    return min_density
+
+def get_min(frame):
+    # Get Data
+    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    averagedDensity = np.average(density, axis = 1)
+    normalized_density = averagedDensity / surface_density_zero
+    
+    # Get Minima
+    min_density = find_min(normalized_density)
+
+    # Print Update
+
+    # Store Data
+    return 1.0 / min_density
+
+def get_gap_depth(args_here):
     # Unwrap Args
     i, frame = args_here
 
@@ -202,64 +227,21 @@ def get_torque(args_here):
         fargo_directory = args.compare
         density_compare = (fromfile("%s/gasdens%d.dat" % (fargo_directory, frame)).reshape(num_rad, num_theta))
 
-    def helper(density):
-        frame_i = np.searchsorted(times, frame)
-
-        # Planet
-        px = planet_x[frame_i]
-        py = planet_y[frame_i]
-        planet_r = planet_radii[frame_i]
-
-        mass = base_mass[frame_i] + accreted_mass[frame_i]
-        hill_radius = planet_r * np.power(mass, 1.0 / 3.0)
-
-        # Torque
-        r_element = np.array([np.outer(rad, np.cos(theta)), np.outer(rad, np.sin(theta))]) # star to fluid element 
-        r_diff = np.array([np.outer(rad, np.cos(theta)) - px, np.outer(rad, np.sin(theta)) - py]) # planet to fluid element
-        dist_sq = np.einsum("ijk,ijk->jk", r_diff, r_diff)
-
-        coeff = BigG * planet_mass * density / dist_sq
-        direction = np.cross(r_element, r_diff, axis = 0)
-
-        torque_density_per_area = coeff * direction
-        d_rad = rad[1] - rad[0]; d_theta = theta[1] - theta[0]
-        area = rad[:, None] * np.outer(d_rad, d_theta)
-
-        torque_density = torque_density_per_area * area
-        normalized_torque_density = torque_density / surface_density_zero # / np.sqrt(2.0 * np.pi) / scale_height_function[:, None]
-
-        # Hill Cut
-        hill_cut = np.ones(density.shape)
-        hill_cut[dist_sq < hill_radius] = 0.0
-        torque_density *= hill_cut
-
-        # Total
-        radial_torque_density_profile = np.sum(torque_density, axis = -1)
-
-        # Split the disc
-        planet_ri = np.searchsorted(rad, planet_r)
-        inner_torque = np.sum(radial_torque_density_profile[:planet_ri])
-        outer_torque = np.sum(radial_torque_density_profile[planet_ri:])
-
-        return inner_torque, outer_torque
-
-    inner_torque, outer_torque = helper(density)
+    gap_depth = get_min(frame)
 
     if args.compare:
-        inner_torque_compare, outer_torque_compare = helper(density_compare)
+        gap_depth_compare = get_min(density_compare)
 
     # Print Update
-    print "%d: %.10f, %.10f" % (frame, inner_torque, outer_torque)
+    print "%d: %.10f" % (frame, gap_depth)
     if args.compare:
-        print "%d: %.10f, %.10f" % (frame, inner_torque_compare, outer_torque_compare)
+        print "%d: %.10f" % (frame, gap_depth_compare)
 
     # Store Data
-    inner_torque_over_time[i] = inner_torque
-    outer_torque_over_time[i] = outer_torque
+    gap_depth_over_time[i] = gap_depth
 
     if args.compare:
-        inner_torque_over_time_compare[i] = inner_torque_compare
-        outer_torque_over_time_compare[i] = outer_torque_compare
+        gap_depth_over_time_compare[i] = gap_depth_compare
 
 ###############################################################################
 
@@ -272,12 +254,10 @@ max_frame = 100 #util.find_max_frame()
 #torque_over_time = np.zeros(len(frame_range))
 #peak_over_time = np.zeros(len(frame_range))
 
-inner_torque_over_time = mp_array("d", len(frame_range))
-outer_torque_over_time = mp_array("d", len(frame_range))
+gap_depth_over_time = mp_array("d", len(frame_range))
 
 if args.compare:
-    inner_torque_over_time_compare = mp_array("d", len(frame_range))
-    outer_torque_over_time_compare = mp_array("d", len(frame_range))
+    gap_depth_over_time_compare = mp_array("d", len(frame_range))
 
 #for i, frame in enumerate(frame_range):
 #    get_excess_mass((i, frame))
@@ -285,17 +265,16 @@ if args.compare:
 pool_args = [(i, frame) for i, frame in enumerate(frame_range)]
 
 p = Pool(num_cores)
-p.map(get_torque, pool_args)
+p.map(get_gap_depth, pool_args)
 p.terminate()
 
 if args.compare:
-    torque_compare = np.max(torque_over_time_compare)
+    gap_depth_compare = np.max(gap_depth_over_time_compare)
 
 ## Pickle to combine later ##
 
-pickle.dump(np.array(frame_range), open("torque_frames.p", "wb"))
-pickle.dump(np.array(inner_torque_over_time), open("inner_torque_values.p", "wb"))
-pickle.dump(np.array(outer_torque_over_time), open("outer_torque_values.p", "wb"))
+pickle.dump(np.array(frame_range), open("gap_depth_frames.p", "wb"))
+pickle.dump(np.array(gap_depth_over_time), open("gap_depth_values.p", "wb"))
 
 ###############################################################################
 
@@ -314,29 +293,8 @@ def make_plot(show = False):
     kernel_size = 5
 
     x = frame_range
-    y1 = smooth(inner_torque_over_time, kernel_size)
-    y2 = smooth(outer_torque_over_time, kernel_size)
-    y3 = y1 + y2
-    result1 = plot.plot(x, y1, c = 'b', linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Inner)" % cwd)
-    result2 = plot.plot(x, y2, c = 'orange', linewidth = linewidth, linestyle = "-.", zorder = 99, label = "%s (Outer)" % cwd)
-    result3 = plot.plot(x, y3, c = 'red', linewidth = linewidth, linestyle = "-", zorder = 99, label = "%s (Total)" % cwd)
-
-    # Raw Data
-    torque_data = np.loadtxt("tqwk0.dat")
-    x_raw = torque_data[:, 0]
-    y1_raw = torque_data[:, 1]
-    y2_raw = torque_data[:, 2]
-
-    y1_smooth = smooth(y1_raw, ks)
-    y2_smooth = smooth(y2_raw, ks)
-
-    raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s (Inner) - tqwk0.dat" % cwd)
-    raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s (Outer) - tqwk0.dat" % cwd)
-
-    if args.ref > 0:
-        x = times
-        y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * 1.0
-        plot.plot(x, y_ref, linewidth = linewidth, alpha = 0.5)
+    y = smooth(gap_depth_over_time, kernel_size)
+    result1 = plot.plot(x, y, c = 'b', linewidth = linewidth, linestyle = "-.", zorder = 99)
 
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
@@ -355,24 +313,20 @@ def make_plot(show = False):
 
     # Axes
     if args.max_y is None:
-        min_y1 = -1.1 * min(y1_smooth)
-        min_y2 = -1.1 * min(y2_smooth)
-
-        max_y1 = 1.1 * max(y1_smooth)
-        max_y2 = 1.1 * max(y2_smooth)
-
-        max_y = max([min_y1, min_y2, max_y1, max_y2])
+        x_min_i = np.searchsorted(x, x_min)
+        x_max_i = np.searchsorted(x, x_max)
+        max_y = 1.1 * max(y[x_min_i : x_max_i])
     else:
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(-max_y, max_y)
+    plot.ylim(0, max_y)
 
     #title = readTitle()
 
     unit = "orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"Torque", fontsize = fontsize)
+    plot.ylabel(r"Gap Depth", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
