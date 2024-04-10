@@ -284,6 +284,8 @@ def make_plot(show = False):
 
     if args.compare is not None:
         directories = args.compare
+        max_yc = 0
+
         for i, directory in enumerate(directories):
             pool_args = [(i, frame, directory) for i, frame in enumerate(frame_range)]
 
@@ -296,6 +298,14 @@ def make_plot(show = False):
             y_compare = gap_depth_over_time
             result_compare = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
+            # Max
+            x_min_i = np.searchsorted(x, x_min)
+            x_max_i = np.searchsorted(x, x_max)
+            this_max_y = 1.1 * max(y[x_min_i : x_max_i])
+
+            if this_max_y > max_yc:
+                max_yc = this_max_y
+
         plot.legend()
 
     plot.legend(loc = "lower left")
@@ -305,6 +315,11 @@ def make_plot(show = False):
         x_min_i = np.searchsorted(x, x_min)
         x_max_i = np.searchsorted(x, x_max)
         max_y = 1.1 * max(y[x_min_i : x_max_i])
+
+        if args.compare:
+            if (max_yc > max_y):
+                max_y = max_yc
+
     else:
         max_y = args.max_y
 
