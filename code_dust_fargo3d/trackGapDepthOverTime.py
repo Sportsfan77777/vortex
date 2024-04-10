@@ -202,9 +202,8 @@ def find_min(averagedDensity):
 
     return min_density
 
-def get_min(frame):
+def get_min(density):
     # Get Data
-    density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
     
@@ -222,7 +221,7 @@ def get_gap_depth(args_here):
 
     # Get Data
     density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
-    gap_depth = get_min(frame)
+    gap_depth = get_min(density)
 
     # Print Update
     print "%s %d: %.10f" % (directory, frame, gap_depth)
