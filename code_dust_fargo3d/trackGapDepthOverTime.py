@@ -322,9 +322,7 @@ def make_plot(show = False):
             if this_max_y > max_yc:
                 max_yc = this_max_y
 
-        plot.legend()
-
-    plot.legend(loc = "lower left")
+        plot.legend(loc = "upper right")
 
     # Axes
     if args.max_y is None:
