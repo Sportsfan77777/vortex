@@ -294,7 +294,7 @@ def make_plot(show = False):
              ref_density.append(row)
        ref_density = np.array(ref_density).astype(np.float)
 
-       ref_density_min = 1.0 / min(ref_density)
+       ref_density_min = 1.0 / np.min(ref_density)
        plot.scatter(time_i, ref_density_min, s = 50, c = 'k')
 
     # Compare
