@@ -157,7 +157,7 @@ theta = np.linspace(0, 2 * np.pi, num_theta)
 
 version = args.version
 if args.r_lim is None:
-    x_min = frames[0]; x_max = frames[-1]
+    x_min = frame_range[0]; x_max = frame_range[-1]
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 max_y = args.max_y
