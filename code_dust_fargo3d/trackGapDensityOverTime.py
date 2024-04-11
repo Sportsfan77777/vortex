@@ -281,7 +281,7 @@ def make_plot(show = False):
     kernel_size = 5
 
     x = frame_range
-    y = gap_depth_array
+    y = peak_density_array
     result1 = plot.plot(x, y, c = 'b', linewidth = linewidth, zorder = 99)
 
     # Reference
