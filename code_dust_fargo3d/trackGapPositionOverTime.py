@@ -304,7 +304,7 @@ def make_plot(show = False):
 
        ref_density_max_location = ref_times[planet_location + ref_density_max]
 
-       plot.scatter(time_i, ref_density_max_location, s = 50, c = 'k')
+       plot.scatter(time_i, ref_density_max_location, s = 50, c = 'k', zorder = 1000)
 
     # Compare
     if args.compare is not None:
