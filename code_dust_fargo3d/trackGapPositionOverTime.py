@@ -223,7 +223,7 @@ def get_gap_edge_position(args_here):
     density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
     density_zero = fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta)
     
-    peak_density = get_max(density / density_zero)
+    peak_density = get_position(density / density_zero)
 
     # Print Update
     print "%s %d: %.10f" % (directory, frame, peak_density)
@@ -351,7 +351,7 @@ def make_plot(show = False):
 
     unit = "orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"Peak Density at Outer Gap Edge", fontsize = fontsize)
+    plot.ylabel(r"Outer Gap Edge: Peak Location [$r_\mathrm{p}$]", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
