@@ -351,7 +351,7 @@ def make_plot(show = False):
 
     unit = "orbits"
     plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
-    plot.ylabel(r"Gap Depth", fontsize = fontsize)
+    plot.ylabel(r"Peak Density at Outer Gap Edge", fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
