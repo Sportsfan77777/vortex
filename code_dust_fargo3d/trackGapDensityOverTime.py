@@ -250,7 +250,7 @@ peak_density_over_time = mp_array("d", len(frame_range))
 pool_args = [(i, frame, ".") for i, frame in enumerate(frame_range)]
 
 p = Pool(num_cores)
-p.map(get_gap_depth, pool_args)
+p.map(get_gap_edge_density, pool_args)
 p.terminate()
 
 gap_depth_array = np.array(gap_depth_over_time)
@@ -313,7 +313,7 @@ def make_plot(show = False):
             pool_args = [(i, frame, directory) for i, frame in enumerate(frame_range)]
 
             p = Pool(num_cores)
-            p.map(get_gap_depth, pool_args)
+            p.map(get_gap_edge_density, pool_args)
             p.terminate()
 
             ### Plot ###
