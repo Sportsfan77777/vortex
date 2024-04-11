@@ -226,7 +226,7 @@ def get_gap_edge_position(args_here):
     peak_density_location = get_position(density / density_zero)
 
     # Print Update
-    print "%s %d: %.10f" % (directory, frame, peak_density)
+    print "%s %d: %.10f" % (directory, frame, peak_density_location)
 
     # Store Data
     peak_position_over_time[i] = peak_density_location
