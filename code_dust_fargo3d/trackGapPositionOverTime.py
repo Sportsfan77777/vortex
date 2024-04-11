@@ -302,7 +302,7 @@ def make_plot(show = False):
        planet_location = np.searchsorted(ref_times, 1)
        ref_density_max = np.argmax(ref_densities[planet_location:])
 
-       ref_density_max_location = ref_times[ref_density_max]
+       ref_density_max_location = ref_times[planet_location + ref_density_max]
 
        plot.scatter(time_i, ref_density_max_location, s = 50, c = 'k')
 
