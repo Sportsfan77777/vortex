@@ -196,11 +196,11 @@ def find_max(averagedDensity):
     #outer_disk_end = np.searchsorted(rad, 1.25) # look for max radial density before r = 2.3
     max_density_position = np.argmax(averagedDensity[outer_disk_start:])
 
-    #min_index = outer_disk_start + min_rad_outer_index
-    #min_rad = rad[min_index]
-    #min_density = averagedDensity[min_index]
+    max_index = outer_disk_start + min_rad_outer_index
+    max_radius = rad[max_index]
+    #max_density = averagedDensity[min_index]
 
-    return max_density_position
+    return max_density_radius
 
 def get_position(density):
     # Get Data
