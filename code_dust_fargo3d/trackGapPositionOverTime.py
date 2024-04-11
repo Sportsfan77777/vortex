@@ -300,9 +300,11 @@ def make_plot(show = False):
        ref_densities = ref_density[:, 1]
 
        planet_location = np.searchsorted(ref_times, 1)
-       ref_density_max = np.max(ref_densities[planet_location:])
+       ref_density_max = np.argmax(ref_densities[planet_location:])
 
-       plot.scatter(time_i, ref_density_max, s = 50, c = 'k')
+       ref_density_max_location = ref_times[ref_density_max]
+
+       plot.scatter(time_i, ref_density_max_location, s = 50, c = 'k')
 
     # Compare
     if args.compare is not None:
