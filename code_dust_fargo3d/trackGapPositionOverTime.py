@@ -200,7 +200,7 @@ def find_max(averagedDensity):
     max_radius = rad[max_index]
     #max_density = averagedDensity[min_index]
 
-    return max_density_radius
+    return max_radius
 
 def get_position(density):
     # Get Data
