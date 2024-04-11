@@ -253,12 +253,12 @@ p = Pool(num_cores)
 p.map(get_gap_edge_density, pool_args)
 p.terminate()
 
-gap_depth_array = np.array(gap_depth_over_time)
+peak_density_array = np.array(peak_density_over_time)
 
 ## Pickle to combine later ##
 
-pickle.dump(np.array(frame_range), open("gap_depth_frames.p", "wb"))
-pickle.dump(np.array(gap_depth_over_time), open("gap_depth_values.p", "wb"))
+pickle.dump(np.array(frame_range), open("gap_density_frames.p", "wb"))
+pickle.dump(np.array(peak_density_over_time), open("gap_density_values.p", "wb"))
 
 ###############################################################################
 
