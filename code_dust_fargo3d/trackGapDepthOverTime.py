@@ -362,7 +362,7 @@ def make_plot(show = False):
     wind_coefficient = mass_loss_rate / np.power(10.0, wind_power)
 
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
-    title1 = r"$M = %.2f\ M_J$   $h/r = %.2f$    $\nu = 10^{%d}$   $b = %d \times 10^{%d}$" % (planet_mass, scale_height, int(np.log10(viscosity)), wind_coefficient, wind_power)
+    title1 = r"$M_\mathrm{p} = %.2f\ M_J$    $h/r = %.2f$    $\nu = 10^{%d}$   $b = %d \times 10^{%d}$" % (planet_mass, scale_height, int(np.log10(viscosity)), wind_coefficient, wind_power)
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
