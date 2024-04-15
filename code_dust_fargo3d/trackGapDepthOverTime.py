@@ -299,7 +299,7 @@ def make_plot(show = False):
        ref_density = np.array(ref_density).astype(np.float)
 
        ref_density_min = 1.0 / np.min(ref_density)
-       plot.scatter(time_i, ref_density_min, s = 50, c = 'k')
+       plot.scatter(time_i, ref_density_min, s = 50, c = 'k', zorder = 1000)
 
     # Compare
     if args.compare is not None:
