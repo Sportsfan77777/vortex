@@ -106,7 +106,10 @@ surface_density_zero = p.sigma0
 
 taper_time = p.masstaper
 
+scale_height = p.aspectratio
 viscosity = p.nu
+mass_loss_rate = p.masslossrate
+
 
 dt = p.ninterm * p.dt
 
@@ -296,10 +299,10 @@ def make_plot(show = False):
              ref_density.append(row)
        ref_density = np.array(ref_density).astype(np.float)
 
-       ref_times = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
+       ref_radii = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
        ref_densities = ref_density[:, 1]
 
-       planet_location = np.searchsorted(ref_times, 1)
+       planet_location = np.searchsorted(ref_radii, 1)
        ref_density_max = np.max(ref_densities[planet_location:])
 
        plot.scatter(time_i, ref_density_max, s = 50, c = 'k')
@@ -361,8 +364,11 @@ def make_plot(show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
-    title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    wind_power = int(np.floor(np.log10(mass_loss_rate)))
+    wind_coefficient = mass_loss_rate / np.power(10.0, wind_power)
 
+    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    title1 = r"$h/r = %.2f$     $\nu = 10^{%d}$    $b = %d \times 10^{%d}$" % (scale_height, int(np.log10(viscosity)), wind_coefficient, wind_power)
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 1)
