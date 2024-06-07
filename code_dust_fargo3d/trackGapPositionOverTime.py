@@ -54,8 +54,8 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "peakGapEdgePosition",
-                         help = 'save directory (default: peakGapEdgePosition)')
+    parser.add_argument('--dir', dest = "save_directory", default = "gapEdgePosition",
+                         help = 'save directory (default: gapEdgePosition)')
 
     # Reference
     parser.add_argument('--ref', dest = "ref", type = int, default = 0,
