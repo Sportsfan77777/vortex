@@ -318,6 +318,9 @@ def make_plot(frame, show = False):
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     y_text = 1.14
 
+    if args.log:
+        y_text = 2.15
+
     alpha_coefficent = "3"
     if scale_height == 0.08:
         alpha_coefficent = "1.5"
