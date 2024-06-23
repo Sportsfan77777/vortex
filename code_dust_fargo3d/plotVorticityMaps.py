@@ -290,6 +290,10 @@ def generate_colors(n):
 
 ##### PLOTTING #####
 
+labelsize = 16
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
 def make_plot(frame, show = False):
     # Set up figure
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
