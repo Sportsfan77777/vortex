@@ -230,10 +230,10 @@ def make_plot(frame, show = False):
     with open("MassLoss-Mt3.csv", "r") as f:
        reader = csv.reader(f)
        for row in reader:
-          ref_density.append(row)
-    ref_mass_loss_rate = np.array(ref_density).astype(np.float)
+          ref_mass_loss_rate.append(row)
+    ref_mass_loss_rate = np.array(ref_mass_loss_rate).astype(np.float)
 
-    #print np.shape(ref_density), ref_density
+    #print np.shape(ref_mass_loss_rate), ref_mass_loss_rate
 
     xref = ref_mass_loss_rate[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
     yref = ref_mass_loss_rate[:, 1]
