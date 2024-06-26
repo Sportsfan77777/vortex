@@ -244,6 +244,21 @@ def make_plot(frame, show = False):
     yref = ref_mass_loss_rate[:, 1]
     plot.plot(xref, yref, linewidth = linewidth, c = "k", zorder = 2, label = "A&B 23")
 
+    with open("Mt3Am3-t140.csv", "r") as f:
+       reader = csv.reader(f)
+       for row in reader:
+          ref_density.append(row)
+    ref_density = np.array(ref_density).astype(np.float)
+
+    #print np.shape(ref_density), ref_density
+
+    xref_d = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
+    omega_d = np.power(xref_d, -1.5)
+    yref_d = ref_density[:, 1] * masslossrate
+    yref_d2 = ref_density[:, 1] * masslossrate * omega_d
+    plot.plot(xref, yref_d, linewidth = linewidth, c = "grey", zorder = 2)
+    plot.plot(xref, yref_d2, linewidth = linewidth, c = "brown", zorder = 2)
+
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
         averagedDensity_zero = np.average(density_zero, axis = 1)
@@ -318,7 +333,7 @@ def make_plot(frame, show = False):
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
     #y_text = 1.14
-    y_text = 2.15
+    y_text = 2.05
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
