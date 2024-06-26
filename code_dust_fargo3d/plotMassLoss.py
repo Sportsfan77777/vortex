@@ -155,9 +155,6 @@ save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
-merge = args.merge
-mpi = args.mpi
-
 # Plot Parameters (variable)
 show = args.show
 
