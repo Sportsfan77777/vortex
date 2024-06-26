@@ -244,6 +244,7 @@ def make_plot(frame, show = False):
     yref = ref_mass_loss_rate[:, 1]
     plot.plot(xref, yref, linewidth = linewidth, c = "k", zorder = 2, label = "A&B 23")
 
+    ref_density = []
     with open("Mt3Am3-t140.csv", "r") as f:
        reader = csv.reader(f)
        for row in reader:
