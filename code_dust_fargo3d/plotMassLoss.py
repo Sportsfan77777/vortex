@@ -255,8 +255,8 @@ def make_plot(frame, show = False):
 
     xref_d = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
     omega_d = np.power(xref_d, -1.5)
-    yref_d = ref_density[:, 1] * masslossrate
-    yref_d2 = ref_density[:, 1] * masslossrate * omega_d
+    yref_d = ref_density[:, 1] * mass_loss_rate
+    yref_d2 = ref_density[:, 1] * mass_loss_rate * omega_d
     plot.plot(xref, yref_d, linewidth = linewidth, c = "grey", zorder = 2)
     plot.plot(xref, yref_d2, linewidth = linewidth, c = "brown", zorder = 2)
 
