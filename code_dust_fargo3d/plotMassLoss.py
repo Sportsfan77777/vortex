@@ -212,12 +212,17 @@ def make_plot(frame, show = False):
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
-    accretion_rate = 2.0 * mass_loss_rate # Outside the gap only (but should be zero in the gap anyway)
+    omega = np.power(rad, -1.5)
+
+    accretion_rate = mass_loss_rate # Outside the gap only (but should be zero in the gap anyway)
+    accretion_rate_omega = mass_loss_rate * omega # Outside the gap only (but should be zero in the gap anyway)
 
     ### Plot ###
     x = rad
     y = normalized_density * accretion_rate
-    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+    y2 = normalized_density * accretion_rate_omega
+    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = "Constant Omega")
+    result2,  = plot.plot(x, y2, linewidth = linewidth, c = "r", zorder = 99, label = "Omega(r)")
 
     this_x = planet_x[frame]
     this_y = planet_y[frame]
@@ -237,7 +242,7 @@ def make_plot(frame, show = False):
 
     xref = ref_mass_loss_rate[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
     yref = ref_mass_loss_rate[:, 1]
-    plot.plot(xref, yref, linewidth = linewidth, c = "k", zorder = 2)
+    plot.plot(xref, yref, linewidth = linewidth, c = "k", zorder = 2, label = "A&B 23")
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
