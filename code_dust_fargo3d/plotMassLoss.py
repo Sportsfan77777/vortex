@@ -212,7 +212,7 @@ def make_plot(frame, show = False):
     averagedDensity = np.average(density, axis = 1)
     normalized_density = averagedDensity / surface_density_zero
 
-    accretion_rate = 2.0 * masslossrate # Outside the gap only (but should be zero in the gap anyway)
+    accretion_rate = 2.0 * mass_loss_rate # Outside the gap only (but should be zero in the gap anyway)
 
     ### Plot ###
     x = rad
