@@ -260,8 +260,6 @@ def make_plot(frame, show = False):
             y_compare = normalized_density_compare
             result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
-        plot.legend()
-
     if args.derivative:
         twin = ax.twinx()
 
@@ -276,6 +274,8 @@ def make_plot(frame, show = False):
         plot.legend()
 
         twin.set_ylim(-10, 10)
+
+    plot.legend(loc = "upper right")
 
     # Axes
     if args.max_y is None:
@@ -312,7 +312,8 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
+    #y_text = 1.14
+    y_text = 2.15
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
