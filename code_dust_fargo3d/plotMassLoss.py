@@ -221,7 +221,7 @@ def make_plot(frame, show = False):
     x = rad
     y = normalized_density * accretion_rate
     y2 = normalized_density * accretion_rate_omega
-    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = "Constant Omega")
+    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = "Omega_p")
     result2,  = plot.plot(x, y2, linewidth = linewidth, c = "r", zorder = 99, label = "Omega(r)")
 
     this_x = planet_x[frame]
