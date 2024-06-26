@@ -209,7 +209,7 @@ def make_plot(frame, show = False):
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
-    averagedDensity = np.average(density, axis = 1)
+    averagedDensity = np.average(density, axis = 1) * (2.0 * np.pi)
     normalized_density = averagedDensity / surface_density_zero
 
     omega = np.power(rad, -1.5)
