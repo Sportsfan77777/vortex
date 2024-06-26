@@ -257,8 +257,8 @@ def make_plot(frame, show = False):
     omega_d = np.power(xref_d, -1.5)
     yref_d = ref_density[:, 1] * mass_loss_rate
     yref_d2 = ref_density[:, 1] * mass_loss_rate * omega_d
-    plot.plot(xref, yref_d, linewidth = linewidth, c = "grey", zorder = 2)
-    plot.plot(xref, yref_d2, linewidth = linewidth, c = "brown", zorder = 2)
+    plot.plot(xref_d, yref_d, linewidth = linewidth, c = "grey", zorder = 2)
+    plot.plot(xref_d, yref_d2, linewidth = linewidth, c = "brown", zorder = 2)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
