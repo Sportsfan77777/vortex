@@ -84,6 +84,12 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser.add_argument('--log', dest = "log", action = 'store_true', default = False,
                          help = 'plot log y-axis (default: do not do it!)')
 
+    parser.add_argument('-r', dest = "ref", type = int, default = 0,
+                         help = 'ref case to compare to (num Jup) (default: 0)')
+
+    parser.add_argument('--hill', dest = "hill", type = int, default = 1,
+                         help = 'number of hill radii to exclude (default: 1)')
+
     parser.add_argument('--compare', dest = "compare", nargs = '+', default = None,
                          help = 'compare to another directory (default: do not do it!)')
 
@@ -203,6 +209,36 @@ fargo_par["theta"] = theta
 
 ###############################################################################
 
+##### HELPER FUNCTION #####
+
+def get_rid_of_hill(density, angle = np.pi, num_hill = 1.0):
+   planet_r = 1.0
+   planet_phi = angle
+
+   x_p = planet_r * np.cos(planet_phi)
+   y_p = planet_r * np.sin(planet_phi)
+
+   hill_r = planet_r * np.power(planet_mass * jupiter_mass / 3.0, 1.0 / 3.0)
+   start_r = planet_r - num_hill * hill_r
+   end_r = planet_r + num_hill * hill_r
+
+   start_ri = np.searchsorted(rad, start_r) - 1
+   end_ri = np.searchsorted(rad, end_r) + 1
+
+   for r_i, r in enumerate(rad[start_ri : end_ri]):
+       x_i = r * np.cos(theta)
+       y_i = r * np.sin(theta)
+
+       distance = np.sqrt(np.power(x_i - x_p, 2) + np.power(y_i - y_p, 2))
+       mask = np.ones(len(theta))
+       mask[distance < num_hill * hill_r] = 0 # positive is safe, negative should be masked
+
+       density[start_ri + r_i] *= mask
+
+   return density
+
+###############################################################################
+
 ##### PLOTTING #####
 
 alpha = 0.7
@@ -218,6 +254,8 @@ def make_plot(frame, show = False):
 
     # Data
     density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    if args.hill > 0:
+       density = get_rid_of_hill(density, num_hill = args.hill)
     averagedDensity = np.average(density, axis = 1)
 
     density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -229,6 +267,24 @@ def make_plot(frame, show = False):
     x = rad
     y = normalized_density
     result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+
+    # Reference
+    if args.ref > 0:
+      colors = ['k', 'grey']
+      times = [20, 30, 50, 100, 140]
+      for i, time_i in enumerate(times):
+         ref_density = []
+         with open("Mt%dAm3-t%d.csv" % (args.ref, time_i), "r") as f:
+            reader = csv.reader(f)
+            for row in reader:
+               ref_density.append(row)
+         ref_density = np.array(ref_density).astype(np.float)
+
+         #print np.shape(ref_density), ref_density
+
+         xref = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
+         yref = ref_density[:, 1]
+         plot.plot(xref, yref, linewidth = linewidth, c = colors[i % 2], zorder = 2)
 
     this_x = planet_x[frame]
     this_y = planet_y[frame]
