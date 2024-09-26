@@ -307,6 +307,9 @@ def make_plot(frame, show = False):
             density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
             averagedDensity_compare = np.average(density_compare, axis = 1)
 
+            if args.hill > 0:
+               density_compare = get_rid_of_hill(density_compare, num_hill = args.hill)
+
             density_compare_zero = (fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta))
             averagedDensity_compare_zero = np.average(density_compare_zero, axis = 1)
 
@@ -317,7 +320,7 @@ def make_plot(frame, show = False):
             y_compare = normalized_density_compare
             result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
-        plot.legend()
+        plot.legend(loc = "upper right")
 
     if args.derivative:
         twin = ax.twinx()
