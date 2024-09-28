@@ -290,7 +290,10 @@ def make_plot(frame, show = False):
     this_y = planet_y[frame]
     planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
 
-    plot.scatter([planet_location], [1.05 * 10**(-3)], c = 'k', s = 75, alpha = 0.8, clip_on = False)
+    if not args.log:
+        plot.scatter([planet_location], [1.05 * 10**(-3)], c = 'k', s = 75, alpha = 0.8, clip_on = False)
+    else:
+        plot.scatter([planet_location], [1.005 * 10**(-2)], c = 'k', s = 75, alpha = 0.8, clip_on = False)
 
     if args.zero:
         #density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
