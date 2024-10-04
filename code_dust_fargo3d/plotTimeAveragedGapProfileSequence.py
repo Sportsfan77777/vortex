@@ -452,9 +452,9 @@ def make_plot(frame, show = False):
     frame_string = frame_string[:-1] # get rid of trailing '-'
 
     if version is None:
-        save_fn = "%s/timeAaveragedGapProfile_%s_%s.png" % (save_directory, directory_name, frame_string)
+        save_fn = "%s/timeAveragedGapProfile_%s_%s.png" % (save_directory, directory_name, frame_string)
     else:
-        save_fn = "%s/v%04d_timeAaveragedGapProfile_%s_%s.png" % (save_directory, version, directory_name, frame_string)
+        save_fn = "%s/v%04d_timeAveragedGapProfile_%s_%s.png" % (save_directory, version, directory_name, frame_string)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
