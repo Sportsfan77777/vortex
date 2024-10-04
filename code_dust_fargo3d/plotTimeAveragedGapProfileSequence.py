@@ -270,12 +270,15 @@ def make_plot(frame, show = False):
         ### Plot ###
         x = rad
         y = normalized_density
-        result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+        result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+
+    plot.legend(loc = "lower right", fontsize = fontsize - 5)
 
     # Reference
     if args.ref > 0:
       colors = ['k', 'grey']
-      times = [20, 30, 50, 100, 140]
+      #times = [20, 30, 50, 100, 140]
+      times = [140]
       for i, time_i in enumerate(times):
          ref_density = []
          with open("Mt%dAm3-t%d.csv" % (args.ref, time_i), "r") as f:
@@ -288,7 +291,7 @@ def make_plot(frame, show = False):
 
          xref = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
          yref = ref_density[:, 1]
-         plot.plot(xref, yref, linewidth = linewidth, c = colors[i % 2], zorder = 2)
+         plot.plot(xref, yref, linewidth = linewidth, c = colors[i % 2], zorder = 2, label = "A&B 2023 (t = 140)")
 
     this_x = planet_x[frame]
     this_y = planet_y[frame]
@@ -398,9 +401,9 @@ def make_plot(frame, show = False):
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    title2 = r"$M_\mathrm{p}\ =\ %.2f$ $M_\mathrm{Jup}$]" % (current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    #ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
@@ -449,9 +452,9 @@ def make_plot(frame, show = False):
     frame_string = frame_string[:-1] # get rid of trailing '-'
 
     if version is None:
-        save_fn = "%s/averagedDensity_%s_%s.png" % (save_directory, directory_name, frame_string)
+        save_fn = "%s/timeAaveragedGapProfile_%s_%s.png" % (save_directory, directory_name, frame_string)
     else:
-        save_fn = "%s/v%04d_averagedDensity_%s_%s.png" % (save_directory, version, directory_name, frame_string)
+        save_fn = "%s/v%04d_timeAaveragedGapProfile_%s_%s.png" % (save_directory, version, directory_name, frame_string)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
