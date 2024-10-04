@@ -52,7 +52,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "timeAveragedGapProfile",
+    parser.add_argument('--dir', dest = "save_directory", default = "timeAveragedGapProfileSequences",
                          help = 'save directory (default: timeAveragedGapProfile)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
                          help = 'use .mpiio output files (default: do not use mpi)')
@@ -442,10 +442,16 @@ def make_plot(frame, show = False):
         twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
 
     # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1].split("-")[0]
+    frame_string = ""
+    for frame in frame_range:
+        frame_string += ("%04d-" % frame)
+    frame_string = frame_string[:-1] # get rid of trailing '-'
+
     if version is None:
-        save_fn = "%s/timeAveragedGapProfile_%04d.png" % (save_directory, frame)
+        save_fn = "%s/averagedDensity_%s_%s.png" % (save_directory, directory_name, frame_string)
     else:
-        save_fn = "%s/v%04d_timeAveragedGapProfile_%04d.png" % (save_directory, version, frame)
+        save_fn = "%s/v%04d_averagedDensity_%s_%s.png" % (save_directory, version, directory_name, frame_string)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
