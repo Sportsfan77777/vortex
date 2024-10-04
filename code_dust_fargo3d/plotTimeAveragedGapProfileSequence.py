@@ -253,6 +253,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
+    colors = ["darkorange", "b"]
     for i, frame in enumerate(frame_range):
         density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
         density_plus_one = fromfile("gasdens%d.dat" % (frame + 1)).reshape(num_rad, num_theta)
@@ -270,7 +271,7 @@ def make_plot(frame, show = False):
         ### Plot ###
         x = rad
         y = normalized_density
-        result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
+        result,  = plot.plot(x, y, linewidth = linewidth, c = colors[i], zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
     # Reference
     if args.ref > 0:
