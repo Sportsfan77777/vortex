@@ -272,8 +272,6 @@ def make_plot(frame, show = False):
         y = normalized_density
         result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = r"$t$ $=$ $%d$ $T_\mathrm{p}$" % frame)
 
-    plot.legend(loc = "lower right", fontsize = fontsize - 5)
-
     # Reference
     if args.ref > 0:
       colors = ['k', 'grey']
@@ -292,6 +290,8 @@ def make_plot(frame, show = False):
          xref = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
          yref = ref_density[:, 1]
          plot.plot(xref, yref, linewidth = linewidth, c = colors[i % 2], zorder = 2, label = "A&B 2023 (t = 140)")
+
+    plot.legend(loc = "lower right", fontsize = fontsize - 5)
 
     this_x = planet_x[frame]
     this_y = planet_y[frame]
@@ -401,7 +401,7 @@ def make_plot(frame, show = False):
     #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
     #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    title2 = r"$M_\mathrm{p}\ =\ %.2f$ $M_\mathrm{Jup}$]" % (current_mass)
+    title2 = r"$M_\mathrm{p}\ =\ %.2f$ $M_\mathrm{Jup}$" % (current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
     #ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
