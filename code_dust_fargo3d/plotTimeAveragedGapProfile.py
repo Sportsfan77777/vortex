@@ -313,10 +313,10 @@ def make_plot(frame, show = False):
             density_compare = (fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta))
             density_compare_plus_one = (fromfile("%s/gasdens%d.dat" % (directory, frame + 1)).reshape(num_rad, num_theta))
             density_compare = (density_compare + density_compare_plus_one) / 2.0
-            averagedDensity_compare = np.average(density_compare, axis = 1)
 
             if args.hill > 0:
                density_compare = get_rid_of_hill(density_compare, num_hill = args.hill)
+            averagedDensity_compare = np.average(density_compare, axis = 1)
 
             density_compare_zero = (fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta))
             averagedDensity_compare_zero = np.average(density_compare_zero, axis = 1)
