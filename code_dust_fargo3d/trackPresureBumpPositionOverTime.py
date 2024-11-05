@@ -223,6 +223,9 @@ def get_gap_edge_position(args_here):
 
     # Get Data
     density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
+    density_plus_one = fromfile("gasdens%d.dat" % (frame + 1)).reshape(num_rad, num_theta)
+    density = (density + density_plus_one) / 2.0
+
     #density_zero = fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta)
     
     peak_density_location = get_position(density)
