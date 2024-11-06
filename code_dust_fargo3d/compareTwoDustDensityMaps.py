@@ -161,6 +161,7 @@ taper_time = p.masstaper
 
 scale_height = p.aspectratio
 viscosity = p.nu
+alpha = p.alpha
 
 """
 
@@ -436,11 +437,16 @@ def make_plot(frames, show = False):
         elif scale_height == 0.04:
             alpha_coefficent = "6"
 
+        wind_power = int(np.floor(np.log10(mass_loss_rate)))
+        wind_coefficient = mass_loss_rate / np.power(10.0, wind_power)
+
         if i == 0:
-            text1 = r"$h = %.2f$" % (scale_height)
+            #text1 = r"$h = %.2f$" % (scale_height)
+            text1 = r"$\alpha = 10^{%d}$" % (alpha)
             plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
-            text2 = r"$\alpha \approx %s \times 10^{%d}$" % (alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2)
-            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 2)
+            #text2 = r"$\alpha = %d \times 10^{%d}$" % (alpha_coefficient, int(np.log(viscosity) / np.log(10)) + 2)
+            text2 = r"$b = %d \times 10^{%d}$" % (wind_coefficient, wind_power)
+            #plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 2)
         if i == 1:
             text3 = args.optional_title
             text4 = r"%d$\times$%d (2-D)" % (num_rad, num_theta)
@@ -450,7 +456,8 @@ def make_plot(frames, show = False):
               plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize - 2)
               plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize - 2)
 
-        title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
+        title = r"$t = %d$ $\mathrm{orbits}$]" % (orbit)
+        #title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
 
@@ -475,8 +482,9 @@ def make_plot(frames, show = False):
         final_frame = len(accreted_mass) - 1
     final_planet_mass = planet_mass + accreted_mass[final_frame]
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
-    title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
+    #title = r"$\Sigma_0$ $/$ $\Sigma_\mathrm{base} = %.1f$    ($M_\mathrm{p} = %.2f$ $M_\mathrm{Jup}$)" % (surface_density_zero / surface_density_base, final_planet_mass)
     #title = r"$h = %.2f$     $\alpha \approx %s \times 10^{%d}$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
+    title = r"$h = %.2f$    $M_\mathrm{p} = %.2f$ $M_\mathrm{J}$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, planet_mass)
     plot.suptitle("%s" % (title), y = 1.12, fontsize = fontsize + 2, bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0))
 
     # Save, Show, and Close
