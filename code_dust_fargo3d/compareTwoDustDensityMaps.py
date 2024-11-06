@@ -443,7 +443,7 @@ def make_plot(frames, show = False):
 
         if i == 0:
             #text1 = r"$h = %.2f$" % (scale_height)
-            text1 = r"$\alpha = 10^{%d}$" % (int(np.log(alpha) / np.log(10)))
+            text1 = r"$\alpha = 10^{%d}$" % (int(round(np.log(alpha) / np.log(10), 0)))
             plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
             #text2 = r"$\alpha = %d \times 10^{%d}$" % (alpha_coefficient, int(np.log(viscosity) / np.log(10)) + 2)
             text2 = r"$b = %d \times 10^{%d}$" % (wind_coefficient, wind_power)
@@ -460,7 +460,7 @@ def make_plot(frames, show = False):
         if i == 0:
             title = r"$t = %d$ [$\mathrm{K20}$]" % (orbit)
         if i == 1:
-            title = r"$t = %d$ [$\mathrm{this work}$]" % (orbit)
+            title = r"$t = %d$ [$\mathrm{this~work}$]" % (orbit)
         #title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
