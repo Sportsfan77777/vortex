@@ -460,7 +460,7 @@ def make_plot(frames, show = False):
         if i == 0:
             title = r"$t = %d$ [$\mathrm{K20}$]" % (orbit)
         if i == 1:
-            title = r"$t = %d$ [$\mathrm{this~work}$]" % (orbit)
+            title = r"$t = %d$ [$\mathrm{this}$ $\mathrm{work}$]" % (orbit)
         #title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
