@@ -162,6 +162,7 @@ taper_time = p.masstaper
 scale_height = p.aspectratio
 viscosity = p.nu
 alpha = p.alpha
+mass_loss_rate = p.masslossrate
 
 """
 
