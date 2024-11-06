@@ -67,7 +67,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Frame Selection
     parser.add_argument('frames', type = int, nargs = 2,
                          help = 'select two frames')
-    parser.add_argument('-d', dest = "compare_directory",, default = [".", "."],
+    parser.add_argument('-d', dest = "compare_directory", default = [".", "."],
                          help = 'select compare directory (default: cwd)')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
