@@ -443,11 +443,11 @@ def make_plot(frames, show = False):
 
         if i == 0:
             #text1 = r"$h = %.2f$" % (scale_height)
-            text1 = r"$\alpha = 10^{%d}$" % (alpha)
+            text1 = r"$\alpha = 10^{%d}$" % (int(np.log(alpha) / np.log(10)))
             plot.text(x_min - x_shift * x_range, (y_text + y_shift) * plot.ylim()[-1], text1, horizontalalignment = 'left', fontsize = fontsize - 2)
             #text2 = r"$\alpha = %d \times 10^{%d}$" % (alpha_coefficient, int(np.log(viscosity) / np.log(10)) + 2)
             text2 = r"$b = %d \times 10^{%d}$" % (wind_coefficient, wind_power)
-            #plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 2)
+            plot.text(x_min - x_shift * x_range, (y_text) * plot.ylim()[-1], text2, horizontalalignment = 'left', fontsize = fontsize - 2)
         if i == 1:
             text3 = args.optional_title
             text4 = r"%d$\times$%d (2-D)" % (num_rad, num_theta)
@@ -455,9 +455,12 @@ def make_plot(frames, show = False):
             if text3 is not None:
               #plot.text(x_max + x_shift * x_range, (y_text + 0.5 * y_shift) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize + 1)
               plot.text(x_max + (x_shift + extra) * x_range, (y_text + y_shift + 0.01) * plot.ylim()[-1], text3, horizontalalignment = 'right', fontsize = fontsize - 2)
-              plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize - 2)
+              #plot.text(x_max + (x_shift + extra) * x_range, (y_text + 0.01) * plot.ylim()[-1], text4, horizontalalignment = 'right', fontsize = fontsize - 2)
 
-        title = r"$t = %d$ $\mathrm{orbits}$]" % (orbit)
+        if i == 0:
+            title = r"$t = %d$ [$\mathrm{K20}$]" % (orbit)
+        if i == 1:
+            title = r"$t = %d$ [$\mathrm{this work}$]" % (orbit)
         #title = r"$t = %d$ [$m_\mathrm{p}=%.2f$ $M_\mathrm{J}$]" % (orbit, current_mass)
         #title = r"$t = %d$ [$\delta_\mathrm{gap}=%.1f$]" % (orbit, current_gap_depth)
         plot.title("%s" % (title), y = 1.035, fontsize = fontsize + 1)
