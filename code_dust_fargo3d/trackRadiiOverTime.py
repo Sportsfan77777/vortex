@@ -63,7 +63,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
+    parser.add_argument('--yrange', dest = "y_range", type = float, default = [0.7, None],
                          help = 'maximum density (default: 1.1 times the max)')
 
     parser.add_argument('--offset', dest = "offset", type = float, default = 0.0,
@@ -145,7 +145,9 @@ if args.r_lim is None:
     x_min = 0; x_max = 1000
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
-max_y = args.max_y
+
+min_y = args.y_range[0]
+max_y = args.y_range[1]
 
 negative = args.negative
 
@@ -161,6 +163,10 @@ dpi = args.dpi
 ###############################################################################
 
 ##### PLOTTING #####
+
+labelsize = 18
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
 
 def make_plot(show = False):
     # Set up figure
@@ -210,7 +216,7 @@ def make_plot(show = False):
         max_y = args.max_y
 
     plot.xlim(x_min, x_max)
-    plot.ylim(0.7, max_y)
+    plot.ylim(min_y, max_y)
 
     #title = readTitle()
 
