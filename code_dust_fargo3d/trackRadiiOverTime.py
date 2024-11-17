@@ -208,12 +208,12 @@ def make_plot(show = False):
         plot.legend(loc = "lower left")
 
     # Axes
-    if args.max_y is None:
+    if max_y is None:
         x_min_i = np.searchsorted(x, x_min)
         x_max_i = np.searchsorted(x, x_max)
         max_y = 1.1 * max(y[x_min_i : x_max_i])
-    else:
-        max_y = args.max_y
+    #else:
+    #    max_y = args.max_y
 
     plot.xlim(x_min, x_max)
     plot.ylim(min_y, max_y)
