@@ -146,8 +146,9 @@ if args.r_lim is None:
 else:
     x_min = args.r_lim[0]; x_max = args.r_lim[1]
 
-min_y = args.y_range[0]
-max_y = args.y_range[1]
+y_range = args.y_range
+#min_y = args.y_range[0]
+#max_y = args.y_range[1]
 
 negative = args.negative
 
@@ -208,12 +209,13 @@ def make_plot(show = False):
         plot.legend(loc = "lower left")
 
     # Axes
-    if max_y is None:
+    min_y = y_range[0]
+    if y_range[1] is None:
         x_min_i = np.searchsorted(x, x_min)
         x_max_i = np.searchsorted(x, x_max)
         max_y = 1.1 * max(y[x_min_i : x_max_i])
-    #else:
-    #    max_y = args.max_y
+    else:
+        max_y = y_range[1]
 
     plot.xlim(x_min, x_max)
     plot.ylim(min_y, max_y)
