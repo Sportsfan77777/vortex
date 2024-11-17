@@ -63,7 +63,7 @@ def new_argument_parser(description = "Plot gas density maps."):
 
     parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
                          help = 'radial range in plot (default: [r_min, r_max])')
-    parser.add_argument('--yrange', dest = "y_range", type = float, default = [0.7, None],
+    parser.add_argument('--yrange', dest = "y_range", type = float, nargs = 2, default = [0.7, None],
                          help = 'maximum density (default: 1.1 times the max)')
 
     parser.add_argument('--offset', dest = "offset", type = float, default = 0.0,
