@@ -48,10 +48,10 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('frames', type = int, nargs = '+',
-                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
-    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
-                         help = 'number of cores (default: 1)')
+    #parser.add_argument('frames', type = int, nargs = '+',
+    #                     help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    #parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+    #                     help = 'number of cores (default: 1)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "torqueOverTime",
@@ -136,10 +136,10 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
-frame_range = util.get_frame_range(args.frames)
+#frame_range = util.get_frame_range(args.frames)
 
 # Number of Cores 
-num_cores = args.num_cores
+#num_cores = args.num_cores
 
 # Files
 save_directory = args.save_directory
