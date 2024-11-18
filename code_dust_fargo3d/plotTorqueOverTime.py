@@ -288,9 +288,9 @@ def make_plot(show = False):
     directory_name = os.getcwd().split("/")[-1]
 
     if version is None:
-        save_fn = "%s/%s_torqueOverTime.png" % (save_directory, directory_name)
+        save_fn = "%s/%s_torqueOutputOverTime.png" % (save_directory, directory_name)
     else:
-        save_fn = "%s/v%04d_%s_torqueOverTime.png" % (save_directory, version, directory_name)
+        save_fn = "%s/v%04d_%s_torqueOutputOverTime.png" % (save_directory, version, directory_name)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
 
     if show:
