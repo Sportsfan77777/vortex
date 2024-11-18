@@ -215,9 +215,11 @@ def make_plot(show = False):
 
     y1_smooth = smooth(y1_raw, ks)
     y2_smooth = smooth(y2_raw, ks)
+    total = y1_smooth + y2_smooth
 
     raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s Inner" % cwd)
     raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s Outer" % cwd)
+    raw3 = plot.plot(x_raw, total, c = 'red', linewidth = linewidth, zorder = 99, label = "%s Outer" % cwd)
 
     if args.ref > 0:
         x = times
