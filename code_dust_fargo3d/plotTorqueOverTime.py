@@ -220,11 +220,12 @@ def make_plot(show = False):
     raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s Inner" % cwd)
     raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s Outer" % cwd)
     raw3 = plot.plot(x_raw, total, c = 'red', linewidth = linewidth, zorder = 99, label = "%s Outer" % cwd)
-
-    if args.ref > 0:
-        x = times
-        y_ref = np.power(np.sin((np.pi / 2) * (1.0 * times / args.ref)), 2) * 1.0
-        plot.plot(x, y_ref, linewidth = linewidth, alpha = 0.5)
+    
+    # Ref
+    #if args.ref > 0:
+    x = times
+    y_ref = np.zeros(len(times))
+    plot.plot(x, y_ref, linewidth = 1)
 
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
