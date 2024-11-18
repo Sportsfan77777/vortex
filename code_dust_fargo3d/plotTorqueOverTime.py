@@ -219,7 +219,7 @@ def make_plot(show = False):
 
     raw1 = plot.plot(x_raw, y1_smooth, c = 'b', linewidth = linewidth, zorder = 99, label = "%s Inner" % cwd)
     raw2 = plot.plot(x_raw, y2_smooth, c = 'orange', linewidth = linewidth, zorder = 99, label = "%s Outer" % cwd)
-    raw3 = plot.plot(x_raw, total, c = 'red', linewidth = linewidth, zorder = 99, label = "%s Outer" % cwd)
+    raw3 = plot.plot(x_raw, total, c = 'red', linewidth = linewidth, zorder = 99, label = "%s Total" % cwd)
     
     # Ref
     #if args.ref > 0:
