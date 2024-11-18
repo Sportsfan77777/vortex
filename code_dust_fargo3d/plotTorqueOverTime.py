@@ -223,9 +223,8 @@ def make_plot(show = False):
     
     # Ref
     #if args.ref > 0:
-    x = times
-    y_ref = np.zeros(len(times))
-    plot.plot(x, y_ref, linewidth = 1)
+    y_ref = np.zeros(len(x_raw))
+    plot.plot(x_raw, y_ref, linewidth = 1)
 
     if args.compare is not None:
         for i, directory in enumerate(args.compare):
