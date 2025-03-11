@@ -109,7 +109,7 @@ p = Parameters()
 num_rad = p.ny; num_theta = p.nx
 r_min = p.ymin; r_max = p.ymax
 
-surface_density_zero = p.sigma0
+surface_density_zero = p.sigma0 * p.epsilon
 
 planet_mass = 1.0
 taper_time = p.masstaper
