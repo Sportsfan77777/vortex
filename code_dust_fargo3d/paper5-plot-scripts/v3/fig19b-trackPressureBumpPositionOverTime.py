@@ -1,0 +1,416 @@
+"""
+plot azimuthally averaged density
+then, makes movies
+
+Usage:
+python plotAveragedDensity.py frame_number <== plot one frame
+python plotAveragedDensity.py -m <== make a movie instead of plots (plots already exist)
+python plotAveragedDensity.py -1 <<<===== Plots a sample
+python plotAveragedDensity.py <== plot all frames and make a movie
+
+"""
+
+import sys, os, subprocess, csv
+import pickle, glob
+from multiprocessing import Pool
+from multiprocessing import Array as mp_array
+import argparse
+
+import math
+import numpy as np
+from scipy import signal as sig
+from scipy.ndimage import filters as ff
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import rcParams as rc
+from matplotlib import pyplot as plot
+
+from pylab import rcParams
+from pylab import fromfile
+
+import util
+import azimuthal as az
+#from readTitle import readTitle
+
+from advanced import Parameters
+#from reader import Fields
+
+from colormaps import cmaps
+for key in cmaps:
+    plot.register_cmap(name = key, cmap = cmaps[key])
+
+###############################################################################
+
+### Input Parameters ###
+
+def new_argument_parser(description = "Plot gas density maps."):
+    parser = argparse.ArgumentParser()
+
+    # Frame Selection
+    parser.add_argument('frames', type = int, nargs = '+',
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
+                         help = 'number of cores (default: 1)')
+
+    # Files
+    parser.add_argument('--dir', dest = "save_directory", default = "pressureBumpPosition",
+                         help = 'save directory (default: pressureBumpPosition)')
+
+    # Reference
+    parser.add_argument('--ref', dest = "ref", type = int, default = 0,
+                         help = 'reference taper time for prescribed growth curve (default: no reference)')
+    parser.add_argument('--compare', dest = "compare", nargs = '+', default = ["../h10_nu9_b45-Mt3-768x768-case4-stockholm-3000-orbits-to-r585-simple-mass-loss", "../h10_nu9_b65-Mt3-768x768-case4-stockholm-3000-orbits-to-r585-no-mass-loss", "/tiara/home/mhammer/scratch/h10_nu9_b45-Mt3-768x768-case4-stockholm-3000-orbits-to-r585-no-extra-gap-torque", "/tiara/home/mhammer/scratch/h10_nu9_b45-Mt3-768x768-case4-stockholm-3000-orbits-to-r585-simple-mass-loss-no-extra-gap-torque"],
+                         help = 'compare to another directory (default: do not do it!)')
+
+
+
+    # Plot Parameters (variable)
+    parser.add_argument('--hide', dest = "show", action = 'store_false', default = True,
+                         help = 'for single plot, do not display plot (default: display plot)')
+    parser.add_argument('-v', dest = "version", type = int, default = None,
+                         help = 'version number (up to 4 digits) for this set of plot parameters (default: None)')
+
+    parser.add_argument('--range', dest = "r_lim", type = float, nargs = 2, default = None,
+                         help = 'radial range in plot (default: [r_min, r_max])')
+    parser.add_argument('--max_y', dest = "max_y", type = float, default = 2.8,
+                         help = 'maximum density (default: 1.1 times the max)')
+
+    parser.add_argument('--offset', dest = "offset", type = float, default = 0.0,
+                         help = 'time offset for compare (default: 0.0)')
+
+    parser.add_argument('--negative', dest = "negative", action = 'store_true', default = False,
+                         help = 'add negative mass (default: do not)')
+    
+    # Plot Parameters (rarely need to change)
+    parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 18,
+                         help = 'fontsize of plot annotations (default: 16)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
+                         help = 'fontsize of plot annotations (default: 3)')
+    parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
+                         help = 'dpi of plot annotations (default: 100)')
+
+    return parser
+
+###############################################################################
+
+### Parse Arguments ###
+args = new_argument_parser().parse_args()
+
+### Get Fargo Parameters ###
+p = Parameters()
+
+num_rad = p.ny; num_theta = p.nx
+r_min = p.ymin; r_max = p.ymax
+
+surface_density_zero = p.sigma0
+
+taper_time = p.masstaper
+
+scale_height = p.aspectratio
+viscosity = p.nu
+mass_loss_rate = p.masslossrate
+
+dt = p.ninterm * p.dt
+
+fargo_par = util.get_pickled_parameters()
+
+jupiter_mass = 1e-3
+planet_mass = fargo_par["PlanetMass"] / jupiter_mass
+accretion = fargo_par["Accretion"]
+
+
+"""
+num_rad = fargo_par["Nrad"]; num_theta = fargo_par["Nsec"]
+r_min = fargo_par["Rmin"]; r_max = fargo_par["Rmax"]
+
+
+taper_time = fargo_par["MassTaper"]
+
+surface_density_zero = fargo_par["Sigma0"]
+disk_mass = 2 * np.pi * surface_density_zero * (r_max - r_min) / jupiter_mass # M_{disk} = (2 \pi) * \Sigma_0 * r_p * (r_out - r_in)
+
+scale_height = fargo_par["AspectRatio"]
+viscosity = fargo_par["Viscosity"]
+
+size = fargo_par["PSIZE"]
+"""
+
+### Get Input Parameters ###
+
+# Frames
+frame_range = util.get_frame_range(args.frames)
+
+# Number of Cores 
+num_cores = args.num_cores
+
+# Files
+save_directory = args.save_directory
+if not os.path.isdir(save_directory):
+    os.mkdir(save_directory) # make save directory if it does not already exist
+
+# Reference
+ref = args.ref
+
+# Plot Parameters (variable)
+show = args.show
+
+rad = np.linspace(r_min, r_max, num_rad)
+theta = np.linspace(0, 2 * np.pi, num_theta)
+
+version = args.version
+if args.r_lim is None:
+    x_min = frame_range[0]; x_max = frame_range[-1]
+else:
+    x_min = args.r_lim[0]; x_max = args.r_lim[1]
+max_y = args.max_y
+
+negative = args.negative
+
+# Plot Parameters (constant)
+fontsize = args.fontsize
+linewidth = args.linewidth
+dpi = args.dpi
+
+# Planet
+data = np.loadtxt("planet0.dat")
+times = data[:, 0]
+planet_x = data[:, 1]
+planet_y = data[:, 2]
+planet_radii = np.sqrt(np.power(planet_x, 2) + np.power(planet_y, 2))
+base_mass = data[:, 7]
+accreted_mass = data[:, 8] #/ jupiter_mass
+
+BigG = 1.0
+
+### Add new parameters to dictionary ###
+#fargo_par["rad"] = rad
+#fargo_par["theta"] = theta
+
+### Helper Functions ###
+
+# Smoothing Function
+smooth = lambda array, kernel_size : ff.gaussian_filter(array, kernel_size) # smoothing filter
+ks = 40.0 # Kernel Size
+ks_small = ks / 5.0 # Smaller kernel to check the normal kernel
+
+def find_max(averagedDensity):
+    outer_disk_start = np.searchsorted(rad, 1.0) # look for max radial density beyond r = 1.1
+    #outer_disk_end = np.searchsorted(rad, 1.25) # look for max radial density before r = 2.3
+    max_density_position = np.argmax(averagedDensity[outer_disk_start:])
+
+    max_index = outer_disk_start + max_density_position
+    max_radius = rad[max_index]
+    #max_density = averagedDensity[min_index]
+
+    return max_radius
+
+def get_position(density):
+    # Get Data
+    averagedDensity = np.average(density, axis = 1)
+    #normalized_density = averagedDensity / surface_density_zero # FIX THIS: DIVIDE BY THE WHOLE DENSITY PROFILE!!!!!!!!!!
+    
+    # Get Minima
+    max_density_position = find_max(averagedDensity)
+
+    # Print Update
+
+    # Store Data
+    return max_density_position
+
+def get_gap_edge_position(args_here):
+    # Unwrap Args
+    i, frame, directory = args_here
+
+    # Get Data
+    density = fromfile("%s/gasdens%d.dat" % (directory, frame)).reshape(num_rad, num_theta)
+    #density_plus_one = fromfile("gasdens%d.dat" % (frame + 1)).reshape(num_rad, num_theta)
+    #density = (density + density_plus_one) / 2.0
+
+    #density_zero = fromfile("%s/gasdens0.dat" % (directory)).reshape(num_rad, num_theta)
+    
+    peak_density_location = get_position(density)
+
+    # Print Update
+    print "%s %d: %.10f" % (directory, frame, peak_density_location)
+
+    # Store Data
+    peak_position_over_time[i] = peak_density_location
+
+###############################################################################
+
+## Use These Frames ##
+rate = 1 # 5 works better, but is very slow
+start = 50
+max_frame = 100 #util.find_max_frame()
+#frame_range = np.array(range(start, max_frame + 1, rate))
+
+#torque_over_time = np.zeros(len(frame_range))
+#peak_over_time = np.zeros(len(frame_range))
+
+peak_position_over_time = mp_array("d", len(frame_range))
+
+#for i, frame in enumerate(frame_range):
+#    get_excess_mass((i, frame))
+
+pool_args = [(i, frame, ".") for i, frame in enumerate(frame_range)]
+
+p = Pool(num_cores)
+p.map(get_gap_edge_position, pool_args)
+p.terminate()
+
+peak_position_array = np.array(peak_position_over_time)
+
+## Pickle to combine later ##
+
+pickle.dump(np.array(frame_range), open("gap_position_frames.p", "wb"))
+pickle.dump(np.array(peak_position_over_time), open("gap_position_values.p", "wb"))
+
+###############################################################################
+
+##### PLOTTING #####
+
+labelsize = 18
+rc['xtick.labelsize'] = labelsize
+rc['ytick.labelsize'] = labelsize
+
+def make_plot(show = False):
+    # Set up figure
+    fig = plot.figure(figsize = (7, 6), dpi = dpi)
+    ax = fig.add_subplot(111)
+
+    ### Data ###
+    # Planet
+    cwd = os.getcwd().split("/")[-1]
+
+    ### Plot ###
+    kernel_size = 5
+
+    x = frame_range
+    y = peak_position_array
+    result1 = plot.plot(x, y, c = 'b', linewidth = linewidth, zorder = 599, label = "Four-component")
+
+    # Reference
+    num_jupiters = int(round(planet_mass, 0))
+    colors = ['k', 'grey']
+    times = [20, 30, 50, 100, 140]
+    for i, time_i in enumerate(times):
+       ref_density = []
+       with open("Mt%dAm3-t%d.csv" % (num_jupiters, time_i), "r") as f:
+          reader = csv.reader(f)
+          for row in reader:
+             ref_density.append(row)
+       ref_density = np.array(ref_density).astype(np.float)
+
+       ref_radii = ref_density[:, 0] / 6.0 # Rp = 6 in Aoyama+Bai 23
+       ref_densities = ref_density[:, 1]
+
+       initial_density = np.array([np.power(r, -1.25) for r in ref_radii])
+       ref_densities *= initial_density
+
+       planet_location = np.searchsorted(ref_radii, 1)
+       ref_density_max = np.argmax(ref_densities[planet_location:])
+
+       ref_density_max_location = ref_radii[planet_location + ref_density_max]
+
+       plot.scatter(time_i, ref_density_max_location, s = 50, c = 'k', zorder = 1000)
+
+    # Compare
+    labels = ["Simple Mass Loss", "No Wind", "No Extra Gap Torque", "No Extra Gap Torque (Simple)"]
+    colors = ["C0", "C2", "C1", "C3"]
+    if args.compare is not None:
+        directories = args.compare
+        max_yc = 0
+
+        for i, directory in enumerate(directories):
+            pool_args = [(j, frame, directory) for j, frame in enumerate(frame_range)]
+
+            p = Pool(num_cores)
+            p.map(get_gap_edge_position, pool_args)
+            p.terminate()
+
+            ### Plot ###
+            x = frame_range
+            y_compare = peak_position_over_time
+            result_compare = plot.plot(x, y_compare, linewidth = linewidth, c = colors[i], alpha = 0.6, zorder = 99, label = labels[i])
+
+            # Max
+            x_min_i = np.searchsorted(x, x_min)
+            x_max_i = np.searchsorted(x, x_max)
+            this_max_y = 1.1 * max(y_compare[x_min_i : x_max_i])
+
+            if this_max_y > max_yc:
+                max_yc = this_max_y
+
+        plot.legend(loc = "lower right", fontsize = fontsize - 3)
+
+    # Axes
+    if args.max_y is None:
+        x_min_i = np.searchsorted(x, x_min)
+        x_max_i = np.searchsorted(x, x_max)
+        max_y = 1.1 * max(y[x_min_i : x_max_i])
+
+        if args.compare:
+            if (max_yc > max_y):
+                max_y = max_yc
+
+    else:
+        max_y = args.max_y
+
+    plot.xlim(x_min, x_max)
+    plot.ylim(1, max_y)
+
+    #title = readTitle()
+
+    unit = "orbits"
+    plot.xlabel(r"Time [%s]" % unit, fontsize = fontsize)
+    plot.ylabel(r"$r$ [$r_\mathrm{p}$]", fontsize = fontsize)
+
+    #if title is None:
+    #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
+    #else:
+    #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
+
+    x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
+    y_text = 1.14
+
+    wind_power = int(np.floor(np.log10(mass_loss_rate)))
+    wind_coefficient = mass_loss_rate / np.power(10.0, wind_power)
+
+    title1 = "Outer Pressure Bump Location"
+    #title1 = r"$\Sigma_0 = %.3e$  $M_c = %.2f\ M_J$  $A = %.2f$" % (surface_density_zero, planet_mass, accretion)
+    #title1 = r"$M_\mathrm{p} = %.2f\ M_J$    $h/r = %.2f$    $\nu = 10^{%d}$   $b = %d \times 10^{%d}$" % (planet_mass, scale_height, int(np.log10(viscosity)), wind_coefficient, wind_power)
+    #title1 = r"$M_\mathrm{p} = %.2f\ M_J$    $\nu = 10^{%d}$" % (planet_mass, int(np.log10(viscosity)))
+    #title1 = r"$T_\mathrm{growth} = %d$ $\mathrm{orbits}$" % (taper_time)
+    #title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
+    plot.title("%s" % (title1), y = 1.015, fontsize = fontsize + 2)
+    #plot.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+
+    # Text
+    text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
+    text_visc = r"$\alpha_\mathrm{disk} = 3 \times 10^{%d}$" % (int(np.log(viscosity) / np.log(10)) + 2)
+    text_nu = r"$\nu = 0$" #10^{%d}$" % (int(np.log(viscosity) / np.log(10)))
+    #plot.text(-0.9 * box_size, 2, text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'left', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    plot.text(0.05 * x_range + x_min, 0.9 * (plot.ylim()[-1] - plot.ylim()[0]) + plot.ylim()[0], text_nu, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+    #plot.text(0.9 * box_size, 2, text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'right', bbox=dict(facecolor = 'white', edgecolor = 'black', pad = 10.0))
+    #plot.text(-0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_mass, fontsize = fontsize, color = 'black', horizontalalignment = 'right')
+    #plot.text(0.84 * x_range / 2.0 + x_mid, y_text * plot.ylim()[-1], text_visc, fontsize = fontsize, color = 'black', horizontalalignment = 'left')
+
+
+    # Save, Show, and Close
+    directory_name = os.getcwd().split("/")[-1]
+
+    if version is None:
+        save_fn = "%s/%s_pressureBumpPositionOverTime.png" % (save_directory, directory_name)
+    else:
+        save_fn = "%s/v%04d_%s_pressureBumpPositionOverTime.png" % (save_directory, version, directory_name)
+    plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi)
+
+    if show:
+        plot.show()
+
+    plot.close(fig) # Close Figure (to avoid too many figures)
+
+##### Make Plots! #####
+
+make_plot(show = show)
