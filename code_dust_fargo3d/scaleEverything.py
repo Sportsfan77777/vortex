@@ -455,9 +455,9 @@ def make_plot(frame, show = False):
     real_density = normalized_density * dust_surface_density_zero
     real_density.tofile(write_fn)
 
-    #write_gas_fn = "gasdens%d.dat" % (write_frame)
-    #real_gas_density = normalized_gas_density * surface_density_zero
-    #real_gas_density.tofile(write_gas_fn)
+    write_gas_fn = "gasdens%d.dat" % (write_frame)
+    real_gas_density = normalized_gas_density * surface_density_zero
+    real_gas_density.tofile(write_gas_fn)
 
 ##### Make Plots! #####
 
