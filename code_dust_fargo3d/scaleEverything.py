@@ -274,7 +274,7 @@ def scale_density(normalized_density, fargo_par):
     r1 = np.searchsorted(rad, inner_ring[0])
 
     scaled_density = normalized_density
-    scaled_density[:r1] *= scale
+    scaled_density *= scale
 
     return scaled_density
 
