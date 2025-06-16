@@ -194,6 +194,9 @@ frame_range = util.get_frame_range(args.frames)
 # Number of Cores 
 num_cores = args.num_cores
 
+# Scale
+scale = args.scale
+
 # Move Rings
 inner_ring = args.inner_ring
 outer_ring = args.outer_ring
@@ -238,7 +241,7 @@ start_quiver = args.start_quiver
 end_quiver = args.end_quiver
 rate_x = args.quiver_rate_x
 rate_y = args.quiver_rate_y
-scale = args.quiver_scale
+q_scale = args.quiver_scale
 if start_quiver is None:
    start_quiver = x_min
 if end_quiver is None:
@@ -399,7 +402,7 @@ def make_plot(frame, show = False):
         u = np.transpose(radial_velocity)[:, start_i:end_i]
         v = np.transpose(azimuthal_velocity)[:, start_i:end_i]
 
-        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = scale, color = "white")
+        plot.quiver(x_q[::rate_x], y_q[::rate_y], u[::rate_y,::rate_x], v[::rate_y,::rate_x], scale = q_scale, color = "white")
 
     # Axes
     plot.xlim(x_min, x_max)
