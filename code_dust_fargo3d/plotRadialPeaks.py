@@ -304,6 +304,8 @@ def make_plot(frame, show = False):
     inner_peak, _ = az.get_radial_peak(normalized_density, fargo_par, start = inner_ring[0], end = inner_ring[1])
     outer_peak, _ = az.get_radial_peak(normalized_density, fargo_par, start = outer_ring[0], end = outer_ring[1])
 
+    print inner_peak, outer_peak
+
     if center:
         normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
         normalized_gas_density, shift_c = shift_density(normalized_gas_density, fargo_par, reference_density = normalized_gas_density)
