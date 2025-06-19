@@ -240,6 +240,10 @@ def make_plot(frame, show = False):
 
     plot.scatter([planet_location], [1.05 * 10**(-3)], c = 'k', s = 75, alpha = 0.8, clip_on = False)
 
+    # Reference
+    plot.plot([inner_peak, inner_peak], [-1000, 1000], c = 'k', linewidth = 1)
+    plot.plot([outer_peak, outer_peak], [-1000, 1000], c = 'k', linewidth = 1)
+
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
         averagedDensity_zero = np.average(density_zero, axis = 1)
