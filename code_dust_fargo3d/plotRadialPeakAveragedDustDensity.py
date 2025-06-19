@@ -56,6 +56,10 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'inner ring to be shifted (default: [r_min, r_max])')
     parser.add_argument('--r2', dest = "outer_ring", type = float, nargs = 2, default = [1.2, 2.2],
                          help = 'outer ring to be shifted (default: [r_min, r_max])')
+    parser.add_argument('--g1', dest = "inner_guess", type = float, default = None,
+                         help = 'guess location of inner ring (default: None)')
+    parser.add_argument('--g2', dest = "outer_guess", type = float, default = None,
+                         help = 'guess location of outer ring (default: None)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "radialPeaks-averagedDustDensity%d",
@@ -160,6 +164,9 @@ num_cores = args.num_cores
 inner_ring = args.inner_ring
 outer_ring = args.outer_ring
 
+inner_guess = args.inner_guess
+outer_guess = args.outer_guess
+
 # Files
 save_directory = args.save_directory % args.dust_number
 if not os.path.isdir(save_directory):
@@ -241,8 +248,14 @@ def make_plot(frame, show = False):
     plot.scatter([planet_location], [1.05 * 10**(-3)], c = 'k', s = 75, alpha = 0.8, clip_on = False)
 
     # Reference
-    plot.plot([inner_peak, inner_peak], [-1000, 1000], c = 'k', linewidth = 1)
-    plot.plot([outer_peak, outer_peak], [-1000, 1000], c = 'k', linewidth = 1)
+    ref_max = 1.1 * max(y)
+    plot.plot([inner_peak, inner_peak], [0, ref_max], c = 'k', linewidth = 1)
+    plot.plot([outer_peak, outer_peak], [0, ref_max], c = 'k', linewidth = 1)
+
+    if inner_guess is not None:    
+       plot.plot([inner_guess, inner_guess], [0, ref_max], c = 'r', linewidth = 1)
+    if outer_guess is not None:
+       plot.plot([outer_guess, outer_guess], [0, ref_max], c = 'r', linewidth = 1)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
