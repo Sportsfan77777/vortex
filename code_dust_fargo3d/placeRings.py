@@ -426,9 +426,9 @@ def make_plot(frame, show = False):
 
     # Save, Show, and Close
     if version is None:
-        save_fn = "%s/movedRings-dustDensityMap%d_%04d.png" % (save_directory, dust_number, frame)
+        save_fn = "%s/placeRings-dustDensityMap%d_%04d.png" % (save_directory, dust_number, frame)
     else:
-        save_fn = "%s/v%04d_movedRings-dustDensityMap%d_%04d.png" % (save_directory, version, dust_number, frame)
+        save_fn = "%s/v%04d_placeRings-dustDensityMap%d_%04d.png" % (save_directory, version, dust_number, frame)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
