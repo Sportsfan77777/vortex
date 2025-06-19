@@ -378,27 +378,19 @@ def make_plot(frame, show = False):
     cbar.set_label(r"Dust Surface Density  $\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     # Save, Show, and Close
+    inner_peak_r = int(round(100 * inner_peak, 0))
+    outer_peak_r = int(round(100 * outer_peak, 0))
+
     if version is None:
-        save_fn = "%s/movedRings-dustDensityMap%d_%04d.png" % (save_directory, dust_number, frame)
+        save_fn = "%s/movedRings-dustDensityMap%d_%04d-in%03d-out%03d.png" % (save_directory, dust_number, frame, inner_peak_r, outer_peak_r)
     else:
-        save_fn = "%s/v%04d_movedRings-dustDensityMap%d_%04d.png" % (save_directory, version, dust_number, frame)
+        save_fn = "%s/v%04d_movedRings-dustDensityMap%d_%04d-in%03d-out%03d.png" % (save_directory, version, dust_number, frame, inner_peak_r, outer_peak_r)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
         plot.show()
 
     plot.close(fig) # Close Figure (to avoid too many figures)
-
-    # Write Arrays
-    write_frame = frame + version + 10
-
-    write_fn = "dust%ddens%d.dat" % (dust_number, write_frame)
-    real_density = normalized_density * dust_surface_density_zero
-    real_density.tofile(write_fn)
-
-    write_gas_fn = "gasdens%d.dat" % (write_frame)
-    real_gas_density = normalized_gas_density * surface_density_zero
-    real_gas_density.tofile(write_gas_fn)
 
 ##### Make Plots! #####
 
