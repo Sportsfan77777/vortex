@@ -227,6 +227,8 @@ def make_plot(frame, show = False):
     inner_peak, _ = az.get_radial_peak(averagedDensity, fargo_par, start = inner_ring[0], end = inner_ring[1])
     outer_peak, _ = az.get_radial_peak(averagedDensity, fargo_par, start = outer_ring[0], end = outer_ring[1])
 
+    print inner_peak, outer_peak
+
     ### Plot ###
     x = rad
     y = normalized_density
