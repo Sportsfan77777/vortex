@@ -300,9 +300,10 @@ def make_plot(frame, show = False):
 
     normalized_gas_density = gas_density / surface_density_zero
     normalized_density = density / dust_surface_density_zero
+    averagedDensity = np.average(normalized_density, axis = 1)
 
-    inner_peak, _ = az.get_radial_peak(normalized_density, fargo_par, start = inner_ring[0], end = inner_ring[1])
-    outer_peak, _ = az.get_radial_peak(normalized_density, fargo_par, start = outer_ring[0], end = outer_ring[1])
+    inner_peak, _ = az.get_radial_peak(averagedDensity, fargo_par, start = inner_ring[0], end = inner_ring[1])
+    outer_peak, _ = az.get_radial_peak(averagedDensity, fargo_par, start = outer_ring[0], end = outer_ring[1])
 
     print inner_peak, outer_peak
 
