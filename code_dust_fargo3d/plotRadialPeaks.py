@@ -382,9 +382,9 @@ def make_plot(frame, show = False):
     outer_peak_r = int(round(100 * outer_peak, 0))
 
     if version is None:
-        save_fn = "%s/movedRings-dustDensityMap%d_%04d-in%03d-out%03d.png" % (save_directory, dust_number, frame, inner_peak_r, outer_peak_r)
+        save_fn = "%s/dustDensityMap%d_%04d-in%03d-out%03d.png" % (save_directory, dust_number, frame, inner_peak_r, outer_peak_r)
     else:
-        save_fn = "%s/v%04d_movedRings-dustDensityMap%d_%04d-in%03d-out%03d.png" % (save_directory, version, dust_number, frame, inner_peak_r, outer_peak_r)
+        save_fn = "%s/v%04d_dustDensityMap%d_%04d-in%03d-out%03d.png" % (save_directory, version, dust_number, frame, inner_peak_r, outer_peak_r)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
