@@ -361,13 +361,13 @@ def make_plot(frame, show = False):
     normalized_gas_density = gas_density / surface_density_zero
     normalized_density = density / dust_surface_density_zero
 
+    # Place Rings
+    normalized_density = move_density(normalized_density, fargo_par, move)
+    normalized_gas_density = move_density(normalized_gas_density, fargo_par, move)
+
     if weaken:
         normalized_density = weaken_density(normalized_density, fargo_par)
         normalized_gas_density = weaken_density(normalized_gas_density, fargo_par)
-
-    if move:
-        normalized_density = move_density(normalized_density, fargo_par, move)
-        normalized_gas_density = move_density(normalized_gas_density, fargo_par, move)
 
     if center:
         normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
