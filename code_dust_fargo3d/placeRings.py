@@ -80,6 +80,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'where to move ring one (default: 1)')
     parser.add_argument('--loc', dest = "locations", type = float, nargs = 2, default = [0.6, 1.5],
                          help = 'where both rings are located (default: 1)')
+    parser.add_argument('--protect', dest = "protect", type = float, default = 0.0,
+                         help = 'keep center of width (default: 0)')
 
     # Files
     parser.add_argument('--dir', dest = "save_directory", default = "placedRings-dustDensityMaps%d",
@@ -198,6 +200,7 @@ outer_ring = args.outer_ring
 place1 = args.place1
 place2 = args.place2
 locations = args.locations
+protect = args.protect
 
 # Files
 save_directory = args.save_directory % args.dust_number
@@ -275,17 +278,29 @@ def move_density(normalized_density, fargo_par, shift):
     #moved_density_right = np.roll(normalized_density, move, axis = 0)
     #moved_density_left = np.roll(normalized_density, -move, axis = 0)
 
+    # Get bounds of rings
     r1 = np.searchsorted(rad, inner_ring[0])
     r2 = np.searchsorted(rad, inner_ring[1])
     l1 = np.searchsorted(rad, outer_ring[0])
     l2 = np.searchsorted(rad, outer_ring[1])
 
-    p1 = np.searchsorted(rad, place1)
-    p2 = np.searchsorted(rad, place2)
+    # Get shifts
+    move1 = np.searchsorted(rad, rad[0] + (place1 - locations[0]))
+    move2 = np.searchsorted(rad, rad[0] + (locations[1] - place2))
+    
+    moved_density = normalized_density.copy()
+    #moved_density[r1+move:r2+move] = moved_density[r1:r2]
+    #moved_density[l1-move:l2-move] = moved_density[l1:l2]
 
-    moved_density = normalized_density
-    moved_density[r1+move:r2+move] = moved_density[r1:r2]
-    moved_density[l1-move:l2-move] = moved_density[l1:l2]
+    # Shift
+    moved_density[r1+move1:r2+move1] = moved_density[r1:r2]
+    moved_density[l1-move2:l2-move2] = moved_density[l1:l2]
+
+    # Restore center
+    c1 = np.searchsorted(rad, 1.0 - protect)
+    c2 = np.searchsorted(rad, 1.0 + protect)
+
+    moved_density[c1:c2] = normalized_density[c1:c2]
 
     return moved_density
 
