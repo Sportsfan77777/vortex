@@ -302,8 +302,7 @@ def move_density(normalized_density, fargo_par):
 
     # Weaken inner disc
     if weaken:
-      weakened_density = normalized_density
-      weakened_density[:r1+move1] *= 0.01
+      moved_density[:r1+move1] *= 0.01
 
     return moved_density
 
