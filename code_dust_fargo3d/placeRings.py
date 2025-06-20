@@ -300,6 +300,11 @@ def move_density(normalized_density, fargo_par):
 
       moved_density[c1:c2] = normalized_density[c1:c2]
 
+    # Weaken inner disc
+    if weaken:
+      weakened_density = normalized_density
+      weakened_density[:r1+move1] *= 0.01
+
     return moved_density
 
 def weaken_density(normalized_density, fargo_par):
@@ -362,9 +367,9 @@ def make_plot(frame, show = False):
     normalized_density = move_density(normalized_density, fargo_par)
     normalized_gas_density = move_density(normalized_gas_density, fargo_par)
 
-    if weaken:
-        normalized_density = weaken_density(normalized_density, fargo_par)
-        normalized_gas_density = weaken_density(normalized_gas_density, fargo_par)
+    #if weaken:
+    #    normalized_density = weaken_density(normalized_density, fargo_par)
+    #    normalized_gas_density = weaken_density(normalized_gas_density, fargo_par)
 
     if center:
         normalized_density, shift_c  = shift_density(normalized_density, fargo_par, reference_density = normalized_gas_density)
