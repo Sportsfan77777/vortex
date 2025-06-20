@@ -268,11 +268,8 @@ fargo_par["theta"] = theta
 
 ### Helper Functions ###
 
-def move_density(normalized_density, fargo_par, shift):
+def move_density(normalized_density, fargo_par):
     """ shift density based on option """
-    # Move
-    move = np.searchsorted(rad, rad[0] + shift)
-    print move
 
     # Ref arrays
     #moved_density_right = np.roll(normalized_density, move, axis = 0)
@@ -362,8 +359,8 @@ def make_plot(frame, show = False):
     normalized_density = density / dust_surface_density_zero
 
     # Place Rings
-    normalized_density = move_density(normalized_density, fargo_par, move)
-    normalized_gas_density = move_density(normalized_gas_density, fargo_par, move)
+    normalized_density = move_density(normalized_density, fargo_par)
+    normalized_gas_density = move_density(normalized_gas_density, fargo_par)
 
     if weaken:
         normalized_density = weaken_density(normalized_density, fargo_par)
