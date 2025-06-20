@@ -70,7 +70,7 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Move Rings
-    parser.add_argument('--r1', dest = "inner_ring", type = float, nargs = 2, default = [0.45, 0.75],
+    parser.add_argument('--r1', dest = "inner_ring", type = float, nargs = 2, default = [0.48, 0.75],
                          help = 'inner ring to be shifted (default: [r_min, r_max])')
     parser.add_argument('--r2', dest = "outer_ring", type = float, nargs = 2, default = [1.2, 2.2],
                          help = 'outer ring to be shifted (default: [r_min, r_max])')
