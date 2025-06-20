@@ -297,10 +297,11 @@ def move_density(normalized_density, fargo_par, shift):
     moved_density[l1-move2:l2-move2] = moved_density[l1:l2]
 
     # Restore center
-    c1 = np.searchsorted(rad, 1.0 - protect)
-    c2 = np.searchsorted(rad, 1.0 + protect)
+    if protect > 0.0:
+      c1 = np.searchsorted(rad, 1.0 - protect)
+      c2 = np.searchsorted(rad, 1.0 + protect)
 
-    moved_density[c1:c2] = normalized_density[c1:c2]
+      moved_density[c1:c2] = normalized_density[c1:c2]
 
     return moved_density
 
