@@ -67,7 +67,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
-    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [1e-6, 2],
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [1e-6, 2e2],
                          help = 'range in y-axis (default: [-0.2, 0.2])')
 
     parser.add_argument('-l', dest = "maximum_condition", action = 'store_true', default = False,
@@ -91,8 +91,8 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 21,
                          help = 'fontsize of plot annotations (default: 21)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 4,
-                         help = 'fontsize of plot annotations (default: 3)')
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
+                         help = 'fontsize of plot annotations (default: 2)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
 
@@ -146,6 +146,7 @@ size = fargo_par["PSIZE"]
 
 # Frames
 frame_range = util.get_frame_range(args.frames)
+real_frame = 640
 
 # Number of Cores 
 num_cores = args.num_cores
@@ -229,11 +230,11 @@ def make_plot(frame, show = False):
       y = normalized_density
       result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%d" % dust_number_i)
 
-    this_x = planet_x[frame]
-    this_y = planet_y[frame]
+    this_x = planet_x[real_frame]
+    this_y = planet_y[real_frame]
     planet_location = np.sqrt(np.power(this_x, 2) + np.power(this_y, 2))
 
-    plot.scatter([planet_location], [1.05 * y2_range[0]], c = 'k', s = 75, alpha = 0.8, clip_on = False)
+    plot.scatter([planet_location], [1.05 * y2_range[0]], c = 'k', s = 75, alpha = 0.8, clip_on = False, zorder = 500)
 
     if args.zero:
         density_zero = fromfile("gasdens0.dat").reshape(num_rad, num_theta)
@@ -256,7 +257,7 @@ def make_plot(frame, show = False):
             y_compare = normalized_density_compare
             result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
-    plot.legend(loc = "upper right")
+    plot.legend(loc = "lower right")
 
     if args.derivative:
         twin = ax.twinx()
@@ -294,7 +295,7 @@ def make_plot(frame, show = False):
     else:
         current_mass = np.power(np.sin((np.pi / 2) * (1.0 * orbit / taper_time)), 2) * planet_mass
 
-    current_mass += accreted_mass[frame]
+    current_mass += accreted_mass[real_frame]
 
     #title = readTitle()
 
@@ -308,7 +309,7 @@ def make_plot(frame, show = False):
     #    plot.title("Dust Density Map\n%s\n(t = %.1f)" % (title, orbit), fontsize = fontsize + 1)
 
     x_range = x_max - x_min; x_mid = x_min + x_range / 2.0
-    y_text = 1.14
+    y_text = 3.14
 
     alpha_coefficent = "3"
     if scale_height == 0.08:
