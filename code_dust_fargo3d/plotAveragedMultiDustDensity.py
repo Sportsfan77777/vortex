@@ -287,6 +287,15 @@ def make_plot(frame, show = False):
 
     ax.set_yscale("log")
 
+    #ax2 = ax.twinx()
+
+    #def convert(y):
+    #    coeff = star_mass / np.power(planet_distance, 2)
+    #    return y / coeff
+
+    #y_min, y_max = ax.get_ylim()
+    #ax2.set_ylim(convert(y_min), convert(y_max))
+
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
 
