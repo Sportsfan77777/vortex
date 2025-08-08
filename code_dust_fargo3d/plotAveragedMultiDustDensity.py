@@ -209,7 +209,16 @@ def make_plot(frame, show = False):
     fig = plot.figure(figsize = (7, 6), dpi = dpi)
     ax = fig.add_subplot(111)
 
-    # Data
+    # Gas Data
+    gas_density = fromfile("gasdens%d.dat" % frame).reshape(num_rad, num_theta)
+    averagedGasDensity = np.average(gas_density, axis = 1)
+    normalized_gas_density = averagedGasDensity / dust_surface_density_zero
+
+    x = rad
+    y = normalized_gas_density
+    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = "gas")
+
+    # Dust Data
     for dust_number_i in range(1, dust_number + 1):
       density = fromfile("dust%ddens%d.dat" % (dust_number_i, frame)).reshape(num_rad, num_theta)
       averagedDensity = np.average(density, axis = 1)
@@ -218,7 +227,7 @@ def make_plot(frame, show = False):
       ### Plot ###
       x = rad
       y = normalized_density
-      result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99)
+      result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%d" % dust_number_i)
 
     this_x = planet_x[frame]
     this_y = planet_y[frame]
@@ -247,7 +256,7 @@ def make_plot(frame, show = False):
             y_compare = normalized_density_compare
             result = plot.plot(x, y_compare, linewidth = linewidth, alpha = 0.6, zorder = 99, label = directory)
 
-        plot.legend(loc = "upper right")
+    plot.legend(loc = "upper right")
 
     if args.derivative:
         twin = ax.twinx()
