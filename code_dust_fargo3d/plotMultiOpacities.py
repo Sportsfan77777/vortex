@@ -228,8 +228,15 @@ def make_plot(frame, show = False):
       fn = "../%s/%s"
       sizes_f = open(fn % (base_directory_i, "opacity_sizes.p"), "rb")
       opacity_f = open(fn % (base_directory_i, "opacity_abs.p"), "rb")
+
+      s_fn = fn % (base_directory_i, "opacity_sizes.p")
+      print s_fn
+
       sizes = pickle.load(sizes_f)
       opacities = pickle.load(opacity_f)
+
+      sizes_f.close()
+      opacity_f.close()
 
       ### Plot ###
       x = sizes
