@@ -239,21 +239,21 @@ def make_plot(frame, show = False):
       opacity_f.close()
 
       ### Plot ###
-      x = sizes
+      x = sizes / 1e-3
       y = opacities
       result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%d mm" % mm_bands[band_i])
 
     plot.legend(loc = "lower right")
 
     # Axes
-    if args.max_y is None:
-        x_min_i = np.searchsorted(x, x_min)
-        x_max_i = np.searchsorted(x, x_max)
-        max_y = 1.1 * max(y[x_min_i : x_max_i])
-    else:
-        max_y = args.max_y
+    #if args.max_y is None:
+    #    x_min_i = np.searchsorted(x, x_min)
+    #    x_max_i = np.searchsorted(x, x_max)
+    #    max_y = 1.1 * max(y[x_min_i : x_max_i])
+    #else:
+    #    max_y = args.max_y
 
-    ax.set_xlim(x_min, x_max)
+    #ax.set_xlim(x_min, x_max)
     ax.set_ylim(y2_range[0], y2_range[1])
 
     ax.set_xscale("log")
@@ -271,8 +271,8 @@ def make_plot(frame, show = False):
 
     #title = readTitle()
 
-    unit = r"cm$^2$ $/$ g"
-    unit2 = "mm"
+    unit = "mm"
+    unit2 = r"cm$^2$ $/$ g"
     ax.set_xlabel(r"Grain size [%s]" % unit, fontsize = fontsize)
     ax.set_ylabel(r"Opacity [%s]" % unit2, fontsize = fontsize)
 
