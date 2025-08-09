@@ -153,7 +153,7 @@ real_frame = args.real_frame
 num_cores = args.num_cores
 
 # Files
-save_directory = args.save_directory % args.dust_number
+save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
