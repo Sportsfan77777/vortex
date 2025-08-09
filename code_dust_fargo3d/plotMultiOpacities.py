@@ -226,8 +226,10 @@ def make_plot(frame, show = False):
     # Data
     for (band_i, base_directory_i) in zip(bands, base_directories):
       fn = "../%s/%s"
-      sizes = pickle.load(open(fn % (base_directory_i, "opacity_sizes.p"), "rb"))
-      opacities = pickle.load(open(fn % (base_directory_i, "opacity_abs.p"), "rb"))
+      sizes_f = open(fn % (base_directory_i, "opacity_sizes.p"), "rb")
+      opacity_f = open(fn % (base_directory_i, "opacity_abs.p"), "rb")
+      sizes = pickle.load(sizes_f)
+      opacities = pickle.load(opacity_f)
 
       ### Plot ###
       x = sizes
