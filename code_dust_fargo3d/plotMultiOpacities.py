@@ -58,7 +58,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'save directory (default: averagedDustDensity%d)')
     parser.add_argument('--base', dest = "base_directory", default = "model-band%d-calc-opacity-kansize-five-grains-1741-png",
                          help = 'save directory (default: averagedDustDensity%d)')
-    parser.add_argument('--bands', dest = "bands", nargs = '+', default = [3, 4, 7, 9],
+    parser.add_argument('--bands', dest = "bands", nargs = '+', type = int, default = [3, 4, 7, 9],
                          help = 'max dust number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
 
     # Plot Parameters (variable)
@@ -226,17 +226,14 @@ def make_plot(frame, show = False):
     # Data
     for (band_i, base_directory_i) in zip(bands, base_directories):
       fn = "../%s/%s"
-      s_fn = fn % (base_directory_i, "opacity_sizes.p")
-      o_fn = fn % (base_directory_i, "opacity_abs.p")
-
-      print s_fn
-      print o_fn
+      s_fn = fn % (base_directory_i, "opacity_sizes.npy")
+      o_fn = fn % (base_directory_i, "opacity_abs.npy")
 
       sizes_f = open(s_fn, "rb")
       opacity_f = open(o_fn, "rb")
 
-      sizes = pickle.load(sizes_f)
-      opacities = pickle.load(opacity_f)
+      sizes = np.load(sizes_f)
+      opacities = np.load(opacity_f)
 
       sizes_f.close()
       opacity_f.close()
