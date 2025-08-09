@@ -46,7 +46,9 @@ def new_argument_parser(description = "Plot gas density maps."):
     parser = argparse.ArgumentParser()
 
     # Frame Selection
-    parser.add_argument('--frame', dest = "real_frame", type = int, default = 640,
+    parser.add_argument('--frame', dest = "frame", type = int, default = 1741,
+                         help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
+    parser.add_argument('--real', dest = "real_frame", type = int, default = 640,
                          help = 'select single frame or range(start, end, rate). error if nargs != 1 or 3')
     parser.add_argument('-c', dest = "num_cores", type = int, default = 1,
                          help = 'number of cores (default: 1)')
@@ -147,6 +149,7 @@ size = fargo_par["PSIZE"]
 ### Get Input Parameters ###
 
 # Frames
+frame = args.frame
 real_frame = args.real_frame
 
 # Number of Cores 
@@ -340,14 +343,4 @@ def make_plot(frame, show = False):
 
 # Iterate through frames
 
-if len(frame_range) == 1:
-    make_plot(frame_range[0], show = show)
-else:
-    if num_cores > 1:
-        p = Pool(num_cores) # default number of processes is multiprocessing.cpu_count()
-        p.map(make_plot, frame_range)
-        p.terminate()
-    else:
-        for frame in frame_range:
-            make_plot(frame)
-
+make_plot(frame)
