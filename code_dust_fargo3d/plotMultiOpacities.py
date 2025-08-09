@@ -262,7 +262,7 @@ def make_plot(frame, show = False):
     unit = r"cm$^2$ $/$ g"
     unit2 = "mm"
     ax.set_xlabel(r"Grain size [%s]" % unit, fontsize = fontsize)
-    ax.set_ylabel(r"Opacity [%s] % unit2, fontsize = fontsize)
+    ax.set_ylabel(r"Opacity [%s]" % unit2, fontsize = fontsize)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
