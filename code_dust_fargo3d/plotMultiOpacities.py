@@ -337,10 +337,12 @@ def make_plot(frame, show = False):
         twin.tick_params(axis = 'y', colors = result2.get_color(), **tkw)
 
     # Save, Show, and Close
+    cwd = os.getcwd().split("/")[-1]
+
     if version is None:
-        save_fn = "%s/multiOpacities.png" % (save_directory)
+        save_fn = "%s/multiOpacities-%s.png" % (save_directory, cwd)
     else:
-        save_fn = "%s/v%04d_multiOpacities.png" % (save_directory, version)
+        save_fn = "%s/v%04d_multiOpacities-%s.png" % (save_directory, version, cwd)
     plot.savefig(save_fn, bbox_inches = 'tight', dpi = dpi, pad_inches = 0.2)
 
     if show:
