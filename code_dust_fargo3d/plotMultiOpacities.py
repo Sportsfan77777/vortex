@@ -95,7 +95,7 @@ def new_argument_parser(description = "Plot gas density maps."):
     # Plot Parameters (rarely need to change)
     parser.add_argument('--fontsize', dest = "fontsize", type = int, default = 21,
                          help = 'fontsize of plot annotations (default: 21)')
-    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 2,
+    parser.add_argument('--linewidth', dest = "linewidth", type = int, default = 3,
                          help = 'fontsize of plot annotations (default: 2)')
     parser.add_argument('--dpi', dest = "dpi", type = int, default = 100,
                          help = 'dpi of plot annotations (default: 100)')
@@ -224,7 +224,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    for (band_i, base_directory_i) in zip(bands, base_directories):
+    for (band_i, base_directory_i) in zip(bands[::-1], base_directories[::-1]):
       fn = "../%s/%s"
       s_fn = fn % (base_directory_i, "opacity_sizes.npy")
       o_fn = fn % (base_directory_i, "opacity_abs.npy")
@@ -241,7 +241,7 @@ def make_plot(frame, show = False):
       ### Plot ###
       x = sizes / 1e-3
       y = opacities
-      result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%.2f mm" % mm_bands[band_i])
+      result,  = plot.plot(x, y, linewidth = linewidth, marker='o', zorder = 99, label = "%.2f mm" % mm_bands[band_i])
 
     plot.legend(loc = "lower right")
 
