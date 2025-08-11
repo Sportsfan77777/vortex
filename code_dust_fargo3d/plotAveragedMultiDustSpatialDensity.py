@@ -235,6 +235,8 @@ def make_plot(frame, show = False):
       normalized_density = averagedDensity / surface_density_zero
 
       St = stokes_numbers[dust_number_i - 1]
+      St /= normalized_density
+
       f = 0.7 * np.power(0.001 * (St + 1.0/St), 0.2) # what is F?
       dust_scale_height = gas_scale_height * f
       normalized_spatial_density = normalized_density / dust_scale_height
@@ -326,7 +328,7 @@ def make_plot(frame, show = False):
     unit = "r_\mathrm{p}"
     ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     ax.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
-    ax2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$ [g / cm$^3$]", fontsize = fontsize, rotation = 180)
+    ax2.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$ [g / cm$^3$]", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
