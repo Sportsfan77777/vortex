@@ -159,7 +159,7 @@ if not os.path.isdir(save_directory):
 dust_number = args.dust_number
 stokes_numbers = []
 for i in range(dust_number):
-   stokes_numbers.append(fargo_par["InvStokes%d" % (i+1)])
+   stokes_numbers.append(fargo_par["Stokes%d" % (i)])
 
 # Plot Parameters (variable)
 show = args.show
@@ -234,7 +234,7 @@ def make_plot(frame, show = False):
       averagedDensity = np.average(density, axis = 1)
       normalized_density = averagedDensity / surface_density_zero
 
-      St = stokes_numbers[dust_number_i]
+      St = stokes_numbers[dust_number_i - 1]
       f = 0.7 * np.power(0.001 * (St + 1.0/St), 0.2) # what is F?
       dust_scale_height = gas_scale_height * f
       normalized_spatial_density = normalized_density / dust_scale_height
