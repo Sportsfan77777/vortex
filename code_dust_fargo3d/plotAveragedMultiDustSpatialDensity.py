@@ -67,7 +67,7 @@ def new_argument_parser(description = "Plot gas density maps."):
                          help = 'radial range in plot (default: [r_min, r_max])')
     parser.add_argument('--max_y', dest = "max_y", type = float, default = None,
                          help = 'maximum density (default: 1.1 times the max)')
-    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [1e-5, 3e3],
+    parser.add_argument('--y2_range', dest = "y2_range", type = float, nargs = 2, default = [1e-6, 1e4],
                          help = 'range in y-axis (default: [-0.2, 0.2])')
 
     parser.add_argument('-l', dest = "maximum_condition", action = 'store_true', default = False,
@@ -198,8 +198,8 @@ planet_y = data[:, 2]
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
-star_mass = 3.18e30 # 1.6 solar mass
-planet_distance = 8.98e12 # 60  AU
+star_mass = 3.18e30 * 1e3 # 1.6 solar mass
+planet_distance = 8.98e12 * 1e2 # 60 AU
 
 ###############################################################################
 
@@ -305,7 +305,7 @@ def make_plot(frame, show = False):
 
     def convert(y):
         coeff = star_mass / np.power(planet_distance, 3)
-        return y * surface_density_zero / coeff
+        return y * surface_density_zero * coeff
 
     y_min, y_max = ax.get_ylim()
     ax2.set_ylim(convert(y_min), convert(y_max))
@@ -345,7 +345,7 @@ def make_plot(frame, show = False):
     title1 = r"$h/r = %.2f$     $\alpha \approx %s \times 10^{%d}$    $A = %.2f$" % (scale_height, alpha_coefficent, int(np.log(viscosity) / np.log(10)) + 2, accretion)
     title2 = r"$t = %d$ $\mathrm{orbits}}$  [$m_\mathrm{p}(t)\ =\ %.2f$ $M_\mathrm{Jup}$]" % (orbit, current_mass)
     plot.title("%s" % (title2), y = 1.015, fontsize = fontsize + 1)
-    ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
+    #ax.text(x_mid, y_text * plot.ylim()[-1], title1, horizontalalignment = 'center', bbox = dict(facecolor = 'none', edgecolor = 'black', linewidth = 1.5, pad = 7.0), fontsize = fontsize + 2)
 
     # Text
     text_mass = r"$M_\mathrm{p} = %d$ $M_\mathrm{Jup}$" % (int(planet_mass))
