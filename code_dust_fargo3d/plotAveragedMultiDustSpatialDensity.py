@@ -301,7 +301,7 @@ def make_plot(frame, show = False):
 
     ax.set_yscale("log")
 
-    #ax2 = ax.twinx()
+    ax2 = ax.twinx()
 
     def convert(y):
         coeff = star_mass / np.power(planet_distance, 3)
