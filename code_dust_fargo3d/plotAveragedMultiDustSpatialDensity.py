@@ -309,6 +309,7 @@ def make_plot(frame, show = False):
 
     y_min, y_max = ax.get_ylim()
     ax2.set_ylim(convert(y_min), convert(y_max))
+    ax2.set_yscale("log")
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
