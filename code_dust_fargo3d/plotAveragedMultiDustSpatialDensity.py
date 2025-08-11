@@ -328,7 +328,7 @@ def make_plot(frame, show = False):
     unit = "r_\mathrm{p}"
     ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     ax.set_ylabel(r"$\rho$ $/$ $\rho_0$", fontsize = fontsize)
-    ax2.set_ylabel(r"$\rho$ $/$ $\rho_0$ [g / cm$^3$]", fontsize = fontsize, rotation = 270, labelpad = 25)
+    ax2.set_ylabel(r"$\rho$ [g / cm$^3$]", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
