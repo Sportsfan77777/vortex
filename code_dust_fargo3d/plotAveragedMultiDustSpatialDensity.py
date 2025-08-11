@@ -241,7 +241,7 @@ def make_plot(frame, show = False):
 
       ### Plot ###
       x = rad
-      y = normalized_spaital_density
+      y = normalized_spatial_density
       result,  = plot.plot(x, y, linewidth = linewidth, zorder = 99, label = "%d" % dust_number_i)
 
     this_x = planet_x[real_frame]
