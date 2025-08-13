@@ -287,14 +287,15 @@ def make_plot(frame, show = False):
 
     ax.set_yscale("log")
 
-    #ax2 = ax.twinx()
+    ax2 = ax.twinx()
 
-    #def convert(y):
-    #    coeff = star_mass / np.power(planet_distance, 2)
-    #    return y / coeff
+    def convert(y):
+        coeff = star_mass / np.power(planet_distance, 2)
+        return y * surface_density_zero * coeff
 
-    #y_min, y_max = ax.get_ylim()
-    #ax2.set_ylim(convert(y_min), convert(y_max))
+    y_min, y_max = ax.get_ylim()
+    ax2.set_ylim(convert(y_min), convert(y_max))
+    ax2.set_yscale("log")
 
     # Annotate Axes
     orbit = (dt / (2 * np.pi)) * frame
@@ -311,6 +312,7 @@ def make_plot(frame, show = False):
     unit = "r_\mathrm{p}"
     ax.set_xlabel(r"Radius [$%s$]" % unit, fontsize = fontsize)
     ax.set_ylabel(r"$\Sigma$ $/$ $\Sigma_0$", fontsize = fontsize)
+    ax2.set_ylabel(r"$\rho$ [g / cm$^2$]", fontsize = fontsize, rotation = 270, labelpad = 25)
 
     #if title is None:
     #    plot.title("Dust Density Map\n(t = %.1f)" % (orbit), fontsize = fontsize + 1)
