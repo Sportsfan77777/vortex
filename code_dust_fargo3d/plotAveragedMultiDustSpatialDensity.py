@@ -226,7 +226,7 @@ def make_plot(frame, show = False):
 
     x = rad
     y = normalized_gas_spatial_density
-    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = "gas")
+    result,  = plot.plot(x, y, linewidth = linewidth, c = "brown", zorder = 99, label = "gas")
 
     # Dust Data
     for dust_number_i in range(1, dust_number + 1):
