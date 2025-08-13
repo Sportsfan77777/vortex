@@ -195,6 +195,9 @@ planet_y = data[:, 2]
 fargo_par["rad"] = rad
 fargo_par["theta"] = theta
 
+star_mass = 3.18e30 * 1e3 # 1.6 solar mass
+planet_distance = 8.98e12 * 1e2 # 60 AU
+
 ###############################################################################
 
 ##### PLOTTING #####
@@ -217,7 +220,7 @@ def make_plot(frame, show = False):
 
     x = rad
     y = normalized_gas_density
-    result,  = plot.plot(x, y, linewidth = linewidth, c = "b", zorder = 99, label = "gas")
+    result,  = plot.plot(x, y, linewidth = linewidth, c = "brown", zorder = 99, label = "gas")
 
     # Dust Data
     for dust_number_i in range(1, dust_number + 1):
