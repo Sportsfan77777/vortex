@@ -70,8 +70,8 @@ def new_argument_parser(description = "Plot dust density maps."):
                          help = 'number of cores (default: 1)')
 
     # Files
-    parser.add_argument('--dir', dest = "save_directory", default = "gasLabelMaps%d",
-                         help = 'save directory (default: gasLabelMaps%d)')
+    parser.add_argument('--dir', dest = "save_directory", default = "gasLabelMaps",
+                         help = 'save directory (default: gasLabelMaps)')
     parser.add_argument('-n', dest = "dust_number", type = int, default = 1,
                          help = 'number (1, 2, or 3) corresponding to different dust sizes (default: 1)')
     parser.add_argument('--mpi', dest = "mpi", action = 'store_true', default = False,
@@ -179,7 +179,7 @@ frame_range = util.get_frame_range(args.frames)
 num_cores = args.num_cores
 
 # Files
-save_directory = args.save_directory % args.dust_number
+save_directory = args.save_directory
 if not os.path.isdir(save_directory):
     os.mkdir(save_directory) # make save directory if it does not already exist
 
