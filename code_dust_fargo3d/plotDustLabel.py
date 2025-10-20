@@ -281,7 +281,7 @@ def make_plot(frame, show = False):
     ax = fig.add_subplot(111)
 
     # Data
-    density = fromfile("gaslabel%d.dat" % (frame)).reshape(num_rad, num_theta)
+    density = fromfile("dust%dlabel%d.dat" % (dust_number, frame)).reshape(num_rad, num_theta)
         
     normalized_density = density # / dust_surface_density_zero
 
